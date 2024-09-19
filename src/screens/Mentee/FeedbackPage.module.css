@@ -10,7 +10,7 @@
   .contentWrapper {
     display: flex;
     flex: 1;
-    margin-top: 70px; /* Space below the header */
+    margin-top: 0px; /* Space below the header */
   }
   
   /* Side Navigation Bar */
@@ -36,7 +36,7 @@
   
   .sideNav li a {
     color: #ffffff;
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 500;
     text-decoration: none;
     margin-left: 10px;
@@ -65,7 +65,7 @@
   /* Feedback Section Styling */
   .feedbackSection {
     flex: 1;
-    margin-left: 250px; /* Adjust based on initial nav width */
+    margin-left: 0px; /* Adjust based on initial nav width */
     padding: 30px;
     background-color: #D9D9D9;
     border-radius: 10px;
@@ -83,7 +83,7 @@
   /* Anonymity Notice */
   .anonymityNotice {
     font-size: 20px;
-    color: #666666;
+    color: #000000;
     text-align: center;
     margin-bottom: 20px;
     font-weight: bolder;
@@ -93,6 +93,8 @@
   .feedbackForm {
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
+    margin-top: 70px;
   }
   
   .inputGroup {
@@ -104,7 +106,19 @@
   
   .inputContainer {
     flex: 1;
+    
   }
+  .inputContainer input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #000000; /* Black border for strokes */
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #ABAAAA; /* Dark grey background */
+    box-sizing: border-box;
+    color: #333333; /* Dark text color to ensure visibility */
+  }
+  
   
   .inputContainer label {
     display: block;
@@ -120,7 +134,7 @@
     border: 1px solid #000000; /* Black border */
     border-radius: 6px;
     font-size: 14px;
-    background-color: #f0f0f0; /* Grey background */
+    background-color: #ABAAAA; /* Grey background */
     box-sizing: border-box;
   }
   
@@ -132,7 +146,10 @@
   .buttonGroup {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 60px;
+    height: 45px;
+    margin-bottom: 10px;
+    margin-top: 12px;
   }
   
   .submitButton,

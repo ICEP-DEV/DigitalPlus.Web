@@ -101,14 +101,14 @@ const FeedbackPage = () => {
 
         {/* Feedback Section */}
         <div className={styles.feedbackSection}>
-          <h1 className={styles.feedbackTitle}>Feedback</h1>
+          <h1 className={styles.feedbackTitle}>FEEDBACK</h1>
           <p className={styles.anonymityNotice}>
             Your feedback is important to us and will remain anonymous.
           </p>
           <form onSubmit={handleSubmit} className={styles.feedbackForm}>
             <div className={styles.inputGroup}>
               <div className={styles.inputContainer}>
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">Mentor's Name</label>
                 <input
                   type="text"
                   id="name"
@@ -118,7 +118,7 @@ const FeedbackPage = () => {
                 />
               </div>
               <div className={styles.inputContainer}>
-                <label htmlFor="surname">Surname</label>
+                <label htmlFor="surname">Mentor's Surname</label>
                 <input
                   type="text"
                   id="surname"
@@ -139,8 +139,8 @@ const FeedbackPage = () => {
               />
             </div>
             <div className={styles.buttonGroup}>
-              <button type="submit" className={styles.submitButton}>Submit</button>
-              <button type="button" onClick={clearForm} className={styles.clearButton}>Clear</button>
+              <button type="submit" className={styles.submitButton}>SUBMIT</button>
+              <button type="button" onClick={clearForm} className={styles.clearButton}>CLEAR</button>
             </div>
           </form>
         </div>
