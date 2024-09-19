@@ -1,0 +1,126 @@
+.loginPage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.headerText {
+  margin-left: 20px;
+  color: white;
+  text-align: left;
+}
+
+.headerText h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.headerText span {
+  font-size: 14px;
+}
+
+.navigation {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.navigation ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation a:hover {
+  color: #66ccff;
+}
+
+.loginBox {
+  background-color: rgb(0, 20, 46);
+  padding: 30px;
+  border-radius: 10px;
+  color: white;
+  width: 300px;
+  height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.7),
+              -10px -10px 20px rgba(255, 255, 255, 0.2);
+  background-image: linear-gradient(145deg, rgb(10, 30, 60), rgb(0, 20, 46));
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.loginBox:hover {
+  transform: translateY(-5px);
+  box-shadow: 15px 15px 25px rgba(0, 0, 0, 0.7),
+              -15px -15px 25px rgba(255, 255, 255, 0.2);
+}
+
+.loginBox h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.loginBox h3 {
+  margin: 10px 0;
+  font-size: 22px;
+  text-align: center;
+}
+
+.loginBox input {
+  width: 80%;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  font-size: 14px;
+}
+
+.forgotPassword {
+  display: block;
+  margin: 10px 0;
+  color: #66ccff;
+  text-decoration: none;
+  
+}
+
+.errorMessage {
+  color: #ff4d4d;
+  background-color: #ffe6e6;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 10px 0;
+  margin-right: 10px;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #ff4d4d;
+}

@@ -1,0 +1,34 @@
+.servicesSection {
+  padding: 40px 60px;
+  background-color: #002147; /* Dark blue */
+  text-align: center;
+}
+
+.servicesSection h2 {
+  color: #ffcc00; /* Yellow */
+  font-size: 36px;
+  margin-bottom: 30px;
+}
+
+.servicesSection ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.servicesSection ul li {
+  color: #fff;
+  font-size: 18px;
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+}
+
+.servicesSection ul li::before {
+  content: '\25CF'; /* Unicode character for a filled circle */
+  color: #ffcc00; /* Yellow */
+  font-size: 20px;
+  margin-right: 15px;
+}

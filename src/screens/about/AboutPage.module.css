@@ -1,0 +1,48 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+  height: 100vh; /* Full viewport height */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+div {
+  perspective: 1000px;
+}
+
+/* 3D effect for each section */
+.section {
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  transform: rotateX(10deg) rotateY(-10deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+.section:hover {
+  transform: rotateX(0deg) rotateY(0deg);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling specific to Header */
+.header {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Styling specific to Footer */
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+}
+
+/* Ensure content after header is scrollable */
+.main-content {
+  padding-top: 70px; /* Offset to account for fixed header */
+}

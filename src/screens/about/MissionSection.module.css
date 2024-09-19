@@ -1,0 +1,34 @@
+.missionSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 60px;
+  background-color: #002147; /* Dark blue */
+  color: #fff;
+  flex-direction: row-reverse; /* This moves the image to the right and text to the left */
+}
+
+.missionSection h2 {
+  color: #ffcc00; /* Yellow */
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.missionContent {
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.missionSection p {
+  margin-bottom: 20px;
+}
+
+.imageContainer {
+  margin-left: 40px; /* Adjust margin to provide space between text and image */
+}
+
+.imageContainer img {
+  width: 400px;
+  height: auto;
+  border-radius: 10px;
+}

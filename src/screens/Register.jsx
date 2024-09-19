@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './style.css'
 import { useNavigate } from 'react-router-dom';
-import Header from './Header';
+ import Header from './Header';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

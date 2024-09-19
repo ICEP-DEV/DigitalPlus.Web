@@ -1,0 +1,89 @@
+.landingPage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.tutLogo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  height: 80px;
+  z-index: 3;
+}
+
+.tutLogo:hover {
+  transform: scale(1.05) translateZ(5px); /* Slight zoom and depth on hover for a 3D pop */
+}
+
+.navigation ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 4;
+}
+
+.navigation a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+@keyframes blinkBorder {
+  0% {
+    border-color: #007bff;
+  }
+  50% {
+    border-color: #ffffff;
+  }
+  100% {
+    border-color: #007bff;
+  }
+}
+
+.loginButton a {
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 2px solid #007bff; /* Add a solid border */
+  animation: blinkBorder 1.5s infinite; /* Apply the blinking border animation */
+}
+
+.loginButton a:hover {
+  background-color: #00178018;
+  border-color: #ffffff; /* Keep the border white on hover */
+}
+
+
+
+.mentorLogoWrapper {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  text-align: right;
+  z-index: 2;
+  color: white;
+}
+
+.mentorText p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.2;
+}
