@@ -5,6 +5,7 @@ import LandingPage from './screens/Landing/LandingPage.js';
 import LoginPage from './screens/Login/LoginPage.js';
 import AboutPage from './screens/about/AboutPage.js'; 
 import RegisterPage from './screens/Register/RegisterPage.js'; 
+import FeedbackPage from './screens/Mentee/FeedbackPage.js';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/aboutPage" element={<AboutPage />} /> 
         <Route path="/RegisterPage" element={<RegisterPage />} /> 
+        <Route path="/FeedbackPage" element={<FeedbackPage />} /> 
         </Routes>
     </Router>
   );
