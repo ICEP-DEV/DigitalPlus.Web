@@ -3,89 +3,57 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #f9f9f9;
+    background-color: #D9D9D9;
   }
   
   /* Content and Navigation Alignment */
   .contentWrapper {
     display: flex;
     flex: 1;
-    margin-top: 0px; /* Space below the header */
+    margin-top: 50px; /* Space below the header */
+    
   }
-  
-  /* Side Navigation Bar */
-  .sideNav {
-    background-color: #002147;
-    padding: 20px;
-    position: relative; /* Relative positioning to contain the resizer */
-    height: calc(100vh - 90px); /* Full height minus header */
-    border-right: 2px solid #ccc;
-    overflow: hidden;
-  }
-  
-  .sideNav ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .sideNav li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .sideNav li a {
-    color: #ffffff;
-    font-size: 22px;
-    font-weight: 500;
-    text-decoration: none;
-    margin-left: 10px;
-  }
-  
-  .sideNav li a:hover {
-    color: #1e90ff;
-  }
-  
-  .navIcon {
-    color: #ffffff;
-    font-size: 20px;
-  }
-  
-  /* Resizer */
-  .resizer {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 10px;
-    height: 100%;
-    background-color: #444;
-    cursor: ew-resize;
+  /* FEEDBACK Title Styling */
+.feedbackMainTitle {
+    font-size: 50px;
+    font-weight: lighter;
+    color: #0000007a;
+    margin-left: 20px;
+    margin-bottom: 700px; /* Add space below the header */
+    margin-top: 100px;
+    text-align: left;
+    position: absolute; /* Position it on the left side */
+    bottom: 165px; /* Adjust this value according to your header height */
+    left: -10px; /* Distance from the left side */
   }
   
   /* Feedback Section Styling */
-  .feedbackSection {
-    flex: 1;
-    margin-left: 0px; /* Adjust based on initial nav width */
-    padding: 30px;
+.feedbackSection {
+    flex-grow: 1;
+    padding: 40px;
+    margin-left: 80px;
+    margin-right: 100px;
+    max-width: 1000px;
     background-color: #D9D9D9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
+    
+  } 
   
+  /* Title Styling */
   .feedbackTitle {
-    font-size: 32px;
-    font-weight: bold;
-    color: #333333;
-    margin-bottom: 15px;
+    font-size: 50px;
+    font-weight: bolder;
+    margin-bottom: 60px;
+    color: #05273f;
     text-align: center;
+    margin-left: 100px;
   }
   
   /* Anonymity Notice */
   .anonymityNotice {
-    font-size: 20px;
-    color: #000000;
-    text-align: center;
-    margin-bottom: 20px;
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #66666683;
+    text-align: left;
     font-weight: bolder;
   }
   
@@ -93,25 +61,48 @@
   .feedbackForm {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
-    margin-top: 70px;
+    gap: 20px;
+    margin-top: 20px;
+    
   }
   
+  /* Input Group - Align the input fields next to each other */
   .inputGroup {
     display: flex;
-    justify-content: space-between;
     gap: 20px;
     margin-bottom: 20px;
   }
   
+  /* Input Containers */
   .inputContainer {
     flex: 1;
-    
+    display: flex;
+    flex-direction: column;
   }
+  
+  .inputContainer label {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  /* Input Field Styling */
+  .inputField, 
+  .textArea {
+    padding: 12px;
+    border: 2px solid #0000009f; /* Black border for strokes */
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    background-color: #ABAAAA;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+  }
+
   .inputContainer input {
     width: 100%;
     padding: 12px;
-    border: 2px solid #000000; /* Black border for strokes */
+    border: 2px solid #0000009f; /* Black border for strokes */
     border-radius: 6px;
     font-size: 14px;
     background-color: #ABAAAA; /* Dark grey background */
@@ -119,67 +110,53 @@
     color: #333333; /* Dark text color to ensure visibility */
   }
   
-  
-  .inputContainer label {
-    display: block;
-    margin-bottom: 5px;
-    color: #000000;
+  .inputField:focus, 
+  .textArea:focus {
+    border-color: #000000;
   }
   
-  /* Updated styles for input fields */
-  input,
-  textarea {
-    width: 100%;
-    padding: 12px; /* Increased padding */
-    border: 1px solid #000000; /* Black border */
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: #ABAAAA; /* Grey background */
-    box-sizing: border-box;
-  }
-  
-  textarea {
+  .textArea {
     resize: vertical;
+    height: 120px;
   }
   
-  /* Button Styling */
+  /* Button Group Styling */
   .buttonGroup {
     display: flex;
-    justify-content: center;
-    gap: 60px;
-    height: 45px;
-    margin-bottom: 10px;
-    margin-top: 12px;
+    justify-content: space-evenly;
+    gap: 40px;
   }
   
-  .submitButton,
+  .submitButton, 
   .clearButton {
-    padding: 8px 16px; /* Reduced padding */
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px; /* Reduced font size */
+    padding: 12px 40px;
+    font-size: 16px;
     font-weight: bold;
-    color: #ffffff;
-    transition: background-color 0.3s;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 50px;
+    width: 300px;
+    margin-top: 60px;
   }
   
   .submitButton {
     background-color: #0E4C79;
-    width: 200px;
+    color: rgba(255, 255, 255, 0.548);
+  }
+  
+  .submitButton:hover {
+    background-color: #05273f;
   }
   
   .clearButton {
     background-color: #0E4C79;
-    width: 200px;
-  }
-  
-  .submitButton:hover {
-    background-color: #0056b3;
+    color:rgba(255, 255, 255, 0.548);
   }
   
   .clearButton:hover {
-    background-color: #0056b3;
+    background-color: #05273f;
   }
   
   /* Responsive Design */
@@ -188,14 +165,53 @@
       flex-direction: column;
     }
   
-    .sideNav {
-      width: 100%;
-      position: relative;
-      border-right: none;
-    }
-  
     .feedbackSection {
       margin-left: 0;
+      width: 100%;
     }
+  
+    .inputGroup {
+      flex-direction: column;
+    }
+  
+    .buttonGroup {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+  }
+
+  /* FeedbackPage.module.css */
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  
+  .modalContent {
+    background-color: white;
+    padding: 50px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modalIcon {
+    font-size: 50px;
+    color: green;
+    margin-bottom: 10px;
+  }
+  
+  .modalContent p {
+    font-size: 18px;
+    font-weight: bold;
   }
   

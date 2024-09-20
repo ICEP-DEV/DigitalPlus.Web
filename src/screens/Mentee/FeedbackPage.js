@@ -1,21 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FaHome, FaBook, FaCalendarAlt, FaUserPlus, FaCommentDots, FaRobot, FaCog, FaSignOutAlt } from 'react-icons/fa';
+// src/pages/FeedbackPage/FeedbackPage.js
+
+import React, { useState } from 'react';
 import Header from '../../components/Header';
-import styles from './FeedbackPage.module.css'; // Import the CSS module
+import Navigation from '../../components/MenteeNavBar';
+import styles from './FeedbackPage.module.css'; 
+import { FaCheckCircle } from 'react-icons/fa'; // Import icon
 
 const FeedbackPage = () => {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [comment, setComment] = useState('');
-  const [navWidth, setNavWidth] = useState(250); // Default width
-  const navRef = useRef(null);
+  const [showModal, setShowModal] = useState(false); // State for showing modal
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Implement form submission logic here
-    alert('Feedback submitted successfully.');
+    setShowModal(true); // Show modal after form submission
+    setTimeout(() => {
+      setShowModal(false); // Hide modal after 3 seconds
+    }, 3000);
     clearForm();
   };
 
@@ -26,125 +29,79 @@ const FeedbackPage = () => {
     setComment('');
   };
 
-  const handleMouseDown = (e) => {
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleMouseMove = (e) => {
-    const newWidth = e.clientX;
-    if (newWidth > 100 && newWidth < window.innerWidth - 100) {
-      setNavWidth(newWidth);
-    }
-  };
-
-  const handleMouseUp = () => {
-    document.removeEventListener('mousemove', handleMouseMove);
-    document.removeEventListener('mouseup', handleMouseUp);
-  };
-
-  useEffect(() => {
-    // Set the initial width of the navigation bar on mount
-    if (navRef.current) {
-      navRef.current.style.width = `${navWidth}px`;
-    }
-  }, [navWidth]);
-
   return (
     <div className={styles.pageContainer}>
       <Header />
-
-      {/* Main content container */}
       <div className={styles.contentWrapper}>
-        {/* Side Navigation Bar */}
-        <nav className={styles.sideNav} ref={navRef}>
-          <ul>
-            <li>
-              <FaHome className={styles.navIcon} />
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <FaBook className={styles.navIcon} />
-              <Link to="/module">Module</Link>
-            </li>
-            <li>
-              <FaCalendarAlt className={styles.navIcon} />
-              <Link to="/booking">Booking</Link>
-            </li>
-            <li>
-              <FaUserPlus className={styles.navIcon} />
-              <Link to="/register">Register</Link>
-            </li>
-            <li>
-              <FaCommentDots className={styles.navIcon} />
-              <Link to="/feedback">Feedback</Link>
-            </li>
-            <li>
-              <FaRobot className={styles.navIcon} />
-              <Link to="/ai">Use AI</Link>
-            </li>
-            <li>
-              <FaCog className={styles.navIcon} />
-              <Link to="/settings">Settings</Link>
-            </li>
-            <li>
-              <FaSignOutAlt className={styles.navIcon} />
-              <Link to="/logout">Logout</Link>
-            </li>
-          </ul>
-          {/* Resizer */}
-          <div
-            className={styles.resizer}
-            onMouseDown={handleMouseDown}
-          />
-        </nav>
+        
+        {/* FEEDBACK Title */}
+        <h1 className={styles.feedbackMainTitle}>FEEDBACK</h1>
+
+        {/* Import the Navigation component */}
+        <Navigation />
 
         {/* Feedback Section */}
         <div className={styles.feedbackSection}>
-          <h1 className={styles.feedbackTitle}>FEEDBACK</h1>
+          <h1 className={styles.feedbackTitle}>We Value Your Feedback</h1>
           <p className={styles.anonymityNotice}>
-            Your feedback is important to us and will remain anonymous.
+            Please provide your feedback below...Your responses will remain anonymous.
           </p>
           <form onSubmit={handleSubmit} className={styles.feedbackForm}>
             <div className={styles.inputGroup}>
               <div className={styles.inputContainer}>
-                <label htmlFor="name">Mentor's Name</label>
+                <label htmlFor="name">MENTOR'S NAME:</label>
                 <input
                   type="text"
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter mentor's first name"
+                  className={styles.inputField}
                   required
                 />
               </div>
               <div className={styles.inputContainer}>
-                <label htmlFor="surname">Mentor's Surname</label>
+                <label htmlFor="surname">MENTOR'S SURNAME</label>
                 <input
                   type="text"
                   id="surname"
                   value={surname}
                   onChange={(e) => setSurname(e.target.value)}
+                  placeholder="Enter mentor's last name"
+                  className={styles.inputField}
                   required
                 />
               </div>
             </div>
             <div className={styles.inputContainer}>
-              <label htmlFor="comment">Comment</label>
+              <label htmlFor="comment">YOUR FEEDBACK:</label>
               <textarea
                 id="comment"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 rows="5"
+                placeholder="Share your experience or any concerns"
+                className={styles.textArea}
                 required
               />
             </div>
             <div className={styles.buttonGroup}>
-              <button type="submit" className={styles.submitButton}>SUBMIT</button>
-              <button type="button" onClick={clearForm} className={styles.clearButton}>CLEAR</button>
+              <button type="submit" className={styles.submitButton}>Submit Feedback</button>
+              <button type="button" onClick={clearForm} className={styles.clearButton}>Clear Form</button>
             </div>
           </form>
         </div>
       </div>
+
+      {/* Modal for thank you message */}
+      {showModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <FaCheckCircle className={styles.modalIcon} />
+            <p>Thank you for your feedback!</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
