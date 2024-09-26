@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header';
-import Navigation from '../../components/MenteeNavBar';
+import SideBar from '../../components/SideBar';
 import styles from './BookingsPage.module.css'; // Import CSS
 
 const MentorBookingsPage = () => {
@@ -11,8 +11,8 @@ const MentorBookingsPage = () => {
       surname: 'Doe',
       date: '2024-09-22',
       time: '10:00 AM',
-      sessionType: 'One-on-One',
-      module: 'Multimedia Computing',
+      sessionType: 'Online',
+      module: 'PPAFO5D',
     },
     {
       id: 2,
@@ -20,8 +20,8 @@ const MentorBookingsPage = () => {
       surname: 'Smith',
       date: '2024-09-23',
       time: '12:00 PM',
-      sessionType: 'Group Session',
-      module: 'Data Fundamentals',
+      sessionType: 'Contact',
+      module: 'PPB115D',
     },
   ]);
 
@@ -71,10 +71,10 @@ const MentorBookingsPage = () => {
   return (
     <div className={styles.pageContainer}>
       <Header />
-      
+      <SideBar />
       <div className={styles.contentWrapper}>
-       <Navigation />
-        <h1 className={styles.bookingsMainTitle}>Mentor Bookings</h1>
+{/*       
+        <h1 className={styles.bookingsMainTitle}>BOOKINGS</h1> */}
        
         <div className={styles.bookingSection}>
           <h2 className={styles.bookingsTitle}>Upcoming Bookings</h2>

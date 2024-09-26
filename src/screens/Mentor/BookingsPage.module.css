@@ -3,6 +3,7 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: #D9D9D9;
+  height: auto;
 }
 
 .contentWrapper {
@@ -16,12 +17,12 @@
   font-weight: lighter;
   color: #0000007a;
   margin-left: 20px;
-  margin-bottom: 700px; /* Add space below the header */
+  margin-bottom: 710px; /* Add space below the header */
   margin-top: 100px;
   text-align: left;
   position: absolute; /* Position it on the left side */
   bottom: 512px; /* Adjust this value according to your header height */
-  left: -10px; /* Distance from the left side */
+  left: -20px; /* Distance from the left side */
 }
 
 .bookingSection {
@@ -30,6 +31,7 @@
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 800px;
+  margin-left: 240px;
 }
 
 .bookingsTitle {
@@ -66,12 +68,12 @@
 }
 
 .confirmButton {
-  background-color: #4caf50;
+  background-color: #33ff00;
   color: white;
 }
 
 .cancelButton {
-  background-color: #f44336;
+  background-color: #ff0404;
   color: white;
 }
 
@@ -138,4 +140,22 @@
 .closeButton {
   background-color: #f44336;
   color: white;
+}
+.bookingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border: 1px solid #ddd; /* Add outer border for the table */
+}
+
+.bookingsTable th,
+.bookingsTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #ddd; /* Add vertical strokes to table cells */
+}
+
+.bookingsTable th {
+  background-color: #f8f8f8;
+  font-weight: bold;
 }

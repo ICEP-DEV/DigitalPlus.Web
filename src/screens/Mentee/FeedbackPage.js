@@ -1,10 +1,11 @@
 // src/pages/FeedbackPage/FeedbackPage.js
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link
 import Header from '../../components/Header';
-import Navigation from '../../components/MenteeNavBar';
 import styles from './FeedbackPage.module.css'; 
-import { FaCheckCircle } from 'react-icons/fa'; // Import icon
+import { FaCheckCircle, FaUserCircle } from 'react-icons/fa'; // Import profile icon
+import SideBar from '../../components/SideBar';
 
 const FeedbackPage = () => {
   const [name, setName] = useState('');
@@ -32,13 +33,16 @@ const FeedbackPage = () => {
   return (
     <div className={styles.pageContainer}>
       <Header />
+      <SideBar />
+
       <div className={styles.contentWrapper}>
-        
+        {/* Profile Icon - Clicking will take the user to the profile page */}
+        <Link to="/profile" className={styles.profileLink}>
+          <FaUserCircle className={styles.profileIcon} />
+        </Link>
+
         {/* FEEDBACK Title */}
         <h1 className={styles.feedbackMainTitle}>FEEDBACK</h1>
-
-        {/* Import the Navigation component */}
-        <Navigation />
 
         {/* Feedback Section */}
         <div className={styles.feedbackSection}>
