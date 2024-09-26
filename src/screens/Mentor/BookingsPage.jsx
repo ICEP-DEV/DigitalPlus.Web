@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify'; // Import React Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 import Header from '../../components/Header';
 import SideBar from '../../components/SideBar';
 import styles from './BookingsPage.module.css'; // Import CSS
@@ -44,21 +46,21 @@ const MentorBookingsPage = () => {
     const { action, bookingId } = modalInfo;
 
     if (reason.trim() === '') {
-      alert('Please provide a reason.');
+      toast.error('Please provide a reason.');
       return;
     }
 
     switch (action) {
       case 'Confirm':
-        alert(`Booking with ID ${bookingId} has been confirmed for the reason: ${reason}.`);
+        toast.success(`Booking with ID ${bookingId} has been confirmed for the reason: ${reason}.`);
         // Add logic to update confirmation status
         break;
       case 'Cancel':
         setBookings(bookings.filter((booking) => booking.id !== bookingId));
-        alert(`Booking with ID ${bookingId} has been canceled for the reason: ${reason}.`);
+        toast.info(`Booking with ID ${bookingId} has been canceled for the reason: ${reason}.`);
         break;
       case 'Reschedule':
-        alert(`Rescheduling booking with ID ${bookingId} for the reason: ${reason}.`);
+        toast.warning(`Rescheduling booking with ID ${bookingId} for the reason: ${reason}.`);
         // Add logic to reschedule the booking
         break;
       default:
@@ -72,10 +74,8 @@ const MentorBookingsPage = () => {
     <div className={styles.pageContainer}>
       <Header />
       <SideBar />
+      
       <div className={styles.contentWrapper}>
-{/*       
-        <h1 className={styles.bookingsMainTitle}>BOOKINGS</h1> */}
-       
         <div className={styles.bookingSection}>
           <h2 className={styles.bookingsTitle}>Upcoming Bookings</h2>
 
@@ -143,6 +143,9 @@ const MentorBookingsPage = () => {
             </div>
           </div>
         )}
+
+        {/* Toast Container */}
+        <ToastContainer />
       </div>
     </div>
   );
