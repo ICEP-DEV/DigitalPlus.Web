@@ -1,0 +1,131 @@
+/* Layout container for the entire dashboard */
+.adminDashboardContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden; /* Prevent scrolling on the entire dashboard */
+}
+
+/* Header styles */
+.adminHeader {
+    background-color: #0a1f44;
+    padding: 20px 30px; /* Increased padding for a more spacious look */
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 20px; /* Slightly increased font size for better readability */
+    font-weight: bold;
+    height: 60px; /* Adjusted height to match the new padding */
+    margin-bottom: 20px; /* Increased gap between the header and navigation bar */
+}
+
+.adminInfo {
+    display: flex;
+    align-items: center;
+}
+
+.adminIcon {
+    font-size: 28px; /* Slightly larger icon */
+    margin-right: 15px;
+}
+
+/* Sidebar styles */
+.adminDashboard {
+    display: flex;
+    height: calc(100vh - 80px); /* Full height minus header and the larger gap */
+}
+
+.sidebar {
+    background-color: #162a4d;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+    padding-top: 10px; /* Added padding for better spacing */
+}
+
+.sidebarOpen {
+    width: 250px;
+}
+
+.sidebarClosed {
+    width: 80px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebarItem {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border-radius: 6px; /* Added rounded corners for better aesthetics */
+}
+
+.sidebarItem i {
+    margin-right: 15px; /* Increased space between icon and text */
+}
+
+.sidebarItem:hover {
+    background-color: #1f406b;
+}
+
+.sidebarItem span {
+    margin-left: 10px;
+}
+
+.sidebarClosed .sidebarItem span {
+    display: none;
+}
+
+/* Toggle button */
+.toggleButton {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px; /* Slightly larger button icon */
+    cursor: pointer;
+    padding: 10px;
+    margin-left: 15px; /* Increased margin for better spacing */
+    align-self: flex-start;
+}
+
+/* Logout section */
+.sidebarLogout {
+    padding: 15px 20px;
+}
+
+/* Main content area */
+.dashboardContent {
+    flex-grow: 1;
+    background-color: #e0e0e0;
+    padding: 30px; /* Increased padding for a more professional look */
+    overflow: hidden; /* Prevent scrolling on the main content area */
+    height: calc(100vh - 80px); /* Ensure it fits the remaining height after header */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Added subtle shadow for a more professional look */
+    border-radius: 8px; /* Added border radius for a clean layout */
+}
+
+/* MentorsContent specific styling to avoid scrolling */
+.mentorsContainer {
+    padding: 30px; /* Consistent padding */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+    height: calc(100vh - 80px); /* Full height minus the header */
+    overflow: hidden; /* Ensure no scrolling */
+}
+
+/* General adjustments for better spacing */
+.sidebar ul {
+    padding-top: 10px;
+}

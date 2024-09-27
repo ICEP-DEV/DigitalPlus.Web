@@ -1,0 +1,100 @@
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .profileCard {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profilePic {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .contactInfo {
+    margin: 10px 0;
+  }
+  
+  .formCard {
+    width: 100%;
+    max-width: 600px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .formHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .editButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .tabsContainer {
+    display: flex;
+    margin-top: 20px;
+  }
+  
+  .tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .active {
+    border-color: #4CAF50;
+    font-weight: bold;
+  }
+  
+  .formSection {
+    margin-top: 20px;
+  }
+  
+  .formField {
+    margin-bottom: 15px;
+  }
+  
+  .addressFields {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .formFooter {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .cancelButton,
+  .saveButton {
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .messagesSection {
+    margin-top: 20px;
+  }
+  
+  .infoMessage {
+    color: #666;
+  }
+  
+  .messageItem {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+  }
+  

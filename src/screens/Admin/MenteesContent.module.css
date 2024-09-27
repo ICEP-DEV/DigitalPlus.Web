@@ -1,0 +1,144 @@
+/* Container */
+.menteesContent_container {
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Notification bar */
+  .menteesContent_notificationBar {
+    padding: 10px 20px;
+    text-align: center;
+    margin-bottom: 15px;
+    color: white;
+    border-radius: 5px;
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  
+  .menteesContent_notificationBar_success {
+    background-color: #28a745;
+  }
+  
+  .menteesContent_notificationBar_error {
+    background-color: #dc3545;
+  }
+  
+  /* Header and Search Bar */
+  .menteesContent_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .menteesContent_header h2 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .menteesContent_searchBar input {
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    width: 300px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Table Styles */
+  .menteesContent_tableWrapper {
+    overflow-y: auto;
+    max-height: 400px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .menteesContent_table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+  }
+  
+  .menteesContent_table th,
+  .menteesContent_table td {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: left;
+    font-size: 14px;
+  }
+  
+  .menteesContent_table th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+  }
+  
+  .menteesContent_table td {
+    font-size: 14px;
+  }
+  
+  .menteesContent_table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Button Styles */
+  .menteesContent_activateButton,
+  .menteesContent_deactivateButton,
+  .menteesContent_deleteButton,
+  .menteesContent_editButton,
+  .menteesContent_saveButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    color: white;
+  }
+  
+  .menteesContent_activateButton {
+    background-color: #28a745;
+  }
+  
+  .menteesContent_deactivateButton {
+    background-color: #ffc107;
+  }
+  
+  .menteesContent_editButton {
+    background-color: #007bff;
+  }
+  
+  .menteesContent_saveButton {
+    background-color: #28a745;
+  }
+  
+  .menteesContent_deleteButton {
+    background-color: #dc3545;
+  }
+  
+  .menteesContent_deleteButton:hover {
+    background-color: #c82333;
+  }
+  
+  .menteesContent_editButton:hover,
+  .menteesContent_saveButton:hover,
+  .menteesContent_activateButton:hover,
+  .menteesContent_deactivateButton:hover {
+    opacity: 0.8;
+  }
+  
+  input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+  }
+  

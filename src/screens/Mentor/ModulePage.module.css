@@ -1,0 +1,61 @@
+.module-page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 80%;
+    margin: auto;
+  }
+  
+  .module-carousel {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .module-item {
+    min-width: 250px;
+    max-width: 250px;
+    margin: 10px;
+    text-align: center;
+    transition: transform 0.5s ease;
+  }
+  
+  .module-item img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .module-item-title {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .module-item.active {
+    transform: scale(1.1);
+  }
+  
+  .module-nav {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .module-nav.left {
+    left: 0;
+  }
+  
+  .module-nav.right {
+    right: 0;
+  }
+  
+  .module-nav:hover {
+    color: #000;
+  }
+  

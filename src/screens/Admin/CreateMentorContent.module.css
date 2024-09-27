@@ -1,0 +1,40 @@
+.createMentorContent {
+    padding: 20px;
+  }
+  
+  .createMentorContent h2 {
+    margin-bottom: 20px;
+  }
+  
+  .createMentorContentForm {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .createMentorContentInput, .createMentorContentSelect {
+    width: calc(50% - 20px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .createButtons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .createButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .createButton:hover {
+    background-color: #0056b3;
+  }
+  

@@ -1,102 +1,92 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import logoTUT from '../../Assets/TUT_Logo_Transparent.png';
-import background from '../../Assets/Login Background.jpeg';
-import styles from './LoginPage.module.css';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link and useNavigate
+import styles from './LoginPage.module.css'; // Import the CSS module
 
-const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      const response = await fetch('http://localhost:5000/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Login successful:', data);
-        toast.success('Login successful!', {
-          position: 'top-right',
-        });
-        setTimeout(() => {
-          navigate('/aboutPage');
-        }, 1500);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Invalid email or password');
-        toast.error(errorData.error || 'Invalid email or password', {
-          position: 'top-right',
-        });
-      }
-    } catch (err) {
-      console.error('Error during login:', err);
-      setError('An unexpected error occurred. Please try again later.');
-      toast.error('An unexpected error occurred. Please try again later.', {
-        position: 'top-right',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+        // Simulating the login behavior without a backend
+        try {
+            const response = await mockLoginApi(email, password); // Using the mock API function
+            
+            // Redirect user based on their role
+            if (response.user.role === 'mentor') {
+                navigate('/mentor-dashboard/home'); // Mentor dashboard
+            } else if (response.user.role === 'mentee') {
+                navigate('/mentee-dashboard/home'); // Mentee dashboard
+            } else if (response.user.role === 'admin') {
+                navigate('/admin-dashboard/dashboard'); // Admin dashboard
+            } else {
+                setError('Invalid user role');
+            }
+        } catch (err) {
+            setError('Login failed. Please check your credentials.');
+        }
+    };
 
-  return (
-    <div className={styles.loginPage}>
-      <img src={background} alt="Background" className={styles.background} />
-      <div className={styles.loginBox}>
-        <h2>WE-MEN-TOR</h2>
-        <h3>LOGIN</h3>
-        <form onSubmit={handleSubmit}>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="username@gmail.com"
-            required
-          />
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-          />
-          {error && <p className={styles.errorMessage}>{error}</p>}
-          <a href="#forgot-password" className={styles.forgotPassword}>Forgot Password?</a>
-          <button type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Sign in'}
-          </button>
-        </form>
-        <p>Don't have an account yet? <Link to="/registerPage">Sign Up</Link></p>
-      </div>
-      <ToastContainer 
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-    </div>
-  );
+    return (
+        <div className={styles.loginContainer}>
+            <div className={styles.formBox}>
+                <h1 className={styles.formTitle}>WE-MEN-TOR</h1>
+                <h2 className={styles.loginTitle}>LOGIN</h2>
+                <form onSubmit={handleLogin} className={styles.form}>
+                    <label className={styles.label}>Email:</label>
+                    <input 
+                        type="email" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="username@gmail.com" 
+                        required 
+                        className={styles.inputField}
+                    />
+                    
+                    <label className={styles.label}>Password:</label>
+                    <input 
+                        type="password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password" 
+                        required 
+                        className={styles.inputField}
+                    />
+
+                    {error && <p className={styles.error}>{error}</p>}
+
+                    <button className={styles.forgotPassword} type="button">Forgot Password?</button>
+
+                    <input type="submit" value="Sign in" className={styles.submitBtn} />
+                </form>
+
+                <p className={styles.signupText}>
+                    Don’t have an account yet? <Link to="/signup" className={styles.signupLink}>Sign Up</Link> {/* Using Link */}
+                </p>
+            </div>
+        </div>
+    );
 };
 
-export default LoginPage;
+// Mocking an API request since there's no backend
+const mockLoginApi = (email, password) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // This simulates different users based on the email
+            if (email === 'mentor@test.com') {
+                resolve({ user: { name: 'Mentor User', role: 'mentor' } });
+            } else if (email === 'mentee@test.com') {
+                resolve({ user: { name: 'Mentee User', role: 'mentee' } });
+            } else if (email === 'admin@test.com') {
+                resolve({ user: { name: 'Admin User', role: 'admin' } });
+            } else {
+                reject('Invalid credentials');
+            }
+        }, 1000); // Simulates a 1-second response delay
+    });
+};
+
+export default Login;

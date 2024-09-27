@@ -1,0 +1,149 @@
+/* Scoped container for the whole Modules section */
+.modulesContainer {
+    padding: 20px;
+    text-align: center;
+    background-color: #f0f0f0;
+  }
+  
+  /* Faculty Dropdown */
+  .facultyDropdown {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .facultyDropdown select {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #1b1b1b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  /* Modules title */
+  .modulesTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+  }
+  
+  /* Carousel styling */
+  .modulesCarousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .carouselItems {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    width: 600px;
+    scroll-behavior: smooth;
+  }
+  
+  .carouselItems::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .carouselItems::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+  }
+  
+  .carouselItem {
+    flex: 0 0 33.33%;
+    margin: 0 10px;
+    text-align: center;
+    background-color: #e6e6e6;
+    border-radius: 10px;
+    padding: 20px;
+  }
+  
+  .moduleIcon {
+    margin-bottom: 10px;
+  }
+  
+  /* Scrollable mentor list */
+  .mentorList {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-top: 10px;
+  }
+  
+  .mentorList::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .mentorList::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+  }
+  
+  .mentorItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+  }
+  
+  .deleteMentorBtn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  /* Carousel navigation buttons */
+  .carouselBtn {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  .leftBtn {
+    margin-right: 20px;
+  }
+  
+  .rightBtn {
+    margin-left: 20px;
+  }
+  
+  /* Add Button and Input */
+  .assignMentorSection {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .assignMentorSection select,
+  .assignMentorSection input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .addButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .addButton:hover {
+    background-color: #0056b3;
+  }
+  

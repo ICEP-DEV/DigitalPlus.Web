@@ -1,58 +1,58 @@
+/* NavBar.module.css */
+
 /* Navigation Bar styles */
-.nav-bar {
-    height: 120px;
-    background-color: #070c24;
-    display: flex;
-    align-items: center;
-    padding: 0 20px; /* Add padding for inner spacing */
-    overflow: hidden; /* Prevent overflow */
+.navBar {
+  height: 120px;
+  background-color: #002147;
+  display: flex;
+  align-items: center;
+  padding: 0 20px; /* Add padding for inner spacing */
+  overflow: hidden; /* Prevent overflow */
+}
+
+/* Style for profile container */
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto; /* Push icon and text to the right */
+  color: white;
+}
+
+/* Profile Icon */
+.profileIcon {
+  height: 90px;
+  width: 90px;
+}
+
+/* Profile text under the icon */
+.profileText {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+  .navBar {
+    height: auto;
+    padding: 10px 20px; /* Reduce padding on smaller screens */
   }
-  
-  /* Style for profile container */
-  .profile_container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: auto; /* Push icon and text to the right */
-    color: white;
+}
+
+/* Extra Small Screens */
+@media (max-width: 480px) {
+  .navBar {
+    height: auto;
+    padding: 5px 10px;
+    flex-wrap: wrap; /* Adjust for very small screens */
   }
-  
-  /* Profile Icon */
-  .profile_icon {
-    height: 90px;
-    width: 90px;
+
+  .profileIcon {
+    height: 80px; /* Adjust size for smaller screens */
+    width: 80px;
   }
-  
-  /* Profile text under the icon */
-  .profile_text {
-   
-    font-size: 20px;
-    font-weight: bold;
+
+  .profileText {
+    font-size: 16px; /* Adjusted font size for small screens */
   }
-  
-  /* Responsive behavior for smaller screens */
-  @media (max-width: 768px) {
-    .nav-bar {
-      height: auto;
-      padding: 10px 20px; /* Reduce padding on smaller screens */
-    }
-  }
-  
-  /* Extra Small Screens */
-  @media (max-width: 480px) {
-    .nav-bar {
-      height: auto;
-      padding: 5px 10px;
-      flex-wrap: wrap; /* Adjust for very small screens */
-    }
-  
-    .profile_icon {
-      height: 80px; /* Adjust size for smaller screens */
-      width: 80px;
-    }
-  
-    .profile_text {
-      font-size: 80px;
-    }
-  }
-  
+}

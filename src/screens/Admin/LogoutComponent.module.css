@@ -1,0 +1,41 @@
+.logoutContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  }
+  
+  .logoutContent {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .questionIcon {
+    font-size: 50px;
+    margin-bottom: 20px;
+  }
+  
+  .logoutButtons {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .yesButton,
+  .noButton {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .yesButton:hover,
+  .noButton:hover {
+    background-color: #004099;
+  }
+  

@@ -1,9 +1,10 @@
 // src/pages/SettingsPage/SettingsPage.js
 
 import React, { useState } from 'react';
-import Header from '../../components/Header';
-import SideBar from '../../components/SideBar';
+// import Header from '../../components/Header';
+// import SideBar from '../../components/SideBar';
 import styles from './SettingsPage.module.css'; // Create a CSS file for styling
+import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const SettingsPage = () => {
   // Example state for user data. In a real app, fetch from a backend or state management store.
@@ -33,9 +34,10 @@ const SettingsPage = () => {
   };
 
   return (
+    <SideBarNavBar>
     <div className={styles.pageContainer}>
-      <Header />
-      <SideBar />
+      {/* <Header />
+      <SideBar /> */}
       <div className={styles.settingsFormSection}>
         <h1>Edit Your Profile</h1>
         <form onSubmit={handleSubmit} className={styles.settingsForm}>
@@ -103,6 +105,7 @@ const SettingsPage = () => {
         </form>
       </div>
     </div>
+    </SideBarNavBar>
   );
 };
 

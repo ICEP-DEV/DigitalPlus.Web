@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom'; // Import Link for navigation
-import Header from '../../components/Header';
-import SideBar from '../../components/SideBar';
+// import Header from '../../components/Header';
+// import SideBar from '../../components/SideBar';
 import styles from './ProfilePage.module.css';
 import profilePicture from '../../Assets/profile.jpeg';
+import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const ProfilePage = () => {
   // Replace these with actual data from your state or API
@@ -20,9 +21,10 @@ const ProfilePage = () => {
   };
 
   return (
+    <SideBarNavBar>
     <div className={styles.pageContainer}>
-      <Header />
-      <SideBar />
+      {/* <Header />
+      <SideBar /> */}
       <div className={styles.profileSection}>
         <div className={styles.contentContainer}>
           {/* Profile Picture Section */}
@@ -62,6 +64,7 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
+    </SideBarNavBar>
   );
 };
 

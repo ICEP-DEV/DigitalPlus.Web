@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link
-import Header from '../../components/Header';
+// import Header from '../../components/Header';
 import styles from './FeedbackPage.module.css'; 
 import { FaCheckCircle, FaUserCircle } from 'react-icons/fa'; // Import profile icon
-import SideBar from '../../components/SideBar';
+// import SideBar from './Navigation/SideBar';
+import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const FeedbackPage = () => {
   const [name, setName] = useState('');
@@ -31,9 +32,10 @@ const FeedbackPage = () => {
   };
 
   return (
+    <SideBarNavBar>
     <div className={styles.pageContainer}>
-      <Header />
-      <SideBar />
+      {/* <Header />
+      <SideBar /> */}
 
       <div className={styles.contentWrapper}>
         {/* Profile Icon - Clicking will take the user to the profile page */}
@@ -107,6 +109,7 @@ const FeedbackPage = () => {
         </div>
       )}
     </div>
+    </SideBarNavBar>
   );
 };
 

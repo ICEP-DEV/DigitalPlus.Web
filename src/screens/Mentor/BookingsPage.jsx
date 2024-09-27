@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify'; // Import React Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
-import Header from '../../components/Header';
-import SideBar from '../../components/SideBar';
+import Header from './Navigation/NavBar';
+import SideBar from './Navigation/SideBar';
 import styles from './BookingsPage.module.css'; // Import CSS
+
 
 const MentorBookingsPage = () => {
   const [bookings, setBookings] = useState([

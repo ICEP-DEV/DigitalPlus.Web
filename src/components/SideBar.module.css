@@ -11,7 +11,7 @@
   overflow-y: auto; /* Enable vertical scrolling if content overflows */
   position: fixed; /* Sidebar stays fixed on the right */
   left: 0%;
-  top: 23%;
+  top: 20%;
 }
 
 .sideBarWrapper {
