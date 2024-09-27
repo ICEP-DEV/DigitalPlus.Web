@@ -15,11 +15,7 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    /*
-    git config --global user.email "fowardnkuna6@gmail.com"
-  git config --global user.name "@Foward.98"
-
-    */
+    
     setLoading(true); // Start loading
     setError(''); // Clear any previous errors
 
