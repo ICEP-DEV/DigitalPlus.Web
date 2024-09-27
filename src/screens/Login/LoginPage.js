@@ -13,43 +13,50 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
+    /*
+    git config --global user.email "fowardnkuna6@gmail.com"
+  git config --global user.name "@Foward.98"
+
+    */
+    setLoading(true); // Start loading
+    setError(''); // Clear any previous errors
+
+    const loginRequest = {
+      email: email,
+      password: password,
+    };
+
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch('http://192.168.1.238:7163/api/DigitalPlusLogin/Login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(loginRequest),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Login successful:', data);
-        toast.success('Login successful!', {
-          position: 'top-right',
-        });
-        setTimeout(() => {
-          navigate('/aboutPage');
-        }, 1500);
+      const data = await response.json();
+
+      if (data.Success) {
+        toast.success(data.Message); // Show success message
+
+        // Redirect based on the role
+        if (data.Role === 'Admin') {
+          navigate('/adminDashboard');
+        } else if (data.Role === 'Mentor') {
+          navigate('/mentorDashboard');
+        } else if (data.Role === 'Mentee') {
+          navigate('/menteeDashboard');
+        }
       } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Invalid email or password');
-        toast.error(errorData.error || 'Invalid email or password', {
-          position: 'top-right',
-        });
+        setError(data.Message); // Set error if login fails
       }
     } catch (err) {
-      console.error('Error during login:', err);
-      setError('An unexpected error occurred. Please try again later.');
-      toast.error('An unexpected error occurred. Please try again later.', {
-        position: 'top-right',
-      });
+      setError('An error occurred. Please try again.');
     } finally {
-      setLoading(false);
+      setLoading(false); // End loading
     }
   };
 
@@ -59,7 +66,7 @@ const LoginPage = () => {
       <div className={styles.loginBox}>
         <h2>WE-MEN-TOR</h2>
         <h3>LOGIN</h3>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <label>Email:</label>
           <input
             type="email"
