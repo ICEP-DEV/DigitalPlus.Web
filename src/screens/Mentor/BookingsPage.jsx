@@ -10,10 +10,10 @@ const MentorBookingsPage = () => {
   const [bookings, setBookings] = useState([
     {
       id: 1,
-      name: 'Foward',
+      name: 'John',
       surname: 'Doe',
       date: '2024-09-22',
-      time: '10:00 AM',
+      time: '10:10 AM',
       sessionType: 'Online',
       module: 'PPAFO5D',
     },

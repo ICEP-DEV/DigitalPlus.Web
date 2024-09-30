@@ -8,7 +8,7 @@ function Landing() {
       <div>
           <Header />
           <SideBar />
-        <h1>Hello</h1>
+        <h1>Hello user</h1>
         <p>Welcome to the Mentor Dashboard</p>
       </div>
 
