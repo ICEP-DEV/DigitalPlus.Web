@@ -1,0 +1,186 @@
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    height: 83vh;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chatWindow {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.messages {
+    display: flex;
+    flex-direction: column;
+}
+
+.messageContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.message {
+    max-width: 90%;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    font-size: 16px;
+    line-height: 1.8;
+    word-wrap: break-word;
+    word-break: break-word;
+    background-color: #f7f7f7;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.textMessage {
+    background-color: #e7eaee;
+    color: black;
+    align-self: flex-start;
+    border: solid 1px;
+    border-color: #182a3d;
+    padding: 15px;
+}
+
+.fileMessage {
+    background-color: #e7eaee;
+    color: #333;
+    align-self: flex-start;
+    border: solid 1px rgb(114, 175, 23);
+}
+
+.messageLine {
+    margin: 0;
+    padding: 0;
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
+.messageInputContainer {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.messageInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+}
+
+.sendButton {
+    padding: 10px 15px;
+    margin-left: 10px;
+    background-color: #182a3d;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    outline: none;
+}
+
+.uploadInput {
+    display: none;
+}
+
+.uploadButton {
+    background-color: whitesmoke;
+    color: rgb(19, 185, 55);
+    border: solid 1px;
+    border-radius: 5px;
+    padding: 15px 10px;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+    height: 27px;
+}
+
+.sendButton:hover {
+    background-color: #0d1431;
+}
+
+.deleteButton {
+    background-color: #747172;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.deleteButton:hover {
+    background-color: #4d4a4a;
+}
+
+.pdfButton {
+    padding: 10px;
+    background-color: #182a3d;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.pdfButton:hover {
+    background-color: #0d1431;
+}
+
+.dropdown {
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdownButton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dropdownButton:hover {
+    background-color: #f1f1f1;
+}
+
+.closeButton {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+}
+
+.closeButton:hover {
+    background-color: darkred;
+}
