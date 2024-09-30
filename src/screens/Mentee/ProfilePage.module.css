@@ -37,8 +37,11 @@
   margin-bottom: 5px;
   border-radius: 8px;
   width: 100%;
+  color: #000000;
 }
-
+h2{
+  color: #000000;
+}
 .profileTitle {
   text-align: center;
   font-size: 2rem;
@@ -68,7 +71,7 @@
 .courseName {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #333;
+  color: #000000;
   margin-bottom: 20px;
 }
 
@@ -86,3 +89,17 @@
 .editButton:hover {
   background-color: #0b324e;
 }
+
+/* ProfilePage.module.css */
+
+/* Add this to your existing CSS */
+
+.fileInput {
+  margin-top: 10px; /* Space above the file input */
+  padding: 10px; /* Padding for the input */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  background-color: #f0f4f8; /* Background color */
+}
+

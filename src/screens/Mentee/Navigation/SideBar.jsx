@@ -45,26 +45,28 @@ function SideBar() {
           {!isCollapsed && <span>REGISTER</span>}
         </div>
 
+        {/* New FEEDBACK item */}
+        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/feedback')}>
+          <MdFeedback className={styles.icon} />
+          {!isCollapsed && <span>FEEDBACK</span>}
+        </div>
+{/* 
         <div className={styles.navItem} onClick={() => navigate('/report')}>
           <RiContactsBook3Fill className={styles.icon} />
           {!isCollapsed && <span>REPORT</span>}
-        </div>
+        </div> */}
 
         <div className={styles.navItem} onClick={() => navigate('/ai-tools')}>
           <RiRobot2Fill className={styles.icon} />
           {!isCollapsed && <span>USE AI</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/quizzes')}>
+        {/* <div className={styles.navItem} onClick={() => navigate('/quizzes')}>
           <HiLightBulb className={styles.icon} />
           {!isCollapsed && <span>QUIZZES</span>}
-        </div>
+        </div> */}
 
-        {/* New FEEDBACK item */}
-        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/feedback')}>
-          <MdFeedback className={styles.icon} />
-          {!isCollapsed && <span>FEEDBACK</span>}
-        </div>
+  
 
         <div className={styles.navItem} onClick={() => navigate('/settings')}>
           <IoSettingsSharp className={styles.icon} />

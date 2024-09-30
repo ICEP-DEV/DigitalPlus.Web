@@ -1,0 +1,53 @@
+/* Landing.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Full screen height */
+    background-color: #e9f5fc; /* Softer background color with a hint of blue */
+    padding: 40px; /* Increased padding for better spacing */
+    text-align: center;
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.heading {
+    font-size: 3.5rem; /* Slightly larger text size for the heading */
+    font-weight: 700; /* Increased weight for emphasis */
+    color: #1e5d8a; /* Main brand color */
+    margin-bottom: 25px;
+    text-transform: uppercase; /* Makes heading stand out */
+}
+
+.welcomeText {
+    font-size: 1.75rem; /* Slightly larger welcome text */
+    color: #2a2a2a; /* Darker text color for better contrast */
+    margin-bottom: 15px;
+    letter-spacing: 1px; /* Added letter spacing for elegance */
+}
+
+.paragraph {
+    font-size: 1.2rem;
+    color: #555; /* Slightly lighter text for the paragraph */
+    max-width: 700px; /* Limit paragraph width for readability */
+    line-height: 1.6; /* Increased line height for better readability */
+    margin-top: 0; /* Remove default margin for better alignment */
+}
+
+.button {
+    margin-top: 20px; /* Spacing above button */
+    padding: 10px 20px; /* Padding for button */
+    background-color: #1e5d8a; /* Button color matching the brand */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded button corners */
+    font-size: 1rem; /* Button text size */
+    cursor: pointer; /* Cursor changes to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.button:hover {
+    background-color: #0b324e; /* Darker shade on hover */
+}

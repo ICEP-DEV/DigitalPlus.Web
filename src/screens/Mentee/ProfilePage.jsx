@@ -1,19 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link for navigation
 import styles from './ProfilePage.module.css';
-import profilePicture from '../../Assets/profile.jpeg';
+import defaultProfilePicture from '../../Assets/profile.jpeg'; // Default profile picture
 import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const ProfilePage = () => {
+  const [profilePicture, setProfilePicture] = useState(defaultProfilePicture); // State for profile picture
+
   // Replace these with actual data from your state or API
   const user = {
-    name: 'John',
-    surname: 'Doe',
-    email: '221417714@tut4life.ac.za',
+    name: 'Nobuhle',
+    surname: 'Mkhize',
+    email: '221418714@tut4life.ac.za',
     yearofstudy: '1st Year',
     contact: '0637234846',
     modules: ['PPAF05D', 'COHF05D', 'CFBF05D'],
     course: 'MULTIMEDIA COMPUTING',
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicture(reader.result); // Set the new profile picture
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
   };
 
   return (
@@ -27,6 +40,13 @@ const ProfilePage = () => {
             className={styles.profilePicture} 
           />
           <h3 className={styles.courseName}>{user.course}</h3>
+          {/* Image upload input */}
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={handleImageChange} 
+            className={styles.fileInput} 
+          />
         </div>
 
         {/* Profile Section with Personal Details and Module Details */}
