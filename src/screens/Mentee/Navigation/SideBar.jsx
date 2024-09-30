@@ -50,25 +50,17 @@ function SideBar() {
           <MdFeedback className={styles.icon} />
           {!isCollapsed && <span>FEEDBACK</span>}
         </div>
-{/* 
-        <div className={styles.navItem} onClick={() => navigate('/report')}>
-          <RiContactsBook3Fill className={styles.icon} />
-          {!isCollapsed && <span>REPORT</span>}
-        </div> */}
 
+<<<<<<< HEAD
+=======
+        {/* New USE AI item */}
+>>>>>>> cc517ccc83e70884f0ea6851e55307b2cafa0864
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/ai-tools')}>
           <RiRobot2Fill className={styles.icon} />
           {!isCollapsed && <span>USE AI</span>}
         </div>
 
-        {/* <div className={styles.navItem} onClick={() => navigate('/quizzes')}>
-          <HiLightBulb className={styles.icon} />
-          {!isCollapsed && <span>QUIZZES</span>}
-        </div> */}
-
-  
-
-        <div className={styles.navItem} onClick={() => navigate('/settings')}>
+        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/settings')}>
           <IoSettingsSharp className={styles.icon} />
           {!isCollapsed && <span>SETTINGS</span>}
         </div>
