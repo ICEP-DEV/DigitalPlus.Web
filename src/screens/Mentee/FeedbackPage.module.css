@@ -11,6 +11,7 @@
     display: flex;
     flex: 1;
     margin-top: 50px; /* Space below the header */
+    margin-left: 200px;
     
   }
   /* FEEDBACK Title Styling */

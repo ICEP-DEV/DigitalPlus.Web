@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./NavBar.module.css"; // Import the CSS module
-import imageLogo from "../../../Assets/TUT_Logo_Transparent.png";
+import imageLogo from "../Assets/tutLogo-removebg-preview.png";
 import { BsPersonFill } from "react-icons/bs";
 
 function NavBar() {

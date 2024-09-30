@@ -1,49 +1,51 @@
 .pageContainer {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #D9D9D9;
-  }
-  
-  .profileSection {
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    padding: 20px;
-    margin-right: 450px;
-  }
-  
-  .leftSection, .rightSection {
-    width: 45%; /* Adjust the width of each section */
-  }
-  
-  .leftSection {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align content to the left */
-  }
-  
-  .rightSection {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; /* Align content to the right */
-  }
-  
-  .personalDetails, .moduleDetails {
-    background-color: #f0f0f0;
-    padding: 20px;
-    margin-bottom: 5px;
-    border-radius: 8px;
-    width: 90%;
-    margin-right: 600px;
-  }
-  
-  .profileTitle {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    width: 100%;
-  }
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  background-color: #D9D9D9;
+  align-items: center;
+}
+
+.profileSection {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+}
+
+.leftSection, .rightSection {
+  width: 40%;
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align PersonalDetails to the left */
+  margin-left: 200px;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align ModuleDetails to the right */
+  margin-right: 100px;
+}
+
+.personalDetails, .moduleDetails {
+  background-color: #ABAAAA;
+  padding: 20px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.profileTitle {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
 /* Center Profile Picture Section */
 .profilePictureSection {
   display: flex;
@@ -51,25 +53,23 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-bottom: -10px;
+  margin-bottom: 20px;
 }
 
 /* Styling for the profile picture */
 .profilePicture {
-  width: 120px;    /* Set the size of the image */
-  height: 120px;   /* Ensure it’s a square */
-  border-radius: 50%; /* This makes the image circular */
-  object-fit: cover; /* Ensures the image covers the circle area without distortion */
-  margin-bottom: -20px;
+  width: 120px;    
+  height: 120px;   
+  border-radius: 50%; 
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
-/* Course name below the profile picture */
 .courseName {
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
-  margin-bottom: 5px;
-  padding-bottom: 5px;
+  margin-bottom: 20px;
 }
 
 .editButton {

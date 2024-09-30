@@ -2,10 +2,8 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link
-// import Header from '../../components/Header';
 import styles from './FeedbackPage.module.css'; 
 import { FaCheckCircle, FaUserCircle } from 'react-icons/fa'; // Import profile icon
-// import SideBar from './Navigation/SideBar';
 import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const FeedbackPage = () => {
@@ -34,17 +32,9 @@ const FeedbackPage = () => {
   return (
     <SideBarNavBar>
     <div className={styles.pageContainer}>
-      {/* <Header />
-      <SideBar /> */}
+
 
       <div className={styles.contentWrapper}>
-        {/* Profile Icon - Clicking will take the user to the profile page */}
-        <Link to="/profile" className={styles.profileLink}>
-          <FaUserCircle className={styles.profileIcon} />
-        </Link>
-
-        {/* FEEDBACK Title */}
-        <h1 className={styles.feedbackMainTitle}>FEEDBACK</h1>
 
         {/* Feedback Section */}
         <div className={styles.feedbackSection}>

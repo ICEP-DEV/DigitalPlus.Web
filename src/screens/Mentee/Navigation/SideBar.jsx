@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IoHome, IoSettingsSharp } from "react-icons/io5";
 import { BsBookmarkCheckFill } from "react-icons/bs";
-import { MdMenuBook, MdLogout } from "react-icons/md";
+import { MdMenuBook, MdLogout, MdFeedback } from "react-icons/md";
 import { RiContactsBook3Fill, RiRobot2Fill } from "react-icons/ri";
 import { HiLightBulb } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
@@ -35,7 +35,7 @@ function SideBar() {
           {!isCollapsed && <span>MODULES</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/')}>
+        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/bookings')}>
           <IoHome className={styles.icon} />
           {!isCollapsed && <span>BOOKINGS</span>}
         </div>
@@ -50,14 +50,20 @@ function SideBar() {
           {!isCollapsed && <span>REPORT</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/report')}>
+        <div className={styles.navItem} onClick={() => navigate('/ai-tools')}>
           <RiRobot2Fill className={styles.icon} />
           {!isCollapsed && <span>USE AI</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/report')}>
+        <div className={styles.navItem} onClick={() => navigate('/quizzes')}>
           <HiLightBulb className={styles.icon} />
           {!isCollapsed && <span>QUIZZES</span>}
+        </div>
+
+        {/* New FEEDBACK item */}
+        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/feedback')}>
+          <MdFeedback className={styles.icon} />
+          {!isCollapsed && <span>FEEDBACK</span>}
         </div>
 
         <div className={styles.navItem} onClick={() => navigate('/settings')}>
