@@ -56,7 +56,7 @@ function SideBar() {
           {!isCollapsed && <span>REPORT</span>}
         </div> */}
 
-        <div className={styles.navItem} onClick={() => navigate('/ai-tools')}>
+        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/ai-tools')}>
           <RiRobot2Fill className={styles.icon} />
           {!isCollapsed && <span>USE AI</span>}
         </div>
