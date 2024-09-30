@@ -10,7 +10,7 @@ const MentorBookingsPage = () => {
   const [bookings, setBookings] = useState([
     {
       id: 1,
-      name: 'John',
+      name: 'Foward',
       surname: 'Doe',
       date: '2024-09-22',
       time: '10:00 AM',
