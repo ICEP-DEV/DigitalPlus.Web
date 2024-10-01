@@ -9,11 +9,14 @@ import ComplainsContent from './ComplainsContent';
 import ModulesContent from './ModulesContent';
 import LogoutComponent from './LogoutComponent';
 import SettingsContent from './SettingsContent';
+import ReportContent from './ReportContent';
+import ScheduleComponent from './ScheduleComponent';
 // Import settings-related components
 import AccountContent from './AccountContent';
 import CreateMentorContent from './CreateMentorContent';
 import AnalyticsReportsContent from './AnalyticsReportsContent';
 import { FaBars, FaCog, FaSignOutAlt, FaEnvelope, FaBook, FaUserFriends, FaHome } from 'react-icons/fa';
+
 
 const AdminDashboard = () => {
   const [isOpen, setIsOpen] = useState(true); // State to toggle the sidebar
@@ -76,6 +79,18 @@ const AdminDashboard = () => {
               </Link>
             </li>
             <li>
+              <Link to="/admin-dashboard/reports" className={styles.sidebarItem}>
+                <FaUserFriends />
+                {isOpen && <span>Reports</span>}
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin-dashboard/Schedule" className={styles.sidebarItem}>
+                <FaUserFriends />
+                {isOpen && <span>Schedule</span>}
+              </Link>
+            </li>
+            <li>
               <Link to="/admin-dashboard/complains" className={styles.sidebarItem}>
                 <FaEnvelope />
                 {isOpen && <span>Complains</span>}
@@ -109,6 +124,8 @@ const AdminDashboard = () => {
             <Route path="department" element={<DepartmentContent />} />
             <Route path="mentors" element={<MentorsContent />} />
             <Route path="mentees" element={<MenteesContent />} />
+            <Route path="reports" element={<ReportContent />} />
+            <Route path="schedule" element={<ScheduleComponent />} />
             <Route path="complains" element={<ComplainsContent />} />
             <Route path="modules" element={<ModulesContent />} />
             <Route path="settings/account" element={<AccountContent />} />

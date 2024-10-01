@@ -1,259 +1,115 @@
-import React, { useState, useEffect } from 'react';
-import styles from './SettingsContent.module.css'; // Updated import
+import React, { useState } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import styles from './SettingsContent.module.css';
 
-const SettingsContent = () => {
-  const [activeTab, setActiveTab] = useState('Profile');
-  const [isEditing, setIsEditing] = useState(false);
-
-  // Retrieve the user details from localStorage
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-
-    if (storedUser) {
-      setFormData({
-        firstName: storedUser.firstName,
-        lastName: storedUser.lastName,
-        email: storedUser.emailAddress, // Adjust the key as per the API response
-        username: storedUser.username || '', // Add additional fields if necessary
-        website: storedUser.website || '',
-        street: storedUser.street || '',
-        city: storedUser.city || '',
-        state: storedUser.state || '',
-        password: '************', // Do not display the actual password
-        confirmPassword: '************',
-        profilePic: '/path/to/profile-pic.jpg', // Add user profile picture if available
-      });
-    }
-  }, []);
-
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    username: '',
-    website: '',
-    street: '',
-    city: '',
-    state: '',
-    password: '************',
-    confirmPassword: '************',
-    profilePic: '/path/to/profile-pic.jpg',
+const Settings = () => {
+  const [activeSection, setActiveSection] = useState('account');
+  const [editField, setEditField] = useState({
+    fullName: false,
+    email: false,
+    contact: false,
+    password: false,
   });
 
-  const [originalData, setOriginalData] = useState({ ...formData });
-
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, profilePic: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleDownloadPdf = (id) => {
+    const input = document.getElementById(id);
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 0, 0);
+        pdf.save(`${id}.pdf`);
+      });
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleEditClick = () => {
-    setOriginalData({ ...formData });
-    setIsEditing(true);
-    setActiveTab('Edit');
-  };
-
-  const handleCancelClick = () => {
-    setFormData({ ...originalData });
-    setIsEditing(false);
-  };
-
-  const handleSaveClick = () => {
-    // Normally, you would send updated data to the API here
-    setIsEditing(false);
-    setActiveTab('Profile');
+  const toggleEdit = (field) => {
+    setEditField((prevState) => ({ ...prevState, [field]: !prevState[field] }));
   };
 
   return (
-    <div className={styles.formContainer}>
-      <div className={styles.profileCard}>
-        <img src={formData.profilePic} alt="Profile" className={styles.profilePic} />
-        <h3>{formData.firstName} {formData.lastName}</h3>
-        <p>UI/UX Engineer</p>
-        <div className={styles.contactInfo}>
-          <p>{formData.email}</p>
-          <p>{formData.website || 'www.example.com'}</p>
-        </div>
+    <div className={styles.settingsContainer}>
+      <div className={styles.sidebar}>
+        <h2>SETTINGS</h2>
+        <button
+          onClick={() => setActiveSection('account')}
+          className={activeSection === 'account' ? styles.active : ''}
+        >
+          Account
+        </button>
+        <button
+          onClick={() => setActiveSection('analytics')}
+          className={activeSection === 'analytics' ? styles.active : ''}
+        >
+          Analytics & Report
+        </button>
       </div>
 
-      <div className={styles.formCard}>
-        <div className={styles.formHeader}>
-          <h2>{activeTab === 'Profile' ? 'Profile' : 'Edit Profile'}</h2>
-          {!isEditing && (
-            <button className={styles.editButton} onClick={handleEditClick}>
-              Edit
-            </button>
-          )}
-        </div>
-
-        <div className={styles.tabsContainer}>
-          <div
-            className={`${styles.tab} ${activeTab === 'Profile' ? styles.active : ''}`}
-            onClick={() => setActiveTab('Profile')}
-          >
-            Profile
-          </div>
-          <div
-            className={`${styles.tab} ${activeTab === 'Messages' ? styles.active : ''}`}
-            onClick={() => setActiveTab('Messages')}
-          >
-            Messages
-          </div>
-        </div>
-
-        {activeTab === 'Profile' && !isEditing && (
-          <div className={styles.formSection}>
-            <div className={styles.formField}>
-              <label>First Name</label>
-              <input type="text" value={formData.firstName} disabled />
-            </div>
-            <div className={styles.formField}>
-              <label>Last Name</label>
-              <input type="text" value={formData.lastName} disabled />
-            </div>
-            <div className={styles.formField}>
-              <label>Email</label>
-              <input type="email" value={formData.email} disabled />
-            </div>
-          </div>
-        )}
-
-        {isEditing && (
-          <div className={styles.formSection}>
-            <div className={styles.formField}>
-              <label>First Name</label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className={styles.formField}>
-              <label>Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className={styles.formField}>
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className={styles.formField}>
-              <label>Change Profile Picture</label>
-              <input type="file" accept="image/*" onChange={handleProfilePicChange} />
-            </div>
-
-            <div className={styles.formField}>
-              <label>Website</label>
-              <input
-                type="text"
-                name="website"
-                value={formData.website}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className={styles.formField}>
-              <label>Address</label>
-              <div className={styles.addressFields}>
+      <div className={styles.content}>
+        {activeSection === 'account' && (
+          <div className={styles.accountSection}>
+            <h2>Profile</h2>
+            <div className={styles.profileInfo}>
+              <div className={styles.inputGroup}>
+                <span>Full Name:</span>
                 <input
                   type="text"
-                  name="street"
-                  placeholder="Street"
-                  value={formData.street}
-                  onChange={handleInputChange}
+                  value="Michael Banning"
+                  disabled={!editField.fullName}
                 />
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  value={formData.city}
-                  onChange={handleInputChange}
-                />
-                <input
-                  type="text"
-                  name="state"
-                  placeholder="State"
-                  value={formData.state}
-                  onChange={handleInputChange}
-                />
+                <button onClick={() => toggleEdit('fullName')}>Edit</button>
               </div>
-            </div>
-
-            <div className={styles.formField}>
-              <label>Username</label>
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className={styles.formField}>
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className={styles.formField}>
-              <label>Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className={styles.formFooter}>
-              <button className={styles.cancelButton} onClick={handleCancelClick}>
-                Cancel
-              </button>
-              <button className={styles.saveButton} onClick={handleSaveClick}>
-                Save Changes
-              </button>
+              <div className={styles.inputGroup}>
+                <span>Email Address:</span>
+                <input
+                  type="email"
+                  value="mikebanning2020@gmail.com"
+                  disabled={!editField.email}
+                />
+                <button onClick={() => toggleEdit('email')}>Edit</button>
+              </div>
+              <div className={styles.inputGroup}>
+                <span>Contact:</span>
+                <input
+                  type="text"
+                  value="0780275112"
+                  disabled={!editField.contact}
+                />
+                <button onClick={() => toggleEdit('contact')}>Edit</button>
+              </div>
+              <div className={styles.inputGroup}>
+                <span>Password:</span>
+                <input
+                  type="password"
+                  value="*************"
+                  disabled={!editField.password}
+                />
+                <button onClick={() => toggleEdit('password')}>Edit</button>
+              </div>
+              <button className={styles.save}>Save</button>
             </div>
           </div>
         )}
 
-        {activeTab === 'Messages' && !isEditing && (
-          <div className={styles.messagesSection}>
-            <p className={styles.infoMessage}>Info! Lorem Ipsum is simply dummy text.</p>
-            <div className={styles.messageItem}>
-              <p>Here is your latest summary report...</p>
-              <span>3 hrs ago</span>
-            </div>
-            <div className={styles.messageItem}>
-              <p>There has been a request on your account...</p>
-              <span>Yesterday</span>
+        {activeSection === 'analytics' && (
+          <div className={styles.analyticsSection}>
+            <h2>Analysis Reports</h2>
+            <div className={styles.analyticsGrid}>
+              <div className={styles.reportCard} id="report1">
+                <h3>Classes allocation</h3>
+                <img src="/path-to-chart1" alt="Chart 1" />
+                <button onClick={() => handleDownloadPdf('report1')}>Download</button>
+              </div>
+              <div className={styles.reportCard} id="report2">
+                <h3>Monthly activity</h3>
+                <img src="/path-to-chart2" alt="Chart 2" />
+                <button onClick={() => handleDownloadPdf('report2')}>Download</button>
+              </div>
+              <div className={styles.reportCard} id="report3">
+                <h3>Number of Feedback</h3>
+                <img src="/path-to-chart3" alt="Chart 3" />
+                <button onClick={() => handleDownloadPdf('report3')}>Download</button>
+              </div>
             </div>
           </div>
         )}
@@ -262,4 +118,4 @@ const SettingsContent = () => {
   );
 };
 
-export default SettingsContent;
+export default Settings;
