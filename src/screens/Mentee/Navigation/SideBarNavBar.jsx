@@ -7,6 +7,7 @@ function SideBarNavBar({ children }) {
   return (
     <div className={styles.scrollableContainer}> {/* Use module class */}
       <SideBar />
+      
       <div className="main-content">
         <NavBar />
         {children}
