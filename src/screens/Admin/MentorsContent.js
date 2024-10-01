@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './MentorsContent.module.css';
+import axios from 'axios';
 
 const MentorsContent = () => {
   const modules = ['Module 1', 'Module 2', 'Module 3', 'Module 4'];
   const labs = ['Lab 1', 'Lab 2', 'Lab 3', 'Lab 4'];
 
-  const [mentors, setMentors] = useState([
-    { firstName: 'Masedi', lastName: 'SK', studentEmail: '218496865@tut4life.ac.za', personalEmail: 'masedi@gmail.com', contactNo: '0712345678', password: 'pass123', status: 'ACTIVATED', module: 'Module 1', lab: 'Lab 1' },
-    { firstName: 'Malebana', lastName: 'PJ', studentEmail: '228575654@tut4life.ac.za', personalEmail: 'malebana@gmail.com', contactNo: '0723456789', password: 'pass456', status: 'DEACTIVATED', module: 'Module 2', lab: 'Lab 2' },
-    { firstName: 'John', lastName: 'Doe', studentEmail: '229876543@tut4life.ac.za', personalEmail: 'john.doe@gmail.com', contactNo: '0734567890', password: 'pass789', status: 'ACTIVATED', module: 'Module 3', lab: 'Lab 3' },
-    { firstName: 'Jane', lastName: 'Smith', studentEmail: '218456123@tut4life.ac.za', personalEmail: 'jane.smith@gmail.com', contactNo: '0745678901', password: 'pass101', status: 'DEACTIVATED', module: 'Module 4', lab: 'Lab 4' },
-    { firstName: 'David', lastName: 'Brown', studentEmail: '227654321@tut4life.ac.za', personalEmail: 'david.brown@gmail.com', contactNo: '0756789012', password: 'pass112', status: 'ACTIVATED', module: 'Module 2', lab: 'Lab 2' },
-    { firstName: 'Emily', lastName: 'Davis', studentEmail: '218567432@tut4life.ac.za', personalEmail: 'emily.davis@gmail.com', contactNo: '0767890123', password: 'pass345', status: 'ACTIVATED', module: 'Module 1', lab: 'Lab 1' },
-    { firstName: 'Chris', lastName: 'Johnson', studentEmail: '229654321@tut4life.ac.za', personalEmail: 'chris.johnson@gmail.com', contactNo: '0711234567', password: 'pass567', status: 'DEACTIVATED', module: 'Module 3', lab: 'Lab 3' }
-  ]);
-
+  // State to store mentors
+  const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [mentorForm, setMentorForm] = useState({
     firstName: '',
@@ -23,12 +16,26 @@ const MentorsContent = () => {
     personalEmail: '',
     contactNo: '',
     password: '',
-    status: 'ACTIVATED',
+    activated: 1, // Default is activated
     module: '',
     lab: ''
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  // Fetch mentors from the API when the component mounts
+  useEffect(() => {
+    const fetchMentors = async () => {
+      try {
+        const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentors');
+        setMentors(response.data); // Set the fetched mentors in state
+      } catch (error) {
+        console.error('Error fetching mentors:', error);
+      }
+    };
+
+    fetchMentors();
+  }, []); // Empty dependency array ensures this runs once on mount
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
@@ -69,12 +76,13 @@ const MentorsContent = () => {
     setIsModalVisible(true);
   };
 
+  // Toggle activated status based on the "activated" field
   const toggleStatus = (studentEmail) => {
     const updatedMentors = mentors.map((mentor) => {
       if (mentor.studentEmail === studentEmail) {
         return {
           ...mentor,
-          status: mentor.status === 'ACTIVATED' ? 'DEACTIVATED' : 'ACTIVATED',
+          activated: mentor.activated === 1 ? 0 : 1, // Toggle between 1 (ACTIVATED) and 0 (DEACTIVATED)
         };
       }
       return mentor;
@@ -90,14 +98,14 @@ const MentorsContent = () => {
       personalEmail: '',
       contactNo: '',
       password: '',
-      status: 'ACTIVATED',
+      activated: 1, // Default to activated
       module: '',
       lab: ''
     });
   };
 
   const downloadCSV = () => {
-    const headers = ['First Name', 'Last Name', 'Student Email', 'Personal Email', 'Contact No', 'Password', 'Status', 'Module', 'Lab'];
+    const headers = ['First Name', 'Last Name', 'Student Email', 'Personal Email', 'Contact No', 'Password', 'Activated', 'Module', 'Lab'];
     const rows = mentors.map(mentor => [
       mentor.firstName,
       mentor.lastName,
@@ -105,7 +113,7 @@ const MentorsContent = () => {
       mentor.personalEmail,
       mentor.contactNo,
       mentor.password,
-      mentor.status,
+      mentor.activated === 1 ? 'ACTIVATED' : 'DEACTIVATED',
       mentor.module,
       mentor.lab
     ]);
@@ -171,7 +179,7 @@ const MentorsContent = () => {
                       className={styles.statusToggleButton}
                       onClick={() => toggleStatus(mentor.studentEmail)}
                     >
-                      {mentor.status}
+                      {mentor.activated === 1 ? 'ACTIVATED' : 'DEACTIVATED'}
                     </button>
                   </td>
                   <td>{mentor.module}</td>
@@ -255,12 +263,12 @@ const MentorsContent = () => {
             <div>
               <label>Status:</label>
               <select
-                value={mentorForm.status}
-                onChange={(e) => handleFormChange('status', e.target.value)}
+                value={mentorForm.activated}
+                onChange={(e) => handleFormChange('activated', parseInt(e.target.value))}
                 className={styles.selectField}
               >
-                <option value="ACTIVATED">ACTIVATED</option>
-                <option value="DEACTIVATED">DEACTIVATED</option>
+                <option value={1}>ACTIVATED</option>
+                <option value={0}>DEACTIVATED</option>
               </select>
             </div>
             <div>

@@ -1,14 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './SettingsContent.module.css'; // Updated import
 
 const SettingsContent = () => {
   const [activeTab, setActiveTab] = useState('Profile');
   const [isEditing, setIsEditing] = useState(false);
+
+  // Retrieve the user details from localStorage
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
+    if (storedUser) {
+      setFormData({
+        firstName: storedUser.firstName,
+        lastName: storedUser.lastName,
+        email: storedUser.emailAddress, // Adjust the key as per the API response
+        username: storedUser.username || '', // Add additional fields if necessary
+        website: storedUser.website || '',
+        street: storedUser.street || '',
+        city: storedUser.city || '',
+        state: storedUser.state || '',
+        password: '************', // Do not display the actual password
+        confirmPassword: '************',
+        profilePic: '/path/to/profile-pic.jpg', // Add user profile picture if available
+      });
+    }
+  }, []);
+
   const [formData, setFormData] = useState({
-    firstName: 'Mark',
-    lastName: 'Jhonsan',
-    email: 'mark@example.com',
-    username: 'jhonsanmark',
+    firstName: '',
+    lastName: '',
+    email: '',
+    username: '',
     website: '',
     street: '',
     city: '',
@@ -48,6 +70,7 @@ const SettingsContent = () => {
   };
 
   const handleSaveClick = () => {
+    // Normally, you would send updated data to the API here
     setIsEditing(false);
     setActiveTab('Profile');
   };
@@ -60,7 +83,7 @@ const SettingsContent = () => {
         <p>UI/UX Engineer</p>
         <div className={styles.contactInfo}>
           <p>{formData.email}</p>
-          <p>www.example.com</p>
+          <p>{formData.website || 'www.example.com'}</p>
         </div>
       </div>
 

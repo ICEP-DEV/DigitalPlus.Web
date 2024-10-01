@@ -129,3 +129,21 @@
 .sidebar ul {
     padding-top: 10px;
 }
+.adminInfo {
+    display: flex;
+    flex-direction: column; /* Make the items stack vertically */
+    align-items: center; /* Center the icon and text */
+  }
+  
+  .adminText {
+    margin-top: 5px; /* Add some space between the icon and the text */
+    text-align: center; /* Center the text and email */
+  }
+  
+  .adminEmail {
+    display: block;
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 3px; /* Add some space between "Admin" and the email */
+  }
+  

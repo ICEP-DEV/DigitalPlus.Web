@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './AdminDashboard.module.css'; // Import as a module
 import { Link, Route, Routes } from 'react-router-dom';
 import DashboardContent from './DashboardContent';
@@ -17,18 +17,31 @@ import { FaBars, FaCog, FaSignOutAlt, FaEnvelope, FaBook, FaUserFriends, FaHome 
 
 const AdminDashboard = () => {
   const [isOpen, setIsOpen] = useState(true); // State to toggle the sidebar
+  const [adminEmail, setAdminEmail] = useState(''); // State to store admin email
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen); // Toggle the sidebar between open and closed
   };
 
+  // Fetch the admin email from the user object stored in localStorage
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user')); // Retrieve user data from localStorage
+    if (user && user.emailAddress) {
+      setAdminEmail(user.emailAddress); // Set admin email from the API response
+    }
+  }, []);
+
   return (
     <div className={styles.adminDashboardContainer}>
       <header className={styles.adminHeader}>
-        <div className={styles.adminInfo}>
-          <i className={styles.adminIcon}>👤</i>
-          <span>Admin</span>
-        </div>
+      <div className={styles.adminInfo}>
+  <i className={styles.adminIcon}>👤</i>
+  <div className={styles.adminText}>
+    <span>Admin</span>
+    {adminEmail && <span className={styles.adminEmail}>{adminEmail}</span>} {/* Display the admin email */}
+  </div>
+</div>
+
       </header>
 
       <div className={styles.adminDashboard}>

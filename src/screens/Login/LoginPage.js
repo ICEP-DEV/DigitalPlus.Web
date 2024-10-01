@@ -10,26 +10,40 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
-        // Simulating the login behavior without a backend
+    
         try {
-            const response = await mockLoginApi(email, password); // Using the mock API function
-            
-            // Redirect user based on their role
-            if (response.user.role === 'mentor') {
-                navigate('/mentor-dashboard/home'); // Mentor dashboard
-            } else if (response.user.role === 'mentee') {
-                navigate('/mentee-dashboard/home'); // Mentee dashboard
-            } else if (response.user.role === 'admin') {
-                navigate('/admin-dashboard/dashboard'); // Admin dashboard
+            const response = await fetch('https://localhost:7163/api/DigitalPlusLogin/Login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok && data.success) {
+                // Store the entire user object (including email) in localStorage
+                localStorage.setItem('user', JSON.stringify(data.user));
+    
+                // Redirect user based on their role
+                if (data.role === 'Admin') {
+                    navigate('/admin-dashboard/dashboard');
+                } else if (data.role === 'Mentor') {
+                    navigate('/mentor-dashboard/home');
+                } else if (data.role === 'Mentee') {
+                    navigate('/mentee-dashboard/home');
+                } else {
+                    setError('Invalid user role');
+                }
             } else {
-                setError('Invalid user role');
+                setError(data.message || 'Login failed. Please check your credentials.');
             }
         } catch (err) {
-            setError('Login failed. Please check your credentials.');
+            setError('Login failed. Please check your network or try again.');
         }
     };
-
+    
     return (
         <div className={styles.loginContainer}>
             <div className={styles.formBox}>
@@ -69,24 +83,6 @@ const Login = () => {
             </div>
         </div>
     );
-};
-
-// Mocking an API request since there's no backend
-const mockLoginApi = (email, password) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            // This simulates different users based on the email
-            if (email === 'mentor@test.com') {
-                resolve({ user: { name: 'Mentor User', role: 'mentor' } });
-            } else if (email === 'mentee@test.com') {
-                resolve({ user: { name: 'Mentee User', role: 'mentee' } });
-            } else if (email === 'admin@test.com') {
-                resolve({ user: { name: 'Admin User', role: 'admin' } });
-            } else {
-                reject('Invalid credentials');
-            }
-        }, 1000); // Simulates a 1-second response delay
-    });
 };
 
 export default Login;
