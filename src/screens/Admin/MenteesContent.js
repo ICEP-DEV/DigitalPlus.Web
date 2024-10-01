@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './MenteesContent.module.css'
 
 const MenteesContent = () => {
   const [mentees, setMentees] = useState([]); // Assume you fetch this from an API or local data

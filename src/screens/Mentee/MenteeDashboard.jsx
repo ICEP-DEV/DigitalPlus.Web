@@ -4,6 +4,8 @@ import LogoutComponent from './LogoutComponent';
 import Landing from './Landingpage';
 import FeedbackPage from './FeedbackPage';
 import AiPage from './AiPage';
+import BookingPage from './BookingPage'
+import SettingsPage from './SettingsPage'
 
 const MenteeDashboard = () => {
     return (
@@ -15,6 +17,8 @@ const MenteeDashboard = () => {
         <Route path="logout" element={<LogoutComponent />}/>
         <Route path="feedback" element={<FeedbackPage />}/>
         <Route path="ai-tools" element={<AiPage />}/>
+        <Route path="bookings" element={<BookingPage />}/>
+        <Route path="settings" element={<SettingsPage />}/>
         
        </Routes>
         

@@ -24,7 +24,7 @@ function SideBar() {
 
       <nav className={styles.navLinks}>
         {/* Sidebar navigation items */}
-        <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/home')}>
+        <div className={styles.navItem} onClick={() => navigate('n')}>
           <IoHome className={styles.icon} />
           {!isCollapsed && <span>HOME</span>}
         </div>
