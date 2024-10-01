@@ -1,0 +1,116 @@
+.booking-container {
+  width: calc(100% - 250px); /* Adjust width considering sidebar */
+  padding: 20px;
+  background-color: #ffffff;
+  color: #212121;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 1; /* Ensure it's above any negative z-index values */
+  margin-left: 200px; /* Push container right to clear the sidebar */
+  margin-top: 50px; /* Push container down to clear the navbar */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.booking-title {
+  display: flex;
+  justify-content: flex-start; /* Align title to the start */
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border-bottom: 1px solid black;
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  flex-basis: 48%;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 5px;
+  color: #212121;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #333;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: transparent;
+  font-size: 14px;
+}
+
+input:focus, select:focus {
+  outline: none;
+}
+
+.submit-container {
+  margin-top: 20px;
+}
+
+.submit-button {
+  width: 150px;
+  padding: 10px 20px;
+  background-color: #28507b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #4372a3;
+}
+
+/* Success Popup */
+.success-popup {
+  position: fixed; /* Changed from absolute to fixed for consistent positioning */
+  width: 500px;
+  top: 50%; /* Center vertically in viewport */
+  left: 50%; /* Center horizontally in viewport */
+  transform: translate(-50%, -50%);
+  background-color: #dff0d8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  z-index: 100; /* Ensure it's above everything else */
+}
+
+.success-icon {
+  color: #28a745;
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.success-popup p {
+  font-size: 18px;
+  color: #155724;
+}
