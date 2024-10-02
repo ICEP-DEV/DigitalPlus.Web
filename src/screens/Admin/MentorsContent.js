@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './MentorsContent.module.css';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MentorsContent = () => {
   const modules = ['Module 1', 'Module 2', 'Module 3', 'Module 4'];
@@ -18,10 +20,11 @@ const MentorsContent = () => {
     activated: true,
     module: '',
     lab: '',
-    mentorId: null // Store mentorId for editing
+    mentorId: null
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
   useEffect(() => {
     const fetchMentors = async () => {
@@ -29,10 +32,10 @@ const MentorsContent = () => {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentors');
         const data = response.data.map(mentor => ({
           ...mentor,
-          activated: !!mentor.activated, // Convert bit to boolean
-          mentorId: mentor.mentorId // Store mentorId
+          activated: !!mentor.activated,
+          mentorId: mentor.mentorId
         }));
-        setMentors(data); // Set fetched mentors
+        setMentors(data);
       } catch (error) {
         console.error('Error fetching mentors:', error);
       }
@@ -54,22 +57,18 @@ const MentorsContent = () => {
 
   const handleAddMentor = async () => {
     try {
-      // Construct the new mentor object
       const newMentor = {
-        mentorId: 0, // Set to 0, as the server will assign a new ID
+        mentorId: 0,
         firstName: mentorForm.firstName,
         lastName: mentorForm.lastName,
         studentEmail: mentorForm.studentEmail,
         personalEmail: mentorForm.personalEmail,
         contactNo: mentorForm.contactNo,
         password: mentorForm.password,
-        available: mentorForm.available !== undefined ? mentorForm.available : 0, // Default available to 0 if undefined
-        activated: mentorForm.activated ? true : false // Ensure activated is boolean
+        available: mentorForm.available !== undefined ? mentorForm.available : 0,
+        activated: mentorForm.activated ? true : false
       };
-  
-      console.log('New Mentor Payload:', newMentor); // Log the payload for debugging
-  
-      // Make the API request to add the new mentor
+
       const response = await axios.post(
         `https://localhost:7163/api/DigitalPlusUser/AddMentor`,
         newMentor,
@@ -79,42 +78,37 @@ const MentorsContent = () => {
           }
         }
       );
-  
-      // Add the new mentor to the state if the response is successful
-      setMentors([...mentors, response.data]); // Assuming the response contains the newly created mentor
+
+      setMentors([...mentors, response.data]);
       resetForm();
       setIsModalVisible(false);
+
+      toast.success('Mentor added successfully!');
     } catch (error) {
       console.error('Error adding mentor:', error.response ? error.response.data : error.message);
+      toast.error('Failed to add mentor. Please try again.');
     }
   };
-  
 
   const handleEditMentor = async () => {
     try {
-      // Ensure mentorId is not null or undefined
       if (!mentorForm.mentorId) {
         console.error('MentorId is null or undefined');
         return;
       }
-  
-      // Construct the updated mentor object with mentorId and available fields
+
       const updatedMentor = {
-        mentorId: mentorForm.mentorId,  // Include mentorId in the payload
+        mentorId: mentorForm.mentorId,
         firstName: mentorForm.firstName,
         lastName: mentorForm.lastName,
         studentEmail: mentorForm.studentEmail,
         personalEmail: mentorForm.personalEmail,
         contactNo: mentorForm.contactNo,
         password: mentorForm.password,
-        available: mentorForm.available !== undefined ? mentorForm.available : 0, // Ensure available is provided
-        activated: mentorForm.activated ? true : false // Ensure activated is boolean
+        available: mentorForm.available !== undefined ? mentorForm.available : 0,
+        activated: mentorForm.activated ? true : false
       };
-  
-      console.log('MentorId for update:', mentorForm.mentorId); // Log mentorId for debugging
-      console.log('Updated Mentor Payload:', updatedMentor); // Log the payload for debugging
-  
-      // Make the API request to update the mentor using mentorForm.mentorId
+
       const response = await axios.put(
         `https://localhost:7163/api/DigitalPlusUser/UpdateMentor/${mentorForm.mentorId}`,
         updatedMentor,
@@ -124,22 +118,21 @@ const MentorsContent = () => {
           }
         }
       );
-  
-      // Update the state with the edited mentor if the response is successful
+
       const updatedMentors = mentors.map(mentor =>
         mentor.mentorId === mentorForm.mentorId ? { ...mentor, ...updatedMentor } : mentor
       );
       setMentors(updatedMentors);
       resetForm();
       setIsModalVisible(false);
+
+      toast.success('Mentor updated successfully!');
     } catch (error) {
       console.error('Error updating mentor:', error.response ? error.response.data : error.message);
+      toast.error('Failed to update mentor. Please try again.');
     }
   };
-  
-  
-  
-  
+
   const openAddMentorModal = () => {
     resetForm();
     setIsEditing(false);
@@ -147,24 +140,9 @@ const MentorsContent = () => {
   };
 
   const openEditMentorModal = (mentor) => {
-    console.log('Opening edit for mentor:', mentor); // Log mentor data
-    setMentorForm(mentor); // Load mentor data into the form including mentorId
+    setMentorForm(mentor);
     setIsEditing(true);
     setIsModalVisible(true);
-  };
-  
-
-  const toggleStatus = (studentEmail) => {
-    const updatedMentors = mentors.map(mentor => {
-      if (mentor.studentEmail === studentEmail) {
-        return {
-          ...mentor,
-          activated: !mentor.activated // Toggle activation status
-        };
-      }
-      return mentor;
-    });
-    setMentors(updatedMentors);
   };
 
   const resetForm = () => {
@@ -178,34 +156,31 @@ const MentorsContent = () => {
       activated: true,
       module: '',
       lab: '',
-      mentorId: null // Reset mentorId
+      mentorId: null
     });
+    setShowPassword(false); // Reset password visibility
   };
 
-  const downloadCSV = () => {
-    const headers = ['First Name', 'Last Name', 'Student Email', 'Personal Email', 'Contact No', 'Password', 'Activated', 'Module', 'Lab'];
-    const rows = mentors.map(mentor => [
-      mentor.firstName,
-      mentor.lastName,
-      mentor.studentEmail,
-      mentor.personalEmail,
-      mentor.contactNo,
-      mentor.password,
-      mentor.activated ? 'ACTIVATED' : 'DEACTIVATED',
-      mentor.module,
-      mentor.lab
-    ]);
-    let csvContent = 'data:text/csv;charset=utf-8,' + headers.join(',') + '\n' + rows.map(row => row.join(',')).join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'mentors_list.csv');
-    document.body.appendChild(link);
-    link.click();
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
+// Show the modal
+function showModal() {
+  document.querySelector('.modal').style.display = 'flex';
+  document.body.classList.add('body-modal-active');
+}
+
+// Hide the modal
+function hideModal() {
+  document.querySelector('.modal').style.display = 'none';
+  document.body.classList.remove('body-modal-active');
+}
 
   return (
     <div className={styles.mentorsContainer}>
+      <ToastContainer />
+
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
           <input
@@ -217,9 +192,6 @@ const MentorsContent = () => {
           />
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.downloadCsvButton} onClick={downloadCSV}>
-            Download List
-          </button>
           <button className={styles.addMentorButton} onClick={openAddMentorModal}>
             Add Mentor
           </button>
@@ -235,10 +207,7 @@ const MentorsContent = () => {
               <th>Student Email</th>
               <th>Personal Email</th>
               <th>Contact No</th>
-              <th>Password</th>
               <th>Status</th>
-              <th>Module</th>
-              <th>Lab</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -251,17 +220,13 @@ const MentorsContent = () => {
                   <td>{mentor.studentEmail}</td>
                   <td>{mentor.personalEmail}</td>
                   <td>{mentor.contactNo}</td>
-                  <td>{mentor.password}</td>
                   <td>
                     <button
                       className={`${styles.statusToggleButton} ${mentor.activated ? styles.activate : styles.deactivate}`}
-                      onClick={() => toggleStatus(mentor.studentEmail)}
                     >
                       {mentor.activated ? 'ACTIVATED' : 'DEACTIVATED'}
                     </button>
                   </td>
-                  <td>{mentor.module}</td>
-                  <td>{mentor.lab}</td>
                   <td>
                     <button className={styles.manageButton} onClick={() => openEditMentorModal(mentor)}>
                       Manage
@@ -271,7 +236,7 @@ const MentorsContent = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="10" className={styles.noMentorsMessage}>
+                <td colSpan="7" className={styles.noMentorsMessage}>
                   No mentors found.
                 </td>
               </tr>
@@ -329,10 +294,15 @@ const MentorsContent = () => {
                 className={styles.inputField}
               />
             </div>
-            <div>
+            <div className={styles.passwordField}>
               <label>Password:</label>
+              <span className={styles.eyeIcon} onClick={togglePasswordVisibility}>
+                {showPassword ? '🙈' : '👁️'}
+              </span>
+            </div>
+            <div>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={mentorForm.password}
                 onChange={(e) => handleFormChange('password', e.target.value)}
                 className={styles.inputField}
@@ -341,38 +311,12 @@ const MentorsContent = () => {
             <div>
               <label>Status:</label>
               <select
-                value={mentorForm.activated}
-                onChange={(e) => handleFormChange('activated', parseInt(e.target.value))}
+                value={mentorForm.activated ? 1 : 0}
+                onChange={(e) => handleFormChange('activated', !!parseInt(e.target.value))}
                 className={styles.selectField}
               >
                 <option value={1}>ACTIVATED</option>
                 <option value={0}>DEACTIVATED</option>
-              </select>
-            </div>
-            <div>
-              <label>Module:</label>
-              <select
-                value={mentorForm.module}
-                onChange={(e) => handleFormChange('module', e.target.value)}
-                className={styles.selectField}
-              >
-                <option value="">Select Module</option>
-                {modules.map((module, index) => (
-                  <option key={index} value={module}>{module}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label>Lab:</label>
-              <select
-                value={mentorForm.lab}
-                onChange={(e) => handleFormChange('lab', e.target.value)}
-                className={styles.selectField}
-              >
-                <option value="">Select Lab</option>
-                {labs.map((lab, index) => (
-                  <option key={index} value={lab}>{lab}</option>
-                ))}
               </select>
             </div>
             <div className={styles.modalButtons}>

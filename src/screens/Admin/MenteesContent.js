@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './MenteesContent.module.css';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
@@ -12,14 +14,15 @@ const MenteesContent = () => {
     personalEmail: '',
     contactNo: '',
     password: '',
-    semester: '', // Semester field to be filled correctly
+    semester: '', // Semester field
     activated: true,
-    menteeId: null // Store menteeId for editing
+    menteeId: null, // Store menteeId for editing
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
-  // Fetch all mentees when the component mounts
+  // Fetch mentees data from the API
   useEffect(() => {
     const fetchMentees = async () => {
       try {
@@ -27,9 +30,9 @@ const MenteesContent = () => {
         const data = response.data.map(mentee => ({
           ...mentee,
           activated: !!mentee.activated, // Convert bit to boolean
-          menteeId: mentee.mentee_Id // Store menteeId
+          menteeId: mentee.menteeId, // Use menteeId
         }));
-        setMentees(data); // Set fetched mentees
+        setMentees(data);
       } catch (error) {
         console.error('Error fetching mentees:', error);
       }
@@ -37,22 +40,57 @@ const MenteesContent = () => {
     fetchMentees();
   }, []);
 
-  // Handle changes in the search bar
+  // Handle search input change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
   };
 
-  // Filter mentees based on the search term
+  // Filter mentees based on search term
   const filteredMentees = mentees.filter(mentee =>
     mentee.studentEmail.toLowerCase().includes(searchTerm)
   );
 
-  // Handle form field changes
+  // Handle form input change
   const handleFormChange = (field, value) => {
     setMenteeForm({ ...menteeForm, [field]: value });
   };
 
-  // Handle the mentee update operation
+  // Handle adding a new mentee
+  const handleAddMentee = async () => {
+    try {
+      const newMentee = {
+        menteeId: 0, // Assuming menteeId is auto-generated
+        firstName: menteeForm.firstName,
+        lastName: menteeForm.lastName,
+        studentEmail: menteeForm.studentEmail,
+        personalEmail: menteeForm.personalEmail,
+        contactNo: menteeForm.contactNo,
+        password: menteeForm.password,
+        semester: menteeForm.semester,
+        activated: menteeForm.activated ? true : false,
+      };
+
+      const response = await axios.post(
+        'https://localhost:7163/api/DigitalPlusUser/AddMentee',
+        newMentee,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      setMentees([...mentees, response.data]); // Add new mentee to the list
+      resetForm();
+      setIsModalVisible(false);
+      toast.success('Mentee added successfully!');
+    } catch (error) {
+      console.error('Error adding mentee:', error.response ? error.response.data : error.message);
+      toast.error('Failed to add mentee. Please try again.');
+    }
+  };
+
+  // Handle editing an existing mentee
   const handleEditMentee = async () => {
     try {
       if (!menteeForm.menteeId) {
@@ -60,7 +98,6 @@ const MenteesContent = () => {
         return;
       }
 
-      // Prepare the payload
       const updatedMentee = {
         menteeId: menteeForm.menteeId,
         firstName: menteeForm.firstName,
@@ -69,58 +106,49 @@ const MenteesContent = () => {
         personalEmail: menteeForm.personalEmail,
         contactNo: menteeForm.contactNo,
         password: menteeForm.password,
-        semester: menteeForm.semester, // Ensure the correct semester is set
-        activated: menteeForm.activated ? true : false
+        semester: menteeForm.semester,
+        activated: menteeForm.activated ? true : false,
       };
 
-      console.log('MenteeId for update:', menteeForm.menteeId);
-      console.log('Updated Mentee Payload:', updatedMentee);
-
-      // API call to update the mentee
       await axios.put(
         `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.menteeId}`,
         updatedMentee,
-        { headers: { 'Content-Type': 'application/json' } }
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
 
-      // Update the mentees list locally after a successful update
+      // Update the mentees list locally after the update
       const updatedMentees = mentees.map(mentee =>
         mentee.menteeId === menteeForm.menteeId ? { ...mentee, ...updatedMentee } : mentee
       );
       setMentees(updatedMentees);
       resetForm();
       setIsModalVisible(false);
+      toast.success('Mentee updated successfully!');
     } catch (error) {
       console.error('Error updating mentee:', error.response ? error.response.data : error.message);
+      toast.error('Failed to update mentee. Please try again.');
     }
   };
 
-  // Open modal to add a new mentee
+  // Open modal for adding a mentee
   const openAddMenteeModal = () => {
     resetForm();
     setIsEditing(false);
     setIsModalVisible(true);
   };
 
-  // Open modal to edit an existing mentee
+  // Open modal for editing an existing mentee
   const openEditMenteeModal = (mentee) => {
     setMenteeForm(mentee);
     setIsEditing(true);
     setIsModalVisible(true);
   };
 
-  // Toggle the activation status of a mentee
-  const toggleStatus = (studentEmail) => {
-    const updatedMentees = mentees.map(mentee => {
-      if (mentee.studentEmail === studentEmail) {
-        return { ...mentee, activated: !mentee.activated };
-      }
-      return mentee;
-    });
-    setMentees(updatedMentees);
-  };
-
-  // Reset the form fields
+  // Reset form fields
   const resetForm = () => {
     setMenteeForm({
       firstName: '',
@@ -129,36 +157,21 @@ const MenteesContent = () => {
       personalEmail: '',
       contactNo: '',
       password: '',
-      semester: '', // Reset semester
+      semester: '',
       activated: true,
-      menteeId: null // Reset menteeId
+      menteeId: null,
     });
+    setShowPassword(false); // Reset password visibility
   };
 
-  // Download the list of mentees as a CSV file
-  const downloadCSV = () => {
-    const headers = ['First Name', 'Last Name', 'Student Email', 'Personal Email', 'Contact No', 'Password', 'Semester', 'Activated'];
-    const rows = mentees.map(mentee => [
-      mentee.firstName,
-      mentee.lastName,
-      mentee.studentEmail,
-      mentee.personalEmail,
-      mentee.contactNo,
-      mentee.password,
-      mentee.semester,
-      mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'
-    ]);
-    let csvContent = 'data:text/csv;charset=utf-8,' + headers.join(',') + '\n' + rows.map(row => row.join(',')).join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'mentees_list.csv');
-    document.body.appendChild(link);
-    link.click();
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
     <div className={styles.menteesContainer}>
+      <ToastContainer />
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
           <input
@@ -170,9 +183,6 @@ const MenteesContent = () => {
           />
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.downloadCsvButton} onClick={downloadCSV}>
-            Download List
-          </button>
           <button className={styles.addMenteeButton} onClick={openAddMenteeModal}>
             Add Mentee
           </button>
@@ -204,11 +214,12 @@ const MenteesContent = () => {
                   <td>{mentee.personalEmail}</td>
                   <td>{mentee.contactNo}</td>
                   <td>{mentee.password}</td>
-                  <td>{mentee.semester}</td> {/* Display semester */}
+                  <td>{mentee.semester}</td>
                   <td>
                     <button
-                      className={`${styles.statusToggleButton} ${mentee.activated ? styles.activate : styles.deactivate}`}
-                      onClick={() => toggleStatus(mentee.studentEmail)}
+                      className={`${styles.statusToggleButton} ${
+                        mentee.activated ? styles.activate : styles.deactivate
+                      }`}
                     >
                       {mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'}
                     </button>
@@ -280,10 +291,13 @@ const MenteesContent = () => {
                 className={styles.inputField}
               />
             </div>
-            <div>
+            <div className={styles.passwordField}>
               <label>Password:</label>
+              <span className={styles.eyeIcon} onClick={togglePasswordVisibility}>
+                {showPassword ? '🙈' : '👁️'}
+              </span>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={menteeForm.password}
                 onChange={(e) => handleFormChange('password', e.target.value)}
                 className={styles.inputField}
@@ -307,7 +321,7 @@ const MenteesContent = () => {
               <label>Status:</label>
               <select
                 value={menteeForm.activated ? 1 : 0}
-                onChange={(e) => handleFormChange('activated', parseInt(e.target.value))}
+                onChange={(e) => handleFormChange('activated', !!parseInt(e.target.value))}
                 className={styles.selectField}
               >
                 <option value={1}>ACTIVATED</option>
@@ -315,7 +329,7 @@ const MenteesContent = () => {
               </select>
             </div>
             <div className={styles.modalButtons}>
-              <button onClick={isEditing ? handleEditMentee : () => {}}>
+              <button onClick={isEditing ? handleEditMentee : handleAddMentee}>
                 {isEditing ? 'Update Mentee' : 'Add Mentee'}
               </button>
               <button onClick={() => setIsModalVisible(false)}>Cancel</button>

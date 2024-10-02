@@ -52,10 +52,6 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.downloadCsvButton {
-  background-color: #007bff;
-}
-
 .downloadCsvButton:hover {
   background-color: #0056b3;
 }
@@ -131,33 +127,18 @@
   font-weight: bold;
 }
 
-.registerButton {
-  padding: 12px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.registerButton:hover {
-  background-color: #0056b3;
-}
-
 .modal {
-  position: fixed;
+  position: fixed; /* Fixed position to cover the whole viewport */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Dark background to overlay */
+  background: rgba(0, 0, 0, 0.5); /* Dark background overlay */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Make sure the modal is on top */
+  z-index: 9999; /* High z-index to prevent interaction with any other elements */
+  pointer-events: auto; /* Allow pointer events inside the modal */
 }
 
 .modalContent {
@@ -166,7 +147,16 @@
   border-radius: 8px;
   width: 400px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
+  z-index: 10000; /* Ensure modal content is above the overlay */
+  position: relative;
+}
+
+.body-modal-active {
+  pointer-events: none; /* Disable pointer events for the body */
+}
+
+.modal .modalContent {
+  pointer-events: all; /* Re-enable pointer events only inside the modal */
 }
 
 .modalButtons {
@@ -181,4 +171,42 @@ input, select {
   margin: 5px 0;
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+
+.inputField {
+  width: 100%; /* Ensure full width */
+  padding: 10px; /* Adjust padding for consistency */
+  margin-bottom: 10px; /* Add margin for spacing */
+  box-sizing: border-box; /* Include padding and border in the element's width and height */
+}
+
+.passwordField {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Add margin for consistent spacing */
+}
+
+.eyeIcon {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.selectField {
+  width: 100%; /* Ensure full width for dropdown */
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.noMenteesMessage {
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+  padding: 20px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
