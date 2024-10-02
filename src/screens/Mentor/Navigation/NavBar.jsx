@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import { useEffect, useState } from 'react'; // Import useEffect and useState hooks
 import styles from "./NavBar.module.css";
-import imageLogo from "../Assets/tutLogo-removebg-preview.png";
+import imageLogo from "../Assets/tutLogo_removebg_preview.png";
 import { BsPersonFill } from "react-icons/bs";
 
 function NavBar() {

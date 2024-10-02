@@ -30,7 +30,7 @@ const Login = () => {
                 if (data.role === 'Admin') {
                     navigate('/admin-dashboard/dashboard');
                 } else if (data.role === 'Mentor') {
-                    navigate('/mentor-dashboard/home');
+                    navigate('/mentor-dashboard/AnnouncementPage');
                 } else if (data.role === 'Mentee') {
                     navigate('/mentee-dashboard/home');
                 } else {

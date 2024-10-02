@@ -3,14 +3,13 @@ import { IoHome, IoSettingsSharp } from "react-icons/io5";
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { MdMenuBook, MdLogout } from "react-icons/md";
 import { RiContactsBook3Fill } from "react-icons/ri";
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
-import styles from "./SideBar.module.css"; // Import the CSS module
+import { useNavigate } from 'react-router-dom';  
+import styles from "./SideBar.module.css";
 
 function SideBar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const navigate = useNavigate();  // Use navigate
+  const navigate = useNavigate();  
 
-  // Toggle the collapse state of the sidebar
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -24,7 +23,7 @@ function SideBar() {
 
       <nav className={styles.navLinks}>
         {/* Sidebar navigation items */}
-        <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/home')}>
+        <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/announcementpage')}>
           <IoHome className={styles.icon} />
           {!isCollapsed && <span>HOME</span>}
         </div>
@@ -39,7 +38,7 @@ function SideBar() {
           {!isCollapsed && <span>BOOKINGS</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/register')}>
+        <div className={styles.navItem} onClick={() => navigate('/RegisterPage')}>
           <BsBookmarkCheckFill className={styles.icon} />
           {!isCollapsed && <span>REGISTER</span>}
         </div>
@@ -49,7 +48,7 @@ function SideBar() {
           {!isCollapsed && <span>REPORT</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/settings')}>
+        <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/SettingsPage')}>
           <IoSettingsSharp className={styles.icon} />
           {!isCollapsed && <span>SETTINGS</span>}
         </div>
