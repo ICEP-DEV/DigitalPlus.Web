@@ -1,0 +1,15 @@
+/* NavBar.module.css */
+.navBar {
+    background-color: #1a2138;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    height: 80px;
+  }
+  
+  .appLogo {
+    height: 50px;
+    width: auto;
+  }
+  
