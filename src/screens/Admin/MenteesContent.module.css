@@ -1,144 +1,184 @@
-/* Container */
-.menteesContent_container {
-    padding: 30px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Notification bar */
-  .menteesContent_notificationBar {
-    padding: 10px 20px;
-    text-align: center;
-    margin-bottom: 15px;
-    color: white;
-    border-radius: 5px;
-    max-width: 90%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-  }
-  
-  .menteesContent_notificationBar_success {
-    background-color: #28a745;
-  }
-  
-  .menteesContent_notificationBar_error {
-    background-color: #dc3545;
-  }
-  
-  /* Header and Search Bar */
-  .menteesContent_header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-  
-  .menteesContent_header h2 {
-    font-size: 24px;
-    color: #333;
-  }
-  
-  .menteesContent_searchBar input {
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    width: 300px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Table Styles */
-  .menteesContent_tableWrapper {
-    overflow-y: auto;
-    max-height: 400px;
-    margin-top: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .menteesContent_table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-  }
-  
-  .menteesContent_table th,
-  .menteesContent_table td {
-    border: 1px solid #ddd;
-    padding: 15px;
-    text-align: left;
-    font-size: 14px;
-  }
-  
-  .menteesContent_table th {
-    background-color: #f0f0f0;
-    font-weight: 600;
-  }
-  
-  .menteesContent_table td {
-    font-size: 14px;
-  }
-  
-  .menteesContent_table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  /* Button Styles */
-  .menteesContent_activateButton,
-  .menteesContent_deactivateButton,
-  .menteesContent_deleteButton,
-  .menteesContent_editButton,
-  .menteesContent_saveButton {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-    color: white;
-  }
-  
-  .menteesContent_activateButton {
-    background-color: #28a745;
-  }
-  
-  .menteesContent_deactivateButton {
-    background-color: #ffc107;
-  }
-  
-  .menteesContent_editButton {
-    background-color: #007bff;
-  }
-  
-  .menteesContent_saveButton {
-    background-color: #28a745;
-  }
-  
-  .menteesContent_deleteButton {
-    background-color: #dc3545;
-  }
-  
-  .menteesContent_deleteButton:hover {
-    background-color: #c82333;
-  }
-  
-  .menteesContent_editButton:hover,
-  .menteesContent_saveButton:hover,
-  .menteesContent_activateButton:hover,
-  .menteesContent_deactivateButton:hover {
-    opacity: 0.8;
-  }
-  
-  input[type="text"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-  }
-  
+.menteesContainer {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f6f9;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.searchBarContainer {
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.searchBar {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.searchBar:focus {
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 15px;
+}
+
+.downloadCsvButton, .addMenteeButton {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  color: white;
+  background-color: #007bff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.downloadCsvButton {
+  background-color: #007bff;
+}
+
+.downloadCsvButton:hover {
+  background-color: #0056b3;
+}
+
+.addMenteeButton {
+  background-color: #6c757d;
+}
+
+.addMenteeButton:hover {
+  background-color: #5a6268;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.menteesTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #000;
+}
+
+.menteesTable th,
+.menteesTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.menteesTable th {
+  background-color: #f8f9fa;
+  color: #003366;
+  text-transform: uppercase;
+}
+
+.menteesTable td {
+  background-color: #fff;
+}
+
+.menteesTable td:last-child,
+.menteesTable th:last-child {
+  border-right: none;
+}
+
+.statusToggleButton {
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+.statusToggleButton.activate {
+  background-color: #28a745;
+}
+
+.statusToggleButton.deactivate {
+  background-color: #dc3545;
+}
+
+.manageButton {
+  background-color: #8b4513;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.registerButton {
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.registerButton:hover {
+  background-color: #0056b3;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Dark background to overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Make sure the modal is on top */
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}

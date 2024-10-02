@@ -12,6 +12,7 @@
     "bootstrap": "^5.3.1",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.3",
     "mammoth": "^1.8.0",
     "mdb-react-ui-kit": "^8.0.0",
     "pdf-lib": "^1.17.1",

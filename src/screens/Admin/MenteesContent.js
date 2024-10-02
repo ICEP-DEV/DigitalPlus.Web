@@ -1,92 +1,326 @@
 import React, { useState, useEffect } from 'react';
-import './MenteesContent.module.css'
+import styles from './MenteesContent.module.css';
+import axios from 'axios';
 
 const MenteesContent = () => {
-  const [mentees, setMentees] = useState([]); // Assume you fetch this from an API or local data
-  const [filteredMentees, setFilteredMentees] = useState([]);
+  const [mentees, setMentees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [editMode, setEditMode] = useState(false);
-  const [selectedMentee, setSelectedMentee] = useState(null);
+  const [menteeForm, setMenteeForm] = useState({
+    firstName: '',
+    lastName: '',
+    studentEmail: '',
+    personalEmail: '',
+    contactNo: '',
+    password: '',
+    semester: '', // Semester field to be filled correctly
+    activated: true,
+    menteeId: null // Store menteeId for editing
+  });
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
+  // Fetch all mentees when the component mounts
   useEffect(() => {
-    // Fetch mentees and set state
     const fetchMentees = async () => {
-      // Fetch your mentees data here
-      // Example: const response = await fetch('/api/mentees');
-      // const data = await response.json();
-      // setMentees(data);
+      try {
+        const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentees');
+        const data = response.data.map(mentee => ({
+          ...mentee,
+          activated: !!mentee.activated, // Convert bit to boolean
+          menteeId: mentee.mentee_Id // Store menteeId
+        }));
+        setMentees(data); // Set fetched mentees
+      } catch (error) {
+        console.error('Error fetching mentees:', error);
+      }
     };
-
     fetchMentees();
   }, []);
 
-  useEffect(() => {
-    // Filter mentees based on the search term
-    const filtered = mentees.filter((mentee) =>
-      mentee.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredMentees(filtered);
-  }, [searchTerm, mentees]);
-
-  // Define the handleChange function
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setSelectedMentee((prev) => ({ ...prev, [name]: value }));
+  // Handle changes in the search bar
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value.toLowerCase());
   };
 
-  // Define the handleSave function
-  const handleSave = () => {
-    if (selectedMentee) {
-      // Logic to save changes to the mentee
-      // Example: Save the updated mentee back to the server or update local state
-      setMentees((prev) => prev.map((mentee) => 
-        mentee.id === selectedMentee.id ? selectedMentee : mentee
-      ));
-      setEditMode(false);
-      setSelectedMentee(null);
+  // Filter mentees based on the search term
+  const filteredMentees = mentees.filter(mentee =>
+    mentee.studentEmail.toLowerCase().includes(searchTerm)
+  );
+
+  // Handle form field changes
+  const handleFormChange = (field, value) => {
+    setMenteeForm({ ...menteeForm, [field]: value });
+  };
+
+  // Handle the mentee update operation
+  const handleEditMentee = async () => {
+    try {
+      if (!menteeForm.menteeId) {
+        console.error('MenteeId is null or undefined');
+        return;
+      }
+
+      // Prepare the payload
+      const updatedMentee = {
+        menteeId: menteeForm.menteeId,
+        firstName: menteeForm.firstName,
+        lastName: menteeForm.lastName,
+        studentEmail: menteeForm.studentEmail,
+        personalEmail: menteeForm.personalEmail,
+        contactNo: menteeForm.contactNo,
+        password: menteeForm.password,
+        semester: menteeForm.semester, // Ensure the correct semester is set
+        activated: menteeForm.activated ? true : false
+      };
+
+      console.log('MenteeId for update:', menteeForm.menteeId);
+      console.log('Updated Mentee Payload:', updatedMentee);
+
+      // API call to update the mentee
+      await axios.put(
+        `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.menteeId}`,
+        updatedMentee,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      // Update the mentees list locally after a successful update
+      const updatedMentees = mentees.map(mentee =>
+        mentee.menteeId === menteeForm.menteeId ? { ...mentee, ...updatedMentee } : mentee
+      );
+      setMentees(updatedMentees);
+      resetForm();
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error('Error updating mentee:', error.response ? error.response.data : error.message);
     }
   };
 
-  const handleEdit = (mentee) => {
-    setSelectedMentee(mentee);
-    setEditMode(true);
+  // Open modal to add a new mentee
+  const openAddMenteeModal = () => {
+    resetForm();
+    setIsEditing(false);
+    setIsModalVisible(true);
   };
 
-  const handleDelete = (id) => {
-    // Logic to delete a mentee
-    setMentees((prev) => prev.filter((mentee) => mentee.id !== id));
+  // Open modal to edit an existing mentee
+  const openEditMenteeModal = (mentee) => {
+    setMenteeForm(mentee);
+    setIsEditing(true);
+    setIsModalVisible(true);
+  };
+
+  // Toggle the activation status of a mentee
+  const toggleStatus = (studentEmail) => {
+    const updatedMentees = mentees.map(mentee => {
+      if (mentee.studentEmail === studentEmail) {
+        return { ...mentee, activated: !mentee.activated };
+      }
+      return mentee;
+    });
+    setMentees(updatedMentees);
+  };
+
+  // Reset the form fields
+  const resetForm = () => {
+    setMenteeForm({
+      firstName: '',
+      lastName: '',
+      studentEmail: '',
+      personalEmail: '',
+      contactNo: '',
+      password: '',
+      semester: '', // Reset semester
+      activated: true,
+      menteeId: null // Reset menteeId
+    });
+  };
+
+  // Download the list of mentees as a CSV file
+  const downloadCSV = () => {
+    const headers = ['First Name', 'Last Name', 'Student Email', 'Personal Email', 'Contact No', 'Password', 'Semester', 'Activated'];
+    const rows = mentees.map(mentee => [
+      mentee.firstName,
+      mentee.lastName,
+      mentee.studentEmail,
+      mentee.personalEmail,
+      mentee.contactNo,
+      mentee.password,
+      mentee.semester,
+      mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'
+    ]);
+    let csvContent = 'data:text/csv;charset=utf-8,' + headers.join(',') + '\n' + rows.map(row => row.join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'mentees_list.csv');
+    document.body.appendChild(link);
+    link.click();
   };
 
   return (
-    <div>
-      <h2>Mentees List</h2>
-      <input
-        type="text"
-        placeholder="Search Mentees"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <ul>
-        {filteredMentees.map((mentee) => (
-          <li key={mentee.id}>
-            {mentee.name}
-            <button onClick={() => handleEdit(mentee)}>Edit</button>
-            <button onClick={() => handleDelete(mentee.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-      {editMode && selectedMentee && (
-        <div>
-          <h3>Edit Mentee</h3>
+    <div className={styles.menteesContainer}>
+      <div className={styles.header}>
+        <div className={styles.searchBarContainer}>
           <input
             type="text"
-            name="name"
-            value={selectedMentee.name}
-            onChange={handleChange} // Call handleChange here
+            placeholder="Search by Student Email"
+            className={styles.searchBar}
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
-          {/* Add other fields as necessary */}
-          <button onClick={handleSave}>Save</button> {/* Call handleSave here */}
-          <button onClick={() => setEditMode(false)}>Cancel</button>
+        </div>
+        <div className={styles.buttonGroup}>
+          <button className={styles.downloadCsvButton} onClick={downloadCSV}>
+            Download List
+          </button>
+          <button className={styles.addMenteeButton} onClick={openAddMenteeModal}>
+            Add Mentee
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.tableWrapper}>
+        <table className={styles.menteesTable}>
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Student Email</th>
+              <th>Personal Email</th>
+              <th>Contact No</th>
+              <th>Password</th>
+              <th>Semester</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredMentees.length > 0 ? (
+              filteredMentees.map((mentee, index) => (
+                <tr key={index}>
+                  <td>{mentee.firstName}</td>
+                  <td>{mentee.lastName}</td>
+                  <td>{mentee.studentEmail}</td>
+                  <td>{mentee.personalEmail}</td>
+                  <td>{mentee.contactNo}</td>
+                  <td>{mentee.password}</td>
+                  <td>{mentee.semester}</td> {/* Display semester */}
+                  <td>
+                    <button
+                      className={`${styles.statusToggleButton} ${mentee.activated ? styles.activate : styles.deactivate}`}
+                      onClick={() => toggleStatus(mentee.studentEmail)}
+                    >
+                      {mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'}
+                    </button>
+                  </td>
+                  <td>
+                    <button className={styles.manageButton} onClick={() => openEditMenteeModal(mentee)}>
+                      Manage
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" className={styles.noMenteesMessage}>
+                  No mentees found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {isModalVisible && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h2>{isEditing ? 'Edit Mentee' : 'Add Mentee'}</h2>
+            <div>
+              <label>First Name:</label>
+              <input
+                type="text"
+                value={menteeForm.firstName}
+                onChange={(e) => handleFormChange('firstName', e.target.value)}
+                className={styles.inputField}
+              />
+            </div>
+            <div>
+              <label>Last Name:</label>
+              <input
+                type="text"
+                value={menteeForm.lastName}
+                onChange={(e) => handleFormChange('lastName', e.target.value)}
+                className={styles.inputField}
+              />
+            </div>
+            <div>
+              <label>Student Email:</label>
+              <input
+                type="email"
+                value={menteeForm.studentEmail}
+                onChange={(e) => handleFormChange('studentEmail', e.target.value)}
+                className={styles.inputField}
+              />
+            </div>
+            <div>
+              <label>Personal Email:</label>
+              <input
+                type="email"
+                value={menteeForm.personalEmail}
+                onChange={(e) => handleFormChange('personalEmail', e.target.value)}
+                className={styles.inputField}
+              />
+            </div>
+            <div>
+              <label>Contact No:</label>
+              <input
+                type="text"
+                value={menteeForm.contactNo}
+                onChange={(e) => handleFormChange('contactNo', e.target.value)}
+                className={styles.inputField}
+              />
+            </div>
+            <div>
+              <label>Password:</label>
+              <input
+                type="password"
+                value={menteeForm.password}
+                onChange={(e) => handleFormChange('password', e.target.value)}
+                className={styles.inputField}
+              />
+            </div>
+            <div>
+              <label>Semester:</label>
+              <select
+                value={menteeForm.semester}
+                onChange={(e) => handleFormChange('semester', e.target.value)}
+                className={styles.selectField}
+              >
+                <option value="">Select Semester</option>
+                <option value="1st">1st Semester</option>
+                <option value="2nd">2nd Semester</option>
+                <option value="3rd">3rd Semester</option>
+                <option value="4th">4th Semester</option>
+              </select>
+            </div>
+            <div>
+              <label>Status:</label>
+              <select
+                value={menteeForm.activated ? 1 : 0}
+                onChange={(e) => handleFormChange('activated', parseInt(e.target.value))}
+                className={styles.selectField}
+              >
+                <option value={1}>ACTIVATED</option>
+                <option value={0}>DEACTIVATED</option>
+              </select>
+            </div>
+            <div className={styles.modalButtons}>
+              <button onClick={isEditing ? handleEditMentee : () => {}}>
+                {isEditing ? 'Update Mentee' : 'Add Mentee'}
+              </button>
+              <button onClick={() => setIsModalVisible(false)}>Cancel</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -6,7 +6,6 @@ const MentorsContent = () => {
   const modules = ['Module 1', 'Module 2', 'Module 3', 'Module 4'];
   const labs = ['Lab 1', 'Lab 2', 'Lab 3', 'Lab 4'];
 
-  // State to store mentors
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [mentorForm, setMentorForm] = useState({
@@ -16,26 +15,30 @@ const MentorsContent = () => {
     personalEmail: '',
     contactNo: '',
     password: '',
-    activated: 1, // Default is activated
+    activated: true,
     module: '',
-    lab: ''
+    lab: '',
+    mentorId: null // Store mentorId for editing
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Fetch mentors from the API when the component mounts
   useEffect(() => {
     const fetchMentors = async () => {
       try {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentors');
-        setMentors(response.data); // Set the fetched mentors in state
+        const data = response.data.map(mentor => ({
+          ...mentor,
+          activated: !!mentor.activated, // Convert bit to boolean
+          mentorId: mentor.mentorId // Store mentorId
+        }));
+        setMentors(data); // Set fetched mentors
       } catch (error) {
         console.error('Error fetching mentors:', error);
       }
     };
-
     fetchMentors();
-  }, []); // Empty dependency array ensures this runs once on mount
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
@@ -49,21 +52,94 @@ const MentorsContent = () => {
     setMentorForm({ ...mentorForm, [field]: value });
   };
 
-  const handleAddMentor = () => {
-    setMentors([...mentors, mentorForm]);
-    resetForm();
-    setIsModalVisible(false);
+  const handleAddMentor = async () => {
+    try {
+      // Construct the new mentor object
+      const newMentor = {
+        mentorId: 0, // Set to 0, as the server will assign a new ID
+        firstName: mentorForm.firstName,
+        lastName: mentorForm.lastName,
+        studentEmail: mentorForm.studentEmail,
+        personalEmail: mentorForm.personalEmail,
+        contactNo: mentorForm.contactNo,
+        password: mentorForm.password,
+        available: mentorForm.available !== undefined ? mentorForm.available : 0, // Default available to 0 if undefined
+        activated: mentorForm.activated ? true : false // Ensure activated is boolean
+      };
+  
+      console.log('New Mentor Payload:', newMentor); // Log the payload for debugging
+  
+      // Make the API request to add the new mentor
+      const response = await axios.post(
+        `https://localhost:7163/api/DigitalPlusUser/AddMentor`,
+        newMentor,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+  
+      // Add the new mentor to the state if the response is successful
+      setMentors([...mentors, response.data]); // Assuming the response contains the newly created mentor
+      resetForm();
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error('Error adding mentor:', error.response ? error.response.data : error.message);
+    }
   };
+  
 
-  const handleEditMentor = () => {
-    const updatedMentors = mentors.map(mentor =>
-      mentor.studentEmail === mentorForm.studentEmail ? mentorForm : mentor
-    );
-    setMentors(updatedMentors);
-    resetForm();
-    setIsModalVisible(false);
+  const handleEditMentor = async () => {
+    try {
+      // Ensure mentorId is not null or undefined
+      if (!mentorForm.mentorId) {
+        console.error('MentorId is null or undefined');
+        return;
+      }
+  
+      // Construct the updated mentor object with mentorId and available fields
+      const updatedMentor = {
+        mentorId: mentorForm.mentorId,  // Include mentorId in the payload
+        firstName: mentorForm.firstName,
+        lastName: mentorForm.lastName,
+        studentEmail: mentorForm.studentEmail,
+        personalEmail: mentorForm.personalEmail,
+        contactNo: mentorForm.contactNo,
+        password: mentorForm.password,
+        available: mentorForm.available !== undefined ? mentorForm.available : 0, // Ensure available is provided
+        activated: mentorForm.activated ? true : false // Ensure activated is boolean
+      };
+  
+      console.log('MentorId for update:', mentorForm.mentorId); // Log mentorId for debugging
+      console.log('Updated Mentor Payload:', updatedMentor); // Log the payload for debugging
+  
+      // Make the API request to update the mentor using mentorForm.mentorId
+      const response = await axios.put(
+        `https://localhost:7163/api/DigitalPlusUser/UpdateMentor/${mentorForm.mentorId}`,
+        updatedMentor,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+  
+      // Update the state with the edited mentor if the response is successful
+      const updatedMentors = mentors.map(mentor =>
+        mentor.mentorId === mentorForm.mentorId ? { ...mentor, ...updatedMentor } : mentor
+      );
+      setMentors(updatedMentors);
+      resetForm();
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error('Error updating mentor:', error.response ? error.response.data : error.message);
+    }
   };
-
+  
+  
+  
+  
   const openAddMentorModal = () => {
     resetForm();
     setIsEditing(false);
@@ -71,18 +147,19 @@ const MentorsContent = () => {
   };
 
   const openEditMentorModal = (mentor) => {
-    setMentorForm(mentor);
+    console.log('Opening edit for mentor:', mentor); // Log mentor data
+    setMentorForm(mentor); // Load mentor data into the form including mentorId
     setIsEditing(true);
     setIsModalVisible(true);
   };
+  
 
-  // Toggle activated status based on the "activated" field
   const toggleStatus = (studentEmail) => {
-    const updatedMentors = mentors.map((mentor) => {
+    const updatedMentors = mentors.map(mentor => {
       if (mentor.studentEmail === studentEmail) {
         return {
           ...mentor,
-          activated: mentor.activated === 1 ? 0 : 1, // Toggle between 1 (ACTIVATED) and 0 (DEACTIVATED)
+          activated: !mentor.activated // Toggle activation status
         };
       }
       return mentor;
@@ -98,9 +175,10 @@ const MentorsContent = () => {
       personalEmail: '',
       contactNo: '',
       password: '',
-      activated: 1, // Default to activated
+      activated: true,
       module: '',
-      lab: ''
+      lab: '',
+      mentorId: null // Reset mentorId
     });
   };
 
@@ -113,7 +191,7 @@ const MentorsContent = () => {
       mentor.personalEmail,
       mentor.contactNo,
       mentor.password,
-      mentor.activated === 1 ? 'ACTIVATED' : 'DEACTIVATED',
+      mentor.activated ? 'ACTIVATED' : 'DEACTIVATED',
       mentor.module,
       mentor.lab
     ]);
@@ -176,17 +254,17 @@ const MentorsContent = () => {
                   <td>{mentor.password}</td>
                   <td>
                     <button
-                      className={styles.statusToggleButton}
+                      className={`${styles.statusToggleButton} ${mentor.activated ? styles.activate : styles.deactivate}`}
                       onClick={() => toggleStatus(mentor.studentEmail)}
                     >
-                      {mentor.activated === 1 ? 'ACTIVATED' : 'DEACTIVATED'}
+                      {mentor.activated ? 'ACTIVATED' : 'DEACTIVATED'}
                     </button>
                   </td>
                   <td>{mentor.module}</td>
                   <td>{mentor.lab}</td>
                   <td>
-                    <button className={styles.editButton} onClick={() => openEditMentorModal(mentor)}>
-                      Edit
+                    <button className={styles.manageButton} onClick={() => openEditMentorModal(mentor)}>
+                      Manage
                     </button>
                   </td>
                 </tr>
