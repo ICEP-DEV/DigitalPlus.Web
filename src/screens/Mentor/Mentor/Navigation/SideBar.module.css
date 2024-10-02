@@ -1,0 +1,154 @@
+/* Main layout container */
+.appContainer {
+    display: flex;
+    height: 100vh;
+    flex-direction: row; /* Side by side layout */
+    padding-top: 120px; /* Adjust the padding-top for content below the navbar */
+  }
+  
+  /* Navbar styles */
+  .navBar {
+    width: 100%; /* Full width */
+    height: 120px;
+    background-color: #070c24;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999; /* Navbar should appear above other content */
+  }
+  
+  /* Sidebar styles */
+  .sideBarWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+    height: calc(100vh - 120px); /* Sidebar height is full height minus navbar height */
+    background-color: #070c24;
+    color: white;
+    position: fixed;
+    top: 120px; /* Sidebar starts below the navbar */
+    left: 0;
+    overflow-y: auto;
+    z-index: 10;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  /* Sidebar collapsed */
+  .collapsed {
+    width: 70px;
+  }
+  
+  /* Hamburger button */
+  .hamburger {
+    font-size: 24px;
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+    padding: 20px;
+    text-align: left;
+  }
+  
+  .hamburger:hover {
+    color: lightgray;
+  }
+  
+  /* Main content */
+  .mainContent {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 180px; /* Space for sidebar */
+    transition: margin-left 0.3s ease-in-out;
+    padding-top: 20px; /* Extra padding to avoid content touching the navbar */
+  }
+  
+  .collapsed + .mainContent {
+    margin-left: 70px;
+  }
+  
+  /* Navigation links */
+  .navLinks {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+  }
+  
+  .navItem {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: white;
+    transition: background-color 0.3s ease, padding 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .navItem .icon {
+    font-size: 24px;
+    margin-right: 15px;
+  }
+  
+  /* When sidebar is collapsed */
+  .collapsed .navItem {
+    justify-content: center;
+    padding: 15px;
+  }
+  
+  .collapsed .navItem .icon {
+    margin-right: 0;
+  }
+  
+  .collapsed .navItem span {
+    display: none;
+  }
+  
+  /* Hover effect */
+  .navItem:hover {
+    background-color: lightgray;
+    color: #070c24;
+    border-radius: 5px;
+  }
+  
+  /* Profile Container in the Navbar */
+  .profileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    color: white;
+  }
+  
+  .profileIcon {
+    height: 90px;
+    width: 90px;
+  }
+  
+  .profileText {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  /* Responsive behavior for smaller screens */
+  @media (max-width: 768px) {
+    .sideBar {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+  
+    .navBar {
+      width: 100%;
+      left: 0;
+    }
+  
+    .mainContent {
+      margin-left: 0;
+    }
+  
+    .collapsed + .mainContent {
+      margin-left: 0;
+    }
+  }
+  
