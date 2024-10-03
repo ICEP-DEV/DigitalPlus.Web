@@ -22,7 +22,7 @@ const MenteesContent = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
-  // Fetch mentees data from the API
+  // Fetch mentees data from the API 
   useEffect(() => {
     const fetchMentees = async () => {
       try {
