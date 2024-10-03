@@ -78,7 +78,7 @@ const Login = () => {
                 </form>
 
                 <p className={styles.signupText}>
-                    Don’t have an account yet? <Link to="/signup" className={styles.signupLink}>Sign Up</Link> {/* Using Link */}
+                    Don’t have an account yet? <Link to="/RegisterPage" className={styles.signupLink}>Sign Up</Link> {/* Using Link */}
                 </p>
             </div>
         </div>

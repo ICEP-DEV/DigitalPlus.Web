@@ -1,50 +1,50 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logoTUT from '../../Assets/TUT_Logo_Transparent.png'; // Ensure the path to your logo is correct
 import background from '../../Assets/Login Background.jpeg'; // Ensure the path to your background is correct
 import styles from './RegisterPage.module.css'; // Import the CSS module
+import axios from 'axios';
+
 
 const RegisterPage = () => {
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        studentEmail: '',
-        contactNumber: '',
-        password: '',
-        confirmPassword: '',
+    // const navigate = useNavigate();
+    const [mentee, setMentee] = useState({
+        FirstName: '',
+        LastName: '',
+        StudentEmail: '',
+        ContactNo: '',
+        DepartmentId: '',
+        Password: '',
+        Semester: ''
     });
+
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+        setMentee({ ...mentee, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-  
-        fetch('http://localhost:5000/api/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                alert('Registration successful');
-                navigate('/Login');
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+        try {
+            const response = await axios.post('https://localhost:7163/api/DigitalPlusUser/AddMentee', mentee);
+            console.log('Mentee registered:', response.data);
+            setSuccessMessage('Successfully registered a Mentee!');
+            // Reset form
+            setMentee({
+                FirstName: '',
+                LastName: '',
+                StudentEmail: '',
+                ContactNo: '',
+                DepartmentId: '',
+                Password: '',
+                Semester: ''
+            });
+        } catch (error) {
+            console.error('There was an error registering the mentee!', error);
+            // Handle error response
+        }
     };
 
     return (
@@ -64,67 +64,57 @@ const RegisterPage = () => {
                     <h2 className={styles.registerPageTitle}>WE-MEN-TOR</h2>
                     <div className={styles.registerPageFormSection + ' ' + styles.registerPageFormSectionLeft}>
                         <h3>SIGN UP</h3>
+                        {successMessage && <div style={{ marginTop: '20px',marginBottom:'20px', color: 'green' }}>{successMessage}</div>}
                         <form onSubmit={handleSubmit}>
-                            <label>First Name:</label>
-                            <input
-                                type="text"
-                                name="firstName"
-                                value={formData.firstName}
-                                onChange={handleChange}
-                                placeholder="first name"
-                                required
-                            />
+                        <label>First Name:</label>
+                        <input type="text" name="FirstName" value={mentee.FirstName} onChange={handleChange} required />
+                        
+                        
                             <label>Last Name:</label>
-                            <input
-                                type="text"
-                                name="lastName"
-                                value={formData.lastName}
-                                onChange={handleChange}
-                                placeholder="last name"
-                                required
-                            />
-                            <label>Student Email:</label>
-                            <input
-                                type="email"
-                                name="studentEmail"
-                                value={formData.studentEmail}
-                                onChange={handleChange}
-                                placeholder="studentemail@tut4life.ac.za"
-                                required
-                            />
-                            <label>Contact Number:</label>
-                            <input
-                                type="text"
-                                name="contactNumber"
-                                value={formData.contactNumber}
-                                onChange={handleChange}
-                                placeholder="contact number"
-                                required
-                            />
+                            <input type="text" name="LastName" value={mentee.LastName} onChange={handleChange} required />
+                        
+                      
+                            <label>Email:</label>
+                            <input type="email" name="StudentEmail" value={mentee.StudentEmail} onChange={handleChange} required />
+                   
+                      
+                            <label>Contact No:</label>
+                            <input type="text" name="ContactNo" value={mentee.ContactNo} onChange={handleChange} required />
+                    
+                            <label>Department:</label>
+                            <select name="DepartmentId"  value={mentee.DepartmentId} onChange={handleChange} required>
+                                <option value="">Select Department</option>
+                                <option value="1">Computer Science</option>
+                                <option value="2">Multimedia</option>
+                                <option value="3">Information Technology</option>
+                                <option value="4">Informatics</option>
+                            </select>
+
+                        <label>Semester:</label>
+                       <input type="text" name="Semester"  value={mentee.Semester} onChange={handleChange} required />
                         </form>
                     </div>
                     <div className={styles.registerPageFormSection + ' ' + styles.registerPageFormSectionRight}>
                         <h3>CREATE PASSWORD</h3>
                         <form onSubmit={handleSubmit}>
-                            <label>Password:</label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                placeholder="Password"
-                                required
-                            />
-                            <label>Confirm Password:</label>
+                        <label>Password:</label>
+                       <input type="password" name="Password" value={mentee.Password} onChange={handleChange} required />
+                            {/* <label>Confirm Password:</label>
                             <input
                                 type="password"
                                 name="confirmPassword"
-                                value={formData.confirmPassword}
+                                value={mentee.confirmPassword}
                                 onChange={handleChange}
                                 placeholder="Confirm Password"
                                 required
-                            />
+                            /> */}
+                           
                             <button type="submit">Sign Up</button>
+                          
+                            <p className={styles.loginText}>
+                             Already have an account? <Link to="/login" className={styles.loginLink}>Sign Up</Link> {/* Using Link */}
+                           </p>
+                            
                         </form>
                     </div>
                 </div>
