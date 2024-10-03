@@ -33,7 +33,7 @@ function SideBar({ setActivePage }) {
             LIVE CHAT <HiOutlineChatAlt2 className={styles.icon} />
           </div>
         </a>
-        <a href="#dm" onClick={() => setActivePage('dm')}>
+        <a href="#dm" onClick={() => setActivePage('mentordm')}>
           <div className={styles.navItem}>
             DM <HiOutlineChatAlt2 className={styles.icon} /> {/* DM icon */}
           </div>
