@@ -111,8 +111,8 @@ const RegisterPage = () => {
                            
                             <button type="submit">Sign Up</button>
                           
-                            <p className={styles.loginText}>
-                             Already have an account? <Link to="/login" className={styles.loginLink}>Sign Up</Link> {/* Using Link */}
+                            <p >
+                             Already have an account? <Link to="/login" >Login</Link> {/* Using Link */}
                            </p>
                             
                         </form>
