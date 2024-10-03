@@ -1,0 +1,226 @@
+/* VideoLandingPage.module.css */
+
+/* Carousel Section */
+.carouselSection {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden;
+  }
+  
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 7, 8, 0.8);
+    z-index: 1; /* In front of the carousel */
+  }
+  
+  /* About Section */
+  .aboutSection {
+    position: relative;
+    padding: 50px 20px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .aboutOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 7, 8, 0.65);
+    z-index: 1;
+  }
+  
+  .aboutContent {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+  }
+  
+  .aboutHeading {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .aboutParagraph {
+    max-width: 600px;
+    margin: 0 auto 20px 0;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    color: #fff;
+    line-height: 1.6;
+    text-align: left;
+  }
+  
+  .aboutImage {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  /* Mission Section */
+  .missionSection {
+    position: relative;
+    padding: 50px 20px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .missionOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 7, 8, 0.65);
+    z-index: 1;
+  }
+  
+  .missionContent {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+  }
+  
+  .missionHeading {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .missionParagraph {
+    max-width: 600px;
+    margin: 0 auto 20px 0;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    color: #fff;
+    line-height: 1.6;
+    text-align: center;
+  }
+  
+  .missionImage {
+    max-width: 100%;
+    height: 500px;
+    width: auto;
+    border-radius: 8px;
+  }
+  
+  /* Core Values Section */
+  .coreValuesSection {
+    position: relative;
+    padding: 50px 20px;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+  }
+  
+  .coreValuesOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 7, 8, 0.65);
+    z-index: 1;
+  }
+  
+  .coreValuesContent {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .coreValuesHeading {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .coreValueContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .coreValueCard {
+    flex: 1;
+    max-width: 300px;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(6, 7, 8, 0.75);
+  }
+  
+  .coreValueHeading {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .coreValueParagraph {
+    font-size: 0.75rem;
+    color: #fff;
+    line-height: 1.6;
+    text-align: center;
+  }
+  
+  /* Services Section */
+  .servicesSection {
+    position: relative;
+    padding: 50px 20px;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+  }
+  
+  .servicesOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 7, 8, 0.65);
+    z-index: 1;
+  }
+  
+  .servicesContent {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .servicesHeading {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .servicesParagraph {
+    font-size: 1.2rem;
+    color: #fff;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  

@@ -20,7 +20,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<LandingPage />} />
+        <Route exact path="/" element={<VideoLandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/aboutPage" element={<AboutPage />} />
         <Route path="/FeedbackPage" element={<FeedbackPage />} />

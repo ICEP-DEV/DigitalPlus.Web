@@ -32,7 +32,7 @@ const Login = () => {
                 } else if (data.role === 'Mentor') {
                     navigate('/mentor-dashboard/AnnouncementPage');
                 } else if (data.role === 'Mentee') {
-                    navigate('/mentee-dashboard/home');
+                    navigate('/mentee-dashboard/AnnouncementPage');
                 } else {
                     setError('Invalid user role');
                 }

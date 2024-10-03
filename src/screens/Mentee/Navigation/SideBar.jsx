@@ -40,7 +40,7 @@ function SideBar() {
           {!isCollapsed && <span>BOOKINGS</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/register')}>
+        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/RegisterPage')}>
           <BsBookmarkCheckFill className={styles.icon} />
           {!isCollapsed && <span>REGISTER</span>}
         </div>

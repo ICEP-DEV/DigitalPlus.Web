@@ -13,7 +13,7 @@ const LogoutComponent = () => {
 
   const handleNoClick = () => {
     // Go back to the dashboard
-    navigate('/mentee-dashboard/home');
+    navigate('/mentee-dashboard/AnnouncementPage');
   };
 
   return (
