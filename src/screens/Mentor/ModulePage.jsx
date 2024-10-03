@@ -1,51 +1,56 @@
 import React from 'react';
-import './ModulePage.module.css';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'; // Icons for navigation
-import SideBarNavBar from './Navigation/SideBarNavBar';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
+import styles from './ModulePage.module.css'; // Import the CSS module
+import Header from './Navigation/NavBar.jsx';
+import SideBar from './Navigation/SideBar';
 
 const modules = [
-  { id: 1, title: 'PPA F050', imgSrc: 'https://example.com/image1.png' }, // Replace with actual image URLs
-  { id: 2, title: 'PRB 216D', imgSrc: 'https://example.com/image2.png' },
-  { id: 3, title: 'OOP 216D', imgSrc: 'https://example.com/image3.png' },
-  { id: 4, title: 'AGP 316D', imgSrc: 'https://example.com/image4.png' },
+  { id: 'PPA 216D', image: 'https://picsum.photos/seed/PPA/300/200', description: 'Programming Fundamentals' },
+  { id: 'PPB 216D', image: 'https://picsum.photos/seed/PPB/300/200', description: 'Programming ' },
+  { id: 'OOP 216D', image: 'https://picsum.photos/seed/OOP/300/200', description: 'Object-Oriented Programming' },
+  { id: 'AOP 216D', image: 'https://picsum.photos/seed/AOP/300/200', description: 'Advanced Programming Concepts' },
 ];
 
-const ModulePage = () => {
-  const [activeIndex, setActiveIndex] = React.useState(0);
+export default function ModulePage() {
+  const navigate = useNavigate();  // Create navigate function to handle navigation
 
-  const handleNext = () => {
-    setActiveIndex((prevIndex) => (prevIndex + 1) % modules.length);
-  };
-
-  const handlePrev = () => {
-    setActiveIndex((prevIndex) => (prevIndex === 0 ? modules.length - 1 : prevIndex - 1));
+  const handleNavigation = (moduleId) => {
+    navigate(`/mentor-dashboard/module/${moduleId}`);  // Navigate to the specific module page
   };
 
   return (
-    <SideBarNavBar>
-    <div className="module-page-container">
-      <button className="module-nav left" onClick={handlePrev}>
-        <FaChevronLeft />
-      </button>
-
-      <div className="module-carousel">
-        {modules.map((module, index) => (
-          <div
-            key={module.id}
-            className={`module-item ${index === activeIndex ? 'active' : ''}`}
-          >
-            <img src={module.imgSrc} alt={module.title} />
-            <div className="module-item-title">{module.title}</div>
-          </div>
-        ))}
+    <div>
+    <Header />
+    <SideBar />
+ 
+      <div className={styles['course-modules']}>
+        <h1>Modules</h1>
+        <div className={styles['module-grid']}>
+          {modules.slice(0, 2).map((module) => (  // Display first two modules
+            <div key={module.id} className={styles['module-card']}>
+              <img src={module.image} alt={module.description} />
+              <div className={styles['module-content']}>
+                <h2>{module.id}</h2>
+                <p>{module.description}</p>
+                <button onClick={() => handleNavigation(module.id)}>{module.id}</button> {/* Navigate on click */}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className={styles['module-grid']}>
+          {modules.slice(2, 4).map((module) => (  // Display remaining two modules
+            <div key={module.id} className={styles['module-card']}>
+              <img src={module.image} alt={module.description} />
+              <div className={styles['module-content']}>
+                <h2>{module.id}</h2>
+                <p>{module.description}</p>
+                <button onClick={() => handleNavigation(module.id)}>{module.id}</button> {/* Navigate on click */}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-
-      <button className="module-nav right" onClick={handleNext}>
-        <FaChevronRight />
-      </button>
-    </div>
-    </SideBarNavBar>
+      </div>
+    
   );
-};
-
-export default ModulePage;
+}

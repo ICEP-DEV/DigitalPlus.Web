@@ -1,61 +1,76 @@
-.module-page-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 80%;
-    margin: auto;
-  }
-  
-  .module-carousel {
-    display: flex;
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  .module-item {
-    min-width: 250px;
-    max-width: 250px;
-    margin: 10px;
-    text-align: center;
-    transition: transform 0.5s ease;
-  }
-  
-  .module-item img {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .module-item-title {
-    margin-top: 10px;
-    font-weight: bold;
-  }
-  
-  .module-item.active {
-    transform: scale(1.1);
-  }
-  
-  .module-nav {
-    background: none;
-    border: none;
+.course-modules {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
     font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px; /* Add some space between the grids */
+}
+
+.module-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+}
+
+.module-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.module-content {
+    padding: 16px;
+}
+
+.module-content h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.module-content p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #0070f3;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
     cursor: pointer;
-    color: #333;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  
-  .module-nav.left {
-    left: 0;
-  }
-  
-  .module-nav.right {
-    right: 0;
-  }
-  
-  .module-nav:hover {
-    color: #000;
-  }
-  
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .module-grid {
+        grid-template-columns: 1fr;
+    }
+}

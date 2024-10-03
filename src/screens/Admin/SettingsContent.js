@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import styles from './SettingsContent.module.css';
 
 const Settings = () => {
   const [activeSection, setActiveSection] = useState('account');
+  const [user, setUser] = useState(null);
   const [editField, setEditField] = useState({
     fullName: false,
     email: false,
     contact: false,
     password: false,
   });
+
+  // Fetch user data from localStorage on component mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const handleDownloadPdf = (id) => {
     const input = document.getElementById(id);
@@ -26,6 +35,11 @@ const Settings = () => {
   const toggleEdit = (field) => {
     setEditField((prevState) => ({ ...prevState, [field]: !prevState[field] }));
   };
+
+  // If user data is not available yet, return null or a loading state
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={styles.settingsContainer}>
@@ -54,7 +68,7 @@ const Settings = () => {
                 <span>Full Name:</span>
                 <input
                   type="text"
-                  value="Michael Banning"
+                  value={`${user.firstName} ${user.lastName}`}
                   disabled={!editField.fullName}
                 />
                 <button onClick={() => toggleEdit('fullName')}>Edit</button>
@@ -63,7 +77,7 @@ const Settings = () => {
                 <span>Email Address:</span>
                 <input
                   type="email"
-                  value="mikebanning2020@gmail.com"
+                  value={user.personalEmail}
                   disabled={!editField.email}
                 />
                 <button onClick={() => toggleEdit('email')}>Edit</button>
@@ -72,7 +86,7 @@ const Settings = () => {
                 <span>Contact:</span>
                 <input
                   type="text"
-                  value="0780275112"
+                  value={user.contactNo}
                   disabled={!editField.contact}
                 />
                 <button onClick={() => toggleEdit('contact')}>Edit</button>
@@ -81,7 +95,7 @@ const Settings = () => {
                 <span>Password:</span>
                 <input
                   type="password"
-                  value="*************"
+                  value={user.password}
                   disabled={!editField.password}
                 />
                 <button onClick={() => toggleEdit('password')}>Edit</button>

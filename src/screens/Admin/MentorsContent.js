@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styles from './MentorsContent.module.css';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MentorsContent = () => {
   const modules = ['Module 1', 'Module 2', 'Module 3', 'Module 4'];
   const labs = ['Lab 1', 'Lab 2', 'Lab 3', 'Lab 4'];
 
-  // State to store mentors
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [mentorForm, setMentorForm] = useState({
@@ -16,26 +17,31 @@ const MentorsContent = () => {
     personalEmail: '',
     contactNo: '',
     password: '',
-    activated: 1, // Default is activated
+    activated: true,
     module: '',
-    lab: ''
+    lab: '',
+    mentorId: null
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
-  // Fetch mentors from the API when the component mounts
   useEffect(() => {
     const fetchMentors = async () => {
       try {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentors');
-        setMentors(response.data); // Set the fetched mentors in state
+        const data = response.data.map(mentor => ({
+          ...mentor,
+          activated: !!mentor.activated,
+          mentorId: mentor.mentorId
+        }));
+        setMentors(data);
       } catch (error) {
         console.error('Error fetching mentors:', error);
       }
     };
-
     fetchMentors();
-  }, []); // Empty dependency array ensures this runs once on mount
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
@@ -49,19 +55,82 @@ const MentorsContent = () => {
     setMentorForm({ ...mentorForm, [field]: value });
   };
 
-  const handleAddMentor = () => {
-    setMentors([...mentors, mentorForm]);
-    resetForm();
-    setIsModalVisible(false);
+  const handleAddMentor = async () => {
+    try {
+      const newMentor = {
+        mentorId: 0,
+        firstName: mentorForm.firstName,
+        lastName: mentorForm.lastName,
+        studentEmail: mentorForm.studentEmail,
+        personalEmail: mentorForm.personalEmail,
+        contactNo: mentorForm.contactNo,
+        password: mentorForm.password,
+        available: mentorForm.available !== undefined ? mentorForm.available : 0,
+        activated: mentorForm.activated ? true : false
+      };
+
+      const response = await axios.post(
+        `https://localhost:7163/api/DigitalPlusUser/AddMentor`,
+        newMentor,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      setMentors([...mentors, response.data]);
+      resetForm();
+      setIsModalVisible(false);
+
+      toast.success('Mentor added successfully!');
+    } catch (error) {
+      console.error('Error adding mentor:', error.response ? error.response.data : error.message);
+      toast.error('Failed to add mentor. Please try again.');
+    }
   };
 
-  const handleEditMentor = () => {
-    const updatedMentors = mentors.map(mentor =>
-      mentor.studentEmail === mentorForm.studentEmail ? mentorForm : mentor
-    );
-    setMentors(updatedMentors);
-    resetForm();
-    setIsModalVisible(false);
+  const handleEditMentor = async () => {
+    try {
+      if (!mentorForm.mentorId) {
+        console.error('MentorId is null or undefined');
+        return;
+      }
+
+      const updatedMentor = {
+        mentorId: mentorForm.mentorId,
+        firstName: mentorForm.firstName,
+        lastName: mentorForm.lastName,
+        studentEmail: mentorForm.studentEmail,
+        personalEmail: mentorForm.personalEmail,
+        contactNo: mentorForm.contactNo,
+        password: mentorForm.password,
+        available: mentorForm.available !== undefined ? mentorForm.available : 0,
+        activated: mentorForm.activated ? true : false
+      };
+
+      const response = await axios.put(
+        `https://localhost:7163/api/DigitalPlusUser/UpdateMentor/${mentorForm.mentorId}`,
+        updatedMentor,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      const updatedMentors = mentors.map(mentor =>
+        mentor.mentorId === mentorForm.mentorId ? { ...mentor, ...updatedMentor } : mentor
+      );
+      setMentors(updatedMentors);
+      resetForm();
+      setIsModalVisible(false);
+
+      toast.success('Mentor updated successfully!');
+    } catch (error) {
+      console.error('Error updating mentor:', error.response ? error.response.data : error.message);
+      toast.error('Failed to update mentor. Please try again.');
+    }
   };
 
   const openAddMentorModal = () => {
@@ -76,20 +145,6 @@ const MentorsContent = () => {
     setIsModalVisible(true);
   };
 
-  // Toggle activated status based on the "activated" field
-  const toggleStatus = (studentEmail) => {
-    const updatedMentors = mentors.map((mentor) => {
-      if (mentor.studentEmail === studentEmail) {
-        return {
-          ...mentor,
-          activated: mentor.activated === 1 ? 0 : 1, // Toggle between 1 (ACTIVATED) and 0 (DEACTIVATED)
-        };
-      }
-      return mentor;
-    });
-    setMentors(updatedMentors);
-  };
-
   const resetForm = () => {
     setMentorForm({
       firstName: '',
@@ -98,36 +153,34 @@ const MentorsContent = () => {
       personalEmail: '',
       contactNo: '',
       password: '',
-      activated: 1, // Default to activated
+      activated: true,
       module: '',
-      lab: ''
+      lab: '',
+      mentorId: null
     });
+    setShowPassword(false); // Reset password visibility
   };
 
-  const downloadCSV = () => {
-    const headers = ['First Name', 'Last Name', 'Student Email', 'Personal Email', 'Contact No', 'Password', 'Activated', 'Module', 'Lab'];
-    const rows = mentors.map(mentor => [
-      mentor.firstName,
-      mentor.lastName,
-      mentor.studentEmail,
-      mentor.personalEmail,
-      mentor.contactNo,
-      mentor.password,
-      mentor.activated === 1 ? 'ACTIVATED' : 'DEACTIVATED',
-      mentor.module,
-      mentor.lab
-    ]);
-    let csvContent = 'data:text/csv;charset=utf-8,' + headers.join(',') + '\n' + rows.map(row => row.join(',')).join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'mentors_list.csv');
-    document.body.appendChild(link);
-    link.click();
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
+// Show the modal
+function showModal() {
+  document.querySelector('.modal').style.display = 'flex';
+  document.body.classList.add('body-modal-active');
+}
+
+// Hide the modal
+function hideModal() {
+  document.querySelector('.modal').style.display = 'none';
+  document.body.classList.remove('body-modal-active');
+}
 
   return (
     <div className={styles.mentorsContainer}>
+      <ToastContainer />
+
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
           <input
@@ -139,9 +192,6 @@ const MentorsContent = () => {
           />
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.downloadCsvButton} onClick={downloadCSV}>
-            Download List
-          </button>
           <button className={styles.addMentorButton} onClick={openAddMentorModal}>
             Add Mentor
           </button>
@@ -157,10 +207,7 @@ const MentorsContent = () => {
               <th>Student Email</th>
               <th>Personal Email</th>
               <th>Contact No</th>
-              <th>Password</th>
               <th>Status</th>
-              <th>Module</th>
-              <th>Lab</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -173,27 +220,23 @@ const MentorsContent = () => {
                   <td>{mentor.studentEmail}</td>
                   <td>{mentor.personalEmail}</td>
                   <td>{mentor.contactNo}</td>
-                  <td>{mentor.password}</td>
                   <td>
                     <button
-                      className={styles.statusToggleButton}
-                      onClick={() => toggleStatus(mentor.studentEmail)}
+                      className={`${styles.statusToggleButton} ${mentor.activated ? styles.activate : styles.deactivate}`}
                     >
-                      {mentor.activated === 1 ? 'ACTIVATED' : 'DEACTIVATED'}
+                      {mentor.activated ? 'ACTIVATED' : 'DEACTIVATED'}
                     </button>
                   </td>
-                  <td>{mentor.module}</td>
-                  <td>{mentor.lab}</td>
                   <td>
-                    <button className={styles.editButton} onClick={() => openEditMentorModal(mentor)}>
-                      Edit
+                    <button className={styles.manageButton} onClick={() => openEditMentorModal(mentor)}>
+                      Manage
                     </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="10" className={styles.noMentorsMessage}>
+                <td colSpan="7" className={styles.noMentorsMessage}>
                   No mentors found.
                 </td>
               </tr>
@@ -251,10 +294,15 @@ const MentorsContent = () => {
                 className={styles.inputField}
               />
             </div>
-            <div>
+            <div className={styles.passwordField}>
               <label>Password:</label>
+              <span className={styles.eyeIcon} onClick={togglePasswordVisibility}>
+                {showPassword ? '🙈' : '👁️'}
+              </span>
+            </div>
+            <div>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={mentorForm.password}
                 onChange={(e) => handleFormChange('password', e.target.value)}
                 className={styles.inputField}
@@ -263,38 +311,12 @@ const MentorsContent = () => {
             <div>
               <label>Status:</label>
               <select
-                value={mentorForm.activated}
-                onChange={(e) => handleFormChange('activated', parseInt(e.target.value))}
+                value={mentorForm.activated ? 1 : 0}
+                onChange={(e) => handleFormChange('activated', !!parseInt(e.target.value))}
                 className={styles.selectField}
               >
                 <option value={1}>ACTIVATED</option>
                 <option value={0}>DEACTIVATED</option>
-              </select>
-            </div>
-            <div>
-              <label>Module:</label>
-              <select
-                value={mentorForm.module}
-                onChange={(e) => handleFormChange('module', e.target.value)}
-                className={styles.selectField}
-              >
-                <option value="">Select Module</option>
-                {modules.map((module, index) => (
-                  <option key={index} value={module}>{module}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label>Lab:</label>
-              <select
-                value={mentorForm.lab}
-                onChange={(e) => handleFormChange('lab', e.target.value)}
-                className={styles.selectField}
-              >
-                <option value="">Select Lab</option>
-                {labs.map((lab, index) => (
-                  <option key={index} value={lab}>{lab}</option>
-                ))}
               </select>
             </div>
             <div className={styles.modalButtons}>

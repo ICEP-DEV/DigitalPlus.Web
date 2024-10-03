@@ -1,154 +1,224 @@
-.mentors-content-container {
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f4f6f9;
-    min-height: 100vh;
-    font-family: 'Roboto', sans-serif;
-  }
-  
-  .mentors-content-header {
-    margin-bottom: 30px;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  
-  .mentors-content-search-bar-container {
-    display: flex;
-    justify-content: flex-start;
-    width: 20%;
-  }
-  
-  .mentors-content-search-bar {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    outline: none;
-    border-radius: 8px;
-    font-size: 16px;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-  }
-  
-  .mentors-content-search-bar:focus {
-    box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.5);
-  }
-  
-  .mentors-content-button-group {
-    display: flex;
-    gap: 15px;
-    justify-content: flex-end;
-  }
-  
-  .mentors-content-download-csv-button,
-  .mentors-content-add-mentor-button {
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    font-size: 16px;
-  }
-  
-  .mentors-content-download-csv-button {
-    background-color: #28a745;
-  }
-  
-  .mentors-content-download-csv-button:hover {
-    background-color: #218838;
-  }
-  
-  .mentors-content-add-mentor-button {
-    background-color: #007bff;
-  }
-  
-  .mentors-content-add-mentor-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .mentors-content-table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-  }
-  
-  .mentors-content-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  .mentors-content-table th,
-  .mentors-content-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .mentors-content-table th {
-    background-color: #f8f9fa;
-  }
-  
-  .status-toggle-button {
-    margin-left: 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .status-toggle-button.activate {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .status-toggle-button.deactivate {
-    background-color: #dc3545;
-    color: white;
-  }
-  
-  .edit-button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #ffc107;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .edit-button:hover {
-    background-color: #e0a800;
-  }
-  
-  .mentors-content-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .mentors-content-modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-  }
-  
-  .mentors-content-modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
+.mentorsContainer {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f6f9;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.searchBarContainer {
+  width: 30%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.searchBar {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.searchBar:focus {
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 15px;
+}
+
+.downloadCsvButton, .addMentorButton {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  color: white;
+  background-color: #007bff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.downloadCsvButton {
+  background-color: #007bff;
+}
+
+.downloadCsvButton:hover {
+  background-color: #0056b3;
+}
+
+.addMentorButton {
+  background-color: #6c757d;
+}
+
+.addMentorButton:hover {
+  background-color: #5a6268;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.mentorsTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #000;
+}
+
+.mentorsTable th,
+.mentorsTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+
+.mentorsTable th {
+  background-color: #f8f9fa;
+  color: #003366;
+  text-transform: uppercase;
+}
+
+.mentorsTable td {
+  background-color: #fff;
+}
+
+.mentorsTable td:last-child,
+.mentorsTable th:last-child {
+  border-right: none;
+}
+
+.statusToggleButton {
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+.statusToggleButton.activate {
+  background-color: #28a745;
+}
+
+.statusToggleButton.deactivate {
+  background-color: #dc3545;
+}
+
+.manageButton {
+  background-color: #8b4513;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.registerButton {
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.registerButton:hover {
+  background-color: #0056b3;
+}
+.modal {
+  position: fixed; /* Fixed position to cover the whole viewport */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Dark background overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* High z-index to prevent interaction with any other elements */
+  pointer-events: auto; /* Allow pointer events inside the modal */
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10000; /* Ensure modal content is above the overlay */
+  position: relative;
+}
+
+.body-modal-active {
+  pointer-events: none; /* Disable pointer events for the body */
+}
+
+.modal .modalContent {
+  pointer-events: all; /* Re-enable pointer events only inside the modal */
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.inputField {
+  width: 100%; /* Ensure full width */
+  padding: 10px; /* Adjust padding for consistency */
+  margin-bottom: 10px; /* Add margin for spacing */
+  box-sizing: border-box; /* Include padding and border in the element's width and height */
+}
+
+.passwordField {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Add margin for consistent spacing */
+}
+
+.eyeIcon {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.selectField {
+  width: 100%; /* Ensure full width for dropdown */
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}

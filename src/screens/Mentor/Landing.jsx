@@ -1,6 +1,6 @@
 import React from "react";
 // import SideBarNavBar from './Navigation/SideBarNavBar';
-import Header from './Navigation/NavBar';
+import Header from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
 
 function Landing() {

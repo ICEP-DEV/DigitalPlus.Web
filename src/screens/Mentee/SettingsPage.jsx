@@ -1,124 +1,172 @@
-import React, { useState, useEffect } from 'react';
-import styles from './SettingsPage.module.css'; // Create a CSS file for styling
+import React, { useState } from 'react';
+import styles from './SettingsPage.module.css';  // Import the module.css file
 import SideBarNavBar from './Navigation/SideBarNavBar';
 
-const SettingsPage = () => {
-  // Initialize state for user data
-  const [user, setUser] = useState({
-    name: '',
-    surname: '',
-    email: '',
-    yearofstudy: '',
-    contact: '',
-    modules: [],
+const Settings = () => {
+  const [activeTab, setActiveTab] = useState('changePassword'); // Default to 'Change Password'
+  const [isEditing, setIsEditing] = useState(false); // State to toggle between view and edit mode
+  const [formData, setFormData] = useState({
+    firstName: 'Jonathan',
+    lastName: 'Wick',
+    email: '222870097@tut4life.com',
+    contact: '0780275153',
+    yearOfStudy: '3',
   });
 
-  // UseEffect to fetch user data from localStorage when component mounts
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-
-    if (storedUser) {
-      setUser({
-        name: storedUser.firstName || '',
-        surname: storedUser.lastName || '',
-        email: storedUser.studentEmail || '',
-        yearofstudy: storedUser.yearofstudy || '',
-        contact: storedUser.contactNo || '',
-        modules: storedUser.modules || [],
-      });
-    }
-  }, []);
-
-  // Handle form input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({
-      ...user,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission (you can connect this to a backend or API)
+  const handleEdit = () => {
+    setIsEditing(!isEditing); // Toggle edit mode
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Updated user details:', user);
-    // Add your logic to save updated data
-    // Optionally, save the updated user data back to localStorage
-    localStorage.setItem('user', JSON.stringify(user));
+    setIsEditing(false); // Submit and exit edit mode
   };
 
   return (
     <SideBarNavBar>
-      <div className={styles.pageContainer}>
-        <div className={styles.settingsFormSection}>
-          <h1>Edit Your Profile</h1>
-          <form onSubmit={handleSubmit} className={styles.settingsForm}>
-            <div className={styles.inputGroup}>
-              <label htmlFor="name">First Name:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={user.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label htmlFor="surname">Last Name:</label>
-              <input
-                type="text"
-                id="surname"
-                name="surname"
-                value={user.surname}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={user.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label htmlFor="yearofstudy">Year of Study:</label>
-              <input
-                type="text"
-                id="yearofstudy"
-                name="yearofstudy"
-                value={user.yearofstudy}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label htmlFor="contact">Contact:</label>
-              <input
-                type="text"
-                id="contact"
-                name="contact"
-                value={user.contact}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <button type="submit" className={styles.saveButton}>Save Changes</button>
-          </form>
-        </div>
+    <div className={styles.settingsContainer}>
+      <h2>Account Settings</h2>
+      {/* Tabs */}
+      <div className={styles.settingsTabs}>
+        <button
+          className={activeTab === 'personalDetails' ? styles.activeTab : ''}
+          onClick={() => setActiveTab('personalDetails')}
+        >
+          Personal Details
+        </button>
+        <button
+          className={activeTab === 'changePassword' ? styles.activeTab : ''}
+          onClick={() => setActiveTab('changePassword')}
+        >
+          Change Password
+        </button>
       </div>
+
+      {/* Tab Content */}
+      <div className={styles.tabContent}>
+        {activeTab === 'personalDetails' && (
+          <div>
+            <div className={styles.profileContainer}>
+              <form className={styles.profileForm} onSubmit={handleSubmit}>
+                <div className={styles.formGroup}>
+                  <label>First Name:</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Last Name:</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Email:</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Contact:</label>
+                  <input
+                    type="text"
+                    name="contact"
+                    value={formData.contact}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Year of Study:</label>
+                  <input
+                    type="text"
+                    name="yearOfStudy"
+                    value={formData.yearOfStudy}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+
+                <div className={styles.formGroupFullWidth}>
+                  <label htmlFor="department">Department</label>
+                  <select
+                    id="department"
+                    name="department"
+                    onChange={handleChange}
+                    disabled={!isEditing} // Make it editable only when isEditing is true
+                  >
+                    <option value="">Select a department</option>
+                    <option value="IT">IT</option>
+                    <option value="HR">Human Resources</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Sales">Sales</option>
+                  </select>
+                </div>
+
+                <div className={styles.formButtons}>
+                  <button
+                    type="button"
+                    className={styles.editButton}
+                    onClick={handleEdit}
+                  >
+                    {isEditing ? 'Cancel' : 'Edit'}
+                  </button>
+                  {isEditing && (
+                    <button type="submit" className={styles.updateButton}>
+                      Update
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'changePassword' && (
+          <div>
+            <div className={styles.passwordForm}>
+              <div className={styles.formGroup}>
+                <label>Current Password:</label>
+                <input type="password" name="currentPassword" />
+              </div>
+              <div className={styles.formGroup}>
+                <label>New Password:</label>
+                <input type="password" name="newPassword" />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Confirm Password:</label>
+                <input type="password" name="confirmPassword" />
+              </div>
+            </div>
+            <button className={styles.changePasswordButton}>Change Password</button>
+          </div>
+        )}
+      </div>
+    </div>
     </SideBarNavBar>
   );
 };
 
-export default SettingsPage;
+export default Settings;

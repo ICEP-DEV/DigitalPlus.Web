@@ -37,7 +37,7 @@ function SideBar() {
 
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/bookings')}>
           <IoHome className={styles.icon} />
-          {!isCollapsed && <span>BOOKINGS</span>}
+          {!isCollapsed && <span>BOOKING</span>}
         </div>
 
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/RegisterPage')}>

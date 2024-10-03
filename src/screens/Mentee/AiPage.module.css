@@ -74,13 +74,17 @@
 
 .messageInput {
     flex-grow: 1;
-    padding: 10px;
+    padding: 10px ;
     border: 1px solid #ddd;
     border-radius: 8px;
     outline: none;
+    height: 40px;          /* Ensures consistent height with the button */
 }
 
+
+
 .sendButton {
+    width: auto;    /* Adjust if you want a specific width */
     padding: 10px 15px;
     margin-left: 10px;
     background-color: #182a3d;
@@ -89,6 +93,8 @@
     border-radius: 12px;
     cursor: pointer;
     outline: none;
+    box-sizing: border-box;
+    height: 40px;          /* Ensures consistent height with the button */
 }
 
 .uploadInput {
@@ -126,12 +132,12 @@
 }
 
 .pdfButton {
+    width: auto;
     padding: 10px;
     background-color: #182a3d;
     color: white;
     border: none;
     border-radius: 12px;
-    margin: 10px;
     cursor: pointer;
 }
 

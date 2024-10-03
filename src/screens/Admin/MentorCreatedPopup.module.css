@@ -25,3 +25,13 @@
     border: none;
     font-size: 16px;
 }
+
+  .passwordField {
+    display: flex;
+    align-items: center;
+  }
+  
+  .eyeIcon {
+    cursor: pointer;
+    margin-left: 10px;
+  }

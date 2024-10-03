@@ -1,11 +1,29 @@
-/* Ensure that the container can scroll vertically if there's overflow */
-.scrollableContainer {
-    height: 100vh; /* Full viewport height */
-    overflow-y: auto; /* Enable vertical scroll */
-}
-  
-.appNavigations {
+/* Sidebar and Navbar Container */
+.appContainer {
     display: flex;
-    flex-direction: column; /* Adjust this if necessary */
-    max-height: 100%;
+    flex-direction: row;
+    height: 100vh;
+    width: 100%; /* Make sure the container spans the whole width */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Main Content styles */
+.mainContent {
+    margin-left: 250px; /* Should match the sidebar's width */
+    padding: 20px;
+    transition: margin-left 0.3s ease; /* Smooth transition when sidebar collapses */
+    width: calc(100% - 250px); /* Adjust width based on sidebar */
+    position: relative;
+    top: 120px; /* Height of the navbar */
+    overflow-y: auto;
+    background-color: #fff; /* Background color for visibility */
+}
+
+@media (max-width: 768px) {
+    .appContainer, .mainContent {
+        flex-direction: column;
+        margin-left: 0;
+        width: 100%; /* Full width on smaller screens */
+        top: 0; /* Reset top for main content */
+    }
 }
