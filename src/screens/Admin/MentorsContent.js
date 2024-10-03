@@ -5,12 +5,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const MentorsContent = () => {
-  const modules = ['Module 1', 'Module 2', 'Module 3', 'Module 4'];
-  const labs = ['Lab 1', 'Lab 2', 'Lab 3', 'Lab 4'];
-
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [mentorForm, setMentorForm] = useState({
+    mentorId: '', // Allow users to set this manually
     firstName: '',
     lastName: '',
     studentEmail: '',
@@ -18,9 +16,9 @@ const MentorsContent = () => {
     contactNo: '',
     password: '',
     activated: true,
+    available: 0, // Assuming available should be initialized
     module: '',
-    lab: '',
-    mentorId: null
+    lab: ''
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -58,7 +56,7 @@ const MentorsContent = () => {
   const handleAddMentor = async () => {
     try {
       const newMentor = {
-        mentorId: 0,
+        mentorId: mentorForm.mentorId, // Use the provided mentorId
         firstName: mentorForm.firstName,
         lastName: mentorForm.lastName,
         studentEmail: mentorForm.studentEmail,
@@ -82,7 +80,6 @@ const MentorsContent = () => {
       setMentors([...mentors, response.data]);
       resetForm();
       setIsModalVisible(false);
-
       toast.success('Mentor added successfully!');
     } catch (error) {
       console.error('Error adding mentor:', error.response ? error.response.data : error.message);
@@ -91,14 +88,17 @@ const MentorsContent = () => {
   };
 
   const handleEditMentor = async () => {
-    try {
-      if (!mentorForm.mentorId) {
-        console.error('MentorId is null or undefined');
-        return;
-      }
+    console.log("Mentor form:", mentorForm); // Log the mentorForm state
 
+    // Check if mentorId is null or undefined or not
+    if (mentorForm.mentorId === null || mentorForm.mentorId === undefined || mentorForm.mentorId === '') {
+      console.error('MentorId is null, undefined or empty');
+      return;
+    }
+
+    try {
       const updatedMentor = {
-        mentorId: mentorForm.mentorId,
+        mentorId: mentorForm.mentorId, // Use the provided mentorId
         firstName: mentorForm.firstName,
         lastName: mentorForm.lastName,
         studentEmail: mentorForm.studentEmail,
@@ -110,7 +110,7 @@ const MentorsContent = () => {
       };
 
       const response = await axios.put(
-        `https://localhost:7163/api/DigitalPlusUser/UpdateMentor/${mentorForm.mentorId}`,
+        `https://localhost:7163/api/DigitalPlusUser/UpdateMentor/${parseInt(mentorForm.mentorId)}`,
         updatedMentor,
         {
           headers: {
@@ -125,7 +125,6 @@ const MentorsContent = () => {
       setMentors(updatedMentors);
       resetForm();
       setIsModalVisible(false);
-
       toast.success('Mentor updated successfully!');
     } catch (error) {
       console.error('Error updating mentor:', error.response ? error.response.data : error.message);
@@ -147,6 +146,7 @@ const MentorsContent = () => {
 
   const resetForm = () => {
     setMentorForm({
+      mentorId: '', // Reset MentorId
       firstName: '',
       lastName: '',
       studentEmail: '',
@@ -154,9 +154,9 @@ const MentorsContent = () => {
       contactNo: '',
       password: '',
       activated: true,
+      available: 0, // Reset available as well
       module: '',
-      lab: '',
-      mentorId: null
+      lab: ''
     });
     setShowPassword(false); // Reset password visibility
   };
@@ -165,17 +165,6 @@ const MentorsContent = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-// Show the modal
-function showModal() {
-  document.querySelector('.modal').style.display = 'flex';
-  document.body.classList.add('body-modal-active');
-}
-
-// Hide the modal
-function hideModal() {
-  document.querySelector('.modal').style.display = 'none';
-  document.body.classList.remove('body-modal-active');
-}
 
   return (
     <div className={styles.mentorsContainer}>
@@ -202,6 +191,7 @@ function hideModal() {
         <table className={styles.mentorsTable}>
           <thead>
             <tr>
+              <th>Mentor ID</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Student Email</th>
@@ -215,6 +205,7 @@ function hideModal() {
             {filteredMentors.length > 0 ? (
               filteredMentors.map((mentor, index) => (
                 <tr key={index}>
+                  <td>{mentor.mentorId}</td>
                   <td>{mentor.firstName}</td>
                   <td>{mentor.lastName}</td>
                   <td>{mentor.studentEmail}</td>
@@ -236,7 +227,7 @@ function hideModal() {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className={styles.noMentorsMessage}>
+                <td colSpan="8" className={styles.noMentorsMessage}>
                   No mentors found.
                 </td>
               </tr>
@@ -249,6 +240,15 @@ function hideModal() {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h2>{isEditing ? 'Edit Mentor' : 'Add Mentor'}</h2>
+            <div>
+              <label>Mentor ID:</label>
+              <input
+                type="text"
+                value={mentorForm.mentorId}
+                onChange={(e) => handleFormChange('mentorId', e.target.value)}
+                className={styles.inputField}
+              />
+            </div>
             <div>
               <label>First Name:</label>
               <input
@@ -299,8 +299,6 @@ function hideModal() {
               <span className={styles.eyeIcon} onClick={togglePasswordVisibility}>
                 {showPassword ? '🙈' : '👁️'}
               </span>
-            </div>
-            <div>
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={mentorForm.password}
