@@ -16,7 +16,7 @@ const MenteesContent = () => {
     password: '',
     semester: '', // Semester field
     activated: true,
-    menteeId: null, // Store menteeId for editing
+    mentee_Id: null, // Store menteeId for editing
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -30,7 +30,7 @@ const MenteesContent = () => {
         const data = response.data.map(mentee => ({
           ...mentee,
           activated: !!mentee.activated, // Convert bit to boolean
-          menteeId: mentee.menteeId, // Use menteeId
+          mentee_Id: mentee.mentee_Id, // Use menteeId
         }));
         setMentees(data);
       } catch (error) {
@@ -59,7 +59,7 @@ const MenteesContent = () => {
   const handleAddMentee = async () => {
     try {
       const newMentee = {
-        menteeId: 0, // Assuming menteeId is auto-generated
+        mentee_Id: 0, // Assuming menteeId is auto-generated
         firstName: menteeForm.firstName,
         lastName: menteeForm.lastName,
         studentEmail: menteeForm.studentEmail,
@@ -93,13 +93,13 @@ const MenteesContent = () => {
   // Handle editing an existing mentee
   const handleEditMentee = async () => {
     try {
-      if (!menteeForm.menteeId) {
+      if (!menteeForm.mentee_Id) {
         console.error('MenteeId is null or undefined');
         return;
       }
 
       const updatedMentee = {
-        menteeId: menteeForm.menteeId,
+        mentee_Id: menteeForm.mentee_Id,
         firstName: menteeForm.firstName,
         lastName: menteeForm.lastName,
         studentEmail: menteeForm.studentEmail,
@@ -111,7 +111,7 @@ const MenteesContent = () => {
       };
 
       await axios.put(
-        `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.menteeId}`,
+        `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.mentee_Id}`,
         updatedMentee,
         {
           headers: {
@@ -122,7 +122,7 @@ const MenteesContent = () => {
 
       // Update the mentees list locally after the update
       const updatedMentees = mentees.map(mentee =>
-        mentee.menteeId === menteeForm.menteeId ? { ...mentee, ...updatedMentee } : mentee
+        mentee.mentee_Id === menteeForm.mentee_Id ? { ...mentee, ...updatedMentee } : mentee
       );
       setMentees(updatedMentees);
       resetForm();
@@ -159,7 +159,7 @@ const MenteesContent = () => {
       password: '',
       semester: '',
       activated: true,
-      menteeId: null,
+      mentee_Id: null,
     });
     setShowPassword(false); // Reset password visibility
   };
