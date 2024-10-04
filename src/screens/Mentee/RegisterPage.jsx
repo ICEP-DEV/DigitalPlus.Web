@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import HeaderAnnouncementPage from '../Mentor/Headers/HeaderAnnouncementPage';
 import SideBar from './Navigation/SideBar';
 import styles from './RegisterPage.module.css'; // Import CSS module
+import NavBar from './Navigation/NavBar';
 
 const RegisterPage = () => {
   const [selectedModule, setSelectedModule] = useState('');
@@ -30,7 +31,8 @@ const RegisterPage = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <HeaderAnnouncementPage />
+      {/* <HeaderAnnouncementPage /> */}
+        <NavBar/>
       <SideBar />
       <div className={styles.registerPageContainer}>
         <div className={styles.mainContent}>

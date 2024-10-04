@@ -99,7 +99,7 @@ const RegisterPage = () => {
 
                                 {/* Wrap submit button with a container for centering */}
                                 <div style={styles.buttonContainer}>
-                                    <button type="submit" style={styles.submitButton}>Submit</button>
+                                    <button type="submit" style={styles.submitButton}>Activate</button>
                                 </div>
                             </form>
                         </div>

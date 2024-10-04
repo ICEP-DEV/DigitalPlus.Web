@@ -11,7 +11,10 @@
     align-items: center;
     padding: 0 20px;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-left: -20px;
   }
+
+ 
   
   .headerScrolled {
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -54,6 +57,7 @@
     align-items: center;
     opacity: 0;
     transition: opacity 1.5s ease-in-out;
+    margin-left: -20px;
   }
   
   .navLoaded {
@@ -63,7 +67,7 @@
   .navLink {
     color: white;
     font-size: 1rem;
-    margin-left: 20px;
+    margin-left: 10px;
     text-decoration: none;
     opacity: 0;
     transition: opacity 1s ease-in-out;
@@ -87,5 +91,8 @@
   
   .underlineHovered {
     transform: scaleX(1);
+  }
+  .nav .nav-link {
+    margin-left: 10px; 
   }
   

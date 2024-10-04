@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LogoutComponent from "./LogoutComponent";
-import Landing from "./Landingpage";
+// import Landing from "./Landingpage";
 import FeedbackPage from "./FeedbackPage";
 import AiPage from "./AiPage";
 import BookingPage from "./BookingPage";

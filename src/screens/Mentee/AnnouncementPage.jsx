@@ -4,6 +4,7 @@ import Sidebar from './Bars/Sidebar';
 import { FaInfoCircle } from 'react-icons/fa';
 import styles from './AnnouncementPage.module.css'; // Importing the CSS module
 import SideBar from './Navigation/SideBar';
+import NavBar from './Navigation/NavBar';
 
 const announcements = [
     { date: '12/07/2024', message: 'New mentorship program starts!' },
@@ -31,7 +32,8 @@ function AnnouncementPage() {
 
     return (
         <div className={styles.container}>
-            <HeaderAnnouncementPage />
+            {/* <HeaderAnnouncementPage /> */}
+            <NavBar/>
             <SideBar/>
             <div className={styles.content}>
                 <h1 className={styles.header}>ANNOUNCEMENTS</h1>

@@ -13,12 +13,13 @@ import styles from './VideoLandingPage.module.css';
 const VideoLandingPage = () => {
   return (
     <div>
+      <VideoLandingPageHeader />
       {/* Carousel Section */}
       <div
         id="carousel-section"
         className={styles.carouselSection}
       >
-        <VideoLandingPageHeader />
+        
         {/* Carousel without controls */}
         <Carousel controls={false}>
           {/* First Slide - Local Video */}
