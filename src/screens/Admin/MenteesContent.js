@@ -8,6 +8,7 @@ const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [menteeForm, setMenteeForm] = useState({
+    mentee_Id: '', // Editable Mentee_Id field
     firstName: '',
     lastName: '',
     studentEmail: '',
@@ -16,7 +17,6 @@ const MenteesContent = () => {
     password: '',
     semester: '', // Semester field
     activated: true,
-    mentee_Id: null, // Store menteeId for editing
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -59,7 +59,7 @@ const MenteesContent = () => {
   const handleAddMentee = async () => {
     try {
       const newMentee = {
-        mentee_Id: 0, // Assuming menteeId is auto-generated
+        mentee_Id: menteeForm.mentee_Id, // Use the user-entered mentee_Id
         firstName: menteeForm.firstName,
         lastName: menteeForm.lastName,
         studentEmail: menteeForm.studentEmail,
@@ -94,12 +94,12 @@ const MenteesContent = () => {
   const handleEditMentee = async () => {
     try {
       if (!menteeForm.mentee_Id) {
-        console.error('MenteeId is null or undefined');
+        console.error('Mentee_Id is null or undefined');
         return;
       }
 
       const updatedMentee = {
-        mentee_Id: menteeForm.mentee_Id,
+        mentee_Id: menteeForm.mentee_Id, // Use the user-entered mentee_Id
         firstName: menteeForm.firstName,
         lastName: menteeForm.lastName,
         studentEmail: menteeForm.studentEmail,
@@ -151,6 +151,7 @@ const MenteesContent = () => {
   // Reset form fields
   const resetForm = () => {
     setMenteeForm({
+      mentee_Id: '', // Reset the mentee_Id field
       firstName: '',
       lastName: '',
       studentEmail: '',
@@ -159,7 +160,6 @@ const MenteesContent = () => {
       password: '',
       semester: '',
       activated: true,
-      mentee_Id: null,
     });
     setShowPassword(false); // Reset password visibility
   };
@@ -193,6 +193,7 @@ const MenteesContent = () => {
         <table className={styles.menteesTable}>
           <thead>
             <tr>
+              <th>Mentee ID</th>
               <th>First Name</th>
               <th>Last Name</th>
               <th>Student Email</th>
@@ -208,6 +209,7 @@ const MenteesContent = () => {
             {filteredMentees.length > 0 ? (
               filteredMentees.map((mentee, index) => (
                 <tr key={index}>
+                  <td>{mentee.mentee_Id}</td>
                   <td>{mentee.firstName}</td>
                   <td>{mentee.lastName}</td>
                   <td>{mentee.studentEmail}</td>
@@ -217,9 +219,7 @@ const MenteesContent = () => {
                   <td>{mentee.semester}</td>
                   <td>
                     <button
-                      className={`${styles.statusToggleButton} ${
-                        mentee.activated ? styles.activate : styles.deactivate
-                      }`}
+                      className={`${styles.statusToggleButton} ${mentee.activated ? styles.activate : styles.deactivate}`}
                     >
                       {mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'}
                     </button>
@@ -233,7 +233,7 @@ const MenteesContent = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="9" className={styles.noMenteesMessage}>
+                <td colSpan="10" className={styles.noMenteesMessage}>
                   No mentees found.
                 </td>
               </tr>
@@ -246,6 +246,15 @@ const MenteesContent = () => {
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h2>{isEditing ? 'Edit Mentee' : 'Add Mentee'}</h2>
+            <div>
+              <label>Mentee ID:</label>
+              <input
+                type="text"
+                value={menteeForm.mentee_Id}
+                onChange={(e) => handleFormChange('mentee_Id', e.target.value)}
+                className={styles.inputField}
+              />
+            </div>
             <div>
               <label>First Name:</label>
               <input
