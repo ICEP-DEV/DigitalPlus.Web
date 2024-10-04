@@ -295,7 +295,7 @@ const AiPage = () => {
         <input
           type="text"
           className={styles.messageInput}
-          placeholder="Type a message"
+          placeholder="Paste your notes here"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
         />
