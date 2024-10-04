@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './NavBar.module.css'; // Import the CSS module
-import imageLogo from '../Assets/tutLogo-removebg-preview.png'; // Adjust the path based on your structure
+import imageLogo from '../Assets/tutLogo_removebg_preview.png'; // Adjust the path based on your structure
 
 function NavBar() {
   return (

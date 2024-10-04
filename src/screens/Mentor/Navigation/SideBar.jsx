@@ -34,11 +34,10 @@ function SideBar() {
         </div>
 
         <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/bookings')}>
-          <IoHome className={styles.icon} />
+          <RiContactsBook3Fill className={styles.icon} />
           {!isCollapsed && <span>BOOKINGS</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/RegisterPage')}> </div>
         <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/register')}>
           <BsBookmarkCheckFill className={styles.icon} />
           {!isCollapsed && <span>REGISTER</span>}
@@ -49,7 +48,6 @@ function SideBar() {
           {!isCollapsed && <span>REPORT</span>}
         </div>
 
-        <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/SettingsPage')}>
         <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/setting')}>
           <IoSettingsSharp className={styles.icon} />
           {!isCollapsed && <span>SETTINGS</span>}
@@ -59,10 +57,7 @@ function SideBar() {
           <MdLogout className={styles.icon} />
           {!isCollapsed && <span>LOGOUT</span>}
         </div>
-      
-      
-    </div>
-    </nav>
+      </nav>
     </div>
   );
 }
