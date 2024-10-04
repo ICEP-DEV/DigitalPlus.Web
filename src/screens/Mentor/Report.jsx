@@ -48,6 +48,7 @@ const Report = () => {
        <h1>Report</h1>
         <div className={styles['report-form-container']}>
             <form onSubmit={handleSubmit}>
+            <h1>Mentor Monthly Report</h1>
                 <div className={styles['report-form-row']}>
                     <div className={styles['report-form-group']}>
                         <label htmlFor="mentor-name">MENTOR'S NAME:</label>
