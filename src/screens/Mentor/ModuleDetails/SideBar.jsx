@@ -20,7 +20,7 @@ function SideBar({ setActivePage }) {
         </a>
         <a href="#quizzes" onClick={() => setActivePage('quizz')}>
           <div className={styles.navItem}>
-            SET QUIZ <RiContactsBook3Fill className={styles.icon} />
+             QUIZ <RiContactsBook3Fill className={styles.icon} />
           </div>
         </a>
         <a href="#mentors" onClick={() => setActivePage('classlist')}>

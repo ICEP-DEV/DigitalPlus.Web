@@ -251,6 +251,7 @@ const MenteesContent = () => {
               <input
                 type="text"
                 value={menteeForm.mentee_Id}
+                readOnly={isEditing}
                 onChange={(e) => handleFormChange('mentee_Id', e.target.value)}
                 className={styles.inputField}
               />

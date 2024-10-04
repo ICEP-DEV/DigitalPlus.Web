@@ -39,7 +39,8 @@
   gap: 15px;
 }
 
-.downloadCsvButton, .addMentorButton {
+.downloadCsvButton,
+.addMentorButton {
   padding: 12px 20px;
   border-radius: 20px;
   border: none;
@@ -146,18 +147,23 @@
 .registerButton:hover {
   background-color: #0056b3;
 }
+
 .modal {
-  position: fixed; /* Fixed position to cover the whole viewport */
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Dark background overlay */
+  background: rgba(0, 0, 0, 0.5);
+  /* Dark background overlay */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* High z-index to prevent interaction with any other elements */
-  pointer-events: auto; /* Allow pointer events inside the modal */
+  z-index: 9999;
+  overflow: auto;
+  /* Enable scrolling if content exceeds height */
+  padding: 20px;
+  /* Add padding to prevent content from touching edges */
 }
 
 .modalContent {
@@ -165,44 +171,36 @@
   padding: 20px;
   border-radius: 8px;
   width: 400px;
+  max-height: 90vh;
+  /* Limit height to 90% of the viewport height */
+  overflow-y: auto;
+  /* Add vertical scrolling inside the modal if needed */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10000; /* Ensure modal content is above the overlay */
+  z-index: 10000;
   position: relative;
 }
 
-.body-modal-active {
-  pointer-events: none; /* Disable pointer events for the body */
-}
-
-.modal .modalContent {
-  pointer-events: all; /* Re-enable pointer events only inside the modal */
-}
-
-.modalButtons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-input, select {
+input,
+select {
   width: 100%;
   padding: 10px;
   margin: 5px 0;
   border: 1px solid #ddd;
   border-radius: 5px;
+  box-sizing: border-box;
 }
 
 .inputField {
-  width: 100%; /* Ensure full width */
-  padding: 10px; /* Adjust padding for consistency */
-  margin-bottom: 10px; /* Add margin for spacing */
-  box-sizing: border-box; /* Include padding and border in the element's width and height */
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .passwordField {
   display: flex;
   align-items: center;
-  margin-bottom: 10px; /* Add margin for consistent spacing */
+  margin-bottom: 10px;
 }
 
 .eyeIcon {
@@ -211,7 +209,7 @@ input, select {
 }
 
 .selectField {
-  width: 100%; /* Ensure full width for dropdown */
+  width: 100%;
   padding: 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
