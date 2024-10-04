@@ -1,0 +1,142 @@
+.pageContainer {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Prevents scrolling */
+    background-color: #D9D9D9; /* Set background color of the page */
+  }
+  
+  .registerPageContainer {
+    display: flex;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevents scrolling */
+  }
+  
+  .mainContent {
+    background-color: #D9D9D9; /* Ensure consistency in background color */
+    padding: 20px;
+    max-width: 1200px; /* Increased max width to accommodate space for comment */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .headerTitle {
+    font-size: 24px;
+    color: #001C4A;
+  }
+  
+  .userInfo {
+    background-color: #D3D3D3;
+    padding: 10px;
+    border-radius: 50%;
+    text-align: center;
+  }
+  
+  .formWrapper {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    gap: 30px; /* Adds a gap between the form and the comment section */
+  }
+  
+  .formContainer {
+    flex: 1;
+  }
+  
+  .commentContainer {
+    width: 500px; /* Adjust the width as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .formGroup {
+    margin-bottom: 15px;
+  }
+  
+  .formLabel {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .input {
+    padding: 10px;
+    border-radius: 4px;
+    border: 5px solid #000000;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #ABAAAA;
+  }
+  
+  .textarea {
+    padding: 10px;
+    border-radius: 4px;
+    border: 5px solid #000000; /* Increased border width */
+    width: 100%;
+    height: 300px; /* Increased height for the comment */
+    box-sizing: border-box;
+    background-color: #ABAAAA;
+  }
+  
+  .uploadIcon {
+    color: green;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  
+  .signaturePlaceholder {
+    border: 1px solid #333;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+  }
+  
+  .rangeSlider {
+    width: 100%;
+    /* Slider color changes via pseudo-elements */
+    -webkit-appearance: none; /* Remove default appearance for Webkit browsers */
+    background-color: #000C24; /* Track color */
+    height: 8px; /* Track height */
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+  }
+  
+  .sliderLabels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  
+  .submitButton {
+    background-color: #000C24;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 150px;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* Adds some space above the button */
+  }
+  

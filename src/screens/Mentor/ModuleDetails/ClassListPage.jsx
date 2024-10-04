@@ -15,7 +15,9 @@ const ClassListPage = () => {
     };
 
     return (
+        
         <div className={styles.container}>
+            <h1>List of Student enrolled for PPAF 216D</h1>
             <div className={styles.tableContainer}>
                 <table className={styles.table}>
                     <thead>

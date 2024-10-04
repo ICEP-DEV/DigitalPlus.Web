@@ -3,20 +3,21 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden; /* Prevent scrolling on the entire dashboard */
+    overflow: hidden;
+    /* Prevent scrolling on the entire dashboard */
 }
 
 /* Header styles */
 .adminHeader {
     background-color: #0a1f44;
-    padding: 20px 30px; /* Increased padding for a more spacious look */
+    padding: 20px 30px;
     display: flex;
     align-items: center;
     color: white;
-    font-size: 20px; /* Slightly increased font size for better readability */
+    font-size: 20px;
     font-weight: bold;
-    height: 60px; /* Adjusted height to match the new padding */
-    margin-bottom: 20px; /* Increased gap between the header and navigation bar */
+    height: 60px;
+    margin-bottom: 20px;
 }
 
 .adminInfo {
@@ -25,14 +26,15 @@
 }
 
 .adminIcon {
-    font-size: 28px; /* Slightly larger icon */
+    font-size: 28px;
     margin-right: 15px;
 }
 
 /* Sidebar styles */
 .adminDashboard {
     display: flex;
-    height: calc(100vh - 80px); /* Full height minus header and the larger gap */
+    height: calc(100vh - 80px);
+    /* Full height minus header and gap */
 }
 
 .sidebar {
@@ -40,7 +42,9 @@
     display: flex;
     flex-direction: column;
     transition: width 0.3s ease;
-    padding-top: 10px; /* Added padding for better spacing */
+    padding-top: 10px;
+    overflow-y: auto;
+    /* Enable vertical scrolling */
 }
 
 .sidebarOpen {
@@ -67,11 +71,7 @@
     font-size: 16px;
     transition: background-color 0.3s ease;
     cursor: pointer;
-    border-radius: 6px; /* Added rounded corners for better aesthetics */
-}
-
-.sidebarItem i {
-    margin-right: 15px; /* Increased space between icon and text */
+    border-radius: 6px;
 }
 
 .sidebarItem:hover {
@@ -91,10 +91,10 @@
     background: none;
     border: none;
     color: white;
-    font-size: 22px; /* Slightly larger button icon */
+    font-size: 22px;
     cursor: pointer;
     padding: 10px;
-    margin-left: 15px; /* Increased margin for better spacing */
+    margin-left: 15px;
     align-self: flex-start;
 }
 
@@ -107,43 +107,42 @@
 .dashboardContent {
     flex-grow: 1;
     background-color: #e0e0e0;
-    padding: 30px; /* Increased padding for a more professional look */
-    overflow: hidden; /* Prevent scrolling on the main content area */
-    height: calc(100vh - 80px); /* Ensure it fits the remaining height after header */
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Added subtle shadow for a more professional look */
-    border-radius: 8px; /* Added border radius for a clean layout */
+    padding: 30px;
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    height: calc(100vh - 80px);
+    /* Full height minus the header */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
 /* MentorsContent specific styling to avoid scrolling */
 .mentorsContainer {
-    padding: 30px; /* Consistent padding */
+    padding: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: #f0f0f0;
-    height: calc(100vh - 80px); /* Full height minus the header */
-    overflow: hidden; /* Ensure no scrolling */
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    /* Allow vertical scrolling for mentors content */
 }
 
 /* General adjustments for better spacing */
-.sidebar ul {
-    padding-top: 10px;
-}
 .adminInfo {
     display: flex;
-    flex-direction: column; /* Make the items stack vertically */
-    align-items: center; /* Center the icon and text */
-  }
-  
-  .adminText {
-    margin-top: 5px; /* Add some space between the icon and the text */
-    text-align: center; /* Center the text and email */
-  }
-  
-  .adminEmail {
+    flex-direction: column;
+    align-items: center;
+}
+
+.adminText {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.adminEmail {
     display: block;
     font-size: 0.9rem;
     color: #888;
-    margin-top: 3px; /* Add some space between "Admin" and the email */
-  }
-  
+    margin-top: 3px;
+}

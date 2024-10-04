@@ -13,7 +13,7 @@ const Logout = () => {
             // You can add your actual logout logic here, such as clearing tokens
             navigate('/'); // Example of redirecting after logout
         } else {
-            navigate('/mentor-dashboard/home'); 
+            navigate('/mentor-dashboard/announcementpage'); 
             // Add logic to handle cancellation or closing the dialog.
         }
     };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   PieChart,
   Pie,
@@ -16,6 +16,38 @@ import {
 import styles from './DashboardContent.module.css';
 
 const DashboardContent = () => {
+  // State to hold the data from the API
+  const [dashboardData, setDashboardData] = useState({
+    totalStudents: 0,
+    activatedMentors: 0,
+    deactivatedMentors: 0,
+    totalMentors: 0,
+  });
+
+  // Fetch data from the API when the component mounts
+  useEffect(() => {
+    // Retrieve the 'user' object from local storage and parse it
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    // Check if the user object exists and contains the admin_Id
+    if (user && user.admin_Id) {
+      const fetchDashboardData = async () => {
+        try {
+          const response = await fetch(`https://localhost:7163/api/AdminDashboard/${user.admin_Id}`);
+          const data = await response.json();
+          setDashboardData(data); // Update state with API data
+        } catch (error) {
+          console.error('Error fetching dashboard data:', error);
+        }
+      };
+
+      fetchDashboardData();
+    } else {
+      console.error('No admin_Id found in local storage.');
+    }
+  }, []);
+
+  // Example pie data (could remain static or fetched from API)
   const pieData = [
     { name: 'Contact', value: 60 },  // Contact Classes (60%)
     { name: 'Online', value: 40 },   // Online Classes (40%)
@@ -23,6 +55,7 @@ const DashboardContent = () => {
 
   const colors = ['#FF6347', '#FFA500'];  // Red for Contact and Orange for Online
 
+  // Example line chart data
   const lineData = [
     { date: '7/24', mentors: 50 },
     { date: '7/25', mentors: 45 },
@@ -35,6 +68,7 @@ const DashboardContent = () => {
     { date: '8/1', mentors: 50 },
   ];
 
+  // Example bar chart data
   const barData = [
     { month: 'Jan', students: 70 },
     { month: 'Feb', students: 80 },
@@ -50,34 +84,6 @@ const DashboardContent = () => {
     { month: 'Dec', students: 100 },
   ];
 
-  const dailyBarData = [
-    { day: 'Monday', activity: 80 },
-    { day: 'Tuesday', activity: 70 },
-    { day: 'Wednesday', activity: 40 },
-    { day: 'Thursday', activity: 60 },
-    { day: 'Friday', activity: 90 },
-  ];
-
-  const mentorsPerModuleData = [
-    { module: 'PPA106', mentors: 10 },
-    { module: 'TPG201', mentors: 8 },
-    { module: 'ISY34BT', mentors: 5 },
-    { module: 'IDC30BT', mentors: 7 },
-    { module: 'DSO34BT', mentors: 6 },
-  ];
-
-  const usersPerDayData = [
-    { date: '7/24', users: 100 },
-    { date: '7/25', users: 120 },
-    { date: '7/26', users: 150 },
-    { date: '7/27', users: 170 },
-    { date: '7/28', users: 140 },
-    { date: '7/29', users: 160 },
-    { date: '7/30', users: 180 },
-    { date: '7/31', users: 200 },
-    { date: '8/1', users: 220 },
-  ];
-
   return (
     <div className={styles.dashboardContainer}>
       <div className={styles.header}>
@@ -85,28 +91,28 @@ const DashboardContent = () => {
           <div className={styles.statItemIcon}>👥</div>
           <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Total Students</h3>
-            <p>300</p>
+            <p>{dashboardData.totalStudents}</p> {/* Dynamically rendered data */}
           </div>
         </div>
         <div className={styles.statItem}>
           <div className={styles.statItemIcon}>👥</div>
           <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Activated Mentors</h3>
-            <p>45</p>
+            <p>{dashboardData.activatedMentors}</p> {/* Dynamically rendered data */}
           </div>
         </div>
         <div className={styles.statItem}>
           <div className={styles.statItemIcon}>👥</div>
           <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Deactivated Mentors</h3>
-            <p>5</p>
+            <p>{dashboardData.deactivatedMentors}</p> {/* Dynamically rendered data */}
           </div>
         </div>
         <div className={styles.statItem}>
           <div className={styles.statItemIcon}>👥</div>
           <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Total Mentors</h3>
-            <p>50</p>
+            <p>{dashboardData.totalMentors}</p> {/* Dynamically rendered data */}
           </div>
         </div>
       </div>

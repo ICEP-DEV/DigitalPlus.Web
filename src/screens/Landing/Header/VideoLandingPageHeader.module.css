@@ -1,0 +1,98 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(6, 7, 8, 0.7);
+    height: 60px;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    margin-left: -20px;
+  }
+
+ 
+  
+  .headerScrolled {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logoContainer {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    width: 200px;
+    height: auto;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  }
+  
+  .logoLoaded {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .logo2 {
+    width: 300px;
+    height: 60px;
+    margin-right: 20px;
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  }
+  
+  .logo2Loaded {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .nav {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    margin-left: -20px;
+  }
+  
+  .navLoaded {
+    opacity: 1;
+  }
+  
+  .navLink {
+    color: white;
+    font-size: 1rem;
+    margin-left: 10px;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    position: relative;
+  }
+  
+  .navLinkLoaded {
+    opacity: 1;
+  }
+  
+  .underline {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #fff;
+    left: 0;
+    bottom: -2px;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  
+  .underlineHovered {
+    transform: scaleX(1);
+  }
+  .nav .nav-link {
+    margin-left: 10px; 
+  }
+  

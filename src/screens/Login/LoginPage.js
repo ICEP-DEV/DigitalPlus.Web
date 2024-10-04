@@ -30,9 +30,9 @@ const Login = () => {
                 if (data.role === 'Admin') {
                     navigate('/admin-dashboard/dashboard');
                 } else if (data.role === 'Mentor') {
-                    navigate('/mentor-dashboard/home');
+                    navigate('/mentor-dashboard/AnnouncementPage');
                 } else if (data.role === 'Mentee') {
-                    navigate('/mentee-dashboard/home');
+                    navigate('/mentee-dashboard/AnnouncementPage');
                 } else {
                     setError('Invalid user role');
                 }
@@ -78,7 +78,7 @@ const Login = () => {
                 </form>
 
                 <p className={styles.signupText}>
-                    Don’t have an account yet? <Link to="/signup" className={styles.signupLink}>Sign Up</Link> {/* Using Link */}
+                    Don’t have an account yet? <Link to="/RegisterPage" className={styles.signupLink}>Sign Up</Link> {/* Using Link */}
                 </p>
             </div>
         </div>
