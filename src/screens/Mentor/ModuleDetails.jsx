@@ -6,6 +6,7 @@ import SetQuizzPage from './ModuleDetails/SetQuiz';
 import styles from './ModuleDetails.module.css'; // Import the CSS module
 import ModulePage from './ModulePage';
 import ClassListPage from './ModuleDetails/ClassListPage';
+import MentorDmPage from './ModuleDetails/MentorDmPage';
 
 function App() {
   const [activePage, setActivePage] = useState('chat');  // Default page is ChatPage (LIVE CHAT)
@@ -19,6 +20,7 @@ function App() {
         
           {activePage === 'quizz' && <SetQuizzPage />}
           {activePage === 'classlist' && <ClassListPage />}
+          {activePage === 'mentordm' && <MentorDmPage />}
           {activePage === 'back' && <ModulePage />}
         </div>
       </div>

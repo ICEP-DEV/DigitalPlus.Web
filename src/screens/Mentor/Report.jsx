@@ -45,7 +45,7 @@ const Report = () => {
             <Header />
             <SideBar />
             
-      
+       <h1>Report</h1>
         <div className={styles['report-form-container']}>
             <form onSubmit={handleSubmit}>
             <h1>Mentor Monthly Report</h1>
