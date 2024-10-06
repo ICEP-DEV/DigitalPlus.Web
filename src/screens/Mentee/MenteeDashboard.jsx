@@ -14,7 +14,7 @@ const MenteeDashboard = () => {
     <>
     
       <Routes>
-        <Route path="AnnouncementPage" element={<AnnouncementPage />} />
+        <Route path="home" element={<AnnouncementPage />} />
         <Route path="logout" element={<LogoutComponent />} />
         <Route path="feedback" element={<FeedbackPage />} />
         <Route path="ai-tools" element={<AiPage />} />
