@@ -8,10 +8,13 @@ import AnnouncementPage from './AnnouncementPage.jsx';
 import BookingsPage from './BookingsPage.jsx';
 import RegisterPage from './RegisterPage.jsx';
 
+
 function MentorDashboard() {
   return (
     <> {/* Wrap everything in Router */}
+     
       <Routes>
+    
         <Route path="announcementpage" element={<AnnouncementPage />} /> 
         <Route path="bookings" element={<BookingsPage />} /> 
         <Route path="module" element={<ModulePage />} /> 
