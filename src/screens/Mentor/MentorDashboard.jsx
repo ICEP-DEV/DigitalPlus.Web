@@ -7,11 +7,16 @@ import ModulePage from './ModulePage.jsx';
 import AnnouncementPage from './AnnouncementPage.jsx';
 import BookingsPage from './BookingsPage.jsx';
 import RegisterPage from './RegisterPage.jsx';
+import Header from './Navigation/NavBar.jsx';
+import SideBar from './Navigation/SideBar';
 
 function MentorDashboard() {
   return (
     <> {/* Wrap everything in Router */}
+      <Header />
+      <SideBar />
       <Routes>
+    
         <Route path="announcementpage" element={<AnnouncementPage />} /> 
         <Route path="bookings" element={<BookingsPage />} /> 
         <Route path="module" element={<ModulePage />} /> 
