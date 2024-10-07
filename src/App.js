@@ -15,6 +15,8 @@ import AnnouncementPage from './screens/Mentor/AnnouncementPage';
 import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import RosterPage2 from './screens/Mentee/RosterPage2.jsx';
+import AnnouncementPage2 from './screens/Mentee/AnnouncementPage2.jsx';
 
 const App = () => {
   return (
@@ -30,7 +32,9 @@ const App = () => {
         <Route path="/RegisterPage" element={<RegisterPage />} />
         <Route path="/VideoLandingPage" element={<VideoLandingPage />} />
         <Route path="/AnnouncementPage" element={<AnnouncementPage />} />
+        <Route path="/AnnouncementPage2" element={<AnnouncementPage2 />} />
         <Route path="/roster" element={<RosterPage />} />
+        <Route path="/roster2" element={<RosterPage2 />} />
 
         {/* Nested routing for the Admin, Mentor, and Mentee Dashboards */}
         <Route path="/admin-dashboard/*" element={<AdminDashboard />} />

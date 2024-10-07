@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HeaderAnnouncementPage from '../Mentor/Headers/HeaderAnnouncementPage';
 import Sidebar from './Bars/Sidebar';
 import { FaInfoCircle } from 'react-icons/fa';
-import styles from './AnnouncementPage.module.css'; // Importing the CSS module
+import styles from './AnnouncementPage2.module.css'; // Importing the CSS module
 import SideBar from './Navigation/SideBar';
 import NavBar from './Navigation/NavBar';
 
@@ -63,7 +63,7 @@ function AnnouncementPage() {
                         <div className={styles.date}>{currentDateTime.toLocaleDateString()}</div>
                     </div>
                 </div>
-                <a href="/roster" className={styles.viewRosterLink}>VIEW ROSTER</a>
+                <a href="/roster2" className={styles.viewRosterLink}>VIEW ROSTER</a>
                 <div className={styles.sidebarContainer}>
                     <Sidebar />
                 </div>
