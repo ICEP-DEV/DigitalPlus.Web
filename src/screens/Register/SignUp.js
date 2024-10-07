@@ -7,18 +7,26 @@ import axios from 'axios';
 
 const SignUp = () => {
     const [mentee, setMentee] = useState({
-        Mentee_Id: '',  // Added for Student Number
+        Mentee_Id: '',
         FirstName: '',
         LastName: '',
         StudentEmail: '',
         ContactNo: '',
         DepartmentId: '',
         Password: '',
+        ConfirmPassword: '',
         Semester: ''
     });
 
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [passwordStrength, setPasswordStrength] = useState({
+        minLength: false,
+        upperCase: false,
+        lowerCase: false,
+        digit: false,
+        specialChar: false
+    });
 
     // Function to clear messages after 10 seconds
     useEffect(() => {
@@ -28,42 +36,78 @@ const SignUp = () => {
                 setErrorMessage('');
             }, 1000); // 10 seconds
 
-            return () => clearTimeout(timer); // Cleanup the timer
+            return () => clearTimeout(timer);
         }
     }, [successMessage, errorMessage]);
 
+    // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setMentee({ ...mentee, [name]: value });
+
+        if (name === 'Password') {
+            checkPasswordStrength(value); // Call function to update password strength as user types
+        }
     };
 
+    // Function to check password strength
+    const checkPasswordStrength = (password) => {
+        setPasswordStrength({
+            minLength: password.length >= 8,
+            upperCase: /[A-Z]/.test(password),
+            lowerCase: /[a-z]/.test(password),
+            digit: /[0-9]/.test(password),
+            specialChar: /[^A-Za-z0-9]/.test(password)
+        });
+    };
+
+    // Check if all password requirements are fulfilled
+    const areAllRequirementsMet = () => {
+        return Object.values(passwordStrength).every(Boolean);
+    };
+
+    // Validate password confirmation and overall password strength
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const isPasswordValid = areAllRequirementsMet();
+
+        if (!isPasswordValid) {
+            setErrorMessage('Password does not meet all requirements.');
+            return;
+        }
+
+        if (mentee.Password !== mentee.ConfirmPassword) {
+            setErrorMessage('Passwords do not match!');
+            return;
+        }
+
         try {
             // Check if the Mentee_Id (Student Number) exists
             const checkResponse = await axios.get(`https://localhost:7163/api/DigitalPlusUser/CheckMentee/${mentee.Mentee_Id}`);
             if (checkResponse.data.exists) {
                 setErrorMessage('Student number already exists!');
-                return; // Exit if student number exists
+                return;
             }
-            
+
             // Proceed to register if Mentee_Id doesn't exist
             const response = await axios.post('https://localhost:7163/api/DigitalPlusUser/AddMentee', mentee);
             console.log('Mentee registered:', response.data);
             setSuccessMessage('Successfully registered a Mentee!');
-            
+
             // Reset form
             setMentee({
-                Mentee_Id: '',  // Reset Student Number
+                Mentee_Id: '',
                 FirstName: '',
                 LastName: '',
                 StudentEmail: '',
                 ContactNo: '',
                 DepartmentId: '',
                 Password: '',
+                ConfirmPassword: '',
                 Semester: ''
             });
-            setErrorMessage(''); // Clear any existing error messages
+            setErrorMessage('');
         } catch (error) {
             console.error('There was an error registering the mentee!', error);
             setErrorMessage('An error occurred while registering. Please try again.');
@@ -124,6 +168,29 @@ const SignUp = () => {
                         <form onSubmit={handleSubmit}>
                             <label>Password:</label>
                             <input type="password" name="Password" value={mentee.Password} onChange={handleChange} required />
+
+                            {!areAllRequirementsMet() && (
+                                <ul className={styles.passwordRequirements}>
+                                    <li style={{ color: passwordStrength.minLength ? 'green' : 'red' }}>
+                                        At least 8 characters long
+                                    </li>
+                                    <li style={{ color: passwordStrength.upperCase ? 'green' : 'red' }}>
+                                        At least one uppercase letter
+                                    </li>
+                                    <li style={{ color: passwordStrength.lowerCase ? 'green' : 'red' }}>
+                                        At least one lowercase letter
+                                    </li>
+                                    <li style={{ color: passwordStrength.digit ? 'green' : 'red' }}>
+                                        At least one digit
+                                    </li>
+                                    <li style={{ color: passwordStrength.specialChar ? 'green' : 'red' }}>
+                                        At least one special character
+                                    </li>
+                                </ul>
+                            )}
+
+                            <label>Confirm Password:</label>
+                            <input type="password" name="ConfirmPassword" value={mentee.ConfirmPassword} onChange={handleChange} required />
                            
                             <button type="submit">Sign Up</button>
                             <p>Already have an account? <Link to="/login">Login</Link></p>
