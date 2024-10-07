@@ -1,98 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styles from './ComplainsContent.module.css';
 
 const ComplainsContent = () => {
-  const [complains, setComplains] = useState([
-    {
-      menteeName: 'Lungile Maphosa',
-      menteeEmail: '218496865@tut4life.ac.za',
-      mentorName: 'Sizwe Mkhwanazi',
-      mentorEmail: '219543210@tut4life.ac.za',
-      module: 'Software Engineering',
-      complain: 'The mentor doesn’t respond to the bookings',
-      dateLogged: '2024-09-10 14:30',
-      status: 'Unresolved',
-    },
-    {
-      menteeName: 'Thabiso Molefe',
-      menteeEmail: '218455865@tut4life.ac.za',
-      mentorName: 'Nokubonga Ntuli',
-      mentorEmail: '219678912@tut4life.ac.za',
-      module: 'Database Systems',
-      complain: 'The mentor always cancels the appointments',
-      dateLogged: '2024-09-12 10:45',
-      status: 'Unresolved',
-    },
-    {
-      menteeName: 'Noluthando Dlamini',
-      menteeEmail: '217945321@tut4life.ac.za',
-      mentorName: 'Bongani Khumalo',
-      mentorEmail: '219876543@tut4life.ac.za',
-      module: 'Web Development',
-      complain: 'The mentor reschedules too often',
-      dateLogged: '2024-09-13 09:15',
-      status: 'Resolved',
-    },
-    {
-      menteeName: 'Ayanda Mbatha',
-      menteeEmail: '218123456@tut4life.ac.za',
-      mentorName: 'Thando Ncube',
-      mentorEmail: '218765432@tut4life.ac.za',
-      module: 'Data Structures',
-      complain: 'The mentor doesn’t assist with practicals',
-      dateLogged: '2024-09-15 13:45',
-      status: 'Unresolved',
-    },
-    {
-      menteeName: 'Zinhle Mkhize',
-      menteeEmail: '219654321@tut4life.ac.za',
-      mentorName: 'Kagiso Mohale',
-      mentorEmail: '217876543@tut4life.ac.za',
-      module: 'Database Systems',
-      complain: 'The mentor is always late for the sessions',
-      dateLogged: '2024-09-17 11:20',
-      status: 'Unresolved',
-    },
-    {
-      menteeName: 'Mandla Zondo',
-      menteeEmail: '218098765@tut4life.ac.za',
-      mentorName: 'Lerato Thobela',
-      mentorEmail: '219234567@tut4life.ac.za',
-      module: 'Networking',
-      complain: 'The mentor provides unclear explanations',
-      dateLogged: '2024-09-19 15:30',
-      status: 'Resolved',
-    },
-    {
-      menteeName: 'Sipho Mthethwa',
-      menteeEmail: '218876543@tut4life.ac.za',
-      mentorName: 'Thabiso Ndlovu',
-      mentorEmail: '218543210@tut4life.ac.za',
-      module: 'Cybersecurity',
-      complain: 'The mentor doesn’t attend sessions',
-      dateLogged: '2024-09-20 08:45',
-      status: 'Unresolved',
-    },
-    {
-      menteeName: 'Gugu Sithole',
-      menteeEmail: '219765432@tut4life.ac.za',
-      mentorName: 'Sindi Dlamini',
-      mentorEmail: '217654321@tut4life.ac.za',
-      module: 'Artificial Intelligence',
-      complain: 'The mentor is not available for assistance',
-      dateLogged: '2024-09-21 14:30',
-      status: 'Resolved',
-    },
-  ]);
-
+  const [complains, setComplains] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Fetch all complaints from the API
+  useEffect(() => {
+    axios
+      .get('https://localhost:7163/api/DigitalPlusCrud/GetAllComplaints')
+      .then((response) => {
+        // Accessing the result field from the response
+        if (response.data.success && Array.isArray(response.data.result)) {
+          setComplains(response.data.result);
+        } else {
+          console.error('Error: Invalid response format', response.data);
+          setComplains([]); // Fallback to empty array if unexpected structure
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching complaints: ', error);
+        
+        setComplains([]); // Handle error by setting to empty array
+      });
+  }, []);
+
+  // Handle status change and update the complaint status using the API
   const handleStatusChange = (index) => {
     const updatedComplains = [...complains];
-    updatedComplains[index].status = updatedComplains[index].status === 'Resolved' ? 'Unresolved' : 'Resolved';
-    setComplains(updatedComplains);
+    const complaint = updatedComplains[index];
+    const newStatus = complaint.status === 'Resolved' ? 'Unresolved' : 'Resolved';
+    
+    axios
+      .put(`https://localhost:7163/api/DigitalPlusCrud/UpdateComplaint/${complaint.ComplaintId}`, { status: newStatus })
+      .then(() => {
+        updatedComplains[index].status = newStatus;
+        setComplains(updatedComplains);
+      })
+      .catch((error) => {
+        console.error('Error updating complaint status:', error);
+      });
   };
 
+  // Filter complaints by mentor or mentee name
   const filteredComplains = complains.filter(
     (complain) =>
       complain.mentorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -109,6 +60,7 @@ const ComplainsContent = () => {
             placeholder="Search by Mentor or Mentee"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            
             className={styles.searchInput}
           />
         </div>
@@ -131,14 +83,14 @@ const ComplainsContent = () => {
         <tbody>
           {filteredComplains.length > 0 ? (
             filteredComplains.map((complain, index) => (
-              <tr key={index}>
-                <td>{complain.dateLogged}</td>
+              <tr key={complain.complaintId}>
+                <td>{new Date(complain.dateLogged).toLocaleString()}</td>
                 <td className={styles.menteeName}>{complain.menteeName}</td>
                 <td className={styles.menteeEmail}>{complain.menteeEmail}</td>
                 <td className={styles.mentorName}>{complain.mentorName}</td>
                 <td className={styles.mentorEmail}>{complain.mentorEmail}</td>
-                <td>{complain.module}</td>
-                <td>{complain.complain}</td>
+                <td>{complain.moduleId}</td>
+                <td>{complain.complaintDescription}</td>
                 <td className={complain.status === 'Resolved' ? styles.statusResolved : styles.statusUnresolved}>
                   {complain.status}
                 </td>
