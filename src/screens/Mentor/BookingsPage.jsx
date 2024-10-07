@@ -4,6 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
 import styles from './BookingsPage.module.css';
+import NavBar from './Navigation/NavBar'; // Adjust the path if NavBar is in a different folder
+
 
 const MentorBookingsPage = () => {
   const [bookings, setBookings] = useState([

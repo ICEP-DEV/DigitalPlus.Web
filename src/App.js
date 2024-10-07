@@ -13,7 +13,7 @@ import RosterPage from './screens/Mentor/RosterPage';
 import SignUp from './screens/Register/SignUp.js';
 import AnnouncementPage from './screens/Mentor/AnnouncementPage';
 import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
-import SignUp from './screens/Register/SignUp.js';
+// import SignUp from './screens/Register/SignUp.js';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import RosterPage2 from './screens/Mentee/RosterPage2.jsx';
