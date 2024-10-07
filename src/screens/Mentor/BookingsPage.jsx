@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify'; // Import React Toastify
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
-import Header from './Navigation/NavBar';
+import NavBar from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
 import styles from './BookingsPage.module.css'; // Import CSS
+import HeaderAnnouncementPage from './Headers/HeaderAnnouncementPage';
 
 
 const MentorBookingsPage = () => {
@@ -73,7 +74,7 @@ const MentorBookingsPage = () => {
 
   return (
     <div className={styles.pageContainer}>
-      <Header />
+      <NavBar />
       <SideBar />
       
       <div className={styles.contentWrapper}>

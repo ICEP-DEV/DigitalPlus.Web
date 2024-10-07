@@ -6,7 +6,7 @@ import styles from './RegisterPage.module.css'; // Import the CSS module
 import axios from 'axios';
 
 
-const RegisterPage = () => {
+const SignUp = () => {
     // const navigate = useNavigate();
     const [mentee, setMentee] = useState({
         FirstName: '',
@@ -123,4 +123,4 @@ const RegisterPage = () => {
     );
 };
 
-export default RegisterPage;
+export default SignUp;
