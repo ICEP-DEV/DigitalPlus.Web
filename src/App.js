@@ -35,6 +35,7 @@ const App = () => {
         <Route path="/AnnouncementPage" element={<AnnouncementPage />} />
         <Route path="/AnnouncementPage2" element={<AnnouncementPage2 />} />
         <Route path="/roster" element={<RosterPage />} />
+        <Route path="/roster2" element={<RosterPage2 />} />
         <Route path="/SignUp" element={<SignUp />} />
 
         {/* Nested routing for the Admin, Mentor, and Mentee Dashboards */}
