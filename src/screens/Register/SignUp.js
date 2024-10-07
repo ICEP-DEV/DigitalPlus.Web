@@ -28,13 +28,17 @@ const SignUp = () => {
         specialChar: false
     });
 
+    // Password visibility toggle states
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
     // Function to clear messages after 10 seconds
     useEffect(() => {
         if (successMessage || errorMessage) {
             const timer = setTimeout(() => {
                 setSuccessMessage('');
                 setErrorMessage('');
-            }, 1000); // 10 seconds
+            }, 10000); // 10 seconds
 
             return () => clearTimeout(timer);
         }
@@ -114,6 +118,15 @@ const SignUp = () => {
         }
     };
 
+    // Toggle password visibility
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    };
+
+    const toggleConfirmPasswordVisibility = () => {
+        setConfirmPasswordVisible(!confirmPasswordVisible);
+    };
+
     return (
         <div className={styles.registerPage}>
             <img src={background} alt="Background" className={styles.registerPageBackground} />
@@ -167,7 +180,27 @@ const SignUp = () => {
                         <h3>CREATE PASSWORD</h3>
                         <form onSubmit={handleSubmit}>
                             <label>Password:</label>
-                            <input type="password" name="Password" value={mentee.Password} onChange={handleChange} required />
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type={passwordVisible ? 'text' : 'password'}
+                                    name="Password"
+                                    value={mentee.Password}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <span
+                                    onClick={togglePasswordVisibility}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '10px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {passwordVisible ? '🙈' : '👁'}
+                                </span>
+                            </div>
 
                             {!areAllRequirementsMet() && (
                                 <ul className={styles.passwordRequirements}>
@@ -190,8 +223,28 @@ const SignUp = () => {
                             )}
 
                             <label>Confirm Password:</label>
-                            <input type="password" name="ConfirmPassword" value={mentee.ConfirmPassword} onChange={handleChange} required />
-                           
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type={confirmPasswordVisible ? 'text' : 'password'}
+                                    name="ConfirmPassword"
+                                    value={mentee.ConfirmPassword}
+                                    onChange={handleChange}
+                                    required
+                                />
+                                <span
+                                    onClick={toggleConfirmPasswordVisibility}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '10px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {confirmPasswordVisible ? '🙈' : '👁'}
+                                </span>
+                            </div>
+
                             <button type="submit">Sign Up</button>
                             <p>Already have an account? <Link to="/login">Login</Link></p>
                         </form>
