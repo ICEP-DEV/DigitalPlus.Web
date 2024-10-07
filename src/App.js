@@ -10,7 +10,7 @@ import AdminDashboard from './screens/Admin/AdminDashboard.js';
 import MentorDashboard from './screens/Mentor/MentorDashboard.jsx'; // Mentor Dashboard
 import MenteeDashboard from './screens/Mentee/MenteeDashboard.jsx'; // Mentee Dashboard
 import RosterPage from './screens/Mentor/RosterPage';
-import RegisterPage from './screens/Mentor/RegisterPage';
+import SignUp from './screens/Register/SignUp.js';
 import AnnouncementPage from './screens/Mentor/AnnouncementPage';
 import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
 import 'slick-carousel/slick/slick.css';
@@ -27,7 +27,7 @@ const App = () => {
         <Route path="/ProfilePage" element={<ProfilePage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/RegisterPage" element={<RegisterPage />} />
+        <Route path="/SignUp" element={<SignUp />} />
         <Route path="/VideoLandingPage" element={<VideoLandingPage />} />
         <Route path="/AnnouncementPage" element={<AnnouncementPage />} />
         <Route path="/roster" element={<RosterPage />} />
