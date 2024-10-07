@@ -28,6 +28,7 @@
     "react-router-dom": "^6.26.2",
     "react-scripts": "^5.0.1",
     "react-toastify": "^10.0.5",
+    "rechart": "^0.0.1",
     "recharts": "^2.12.7",
     "slick-carousel": "^1.8.1",
     "source-map-loader": "^5.0.0",

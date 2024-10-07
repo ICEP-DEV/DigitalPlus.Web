@@ -6,7 +6,7 @@ import FeedbackPage from "./FeedbackPage";
 import AiPage from "./AiPage";
 import BookingPage from "./BookingPage";
 import SettingsPage from './SettingsPage'
-import AnnouncementPage from './AnnouncementPage';
+import AnnouncementPage2 from "./AnnouncementPage2";
 import RegisterPage from './RegisterPage';
 
 const MenteeDashboard = () => {
@@ -14,7 +14,7 @@ const MenteeDashboard = () => {
     <>
     
       <Routes>
-        <Route path="AnnouncementPage" element={<AnnouncementPage />} />
+        <Route path="home" element={<AnnouncementPage2 />} />
         <Route path="logout" element={<LogoutComponent />} />
         <Route path="feedback" element={<FeedbackPage />} />
         <Route path="ai-tools" element={<AiPage />} />

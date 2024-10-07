@@ -10,12 +10,14 @@ import AdminDashboard from './screens/Admin/AdminDashboard.js';
 import MentorDashboard from './screens/Mentor/MentorDashboard.jsx'; // Mentor Dashboard
 import MenteeDashboard from './screens/Mentee/MenteeDashboard.jsx'; // Mentee Dashboard
 import RosterPage from './screens/Mentor/RosterPage';
-import RegisterPage from './screens/Mentor/RegisterPage';
+import SignUp from './screens/Register/SignUp.js';
 import AnnouncementPage from './screens/Mentor/AnnouncementPage';
 import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
 import SignUp from './screens/Register/SignUp.js';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import RosterPage2 from './screens/Mentee/RosterPage2.jsx';
+import AnnouncementPage2 from './screens/Mentee/AnnouncementPage2.jsx';
 
 const App = () => {
   return (
@@ -28,9 +30,10 @@ const App = () => {
         <Route path="/ProfilePage" element={<ProfilePage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/RegisterPage" element={<RegisterPage />} />
+        <Route path="/SignUp" element={<SignUp />} />
         <Route path="/VideoLandingPage" element={<VideoLandingPage />} />
         <Route path="/AnnouncementPage" element={<AnnouncementPage />} />
+        <Route path="/AnnouncementPage2" element={<AnnouncementPage2 />} />
         <Route path="/roster" element={<RosterPage />} />
         <Route path="/SignUp" element={<SignUp />} />
 

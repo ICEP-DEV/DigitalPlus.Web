@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify'; // Import React Toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
-import NavBar from './Navigation/NavBar';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Header from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
-import styles from './BookingsPage.module.css'; // Import CSS
-import HeaderAnnouncementPage from './Headers/HeaderAnnouncementPage';
-
+import styles from './BookingsPage.module.css';
 
 const MentorBookingsPage = () => {
   const [bookings, setBookings] = useState([
@@ -55,19 +53,19 @@ const MentorBookingsPage = () => {
     switch (action) {
       case 'Confirm':
         toast.success(`Booking with ID ${bookingId} has been confirmed for the reason: ${reason}.`);
-        // Add logic to update confirmation status
         break;
       case 'Cancel':
-        setBookings(bookings.filter((booking) => booking.id !== bookingId));
         toast.info(`Booking with ID ${bookingId} has been canceled for the reason: ${reason}.`);
         break;
       case 'Reschedule':
         toast.warning(`Rescheduling booking with ID ${bookingId} for the reason: ${reason}.`);
-        // Add logic to reschedule the booking
         break;
       default:
         break;
     }
+
+    // Remove the booking from the list after action
+    setBookings(bookings.filter((booking) => booking.id !== bookingId));
 
     closeModal();
   };
