@@ -33,7 +33,7 @@ const DashboardContent = () => {
     if (user && user.admin_Id) {
       const fetchDashboardData = async () => {
         try {
-          const response = await fetch(`https://localhost:7163/api/AdminDashboard/${user.admin_Id}`);
+          const response = await fetch(`https://localhost:7163/api/admin-dashboard/Dashboard/${user.admin_Id}`);
           const data = await response.json();
           setDashboardData(data); // Update state with API data
         } catch (error) {
