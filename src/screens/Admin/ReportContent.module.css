@@ -1,7 +1,20 @@
+/* Container and general styling */
 .reportsContainer {
   padding: 20px;
   background-color: #f9f9f9;
   font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height of the viewport */
+}
+
+.mainView {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .header {
@@ -11,6 +24,7 @@
   text-align: center;
 }
 
+/* Filter and Search Styling */
 .filterContainer {
   display: flex;
   align-items: center;
@@ -33,11 +47,10 @@
   border-radius: 4px;
 }
 
-.actionBtn {
+.filterBtn {
   padding: 10px 20px;
   background-color: #1f3751;
   color: white;
-  margin-right: 5px;
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -46,122 +59,101 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
 }
 
-.actionBtn:hover {
-  background-color: #0056b3;
-}
-
-.backBtn {
-  padding: 10px 20px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.backBtn:hover {
-  background-color: #5a6268;
-}
-
-.tabBtn {
-  padding: 10px 20px;
-  background-color: #f1f1f1;
-  border: 1px solid #ddd;
-  cursor: pointer;
-  margin-right: 10px;
-  border-radius: 50px;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.tabBtn.active {
-  background-color: #2e4d6e;
-  color: white;
-}
-
-.reportTable, .registerTable, .mentorReportTable {
-  width: 100%;
+/* Table Styling */
+.reportTable {
+  width: 80%; /* Reduced table width for a more compact appearance */
+  margin: 0 auto; /* Center the table horizontally */
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.reportTable th, .reportTable td,
-.registerTable th, .registerTable td,
-.mentorReportTable th, .mentorReportTable td {
-  padding: 15px;
+.reportTable th,
+.reportTable td {
+  padding: 8px; /* Reduced padding to make the table more compact */
   border: 1px solid #ddd;
   text-align: left;
 }
 
-.reportTable th {
-  background-color: #2e4d6e;
-  color: white;
+/* Unique class names for specific columns */
+.studentNumberColumn {
+  width: 20%; /* Adjust the width for better alignment */
 }
 
-.detailsView {
-  padding: 20px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+.mentorNameColumn {
+  width: 30%; /* Adjust the width for better alignment */
 }
 
-.tabSwitcher {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+.courseColumn {
+  width: 25%; /* Adjust the width for better alignment */
 }
 
-.actionButtons {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
+.actionColumn {
+  width: 25%; /* Adjust the width for better alignment */
+  text-align: center;
 }
 
-.registerView, .mentorReportView {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.extraReport {
-  margin-top: 20px;
-}
-
+/* Action Buttons in the Action Column */
 .actionCell {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
-.registerBtn, .mentorReportBtn {
-  padding: 8px 12px;
-  background-color: transparent;
-  color: black;
+.registerIconBtn,
+.reportIconBtn {
+  background-color: #007bff;
+  color: white;
   border: none;
   cursor: pointer;
   font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  transition: background-color 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
 }
 
-.registerBtn:hover, .mentorReportBtn:hover {
-  background-color: #f0f0f0;
+.registerIconBtn:hover,
+.reportIconBtn:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+/* Icon-only Action Buttons in Details View */
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.actionButtons button,
+.shareBtn,
+.downloadBtn,
+.backBtn {
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 5px;
+  width: 35px;
+  height: 35px;
+}
+
+.actionButtons button:hover,
+.shareBtn:hover,
+.downloadBtn:hover,
+.backBtn:hover {
+  background-color: #3e3e3e;
+  color: white;
 }

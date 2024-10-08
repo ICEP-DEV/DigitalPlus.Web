@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styles from './ReportContent.module.css';  // Importing CSS Module
+import { BsFillPersonCheckFill, BsFileEarmarkTextFill } from 'react-icons/bs';  // Importing Bootstrap Icons
 import { RiShareFill, RiDownload2Fill } from 'react-icons/ri';  // Importing React Icons
+import { FaArrowLeft } from 'react-icons/fa';  // Importing back arrow icon
 
-// Sample Data for Reports
 const reportsData = [
   { studentNumber: '22145553', mentor: 'Sfiso Vinjwa', course: 'Computer Science', month: 'May' },
   { studentNumber: '222870097', mentor: 'Karabo Nechicvhangani', course: 'Informatics', month: 'April' },
@@ -10,7 +11,7 @@ const reportsData = [
   { studentNumber: '221418812', mentor: 'Bathabile Mkhabela', course: 'Multimedia Computing', month: 'June' },
 ];
 
-const Reports = () => {
+const ReportContent = () => {
   const [filteredReports, setFilteredReports] = useState(reportsData);
   const [selectedReport, setSelectedReport] = useState(null);
   const [viewType, setViewType] = useState('main'); // 'main', 'register', or 'mentorReport'
@@ -18,7 +19,6 @@ const Reports = () => {
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
 
-  // Filtering and search logic
   const handleSearch = (e) => {
     const searchValue = e.target.value;
     const filtered = reportsData.filter(report =>
@@ -48,7 +48,6 @@ const Reports = () => {
     setTabView('mentorReport');
   };
 
-  // Back to main report list
   const goBack = () => {
     setViewType('main');
   };
@@ -78,27 +77,31 @@ const Reports = () => {
               <option value="May">May</option>
               <option value="June">June</option>
             </select>
-            <button className={styles.actionBtn} onClick={handleFilter}>Filter</button>
+            <button className={styles.filterBtn} onClick={handleFilter}>Filter</button>
           </div>
 
           <table className={styles.reportTable}>
             <thead>
               <tr>
-                <th>Student Number</th>
-                <th>Mentor Name & Surname</th>
-                <th>Course</th>
-                <th>Action</th>
+                <th className={styles.studentNumberCol}>Student Number</th>
+                <th className={styles.mentorNameCol}>Mentor Name & Surname</th>
+                <th className={styles.courseCol}>Course</th>
+                <th className={styles.actionCol}>Action</th> {/* Added unique class name */}
               </tr>
             </thead>
             <tbody>
               {filteredReports.map((report) => (
                 <tr key={report.studentNumber}>
-                  <td>{report.studentNumber}</td>
-                  <td>{report.mentor}</td>
-                  <td>{report.course}</td>
-                  <td className={styles.actionCell}>
-                    <button className={`${styles.actionBtn} ${styles.registerBtn}`} onClick={() => viewRegister(report.studentNumber)}>Register</button>
-                    <button className={styles.actionBtn} onClick={() => viewMentorReport(report.studentNumber)}>Mentor Report</button>
+                  <td className={styles.studentNumberCol}>{report.studentNumber}</td>
+                  <td className={styles.mentorNameCol}>{report.mentor}</td>
+                  <td className={styles.courseCol}>{report.course}</td>
+                  <td className={`${styles.actionCell} ${styles.actionCol}`}> {/* Added unique class name */}
+                    <button className={styles.registerIconBtn} onClick={() => viewRegister(report.studentNumber)} title="Register">
+                      <BsFillPersonCheckFill /> {/* Register Icon */}
+                    </button>
+                    <button className={styles.reportIconBtn} onClick={() => viewMentorReport(report.studentNumber)} title="Mentor Report">
+                      <BsFileEarmarkTextFill /> {/* Mentor Report Icon */}
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -111,13 +114,13 @@ const Reports = () => {
         <div className={styles.detailsView}>
           <div className={styles.tabSwitcher}>
             <button
-              className={`${styles.tabBtn} ${tabView === 'register' ? styles.active : ''}`}
+              className={`${styles.tabBtn} ${tabView === 'register' ? styles.activeTab : ''}`}
               onClick={() => setTabView('register')}
             >
               Register
             </button>
             <button
-              className={`${styles.tabBtn} ${tabView === 'mentorReport' ? styles.active : ''}`}
+              className={`${styles.tabBtn} ${tabView === 'mentorReport' ? styles.activeTab : ''}`}
               onClick={() => setTabView('mentorReport')}
             >
               Mentor Report
@@ -171,13 +174,15 @@ const RegisterComponent = ({ studentNumber, goBack }) => {
         </tbody>
       </table>
       <div className={styles.actionButtons}>
-        <button className={styles.actionBtn}>
-          <RiShareFill /> Share
+        <button className={styles.shareBtn} title="Share">
+          <RiShareFill />  {/* Share Icon Only */}
         </button>
-        <button className={styles.actionBtn}>
-          <RiDownload2Fill /> Download
+        <button className={styles.downloadBtn} title="Download">
+          <RiDownload2Fill />  {/* Download Icon Only */}
         </button>
-        <button className={styles.backBtn} onClick={goBack}>Back</button>
+        <button className={styles.backBtn} onClick={goBack} title="Back">
+          <FaArrowLeft />  {/* Back Icon Only */}
+        </button>
       </div>
     </div>
   );
@@ -214,16 +219,18 @@ const MentorReportComponent = ({ studentNumber, goBack }) => {
       </div>
 
       <div className={styles.actionButtons}>
-        <button className={styles.actionBtn}>
-          <RiShareFill /> Share
+        <button className={styles.shareMentorBtn} title="Share">
+          <RiShareFill />  {/* Share Icon Only */}
         </button>
-        <button className={styles.actionBtn}>
-          <RiDownload2Fill /> Download
+        <button className={styles.downloadMentorBtn} title="Download">
+          <RiDownload2Fill />  {/* Download Icon Only */}
         </button>
-        <button className={styles.backBtn} onClick={goBack}>Back</button>
+        <button className={styles.backBtn} onClick={goBack} title="Back">
+          <FaArrowLeft />  {/* Back Icon Only */}
+        </button>
       </div>
     </div>
   );
 };
 
-export default Reports;
+export default ReportContent;
