@@ -60,12 +60,12 @@ const AdminDashboard = () => {
                 {isOpen && <span>Dashboard</span>}
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/admin-dashboard/department" className={styles.sidebarItem}>
                 <FaUserFriends />
                 {isOpen && <span>Department</span>}
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/admin-dashboard/mentors" className={styles.sidebarItem}>
                 <FaUserFriends />

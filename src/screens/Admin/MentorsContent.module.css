@@ -1,7 +1,7 @@
 .mentorsContainer {
-  padding: 40px;
+  padding: 50px;
   display: flex;
-  flex-direction: column;
+  flex-direction:column;
   align-items: center;
   background-color: #f4f6f9;
   min-height: 100vh;
@@ -15,7 +15,7 @@
 }
 
 .searchBarContainer {
-  width: 30%;
+  width: 35%;
   display: flex;
   justify-content: flex-end;
 }
@@ -49,7 +49,7 @@
   font-weight: bold;
   transition: background-color 0.3s ease;
   color: white;
-  background-color: #007bff;
+  background-color: #396ba0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -63,6 +63,7 @@
 
 .addMentorButton {
   background-color: #6c757d;
+  justify-content: space-between;
 }
 
 .addMentorButton:hover {
@@ -77,20 +78,20 @@
 .mentorsTable {
   width: 100%;
   border-collapse: collapse;
-  border: 2px solid #000;
+  border: 2px ridge #c5c1c1;
 }
 
 .mentorsTable th,
 .mentorsTable td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+  padding: 10px;
+  text-align: start;
+  border-bottom: 1px double #bdacac;
+  border-right: 1px double #bdacac;
 }
 
 .mentorsTable th {
-  background-color: #f8f9fa;
-  color: #003366;
+  background-color: #01182e;
+  color: #eff2f4;
   text-transform: uppercase;
 }
 
@@ -122,7 +123,7 @@
 }
 
 .manageButton {
-  background-color: #8b4513;
+  background-color: #01182e;
   color: white;
   padding: 8px 16px;
   border-radius: 5px;
@@ -132,7 +133,7 @@
   font-weight: bold;
 }
 
-.registerButton {
+/* .registerButton {
   padding: 12px 20px;
   background-color: #007bff;
   color: white;
@@ -146,7 +147,7 @@
 
 .registerButton:hover {
   background-color: #0056b3;
-}
+} */
 
 .modal {
   position: fixed;
@@ -159,6 +160,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  align-content: center;
   z-index: 9999;
   overflow: auto;
   /* Enable scrolling if content exceeds height */
@@ -168,12 +170,12 @@
 
 .modalContent {
   background: white;
-  padding: 20px;
+  padding: 40px;
   border-radius: 8px;
-  width: 400px;
+  width: 300px;
   max-height: 90vh;
   /* Limit height to 90% of the viewport height */
-  overflow-y: auto;
+  overflow-y:auto;
   /* Add vertical scrolling inside the modal if needed */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 10000;
@@ -185,34 +187,62 @@ select {
   width: 100%;
   padding: 10px;
   margin: 5px 0;
-  border: 1px solid #ddd;
+  border: 2px solid #74777b; /* Make the border thicker and use a color like blue */
   border-radius: 5px;
   box-sizing: border-box;
+  background-color: #fff; /* Ensure background color is white */
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover/focus states */
+}
+
+input:focus,
+select:focus {
+  border-color: #74777b; /* Border color on focus */
+  box-shadow: 0 0 5px rgba(112, 113, 115, 0.3); /* Slight glow on focus */
+  outline: none; /* Remove default outline */
 }
 
 .inputField {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
+  border: 2px solid #d2d5d8; /* Make the border more visible */
+  border-radius: 5px;
   box-sizing: border-box;
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition effect for focus */
+  background-color: #f2f2f2;
 }
 
 .passwordField {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  border: 2px solid #c0c1c3; /* Ensure password field border is visible */
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(112, 113, 115, 0.3); /* Subtle shadow */
 }
 
 .eyeIcon {
   cursor: pointer;
   margin-left: 10px;
+  color: #74777b; /* Eye icon color to match the input border */
 }
 
 .selectField {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
+  border: 2px solid #74777b; /* Enhanced border visibility */
+  border-radius: 5px;
   box-sizing: border-box;
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition effect for focus */
+}
+
+.noMentorMessage {
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+  padding: 20px;
 }
 
 .modalButtons {

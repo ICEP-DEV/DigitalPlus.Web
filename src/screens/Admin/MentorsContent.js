@@ -3,6 +3,7 @@ import styles from './MentorsContent.module.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BsPersonFillAdd } from "react-icons/bs";
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
@@ -27,7 +28,7 @@ const MentorsContent = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentors');
+        const response = await axios.get(`https://localhost:7163/api/DigitalPlusUser/GetAllMentors`);
         const data = response.data.map(mentor => ({
           ...mentor,
           activated: !!mentor.activated,
@@ -182,6 +183,7 @@ const MentorsContent = () => {
         </div>
         <div className={styles.buttonGroup}>
           <button className={styles.addMentorButton} onClick={openAddMentorModal}>
+            <BsPersonFillAdd />
             Add Mentor
           </button>
         </div>

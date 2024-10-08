@@ -3,6 +3,8 @@ import styles from './MenteesContent.module.css';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BsPersonFillAdd } from "react-icons/bs";
+
 
 const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
@@ -26,7 +28,7 @@ const MenteesContent = () => {
   useEffect(() => {
     const fetchMentees = async () => {
       try {
-        const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentees');
+        const response = await axios.get(`https://localhost:7163/api/DigitalPlusUser/GetAllMentees`);
         const data = response.data.map(mentee => ({
           ...mentee,
           activated: !!mentee.activated, // Convert bit to boolean
@@ -71,7 +73,7 @@ const MenteesContent = () => {
       };
 
       const response = await axios.post(
-        'https://localhost:7163/api/DigitalPlusUser/AddMentee',
+        `https://localhost:7163/api/DigitalPlusUser/AddMentee`,
         newMentee,
         {
           headers: {
@@ -184,6 +186,7 @@ const MenteesContent = () => {
         </div>
         <div className={styles.buttonGroup}>
           <button className={styles.addMenteeButton} onClick={openAddMenteeModal}>
+          <BsPersonFillAdd />
             Add Mentee
           </button>
         </div>
