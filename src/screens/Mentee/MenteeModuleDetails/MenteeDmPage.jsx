@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './MentorDmPage.module.css'; // Make sure the CSS module is correctly linked
+import styles from './MenteeDmPage.module.css'; // Make sure the CSS module is correctly linked
 import { FaPaperPlane, FaPaperclip, FaEllipsisV } from 'react-icons/fa';
 
 const MentorDmPage = () => {

@@ -1,11 +1,11 @@
 import { useState } from 'react';  // Import useState for managing state
 import NavBar from './MenteeModuleDetails/NavBar';
 import SideBar from './MenteeModuleDetails/SideBar';
-// Import the MentorDmPage component
+// Import the MenteeDmPage component
 import styles from './MenteeModuleDetails.module.css'; // Import the CSS module
 import MenteeModulePage from './MenteeModulePage';
 import MentorsPage from './MenteeModuleDetails/MentorsPage';
-import MentorDmPage from './ModuleDetails/MentorDmPage';
+import MenteeDmPage from './MenteeModuleDetails/MenteeDmPage';
 import QuizPage from  './MenteeModuleDetails/QuizPage';
 function App() {
   const [activePage, setActivePage] = useState('chat');  // Default page is ChatPage (LIVE CHAT)
@@ -19,8 +19,8 @@ function App() {
         
           {activePage === 'quizz' && <QuizPage  />}
           {activePage === 'mentorslist' && <MentorsPage />}
-          {activePage === 'quizhistory' && <MentorDmPage  />}  {/* Correct capitalization */}
-          {activePage === 'mentordm' && <MentorDmPage />}
+          {activePage === 'quizhistory' && <MenteeDmPage  />}  {/* Correct capitalization */}
+          {activePage === 'mentordm' && <MenteeDmPage />}
           {activePage === 'back' && <MenteeModulePage />}
         </div>
       </div>
