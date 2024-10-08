@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styles from './QuizPage.module.css'; // Import the CSS module
 import DynamicTable from './DynamicTable';
-import SideBarNavBar from './Navigation/SideBarNavBar';
 import { BsJustify } from 'react-icons/bs';
 
 const QuizPage = () => {
@@ -42,7 +41,6 @@ const QuizPage = () => {
   };
 
   return (
-    <SideBarNavBar>
     <div style={inlineStyles.container}>
       {showTable ? (
         <DynamicTable onBack={handleBackToQuiz} submittedData={submittedData} />
@@ -77,14 +75,14 @@ const QuizPage = () => {
         </>
       )}
     </div>
-    </SideBarNavBar>
+    
   );
 };
 
 const inlineStyles = {
   container: {
     position: 'relative', // Add this
-    left: '200px', // Add this to move the container 100px to the right
+    left: '70px', // Add this to move the container 100px to the right
     top:'44px',
     marginRight:'10%',
    width: '80%',
