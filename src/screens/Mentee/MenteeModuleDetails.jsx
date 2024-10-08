@@ -7,6 +7,8 @@ import MenteeModulePage from './MenteeModulePage';
 import MentorsPage from './MenteeModuleDetails/MentorsPage';
 import MenteeDmPage from './MenteeModuleDetails/MenteeDmPage';
 import QuizPage from  './MenteeModuleDetails/QuizPage';
+import ChatBoard from './MenteeModuleDetails/ChatBoard';
+
 function App() {
   const [activePage, setActivePage] = useState('chat');  // Default page is ChatPage (LIVE CHAT)
 
@@ -19,7 +21,7 @@ function App() {
         
           {activePage === 'quizz' && <QuizPage  />}
           {activePage === 'mentorslist' && <MentorsPage />}
-          {activePage === 'quizhistory' && <MenteeDmPage  />}  {/* Correct capitalization */}
+          {activePage === 'chatboard' && <ChatBoard />}  {/* Correct capitalization */}
           {activePage === 'mentordm' && <MenteeDmPage />}
           {activePage === 'back' && <MenteeModulePage />}
         </div>
