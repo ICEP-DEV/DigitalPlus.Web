@@ -1,116 +1,164 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './ComplainsContent.module.css';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 
 const ComplainsContent = () => {
-  const [complains, setComplains] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  // Initialize complaints as an empty array
+  const [complaints, setComplaints] = useState([]);
+  const [open, setOpen] = useState(false);  // State to control dialog visibility
+  const [selectedComplaint, setSelectedComplaint] = useState(null);  // To hold the complaint selected for confirmation
 
-  // Fetch all complaints from the API
+  // Fetch complaints from the API when the component mounts
   useEffect(() => {
-    axios
-      .get('https://localhost:7163/api/DigitalPlusCrud/GetAllComplaints')
-      .then((response) => {
-        // Accessing the result field from the response
-        if (response.data.success && Array.isArray(response.data.result)) {
-          setComplains(response.data.result);
-        } else {
-          console.error('Error: Invalid response format', response.data);
-          setComplains([]); // Fallback to empty array if unexpected structure
-        }
-      })
-      .catch((error) => {
-        console.error('Error fetching complaints: ', error);
+    const fetchComplaints = async () => {
+      try {
+        const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllComplaints');
         
-        setComplains([]); // Handle error by setting to empty array
-      });
+        console.log('API Response:', response.data);  // Log the API response
+        
+        // Access complaints from the `result` field of the response
+        if (response.data && Array.isArray(response.data.result)) {
+          setComplaints(response.data.result);  // Set complaints from `result`
+        } else {
+          console.error('No complaints found in the response:', response.data);
+          setComplaints([]);  // Fallback to empty array if no complaints are found
+        }
+      } catch (error) {
+        console.error('Error fetching complaints:', error);
+        setComplaints([]);  // Fallback to empty array on error
+      }
+    };
+
+    fetchComplaints();
   }, []);
 
-  // Handle status change and update the complaint status using the API
-  const handleStatusChange = (index) => {
-    const updatedComplains = [...complains];
-    const complaint = updatedComplains[index];
-    const newStatus = complaint.status === 'Resolved' ? 'Unresolved' : 'Resolved';
-    
-    axios
-      .put(`https://localhost:7163/api/DigitalPlusCrud/UpdateComplaint/${complaint.ComplaintId}`, { status: newStatus })
-      .then(() => {
-        updatedComplains[index].status = newStatus;
-        setComplains(updatedComplains);
-      })
-      .catch((error) => {
-        console.error('Error updating complaint status:', error);
-      });
+  // Open the confirmation dialog
+  const handleClickOpen = (complaint) => {
+    setSelectedComplaint(complaint);  // Store the selected complaint
+    setOpen(true);  // Open the dialog
   };
 
-  // Filter complaints by mentor or mentee name
-  const filteredComplains = complains.filter(
-    (complain) =>
-      complain.mentorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      complain.menteeName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Close the dialog without doing anything
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedComplaint(null);
+  };
+
+  // Function to handle the status change of a complaint
+  const handleStatusChange = async () => {
+    const complaint = selectedComplaint;
+    if (!complaint || !complaint.complaintId) {
+      console.error('Complaint or Complaint ID is undefined');
+      return;
+    }
+  
+    // Use the correct status field based on the backend expectations (could be status or action)
+    const newStatus = complaint.action === 1 ? 'unresolved' : 'resolved';
+  
+    const payload = {
+      complaintId: complaint.complaintId,
+      menteeName: complaint.menteeName,
+      menteeEmail: complaint.menteeEmail,
+      mentorName: complaint.mentorName,
+      mentorEmail: complaint.mentorEmail,
+      complaintDescription: complaint.complaintDescription,
+      moduleId: complaint.moduleId,
+      status: newStatus,  // Make sure this matches the backend requirement
+    };
+  
+    console.log('Payload being sent:', payload);
+  
+    try {
+      const response = await axios.put(
+        `https://localhost:7163/api/DigitalPlusCrud/UpdateComplaint/${complaint.complaintId}`,
+        payload,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+      console.log('Complaint status updated successfully:', response.data);
+  
+      // Update the local state after successfully updating the status
+      setComplaints((prevComplaints) =>
+        prevComplaints.map((comp) =>
+          comp.complaintId === complaint.complaintId ? { ...comp, action: newStatus === 'resolved' ? 1 : 0 } : comp
+        )
+      );
+  
+      handleClose();  // Close the dialog after the update
+    } catch (error) {
+      if (error.response && error.response.data) {
+        console.error('Validation errors:', error.response.data.errors);
+      } else {
+        console.error('Error updating complaint status:', error.message);
+      }
+    }
+  };
+  
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2 className={styles.heading}>Mentees’ Complaints</h2>
-        <div className={styles.searchBar}>
-          <input
-            type="text"
-            placeholder="Search by Mentor or Mentee"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            
-            className={styles.searchInput}
-          />
-        </div>
-      </div>
-
-      <table className={styles.table}>
+    <div>
+      <h1>Complaints</h1>
+      <table>
         <thead>
           <tr>
             <th>Date Logged</th>
-            <th>Mentee (Name & Surname)</th>
             <th>Mentee Email</th>
-            <th>Mentor (Name & Surname)</th>
             <th>Mentor Email</th>
             <th>Module</th>
             <th>Complaint</th>
             <th>Status</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filteredComplains.length > 0 ? (
-            filteredComplains.map((complain, index) => (
-              <tr key={complain.complaintId}>
-                <td>{new Date(complain.dateLogged).toLocaleString()}</td>
-                <td className={styles.menteeName}>{complain.menteeName}</td>
-                <td className={styles.menteeEmail}>{complain.menteeEmail}</td>
-                <td className={styles.mentorName}>{complain.mentorName}</td>
-                <td className={styles.mentorEmail}>{complain.mentorEmail}</td>
-                <td>{complain.moduleId}</td>
-                <td>{complain.complaintDescription}</td>
-                <td className={complain.status === 'Resolved' ? styles.statusResolved : styles.statusUnresolved}>
-                  {complain.status}
+          {complaints.length > 0 ? (
+            complaints.map((complaint) => (
+              <tr key={complaint.complaintId}>
+                <td>{complaint.dateLogged}</td>
+                <td>{complaint.menteeEmail}</td>
+                <td>{complaint.mentorEmail}</td>
+                <td>{complaint.moduleId}</td>
+                <td>{complaint.complaintDescription}</td>
+                {/* Status with color: Green for Resolved, Red for Unresolved */}
+                <td style={{ color: complaint.action === 1 ? 'green' : 'red' }}>
+                  {complaint.action === 1 ? 'Resolved' : 'Unresolved'}
                 </td>
                 <td>
-                  <button
-                    className={`${styles.actionButton} ${complain.status === 'Resolved' ? styles.resolved : styles.unresolved}`}
-                    onClick={() => handleStatusChange(index)}
-                  >
-                    {complain.status === 'Resolved' ? 'Mark as Unresolved' : 'Mark as Resolved'}
-                  </button>
+                  {complaint.action === 0 ? (
+                    <button onClick={() => handleClickOpen(complaint)}>Mark as Resolved</button>
+                  ) : (
+                    <button onClick={() => handleClickOpen(complaint)}>Mark as Unresolved</button>
+                  )}
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="9">No complaints found</td>
+              <td colSpan="7">No complaints found</td>
             </tr>
           )}
         </tbody>
       </table>
+
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle>Confirm Status Change</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to change the status of this complaint to {selectedComplaint?.action === 1 ? 'Unresolved' : 'Resolved'}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            No
+          </Button>
+          <Button onClick={handleStatusChange} color="primary" autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
