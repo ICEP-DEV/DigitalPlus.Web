@@ -51,34 +51,8 @@ const Booking = () => {
                 placeholder="Enter student number"
               />
             </div>
-          </div>
-          <div className={styles.formGroup}>
-            <label>MODULE:</label>
-            <div className={styles.inputGroup}>
-              <FaBook className={styles.icon} />
-              <select name="module" value={formData.module} onChange={handleChange}>
-                <option value="">Select a module</option>
-                <option value="Math">INT316D</option>
-                <option value="Physics">MOB316D</option>
-                <option value="Programming">DBP316D</option>
-              </select>
-            </div>
-          </div>
-        </div>
 
-        <div className={styles.formRow}>
-          <div className={styles.formGroup}>
-            <label>MENTOR:</label>
-            <div className={styles.inputGroup}>
-              <FaUser className={styles.icon} />
-              <select name="mentor" value={formData.mentor} onChange={handleChange}>
-                <option value="">Select a mentor</option>
-                <option value="Danny Dietz">Danny Dietz</option>
-                <option value="Mike Murphy">Mike Murphy</option>
-                <option value="Axelson">Axelson</option>
-                <option value="Marcus Luttrell">Marcus Luttrell</option>
-              </select>
-            </div>
+
           </div>
           <div className={styles.formGroup}>
             <label>NAME AND SURNAME:</label>
@@ -93,6 +67,40 @@ const Booking = () => {
               />
             </div>
           </div>
+
+        </div>
+
+        <div className={styles.formRow}>
+
+        <div className={styles.formGroup}>
+            <label>MODULE:</label>
+            <div className={styles.inputGroup}>
+              <FaBook className={styles.icon} />
+              <select name="module" value={formData.module} onChange={handleChange}>
+                <option value="">Select a module</option>
+                <option value="Math">INT316D</option>
+                <option value="Physics">MOB316D</option>
+                <option value="Programming">DBP316D</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div className={styles.formGroup}>
+            <label>MENTOR:</label>
+            <div className={styles.inputGroup}>
+              <FaUser className={styles.icon} />
+              <select name="mentor" value={formData.mentor} onChange={handleChange}>
+                <option value="">Select a mentor</option>
+                <option value="Danny Dietz">Danny Dietz</option>
+                <option value="Mike Murphy">Mike Murphy</option>
+                <option value="Axelson">Axelson</option>
+                <option value="Marcus Luttrell">Marcus Luttrell</option>
+              </select>
+            </div>
+          </div>
+        
+         
         </div>
 
         <div className={styles.formRow}>

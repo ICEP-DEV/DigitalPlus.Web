@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
 import styles from './ModulePage.module.css'; // Import the CSS module
-import Header from './Navigation/NavBar.jsx';
+import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
+import HeaderAnnouncementPage from './Headers/HeaderAnnouncementPage.js';
 
 const modules = [
   { id: 'PPA 216D', image: 'https://picsum.photos/seed/PPA/300/200', description: 'Programming Fundamentals' },
@@ -20,7 +21,7 @@ export default function ModulePage() {
 
   return (
     <div>
-    <Header />
+    <NavBar />
     <SideBar />
  
       <div className={styles['course-modules']}>

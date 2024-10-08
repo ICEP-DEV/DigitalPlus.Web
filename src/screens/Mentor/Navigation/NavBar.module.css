@@ -6,6 +6,12 @@
     align-items: center;
     padding: 0 20px; /* Add padding for inner spacing */
     overflow: hidden; /* Prevent overflow */
+    position: relative;
+  }
+
+  .appLogo {
+    height: 60px; /* Adjusted size for better fit */
+    width: auto;
   }
   
   /* Style for profile container */

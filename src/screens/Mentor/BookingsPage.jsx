@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify'; // Import React Toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
-import styles from './BookingsPage.module.css'; // Import CSS
+import styles from './BookingsPage.module.css';
+import NavBar from './Navigation/NavBar'; // Adjust the path if NavBar is in a different folder
 
 
 const MentorBookingsPage = () => {
@@ -54,26 +55,26 @@ const MentorBookingsPage = () => {
     switch (action) {
       case 'Confirm':
         toast.success(`Booking with ID ${bookingId} has been confirmed for the reason: ${reason}.`);
-        // Add logic to update confirmation status
         break;
       case 'Cancel':
-        setBookings(bookings.filter((booking) => booking.id !== bookingId));
         toast.info(`Booking with ID ${bookingId} has been canceled for the reason: ${reason}.`);
         break;
       case 'Reschedule':
         toast.warning(`Rescheduling booking with ID ${bookingId} for the reason: ${reason}.`);
-        // Add logic to reschedule the booking
         break;
       default:
         break;
     }
+
+    // Remove the booking from the list after action
+    setBookings(bookings.filter((booking) => booking.id !== bookingId));
 
     closeModal();
   };
 
   return (
     <div className={styles.pageContainer}>
-      <Header />
+      <NavBar />
       <SideBar />
       
       <div className={styles.contentWrapper}>

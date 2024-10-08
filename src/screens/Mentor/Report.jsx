@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from './Report.module.css';
-import Header from './Navigation/NavBar.jsx';
+import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar'; // Import the CSS module
+import HeaderAnnouncementPage from './Headers/HeaderAnnouncementPage.js';
 
 
 const Report = () => {
@@ -42,7 +43,7 @@ const Report = () => {
 
     return (
         <div>
-            <Header />
+            <NavBar />
             <SideBar />
             
        

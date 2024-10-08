@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import { useEffect, useState } from 'react'; // Import useEffect and useState hooks
 import styles from "./NavBar.module.css";
-import imageLogo from "../Assets/tutLogo_removebg_preview.png";
+import tutLogo_removebg_preview from "../Assets/tutLogo_removebg_preview.png";
 import { BsPersonFill } from "react-icons/bs";
 
 function NavBar() {
@@ -24,17 +24,17 @@ function NavBar() {
   }, []);
 
   // Function to handle profile click
-  const handleProfileClick = () => {
-    navigate('/profile'); // Navigate to the profile page
-  };
+  // const handleProfileClick = () => {
+  //   navigate('/settings'); // Navigate to the profile page
+  // };
 
   return (
     <div className={styles.navBar}>
       <br />
-      <img src={imageLogo} alt="Logo" className={styles.appLogo} />
+      <img src={tutLogo_removebg_preview} alt="Logo" className={styles.appLogo} />
 
-      {/* Profile Icon with description */}
-      <div className={styles.profileContainer} onClick={handleProfileClick}>
+      Profile Icon with description
+      <div className={styles.profileContainer} >
         <BsPersonFill className={styles.profileIcon} />
         <span className={styles.profileText}>{displayName}</span>
       </div>

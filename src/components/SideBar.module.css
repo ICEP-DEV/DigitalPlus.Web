@@ -1,7 +1,7 @@
 /* Sidebar styles */
 .sideBar {
   width: 180px;
-  height: 100vh; /* Full height of the viewport */
+  min-height: 100vh; /* Full height of the viewport */
   background-color: #002147;
   color: white;
   display: flex;

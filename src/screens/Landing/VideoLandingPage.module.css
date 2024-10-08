@@ -1,12 +1,21 @@
 /* VideoLandingPage.module.css */
 
 /* Carousel Section */
+/* Ensure the body doesn't scroll horizontally */
 
+  body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
 .carouselSection {
     position: relative;
     width: 100%;
-    height: 100vh; /* Full viewport height */
+    height: 90vh; 
     overflow: hidden;
+    max-width: 100%;
   }
   
   .overlay {
@@ -16,7 +25,7 @@
     width: 100%;
     height: 100%;
     background-color: rgba(6, 7, 8, 0.8);
-    z-index: 1; /* In front of the carousel */
+    z-index: 2; /* In front of the carousel */
   }
   
   /* About Section */
@@ -29,6 +38,10 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    max-width: 100vw; /* Constrain the sections to viewport width */
+    margin: 0 auto; /* Ensure content is centered */
+    box-sizing: border-box; /* Include padding/border in element's width */
+    overflow: hidden;
   }
   
   .aboutOverlay {
@@ -63,10 +76,11 @@
     color: #fff;
     line-height: 1.6;
     text-align: left;
+    word-wrap: break-word;
   }
   
   .aboutImage {
-    max-width: 100%;
+    max-width: 70%;
     height: auto;
     border-radius: 8px;
   }
@@ -81,6 +95,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    max-width: 100vw; /* Constrain the sections to viewport width */
+    margin: 0 auto; /* Ensure content is centered */
+    box-sizing: border-box; /* Include padding/border in element's width */
   }
   
   .missionOverlay {
@@ -115,11 +132,12 @@
     color: #fff;
     line-height: 1.6;
     text-align: center;
+    word-wrap: break-word;
   }
   
   .missionImage {
-    max-width: 100%;
-    height: 500px;
+    max-width: 250px;
+    height: auto;
     width: auto;
     border-radius: 8px;
   }
@@ -131,6 +149,10 @@
     background-size: cover;
     background-position: center;
     text-align: center;
+    max-width: 100vw; /* Constrain the sections to viewport width */
+    margin: 0 auto; /* Ensure content is centered */
+    box-sizing: border-box; /* Include padding/border in element's width */
+    overflow-x: hidden;
   }
   
   .coreValuesOverlay {
@@ -193,6 +215,9 @@
     background-size: cover;
     background-position: center;
     text-align: center;
+    max-width: 100vw; /* Constrain the sections to viewport width */
+    margin: 0 auto; /* Ensure content is centered */
+    box-sizing: border-box; /* Include padding/border in element's width */
   }
   
   .servicesOverlay {
@@ -223,5 +248,162 @@
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
+    word-wrap: break-word;
   }
- 
+  .fullscreenVideo {
+    position: absolute; /* Positioning absolute to cover the section */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    object-fit: cover; /* Ensures the video covers the area without distortion */
+    z-index: 1; /* Places the video behind other content */
+  }
+  .textOverlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centers the text */
+    z-index: 3; /* Above the video and overlay */
+    color: white;
+    text-align: center;
+    background:rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding:20px;
+    max-width: 90vw;
+  }
+
+  /* .textOverlay h2 {
+    font-size: 3rem;
+    margin: 0;
+    animation: fadeIn 2s ease-in;
+    background:rgba(0, 0, 0, 0.7);
+  } */
+
+  .textOverlay h1 {
+    font-size: 2.2rem; /* Adjust size as needed */
+    font-family: 'Montserrat', sans-serif; /* Font for the <h1> */
+    /* margin: 0; */
+    /* padding: 0;  */
+    /* line-height: 1; */
+    font-weight: bolder;
+    
+}
+.underlined {
+    text-decoration: underline; /* Underline the text */
+    font-weight: bold; /* Optional: make it bold */
+}
+
+
+.textOverlay h4 {
+    font-size: 1.5rem; /* Adjust size as needed */
+    font-family: 'Montserrat', sans-serif; /* Font for the <h4> */
+    /* margin: 0; */
+    /* padding: 0; */
+    /* line-height: 1;  */
+    font-weight: bolder;
+}
+
+.textOverlay p {
+    font-size: 1rem; /* Adjust size as needed */
+    font-family: 'Montserrat', sans-serif; /* Change to your preferred font */
+    margin-top: 1rem;
+    margin: 0; /* Remove margin from the paragraph */
+    /* padding: 0;  */
+    font-weight: bolder;
+}
+.gradientOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.8) 100%); /* Optional gradient */
+}
+
+  .fade-in {
+    font-size: 3rem;
+    animation: slideUp 2s ease-in;
+    z-index: 3;
+  }
+  
+  .slide-up {
+    font-size: 1.5rem;
+    animation: slideUp 2s ease-in;
+    margin-top: 1rem;
+  }
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    0% { transform: translateY(50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+
+  
+  .highlightsScroller {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px; /* Adjust height as needed */
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Keep the items on one line */
+    z-index: 4; /* Above the video and other content */
+    scroll-behavior: smooth;
+    overflow: hidden;
+    margin: 0 auto; /* Center the scroller */
+    max-width: 100vw; /* Ensure no overflow */
+  }
+  
+  .highlightsContent {
+    display: inline-block;
+  white-space: nowrap; /* Ensure the text stays on one line */
+  padding-left: 100%; /* Start the text off-screen */
+  animation: scroll 20s linear infinite; /* Animate the scrolling */
+  color: white;
+  font-size: 2em;
+  }
+
+  @keyframes scroll {
+    0% { transform: translateX(100%); }
+    10%{transform: translateX(0)}
+    100% { transform: translateX(-100%); }
+  }
+  
+  .highlightItem {
+    display: inline-block;
+  color: white;
+  font-size: 1.2rem;
+  }
+  .separator {
+    padding: 0 10px;
+    color: white;
+  }
+
+  .cta-button {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.2rem;
+    z-index: 3;
+    text-decoration: none;
+    animation: fadeIn 3s ease;
+  }
+  
+  .cta-button:hover {
+    background-color: #ff4500;
+  }
