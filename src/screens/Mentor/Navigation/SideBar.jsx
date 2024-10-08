@@ -39,6 +39,11 @@ function SideBar() {
           {!isCollapsed && <span>BOOKINGS</span>}
         </div>
 
+        <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/calendar')}>
+          <FaRegCalendarAlt className={styles.icon} />
+          {!isCollapsed && <span>CALENDAR</span>}
+        </div>
+
         <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/register')}>
           <BsBookmarkCheckFill className={styles.icon} />
           {!isCollapsed && <span>REGISTER</span>}
@@ -54,10 +59,7 @@ function SideBar() {
           {!isCollapsed && <span>SETTINGS</span>}
         </div>
         
-        <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/calendar')}>
-          <FaRegCalendarAlt className={styles.icon} />
-          {!isCollapsed && <span>CALENDAR</span>}
-        </div>
+        
 
         <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/logout')}>
           <MdLogout className={styles.icon} />
