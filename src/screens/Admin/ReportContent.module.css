@@ -8,19 +8,22 @@
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .filterContainer {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: center;
+  margin-bottom: 50px;
 }
 
 .searchInput {
   padding: 10px;
   margin-right: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #0e0505;
   border-radius: 4px;
+  width: 250px;
 }
 
 .dropdown {
@@ -31,17 +34,63 @@
 }
 
 .actionBtn {
-  padding: 10px 15px;
+  padding: 10px 20px;
   background-color: #1f3751;
   color: white;
-  margin-right: 10px;
+  margin-right: 5px;
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
   cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
 }
 
 .actionBtn:hover {
   background-color: #0056b3;
+}
+
+.backBtn {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.backBtn:hover {
+  background-color: #5a6268;
+}
+
+.tabBtn {
+  padding: 10px 20px;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 50px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tabBtn.active {
+  background-color: #2e4d6e;
+  color: white;
 }
 
 .reportTable, .registerTable, .mentorReportTable {
@@ -53,9 +102,14 @@
 .reportTable th, .reportTable td,
 .registerTable th, .registerTable td,
 .mentorReportTable th, .mentorReportTable td {
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ddd;
   text-align: left;
+}
+
+.reportTable th {
+  background-color: #2e4d6e;
+  color: white;
 }
 
 .detailsView {
@@ -66,41 +120,17 @@
 }
 
 .tabSwitcher {
+  display: flex;
+  justify-content: center;
   margin-bottom: 20px;
-}
-
-.tabBtn {
-  padding: 10px 20px;
-  background-color: #f1f1f1;
-  border: 1px solid #ddd;
-  cursor: pointer;
-  margin-right: 10px;
-  border-radius: 4px;
-}
-
-.tabBtn.active {
-  background-color: #2e4d6e;
-  color: white;
-}
-
-.backBtn {
-  padding: 10px 15px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.backBtn:hover {
-  background-color: #5a6268;
 }
 
 .actionButtons {
   display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
-
 }
 
 .registerView, .mentorReportView {
@@ -111,4 +141,27 @@
 
 .extraReport {
   margin-top: 20px;
+}
+
+.actionCell {
+  display: flex;
+  justify-content: space-between;
+}
+
+.registerBtn, .mentorReportBtn {
+  padding: 8px 12px;
+  background-color: transparent;
+  color: black;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.registerBtn:hover, .mentorReportBtn:hover {
+  background-color: #f0f0f0;
 }

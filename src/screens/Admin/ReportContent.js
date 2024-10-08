@@ -96,8 +96,8 @@ const Reports = () => {
                   <td>{report.studentNumber}</td>
                   <td>{report.mentor}</td>
                   <td>{report.course}</td>
-                  <td>
-                    <button className={styles.actionBtn} onClick={() => viewRegister(report.studentNumber)}>Register</button>
+                  <td className={styles.actionCell}>
+                    <button className={`${styles.actionBtn} ${styles.registerBtn}`} onClick={() => viewRegister(report.studentNumber)}>Register</button>
                     <button className={styles.actionBtn} onClick={() => viewMentorReport(report.studentNumber)}>Mentor Report</button>
                   </td>
                 </tr>
