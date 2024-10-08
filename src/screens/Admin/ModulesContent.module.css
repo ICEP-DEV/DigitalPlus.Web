@@ -1,149 +1,272 @@
 /* Scoped container for the whole Modules section */
 .modulesContainer {
-    padding: 20px;
-    text-align: center;
-    background-color: #f0f0f0;
-  }
-  
-  /* Faculty Dropdown */
-  .facultyDropdown {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 20px;
-  }
-  
-  .facultyDropdown select {
-    padding: 10px;
-    font-size: 16px;
-    background-color: #1b1b1b;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
-  
-  /* Modules title */
-  .modulesTitle {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 30px;
-  }
-  
-  /* Carousel styling */
-  .modulesCarousel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    position: relative;
-  }
-  
-  .carouselItems {
-    display: flex;
-    overflow-x: auto;
-    scrollbar-width: thin;
-    width: 600px;
-    scroll-behavior: smooth;
-  }
-  
-  .carouselItems::-webkit-scrollbar {
-    height: 8px;
-  }
-  
-  .carouselItems::-webkit-scrollbar-thumb {
-    background-color: #007bff;
-    border-radius: 10px;
-  }
-  
-  .carouselItem {
-    flex: 0 0 33.33%;
-    margin: 0 10px;
-    text-align: center;
-    background-color: #e6e6e6;
-    border-radius: 10px;
-    padding: 20px;
-  }
-  
-  .moduleIcon {
-    margin-bottom: 10px;
-  }
-  
-  /* Scrollable mentor list */
-  .mentorList {
-    max-height: 150px;
-    overflow-y: auto;
-    margin-top: 10px;
-  }
-  
-  .mentorList::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .mentorList::-webkit-scrollbar-thumb {
-    background-color: #007bff;
-    border-radius: 10px;
-  }
-  
-  .mentorItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 5px;
-  }
-  
-  .deleteMentorBtn {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  /* Carousel navigation buttons */
-  .carouselBtn {
-    background-color: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 10px;
-  }
-  
-  .leftBtn {
-    margin-right: 20px;
-  }
-  
-  .rightBtn {
-    margin-left: 20px;
-  }
-  
-  /* Add Button and Input */
-  .assignMentorSection {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  .assignMentorSection select,
-  .assignMentorSection input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .addButton {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .addButton:hover {
-    background-color: #0056b3;
-  }
-  
+  padding: 20px;
+  text-align: center;
+  background-color: #f4f7fc; /* Light background */
+  position: relative; /* Positioning for dropdown */
+}
+
+/* Modules title */
+.modulesTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+/* Faculty Dropdown on the right */
+.modulesFacultyDropdown {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.modulesFacultyDropdown select {
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modulesFacultyDropdown select:hover {
+  background-color: #16a085;
+}
+
+/* Carousel styling */
+.modulesCarousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+  gap: 10px;
+}
+
+.modulesCarouselItems {
+  display: flex;
+  overflow-x: auto; /* Allow horizontal scrolling */
+  width: 100%;
+  max-width: 800px;
+  scroll-behavior: smooth;
+  /* Hide scrollbar for all browsers */
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.modulesCarouselItems::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+
+/* Module item styling */
+.modulesCarouselItem {
+  flex: 0 0 33.33%;
+  margin: 0 10px;
+  text-align: center;
+  background-color: #ffffff; /* Flat background */
+  border-radius: 12px;
+  padding: 20px;
+  width: 160px; /* Maintain size */
+  height: 180px; /* Maintain size */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effects */
+}
+
+.modulesCarouselItem:hover {
+  transform: translateY(-5px); /* Slight lift */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Soft shadow on hover */
+}
+
+.modulesModuleIcon {
+  margin-bottom: 10px;
+  font-size: 50px;
+  color: #3498db; /* Bright color for icon */
+}
+
+.modulesCarouselItem p {
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Mentor list */
+.modulesMentorList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  max-height: 60px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.modulesMentorItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+/* Mentor name aligned to the left */
+.mentorName {
+  flex-grow: 1;
+  text-align: left;
+  color: #34495e;
+}
+
+/* Trash icon aligned to the right */
+.trashIcon {
+  color: #e74c3c; /* Red trash icon */
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.trashIcon:hover {
+  color: #c0392b;
+  transform: scale(1.1); /* Slight scale on hover */
+}
+
+/* Scroll buttons smaller and placed next to the carousel */
+.modulesCarouselBtn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.modulesCarouselBtn:hover {
+  background-color: #2980b9;
+  transform: scale(1.1); /* Scale effect on hover */
+}
+
+.modulesLeftBtn {
+  margin-right: 10px;
+}
+
+.modulesRightBtn {
+  margin-left: 10px;
+}
+
+/* Assign Mentor Section */
+.modulesFormContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+/* Left Section - Select Module and Mentor */
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 20%;
+}
+
+.modulesSelectSection, .mentorsSelectSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  text-align: left;
+  color: #2c3e50;
+}
+
+.modulesSelect, .mentorsSelect {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.modulesSelect:hover, .mentorsSelect:hover {
+  border-color: #3498db; /* Border color change on hover */
+}
+
+/* Assign Mentor Button */
+.assignMentorButton {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.assignMentorButton:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px); /* Slight lift on hover */
+}
+
+/* Right Section - New Module and Add Module */
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 20%;
+}
+
+.newModuleInput {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.newModuleInput:hover {
+  border-color: #3498db;
+}
+
+.addModuleButton {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.addModuleButton:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+}
