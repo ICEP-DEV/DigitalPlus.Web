@@ -171,7 +171,7 @@ const MenteesContent = () => {
           <RiUserSearchFill />
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.addMenteeButton} onClick={openAddMenteeModal}>
+          <button className={styles.addMenteeButton} onClick={openAddMenteeDialog}>
             Add Mentee
           </button>
         </div>
@@ -212,17 +212,10 @@ const MenteesContent = () => {
                     </Button>
                   </td>
                   <td>
-                    <Button
-                      startIcon={<ManageAccounts />}
-                      variant="outlined"
-                      sx={{ color: 'black' }} // Black text color
-                      className={styles.manageButton}
-                      onClick={() => openEditMenteeDialog(mentee)}
-                    >
-                    <button className={styles.manageButton} onClick={() => openEditMenteeModal(mentee)}>
+                    <button className={styles.manageButton} onClick={() => openAddMenteeDialog(mentee)}>
                     <CiEdit />
                       Manage
-                    </Button>
+                    </button>
                   </td>
                 </tr>
               ))

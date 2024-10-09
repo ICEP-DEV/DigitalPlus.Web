@@ -5,7 +5,6 @@ import DoneIcon from '@mui/icons-material/Done'; // Icon for Resolved
 import ReportProblemIcon from '@mui/icons-material/ReportProblem'; // Icon for Unresolved
 import styles from './ComplainsContent.module.css'; // Import the CSS module
 import { GrCompliance } from "react-icons/gr";
-import styles from './ComplainsContent.module.css';
 
 
 

@@ -211,7 +211,7 @@ const MentorsContent = () => {
           >
             Add
           </Button>
-          <button className={styles.addMentorButton} onClick={openAddMentorModal}>
+          <button className={styles.addMentorButton} onClick={openEditMentorDialog}>
             <BsPersonFillAdd />
             Add Mentor
           </button>
@@ -254,17 +254,10 @@ const MentorsContent = () => {
                     </Button>
                   </td>
                   <td>
-                    <Button
-                      startIcon={<ManageAccounts />}
-                      variant="outlined"
-                      sx={{ color: 'black' }} // Black text color
-                      className={styles.manageButton}
-                      onClick={() => openEditMentorDialog(mentor)}
-                    >
-                    <button className={styles.manageButton} onClick={() => openEditMentorModal(mentor)}>
+                    <button className={styles.manageButton} onClick={() => openEditMentorDialog(mentor)}>
                     <CiEdit />
                       Manage
-                    </Button>
+                    </button>
                   </td>
                 </tr>
               ))
