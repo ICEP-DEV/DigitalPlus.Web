@@ -8,14 +8,14 @@ const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [menteeForm, setMenteeForm] = useState({
-    mentee_Id: '', // Editable Mentee_Id field
+    mentee_Id: 0, // Set to 0 as the default for new mentees
     firstName: '',
     lastName: '',
     studentEmail: '',
     personalEmail: '',
     contactNo: '',
     password: '',
-    semester: '', // Semester field
+    semester: '',
     activated: true,
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -32,6 +32,7 @@ const MenteesContent = () => {
           activated: !!mentee.activated, // Convert bit to boolean
           mentee_Id: mentee.mentee_Id, // Use menteeId
         }));
+        
         setMentees(data);
       } catch (error) {
         console.error('Error fetching mentees:', error);
@@ -59,7 +60,7 @@ const MenteesContent = () => {
   const handleAddMentee = async () => {
     try {
       const newMentee = {
-        mentee_Id: menteeForm.mentee_Id, // Use the user-entered mentee_Id
+        mentee_Id: menteeForm.mentee_Id, // Keep the default mentee_Id = 0
         firstName: menteeForm.firstName,
         lastName: menteeForm.lastName,
         studentEmail: menteeForm.studentEmail,
@@ -92,14 +93,16 @@ const MenteesContent = () => {
 
   // Handle editing an existing mentee
   const handleEditMentee = async () => {
+    
     try {
       if (!menteeForm.mentee_Id) {
-        console.error('Mentee_Id is null or undefined');
+        console.error('Mentee_Id is missing or undefined');
+        toast.error('Mentee ID is missing. Please try again.');
         return;
       }
-
+  
       const updatedMentee = {
-        mentee_Id: menteeForm.mentee_Id, // Use the user-entered mentee_Id
+        mentee_Id: menteeForm.mentee_Id, // Ensure the mentee_Id is being sent
         firstName: menteeForm.firstName,
         lastName: menteeForm.lastName,
         studentEmail: menteeForm.studentEmail,
@@ -109,9 +112,9 @@ const MenteesContent = () => {
         semester: menteeForm.semester,
         activated: menteeForm.activated ? true : false,
       };
-
+      console.error(menteeForm.mentee_Id);
       await axios.put(
-        `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.mentee_Id}`,
+        `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.mentee_Id}`, // Pass the mentee_Id in the URL
         updatedMentee,
         {
           headers: {
@@ -119,9 +122,8 @@ const MenteesContent = () => {
           },
         }
       );
-
-      // Update the mentees list locally after the update
-      const updatedMentees = mentees.map(mentee =>
+  
+      const updatedMentees = mentees.map((mentee) =>
         mentee.mentee_Id === menteeForm.mentee_Id ? { ...mentee, ...updatedMentee } : mentee
       );
       setMentees(updatedMentees);
@@ -133,7 +135,7 @@ const MenteesContent = () => {
       toast.error('Failed to update mentee. Please try again.');
     }
   };
-
+  
   // Open modal for adding a mentee
   const openAddMenteeModal = () => {
     resetForm();
@@ -151,7 +153,7 @@ const MenteesContent = () => {
   // Reset form fields
   const resetForm = () => {
     setMenteeForm({
-      mentee_Id: '', // Reset the mentee_Id field
+      mentee_Id: 0, // Reset mentee_Id to 0 for new mentees
       firstName: '',
       lastName: '',
       studentEmail: '',
@@ -251,7 +253,7 @@ const MenteesContent = () => {
               <input
                 type="text"
                 value={menteeForm.mentee_Id}
-                readOnly={isEditing}
+                readOnly={isEditing} // Make this read-only while editing
                 onChange={(e) => handleFormChange('mentee_Id', e.target.value)}
                 className={styles.inputField}
               />

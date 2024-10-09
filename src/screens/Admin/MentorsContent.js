@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import styles from './MentorsContent.module.css';
 import axios from 'axios';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import styles from './MentorsContent.module.css';
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [mentorForm, setMentorForm] = useState({
-    mentorId: '', // Allow users to set this manually
+    mentorId: '',
     firstName: '',
     lastName: '',
     studentEmail: '',
@@ -16,13 +17,13 @@ const MentorsContent = () => {
     contactNo: '',
     password: '',
     activated: true,
-    available: 0, // Assuming available should be initialized
+    available: 0,
     module: '',
     lab: ''
   });
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const fetchMentors = async () => {
@@ -50,13 +51,20 @@ const MentorsContent = () => {
   );
 
   const handleFormChange = (field, value) => {
-    setMentorForm({ ...mentorForm, [field]: value });
+    if (field === 'mentorId') {
+      // Automatically generate the studentEmail based on the mentorId
+      const studentEmail = `${value}@tut4life.ac.za`;
+      setMentorForm({ ...mentorForm, mentorId: value, studentEmail });
+    } else {
+      setMentorForm({ ...mentorForm, [field]: value });
+    }
   };
+  
 
   const handleAddMentor = async () => {
     try {
       const newMentor = {
-        mentorId: mentorForm.mentorId, // Use the provided mentorId
+        mentorId: mentorForm.mentorId,
         firstName: mentorForm.firstName,
         lastName: mentorForm.lastName,
         studentEmail: mentorForm.studentEmail,
@@ -70,16 +78,12 @@ const MentorsContent = () => {
       const response = await axios.post(
         `https://localhost:7163/api/DigitalPlusUser/AddMentor`,
         newMentor,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
       setMentors([...mentors, response.data]);
       resetForm();
-      setIsModalVisible(false);
+      setIsDialogOpen(false);
       toast.success('Mentor added successfully!');
     } catch (error) {
       console.error('Error adding mentor:', error.response ? error.response.data : error.message);
@@ -88,17 +92,14 @@ const MentorsContent = () => {
   };
 
   const handleEditMentor = async () => {
-    console.log("Mentor form:", mentorForm); // Log the mentorForm state
-
-    // Check if mentorId is null or undefined or not
-    if (mentorForm.mentorId === null || mentorForm.mentorId === undefined || mentorForm.mentorId === '') {
-      console.error('MentorId is null, undefined or empty');
+    if (!mentorForm.mentorId) {
+      toast.error('Mentor ID is missing');
       return;
     }
 
     try {
       const updatedMentor = {
-        mentorId: mentorForm.mentorId, // Use the provided mentorId
+        mentorId: mentorForm.mentorId,
         firstName: mentorForm.firstName,
         lastName: mentorForm.lastName,
         studentEmail: mentorForm.studentEmail,
@@ -109,14 +110,10 @@ const MentorsContent = () => {
         activated: mentorForm.activated ? true : false
       };
 
-      const response = await axios.put(
-        `https://localhost:7163/api/DigitalPlusUser/UpdateMentor/${parseInt(mentorForm.mentorId)}`,
+      await axios.put(
+        `https://localhost:7163/api/DigitalPlusUser/UpdateMentor/${mentorForm.mentorId}`,
         updatedMentor,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
       const updatedMentors = mentors.map(mentor =>
@@ -124,7 +121,7 @@ const MentorsContent = () => {
       );
       setMentors(updatedMentors);
       resetForm();
-      setIsModalVisible(false);
+      setIsDialogOpen(false);
       toast.success('Mentor updated successfully!');
     } catch (error) {
       console.error('Error updating mentor:', error.response ? error.response.data : error.message);
@@ -132,21 +129,21 @@ const MentorsContent = () => {
     }
   };
 
-  const openAddMentorModal = () => {
+  const openAddMentorDialog = () => {
     resetForm();
     setIsEditing(false);
-    setIsModalVisible(true);
+    setIsDialogOpen(true);
   };
 
-  const openEditMentorModal = (mentor) => {
+  const openEditMentorDialog = (mentor) => {
     setMentorForm(mentor);
     setIsEditing(true);
-    setIsModalVisible(true);
+    setIsDialogOpen(true);
   };
 
   const resetForm = () => {
     setMentorForm({
-      mentorId: '', // Reset MentorId
+      mentorId: '',
       firstName: '',
       lastName: '',
       studentEmail: '',
@@ -154,34 +151,53 @@ const MentorsContent = () => {
       contactNo: '',
       password: '',
       activated: true,
-      available: 0, // Reset available as well
+      available: 0,
       module: '',
       lab: ''
     });
-    setShowPassword(false); // Reset password visibility
+    setShowPassword(false);
   };
 
-  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
     <div className={styles.mentorsContainer}>
-      <ToastContainer />
+      <ToastContainer 
+        position="top-center"  // Toast appears at the top-center
+        autoClose={3000}       // Auto close after 3 seconds
+        hideProgressBar={false} 
+        newestOnTop={true} 
+        closeOnClick 
+        rtl={false} 
+        pauseOnFocusLoss 
+        draggable 
+        pauseOnHover 
+      />
 
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
-          <input
-            type="text"
-            placeholder="Search by Student Email"
-            className={styles.searchBar}
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
+        <input type="text" style={{ display: 'none' }} autoComplete="off" />
+  
+  <input
+    type="search"
+    placeholder="Search by Student Email"
+    className={styles.searchBar}
+    value={searchTerm}
+    onChange={handleSearchChange}
+    autoComplete="off"  // Disable autofill
+    name="unique-search-email" // Use a unique name that is not 'email'
+    id="search-email-unique" // Use a unique id
+  />
+
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.addMentorButton} onClick={openAddMentorModal}>
+          <button className={styles.addMentorButton} onClick={openAddMentorDialog}>
             Add Mentor
           </button>
         </div>
@@ -219,7 +235,7 @@ const MentorsContent = () => {
                     </button>
                   </td>
                   <td>
-                    <button className={styles.manageButton} onClick={() => openEditMentorModal(mentor)}>
+                    <button className={styles.manageButton} onClick={() => openEditMentorDialog(mentor)}>
                       Manage
                     </button>
                   </td>
@@ -236,96 +252,95 @@ const MentorsContent = () => {
         </table>
       </div>
 
-      {isModalVisible && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <h2>{isEditing ? 'Edit Mentor' : 'Add Mentor'}</h2>
-            <div>
-              <label>Mentor ID:</label>
-              <input
-                type="text"
-                value={mentorForm.mentorId}
-                onChange={(e) => handleFormChange('mentorId', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>First Name:</label>
-              <input
-                type="text"
-                value={mentorForm.firstName}
-                onChange={(e) => handleFormChange('firstName', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Last Name:</label>
-              <input
-                type="text"
-                value={mentorForm.lastName}
-                onChange={(e) => handleFormChange('lastName', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Student Email:</label>
-              <input
-                type="email"
-                value={mentorForm.studentEmail}
-                onChange={(e) => handleFormChange('studentEmail', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Personal Email:</label>
-              <input
-                type="email"
-                value={mentorForm.personalEmail}
-                onChange={(e) => handleFormChange('personalEmail', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Contact No:</label>
-              <input
-                type="text"
-                value={mentorForm.contactNo}
-                onChange={(e) => handleFormChange('contactNo', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div className={styles.passwordField}>
-              <label>Password:</label>
-              <span className={styles.eyeIcon} onClick={togglePasswordVisibility}>
-                {showPassword ? '🙈' : '👁️'}
-              </span>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={mentorForm.password}
-                onChange={(e) => handleFormChange('password', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Status:</label>
-              <select
-                value={mentorForm.activated ? 1 : 0}
-                onChange={(e) => handleFormChange('activated', !!parseInt(e.target.value))}
-                className={styles.selectField}
-              >
-                <option value={1}>ACTIVATED</option>
-                <option value={0}>DEACTIVATED</option>
-              </select>
-            </div>
-            <div className={styles.modalButtons}>
-              <button onClick={isEditing ? handleEditMentor : handleAddMentor}>
-                {isEditing ? 'Update Mentor' : 'Add Mentor'}
-              </button>
-              <button onClick={() => setIsModalVisible(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Dialog for Adding/Editing Mentor */}
+      <Dialog
+  open={isDialogOpen}
+  onClose={(event, reason) => {
+    if (reason !== 'backdropClick') {
+      closeDialog();
+    }
+  }}
+  disableEscapeKeyDown // Prevent closing by pressing Escape key
+>
+        <DialogTitle>{isEditing ? 'Edit Mentor' : 'Add Mentor'}</DialogTitle>
+        <DialogContent>
+  <TextField
+    label="Mentor ID (Student Number)"
+    value={mentorForm.mentorId}
+    onChange={(e) => handleFormChange('mentorId', e.target.value)}
+    fullWidth
+    margin="normal"
+    required
+  />
+  <TextField
+    label="First Name"
+    value={mentorForm.firstName}
+    onChange={(e) => handleFormChange('firstName', e.target.value)}
+    fullWidth
+    margin="normal"
+    required
+  />
+  <TextField
+    label="Last Name"
+    value={mentorForm.lastName}
+    onChange={(e) => handleFormChange('lastName', e.target.value)}
+    fullWidth
+    margin="normal"
+    required
+  />
+  <TextField
+    label="Student Email"
+    value={mentorForm.studentEmail}
+    fullWidth
+    margin="normal"
+    disabled // Make this field disabled as it's automatically generated
+  />
+  <TextField
+    label="Personal Email"
+    value={mentorForm.personalEmail}
+    onChange={(e) => handleFormChange('personalEmail', e.target.value)}
+    fullWidth
+    margin="normal"
+    required
+  />
+  <TextField
+    label="Contact No"
+    value={mentorForm.contactNo}
+    onChange={(e) => handleFormChange('contactNo', e.target.value)}
+    fullWidth
+    margin="normal"
+    required
+  />
+          <TextField
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            value={mentorForm.password}
+            onChange={(e) => handleFormChange('password', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <Select
+            label="Status"
+            value={mentorForm.activated}
+            onChange={(e) => handleFormChange('activated', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          >
+            <MenuItem value={true}>Activated</MenuItem>
+            <MenuItem value={false}>Deactivated</MenuItem>
+          </Select>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={isEditing ? handleEditMentor : handleAddMentor} color="primary">
+            {isEditing ? 'Save Changes' : 'Add Mentor'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

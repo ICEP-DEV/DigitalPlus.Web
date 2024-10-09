@@ -1,98 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done'; // Icon for Resolved
+import ReportProblemIcon from '@mui/icons-material/ReportProblem'; // Icon for Unresolved
+import styles from './ComplainsContent.module.css'; // Import the CSS module
 
 const ComplainsContent = () => {
-  // Initialize complaints as an empty array
   const [complaints, setComplaints] = useState([]);
-  const [open, setOpen] = useState(false);  // State to control dialog visibility
-  const [selectedComplaint, setSelectedComplaint] = useState(null);  // To hold the complaint selected for confirmation
+  const [open, setOpen] = useState(false);
+  const [selectedComplaint, setSelectedComplaint] = useState(null);
 
-  // Fetch complaints from the API when the component mounts
   useEffect(() => {
     const fetchComplaints = async () => {
       try {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllComplaints');
-        
-        console.log('API Response:', response.data);  // Log the API response
-        
-        // Access complaints from the `result` field of the response
         if (response.data && Array.isArray(response.data.result)) {
-          setComplaints(response.data.result);  // Set complaints from `result`
+          setComplaints(response.data.result);
         } else {
-          console.error('No complaints found in the response:', response.data);
-          setComplaints([]);  // Fallback to empty array if no complaints are found
+          setComplaints([]);
         }
       } catch (error) {
-        console.error('Error fetching complaints:', error);
-        setComplaints([]);  // Fallback to empty array on error
+        setComplaints([]);
       }
     };
 
     fetchComplaints();
   }, []);
 
-  // Open the confirmation dialog
   const handleClickOpen = (complaint) => {
-    setSelectedComplaint(complaint);  // Store the selected complaint
-    setOpen(true);  // Open the dialog
+    setSelectedComplaint(complaint);
+    setOpen(true);
   };
 
-  // Close the dialog without doing anything
   const handleClose = () => {
     setOpen(false);
     setSelectedComplaint(null);
   };
 
-  // Function to handle the status change of a complaint
   const handleStatusChange = async () => {
     const complaint = selectedComplaint;
-    if (!complaint || !complaint.complaintId) {
-      console.error('Complaint or Complaint ID is undefined');
-      return;
-    }
-  
-    // Use the correct status field based on the backend expectations (could be status or action)
-    const newStatus = complaint.action === 1 ? 'unresolved' : 'resolved';
-  
+    if (!complaint || !complaint.complaintId) return;
+
+    const newAction = complaint.action === 1 ? 0 : 1;
+    const newStatus = newAction === 1 ? 'resolved' : 'unresolved';
+
     const payload = {
-      complaintId: complaint.complaintId,
-      menteeName: complaint.menteeName,
-      menteeEmail: complaint.menteeEmail,
-      mentorName: complaint.mentorName,
-      mentorEmail: complaint.mentorEmail,
-      complaintDescription: complaint.complaintDescription,
-      moduleId: complaint.moduleId,
-      status: newStatus,  // Make sure this matches the backend requirement
+      ...complaint,
+      status: newStatus,
+      action: newAction
     };
-  
-    console.log('Payload being sent:', payload);
-  
+
     try {
-      const response = await axios.put(
+      await axios.put(
         `https://localhost:7163/api/DigitalPlusCrud/UpdateComplaint/${complaint.complaintId}`,
         payload,
         { headers: { 'Content-Type': 'application/json' } }
       );
-      console.log('Complaint status updated successfully:', response.data);
-  
-      // Update the local state after successfully updating the status
+
       setComplaints((prevComplaints) =>
         prevComplaints.map((comp) =>
-          comp.complaintId === complaint.complaintId ? { ...comp, action: newStatus === 'resolved' ? 1 : 0 } : comp
+          comp.complaintId === complaint.complaintId ? { ...comp, action: newAction } : comp
         )
       );
-  
-      handleClose();  // Close the dialog after the update
+      handleClose();
     } catch (error) {
-      if (error.response && error.response.data) {
-        console.error('Validation errors:', error.response.data.errors);
-      } else {
-        console.error('Error updating complaint status:', error.message);
-      }
+      console.error('Error updating complaint status:', error.message);
     }
   };
-  
 
   return (
     <div>
@@ -118,16 +92,24 @@ const ComplainsContent = () => {
                 <td>{complaint.mentorEmail}</td>
                 <td>{complaint.moduleId}</td>
                 <td>{complaint.complaintDescription}</td>
-                {/* Status with color: Green for Resolved, Red for Unresolved */}
+                {/* Status now showing in words */}
                 <td style={{ color: complaint.action === 1 ? 'green' : 'red' }}>
                   {complaint.action === 1 ? 'Resolved' : 'Unresolved'}
                 </td>
                 <td>
-                  {complaint.action === 0 ? (
-                    <button onClick={() => handleClickOpen(complaint)}>Mark as Resolved</button>
-                  ) : (
-                    <button onClick={() => handleClickOpen(complaint)}>Mark as Unresolved</button>
-                  )}
+                  <button
+                    onClick={() => handleClickOpen(complaint)}
+                    className={styles.iconButton}
+                  >
+                    {complaint.action === 0 ? (
+                      <DoneIcon style={{ color: 'green' }} /> // Icon for marking resolved
+                    ) : (
+                      <ReportProblemIcon style={{ color: 'red' }} /> // Icon for marking unresolved
+                    )}
+                    <span className={styles.tooltipText}>
+                      {complaint.action === 0 ? 'Mark as Resolved' : 'Mark as Unresolved'}
+                    </span>
+                  </button>
                 </td>
               </tr>
             ))
@@ -139,11 +121,7 @@ const ComplainsContent = () => {
         </tbody>
       </table>
 
-      {/* Confirmation Dialog */}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-      >
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Confirm Status Change</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -151,12 +129,8 @@ const ComplainsContent = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            No
-          </Button>
-          <Button onClick={handleStatusChange} color="primary" autoFocus>
-            Yes
-          </Button>
+          <Button onClick={handleClose} color="primary">No</Button>
+          <Button onClick={handleStatusChange} color="primary" autoFocus>Yes</Button>
         </DialogActions>
       </Dialog>
     </div>

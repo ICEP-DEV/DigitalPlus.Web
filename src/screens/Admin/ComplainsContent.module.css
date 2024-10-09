@@ -108,4 +108,32 @@
       width: 100%;
     }
   }
+
+  .iconButton {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .iconButton:hover .tooltipText {
+    display: inline-block;
+  }
+  
+  .tooltipText {
+    display: none;
+    position: absolute;
+    left: -150%; /* Move the tooltip to the left */
+    top: 80%;
+    transform: translateY(-50%);
+    color: black; /* Text color */
+    padding: 5px 10px;
+    z-index: 1;
+    white-space: nowrap;
+    background-color: transparent; /* Removed the background color */
+  }
+
+
   
