@@ -15,37 +15,38 @@ const ClassListPage = () => {
     };
 
     return (
-        
         <div className={styles.container}>
-            <h1>List of Student enrolled for PPAF 216D</h1>
+            <h1>List of Students Enrolled for PPAF 216D</h1>
             <div className={styles.tableContainer}>
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th>STUDENT NUMBER</th>
-                            <th>MENTEE NAME & SURNAME</th>
-                            <th>COURSE</th>
-                            <th>DM STUDENT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student, index) => (
-                            <tr key={index}>
-                                <td>{student.studentNumber}</td>
-                                <td>{student.name}</td>
-                                <td>{student.course}</td>
-                                <td>
-                                    <button
-                                        className={styles.messageBtn}
-                                        onClick={() => handleMessageClick(student.name)}
-                                    >
-                                        MESSAGE
-                                    </button>
-                                </td>
+                <div className={styles.tableWrapper}>
+                    <table className={styles.table}>
+                        <thead>
+                            <tr>
+                                <th>STUDENT NUMBER</th>
+                                <th>MENTEE NAME & SURNAME</th>
+                                <th>COURSE</th>
+                                <th>DM STUDENT</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {students.map((student, index) => (
+                                <tr key={index}>
+                                    <td>{student.studentNumber}</td>
+                                    <td>{student.name}</td>
+                                    <td>{student.course}</td>
+                                    <td>
+                                        <button
+                                            className={styles.messageBtn}
+                                            onClick={() => handleMessageClick(student.name)}
+                                        >
+                                            MESSAGE
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

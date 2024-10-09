@@ -156,8 +156,8 @@ const SignUp = () => {
                             <label>Last Name:</label>
                             <input type="text" name="LastName" value={mentee.LastName} onChange={handleChange} required />
                         
-                             {/* <label >Email:</label>  */}
-                             {/* <input type="email" name="StudentEmail" value={mentee.StudentEmail} onChange={handleChange}  required />  */}
+                              <label >Email:</label>  
+                              <input type="email" name="StudentEmail" value={mentee.StudentEmail} onChange={handleChange}  required />  
                     
                             <label>Contact No:</label>
                             <input type="text" name="ContactNo" value={mentee.ContactNo} onChange={handleChange} required />

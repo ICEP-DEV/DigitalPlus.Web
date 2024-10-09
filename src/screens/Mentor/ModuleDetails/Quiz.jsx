@@ -39,7 +39,8 @@ const QuizHistory = () => {
                   <th>Title</th>
                   <th>Date Created</th>
                   <th>Number of Questions</th>
-                  <th>Mentee Answers</th>
+                
+                  <th>Actions</th> {/* New column for actions */}
                 </tr>
               </thead>
               <tbody>
@@ -47,19 +48,28 @@ const QuizHistory = () => {
                   <td>1. Methods</td>
                   <td>2024-10-05</td>
                   <td>10</td>
-                  <td>5</td>
+                  
+                  <td>
+                    <button className={styles.viewButton}>View Ratings</button> {/* Button to view ratings */}
+                  </td>
                 </tr>
                 <tr>
                   <td>2. If Statement</td>
                   <td>2024-10-03</td>
                   <td>8</td>
-                  <td>4</td>
+                  
+                  <td>
+                    <button className={styles.viewButton}>View Ratings</button> {/* Button to view ratings */}
+                  </td>
                 </tr>
                 <tr>
                   <td>3. Switch Statement</td>
                   <td>2024-10-01</td>
                   <td>7</td>
-                  <td>3</td>
+                  
+                  <td>
+                    <button className={styles.viewButton}>View Ratings</button> {/* Button to view ratings */}
+                  </td>
                 </tr>
               </tbody>
             </table>
