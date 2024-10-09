@@ -59,11 +59,12 @@
 
 .rightVerticalLine {
     width: 3px;
-    height: 100%;
+    height: 50%;
     background-color: #000000;
     position: absolute;
     right: 0;
     bottom: 0;
+    top:0;
 }
 
 .circle {
@@ -78,6 +79,7 @@
 }
 
 .card {
+    border: 3px solid #000; /* Increase the border width (e.g., from 1px to 3px) */
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -123,10 +125,12 @@
 }
 
 .currentDateTime {
-    position: absolute;
+    position: relative;
     right: 30px;
     top: 0;
     text-align: right;
+    margin-top:20px;
+    
 }
 
 .time {

@@ -1,44 +1,65 @@
+
 import React from "react";
-import { Carousel } from "react-bootstrap";
 import VideoLandingPageHeader from "./Header/VideoLandingPageHeader";
 import Footer from "./Footer/Footer";
+import styles from './VideoLandingPage.module.css';
+import useTypingEffect from './useTypingEffect';
 
 // Import your local video and background image
 import WE_MEN_TOR_CLIP from '../Mentor/Assets/WE_MEN_TOR_CLIP.mp4';
+import VideoClip from '../Mentor/Assets/VideoClip.mp4';
 import AboutBG from '../Mentor/Assets/AboutBG.jpg';
 import AboutImage from '../Mentor/Assets/AboutImage.jpg';
 import MissionImage from '../Mentor/Assets/MissionImage.jpg';
-import styles from './VideoLandingPage.module.css';
 
 const VideoLandingPage = () => {
+  const typingSpeed = 100; // Typing speed (ms)
+  const erasingSpeed = 50; // Erasing speed (ms)
+  const combinedText = "WHERE YOUR SUCCESS IS OUR COMMITMENT.";
+  const displayText = useTypingEffect(combinedText, typingSpeed, erasingSpeed);
+
   return (
     <div>
       <VideoLandingPageHeader />
-      {/* Carousel Section */}
-      <div
-        id="carousel-section"
-        className={styles.carouselSection}
-      >
-        
-        {/* Carousel without controls */}
-        <Carousel controls={false}>
-          {/* First Slide - Local Video */}
-          <Carousel.Item>
-            <video
-              className="d-block w-100"
-              autoPlay
-              loop
-              muted
-              style={{ height: "100%", objectFit: "cover" }}
-            >
-              <source src={WE_MEN_TOR_CLIP} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </Carousel.Item>
-        </Carousel>
+      
+      {/* Video Section */}
+      <div id="carousel-section" className={styles.carouselSection}>
+        {/* Local Video */}
+        <video className={styles.fullscreenVideo} autoPlay loop muted>
+          <source src={VideoClip} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
 
         {/* Full-page transparent overlay */}
         <div className={styles.overlay}></div>
+        
+        {/* Overlaying Text */}
+        <div className={styles.overlayTextContainer}>
+          <h4 className={styles.fadeIn}>
+            <span>WELCOME TO THE</span>
+          </h4>
+          <h1 className={styles.fadeIn}>
+            <span className={styles.wementor}>WE-MEN-TOR</span> <span className={styles.platform}>PLATFORM</span>
+          </h1>
+          <p>
+            <span className={styles.typing}>{displayText}</span>
+          </p>
+        </div>
+        
+        {/* Buttons below the overlay text */}
+        <div className={styles.buttonContainer}>
+          < a href ='/AnnouncePage' ><button className={styles.primaryButton}>View Announcement</button></a>
+          < a href ='/RosterPg' ><button className={styles.primaryButton}>View Roster</button></a>
+        </div>
+
+        {/* Highlights Scroller at Bottom */}
+        <div className={styles.highlightsScroller}>
+          <div className={styles.highlightsContent}>
+            #Mentorship &nbsp;&nbsp;|&nbsp;&nbsp; #FutureReady &nbsp;&nbsp;|&nbsp;&nbsp; 
+            #Commitment &nbsp;&nbsp;|&nbsp;&nbsp; #EmpoweringMentees &nbsp;&nbsp;|&nbsp;&nbsp; 
+            #FromGood2Great &nbsp;&nbsp;|&nbsp;&nbsp; #Success
+          </div>
+        </div>
       </div>
 
       {/* About Section */}

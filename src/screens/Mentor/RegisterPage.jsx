@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import HeaderAnnouncementPage from '../Mentor/Headers/HeaderAnnouncementPage';
+import NavBar from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
 
 const RegisterPage = () => {
@@ -29,7 +29,7 @@ const RegisterPage = () => {
 
     return (
         <div style={styles.pageContainer}>
-            <HeaderAnnouncementPage />
+            <NavBar />
             <SideBar />
             <div style={styles.registerPageContainer}>
                 <div style={styles.mainContent}>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styles from './AdminDashboard.module.css'; // Import as a module
 import { Link, Route, Routes } from 'react-router-dom';
 import DashboardContent from './DashboardContent';
-import DepartmentContent from './DepartmentContent';
 import MentorsContent from '../Admin/MentorsContent';
 import MenteesContent from './MenteesContent';
 import ComplainsContent from './ComplainsContent';
@@ -16,7 +15,6 @@ import AccountContent from './AccountContent';
 import CreateMentorContent from './CreateMentorContent';
 import AnalyticsReportsContent from './AnalyticsReportsContent';
 import { FaBars, FaCog, FaSignOutAlt, FaEnvelope, FaBook, FaUserFriends, FaHome } from 'react-icons/fa';
-
 
 const AdminDashboard = () => {
   const [isOpen, setIsOpen] = useState(true); // State to toggle the sidebar
@@ -37,14 +35,13 @@ const AdminDashboard = () => {
   return (
     <div className={styles.adminDashboardContainer}>
       <header className={styles.adminHeader}>
-      <div className={styles.adminInfo}>
-  <i className={styles.adminIcon}>👤</i>
-  <div className={styles.adminText}>
-    <span>Admin</span>
-    {adminEmail && <span className={styles.adminEmail}>{adminEmail}</span>} {/* Display the admin email */}
-  </div>
-</div>
-
+        <div className={styles.adminInfo}>
+          <i className={styles.adminIcon}>👤</i>
+          <div className={styles.adminText}>
+            <span>Admin</span>
+            {adminEmail && <span className={styles.adminEmail}>{adminEmail}</span>} {/* Display the admin email */}
+          </div>
+        </div>
       </header>
 
       <div className={styles.adminDashboard}>
@@ -60,12 +57,6 @@ const AdminDashboard = () => {
                 {isOpen && <span>Dashboard</span>}
               </Link>
             </li>
-            {/* <li>
-              <Link to="/admin-dashboard/department" className={styles.sidebarItem}>
-                <FaUserFriends />
-                {isOpen && <span>Department</span>}
-              </Link>
-            </li> */}
             <li>
               <Link to="/admin-dashboard/mentors" className={styles.sidebarItem}>
                 <FaUserFriends />
@@ -121,7 +112,6 @@ const AdminDashboard = () => {
         <div className={styles.dashboardContent}>
           <Routes>
             <Route path="dashboard" element={<DashboardContent />} />
-            <Route path="department" element={<DepartmentContent />} />
             <Route path="mentors" element={<MentorsContent />} />
             <Route path="mentees" element={<MenteesContent />} />
             <Route path="reports" element={<ReportContent />} />

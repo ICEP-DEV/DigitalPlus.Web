@@ -5,7 +5,7 @@ import Logo1 from '../Assets/Logo1.png';
 import tumelo from '../Assets/tumelo.jpg';
 import styles from './HeaderAnnouncementPage.module.css'; // Import the CSS module
 
-const Header = () => {
+const HeaderAnnouncementPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchChange = (event) => {
@@ -50,4 +50,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderAnnouncementPage;

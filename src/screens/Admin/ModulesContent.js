@@ -1,22 +1,48 @@
 import React, { useState, useRef } from 'react';
+import { FaBook, FaTrash } from 'react-icons/fa'; // Import the FaTrash icon
 import styles from './ModulesContent.module.css'; // Import CSS module
-import { FaBook, FaUserSlash } from 'react-icons/fa';
 
 const ModulesContent = () => {
   const carouselRef = useRef(null);
-  
-  const [modules, setModules] = useState([
-    { id: 'PPAF05D', icon: <FaBook size={60} />, mentors: ['Masedi SK', 'Malebana PJ'] },
-    { id: 'WEBF15D', icon: <FaBook size={60} />, mentors: [] },
-    { id: 'CFAF05D', icon: <FaBook size={60} />, mentors: [] },
-    { id: 'DATA05D', icon: <FaBook size={60} />, mentors: ['John Doe'] },
-    { id: 'SEC05D', icon: <FaBook size={60} />, mentors: [] }
-  ]);
 
+  // Define an array of random colors
+  const backgroundColors = ['#FFEBEE', '#E3F2FD', '#E8F5E9', '#FFF3E0', '#F3E5F5', '#FBE9E7', '#FFFDE7', '#E0F7FA'];
+
+  // Function to get a random background color
+  const getRandomColor = () => backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
+
+  // Modules with their associated faculty
+  const allModules = [
+    { id: 'PPAF05D', faculty: 'Faculty 1', icon: <FaBook size={60} />, backgroundColor: getRandomColor(), mentors: ['Masedi SK', 'Malebana PJ'] },
+    { id: 'WEBF15D', faculty: 'Faculty 1', icon: <FaBook size={60} />, backgroundColor: getRandomColor(), mentors: [] },
+    { id: 'CFAF05D', faculty: 'Faculty 2', icon: <FaBook size={60} />, backgroundColor: getRandomColor(), mentors: [] },
+    { id: 'DATA05D', faculty: 'Faculty 2', icon: <FaBook size={60} />, backgroundColor: getRandomColor(), mentors: ['John Doe'] },
+    { id: 'SEC05D', faculty: 'Faculty 3', icon: <FaBook size={60} />, backgroundColor: getRandomColor(), mentors: [] }
+  ];
+
+  // State to hold the currently selected faculty and filtered modules
+  const [selectedFaculty, setSelectedFaculty] = useState('All');
+  const [filteredModules, setFilteredModules] = useState(allModules);
+
+  // State for managing new module creation and mentor assignment
   const [newModuleId, setNewModuleId] = useState('');
   const existingMentors = ['Masedi SK', 'Malebana PJ', 'John Doe', 'Jane Smith', 'Lerato M'];
   const [selectedModule, setSelectedModule] = useState('');
   const [selectedMentor, setSelectedMentor] = useState('');
+
+  // Function to handle dropdown change
+  const handleFacultyChange = (e) => {
+    const selected = e.target.value;
+    setSelectedFaculty(selected);
+
+    if (selected === 'All') {
+      setFilteredModules(allModules); // Show all modules
+    } else {
+      // Filter modules by the selected faculty
+      const filtered = allModules.filter((module) => module.faculty === selected);
+      setFilteredModules(filtered);
+    }
+  };
 
   const handlePrevClick = () => {
     if (carouselRef.current) {
@@ -33,34 +59,34 @@ const ModulesContent = () => {
   };
 
   const handleAddModule = () => {
-    if (newModuleId.trim() !== '' && !modules.some(module => module.id === newModuleId)) {
-      const newModule = { id: newModuleId, icon: <FaBook size={60} />, mentors: [] };
-      setModules([...modules, newModule]);
+    if (newModuleId.trim() !== '' && !allModules.some(module => module.id === newModuleId)) {
+      const newModule = { id: newModuleId, faculty: selectedFaculty, icon: <FaBook size={60} />, backgroundColor: getRandomColor(), mentors: [] };
+      setFilteredModules([...filteredModules, newModule]);
       setNewModuleId('');
     }
   };
 
   const handleAssignMentor = () => {
     if (selectedModule && selectedMentor) {
-      const updatedModules = modules.map((module) => {
+      const updatedModules = filteredModules.map((module) => {
         if (module.id === selectedModule && !module.mentors.includes(selectedMentor)) {
           return { ...module, mentors: [...module.mentors, selectedMentor] };
         }
         return module;
       });
-      setModules(updatedModules);
+      setFilteredModules(updatedModules);
       setSelectedMentor('');
     }
   };
 
   const handleDeleteMentor = (mentorToRemove, moduleId) => {
-    const updatedModules = modules.map((module) => {
+    const updatedModules = filteredModules.map((module) => {
       if (module.id === moduleId) {
         return { ...module, mentors: module.mentors.filter((mentor) => mentor !== mentorToRemove) };
       }
       return module;
     });
-    setModules(updatedModules);
+    setFilteredModules(updatedModules);
   };
 
   return (
@@ -68,80 +94,106 @@ const ModulesContent = () => {
       <h2 className={styles.modulesTitle}>Modules</h2>
 
       {/* Faculty Dropdown */}
-      <div className={styles.facultyDropdown}>
-        <select>
-          <option value="faculty">FACULTY</option>
-          <option value="faculty1">Faculty 1</option>
-          <option value="faculty2">Faculty 2</option>
+      <div className={styles.modulesFacultyDropdown}>
+        <select value={selectedFaculty} onChange={handleFacultyChange}>
+          <option value="All">All Faculties</option>
+          <option value="Faculty 1">Faculty 1</option>
+          <option value="Faculty 2">Faculty 2</option>
+          <option value="Faculty 3">Faculty 3</option>
         </select>
       </div>
 
-      {/* Carousel with modules */}
+      {/* Carousel with filtered modules */}
       <div className={styles.modulesCarousel}>
-        <button className={`${styles.carouselBtn} ${styles.leftBtn}`} onClick={handlePrevClick}>
+        <button className={`${styles.modulesCarouselBtn} ${styles.modulesLeftBtn}`} onClick={handlePrevClick}>
           {'<'}
         </button>
-        <div className={styles.carouselItems} ref={carouselRef}>
-          {modules.map((module) => (
-            <div className={styles.carouselItem} key={module.id}>
-              <div className={styles.moduleIcon}>{module.icon}</div>
+        <div className={styles.modulesCarouselItems} ref={carouselRef}>
+          {filteredModules.map((module) => (
+            <div
+              className={styles.modulesCarouselItem}
+              key={module.id}
+              style={{ backgroundColor: module.backgroundColor }} // Apply background color here
+            >
+              <div className={styles.modulesModuleIcon}>{module.icon}</div>
               <p>{module.id}</p>
-              <div className={styles.moduleMentors}>
-                <div className={styles.mentorList}>
-                  {module.mentors.map((mentor, index) => (
-                    <div key={index} className={styles.mentorItem}>
-                      <span>{mentor}</span>
-                      <button onClick={() => handleDeleteMentor(mentor, module.id)} className={styles.deleteMentorBtn}>
-                        <FaUserSlash /> Delete
-                      </button>
-                    </div>
-                  ))}
-                </div>
+              <div className={styles.modulesMentorList}>
+                {module.mentors.map((mentor, index) => (
+                  <div key={index} className={styles.modulesMentorItem}>
+                    <span className={styles.mentorName}>{mentor}</span>
+                    <FaTrash 
+                      className={styles.trashIcon} 
+                      onClick={() => handleDeleteMentor(mentor, module.id)} 
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           ))}
         </div>
-        <button className={`${styles.carouselBtn} ${styles.rightBtn}`} onClick={handleNextClick}>
+        <button className={`${styles.modulesCarouselBtn} ${styles.modulesRightBtn}`} onClick={handleNextClick}>
           {'>'}
         </button>
       </div>
 
       {/* Assign Mentor to Module Section */}
-      <div className={styles.assignMentorSection}>
-        <select value={selectedModule} onChange={(e) => setSelectedModule(e.target.value)}>
-          <option value="">Select Module</option>
-          {modules.map((module) => (
-            <option key={module.id} value={module.id}>
-              {module.id}
-            </option>
-          ))}
-        </select>
+      <div className={styles.modulesFormContainer}>
+        {/* Left Section */}
+        <div className={styles.leftSection}>
+          <div className={styles.modulesSelectSection}>
+            <label className={styles.label}>Select Module</label>
+            <select
+              value={selectedModule}
+              onChange={(e) => setSelectedModule(e.target.value)}
+              className={styles.modulesSelect}
+            >
+              <option value="">Select Module</option>
+              {filteredModules.map((module) => (
+                <option key={module.id} value={module.id}>
+                  {module.id}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <select value={selectedMentor} onChange={(e) => setSelectedMentor(e.target.value)}>
-          <option value="">Select Mentor</option>
-          {existingMentors.map((mentor, index) => (
-            <option key={index} value={mentor}>
-              {mentor}
-            </option>
-          ))}
-        </select>
+          <div className={styles.mentorsSelectSection}>
+            <label className={styles.label}>Select Mentor</label>
+            <select
+              value={selectedMentor}
+              onChange={(e) => setSelectedMentor(e.target.value)}
+              className={styles.mentorsSelect}
+            >
+              <option value="">Select Mentor</option>
+              {existingMentors.map((mentor, index) => (
+                <option key={index} value={mentor}>
+                  {mentor}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <button className={styles.addButton} onClick={handleAssignMentor}>
-          Assign Mentor
-        </button>
-      </div>
+          <button className={styles.assignMentorButton} onClick={handleAssignMentor}>
+            Assign Mentor
+          </button>
+        </div>
 
-      {/* Add new Module Section */}
-      <div className={styles.assignMentorSection}>
-        <input
-          type="text"
-          value={newModuleId}
-          onChange={(e) => setNewModuleId(e.target.value)}
-          placeholder="New Module ID"
-        />
-        <button className={styles.addButton} onClick={handleAddModule}>
-          Add Module
-        </button>
+        {/* Right Section */}
+        <div className={styles.rightSection}>
+          <div className={styles.modulesAddModuleSection}>
+            <label className={styles.label}>New Module</label>
+            <input
+              type="text"
+              value={newModuleId}
+              onChange={(e) => setNewModuleId(e.target.value)}
+              placeholder="New Module ID"
+              className={styles.newModuleInput}
+            />
+          </div>
+
+          <button className={styles.addModuleButton} onClick={handleAddModule}>
+            Add Module
+          </button>
+        </div>
       </div>
     </div>
   );

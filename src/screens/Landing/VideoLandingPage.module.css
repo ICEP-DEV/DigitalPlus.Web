@@ -1,12 +1,21 @@
 /* VideoLandingPage.module.css */
 
 /* Carousel Section */
+/* Ensure the body doesn't scroll horizontally */
 
+  body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
 .carouselSection {
     position: relative;
     width: 100%;
-    height: 100vh; /* Full viewport height */
+    height: 90vh; 
     overflow: hidden;
+    max-width: 100%;
   }
   
   .overlay {
@@ -15,8 +24,26 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(6, 7, 8, 0.8);
-    z-index: 1; /* In front of the carousel */
+    background-color: rgba(6, 7, 8, 0.7);
+    z-index: 2; /* In front of the carousel */
+  }
+
+  .overlayTextContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    z-index: 10; /* Ensure the text is above the overlay */
+  }
+
+  .overlayText {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds a shadow for better readability */
+    letter-spacing: 2px;
+    line-height: 1.2;
   }
   
   /* About Section */
@@ -29,6 +56,10 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    max-width: 100vw; /* Constrain the sections to viewport width */
+    margin: 0 auto; /* Ensure content is centered */
+    box-sizing: border-box; /* Include padding/border in element's width */
+    overflow: hidden;
   }
   
   .aboutOverlay {
@@ -63,10 +94,11 @@
     color: #fff;
     line-height: 1.6;
     text-align: left;
+    word-wrap: break-word;
   }
   
   .aboutImage {
-    max-width: 100%;
+    max-width: 70%;
     height: auto;
     border-radius: 8px;
   }
@@ -81,6 +113,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    max-width: 100vw; /* Constrain the sections to viewport width */
+    margin: 0 auto; /* Ensure content is centered */
+    box-sizing: border-box; /* Include padding/border in element's width */
   }
   
   .missionOverlay {
@@ -115,11 +150,12 @@
     color: #fff;
     line-height: 1.6;
     text-align: center;
+    word-wrap: break-word;
   }
   
   .missionImage {
-    max-width: 100%;
-    height: 500px;
+    max-width: 250px;
+    height: auto;
     width: auto;
     border-radius: 8px;
   }
@@ -131,6 +167,10 @@
     background-size: cover;
     background-position: center;
     text-align: center;
+    max-width: 100vw; /* Constrain the sections to viewport width */
+    margin: 0 auto; /* Ensure content is centered */
+    box-sizing: border-box; /* Include padding/border in element's width */
+    overflow-x: hidden;
   }
   
   .coreValuesOverlay {
@@ -193,6 +233,9 @@
     background-size: cover;
     background-position: center;
     text-align: center;
+    max-width: 100vw; /* Constrain the sections to viewport width */
+    margin: 0 auto; /* Ensure content is centered */
+    box-sizing: border-box; /* Include padding/border in element's width */
   }
   
   .servicesOverlay {
@@ -223,5 +266,135 @@
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
+    word-wrap: break-word;
   }
- 
+  .fullscreenVideo {
+    position: absolute; /* Positioning absolute to cover the section */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    object-fit: cover; /* Ensures the video covers the area without distortion */
+    z-index: 1; /* Places the video behind other content */
+  }
+
+
+
+  
+  .highlightsScroller {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px; /* Adjust height as needed */
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    align-items: center;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Keep the items on one line */
+    z-index: 4; /* Above the video and other content */
+    scroll-behavior: smooth;
+    overflow: hidden;
+    margin: 0 auto; /* Center the scroller */
+    max-width: 100vw; /* Ensure no overflow */
+  }
+  
+  .highlightsContent {
+    display: inline-block;
+  white-space: nowrap; /* Ensure the text stays on one line */
+  padding-left: 100%; /* Start the text off-screen */
+  animation: scroll 20s linear infinite; /* Animate the scrolling */
+  color: white;
+  font-size: 2em;
+  }
+
+  @keyframes scroll {
+    0% { transform: translateX(100%); }
+    10%{transform: translateX(0)}
+    100% { transform: translateX(-100%); }
+  }
+  
+  .highlightItem {
+    display: inline-block;
+  color: white;
+  font-size: 1.2rem;
+  }
+  .separator {
+    padding: 0 10px;
+    color: white;
+  }
+
+  
+
+  .buttonContainer {
+    position: absolute; /* Positioning the buttons absolutely within the video section */
+    bottom: 250px; /* Positioning from the bottom */
+    left: 50%; /* Centering horizontally */
+    transform: translateX(-50%); /* Adjusting for centering */
+    display: flex; /* Using flexbox for layout */
+    gap: 100px; /* Space between buttons */
+    z-index: 10; /* Ensure buttons are on top */
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    transition: transform 0.3s ease; /* Smooth transition for the zoom effect */
+  }
+  
+  .primaryButton {
+    background-color: #013220; /* Primary button color */
+    color: white; /* Button text color */
+    border: none; /* No border */
+    padding: 10px 20px; /* Padding for button */
+    border-radius: 100px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+    width: 400px; /* Fixed width */
+  }
+  
+  .primaryButton:hover {
+    background-color: #013220; /* Change color on hover */
+    transform: scale(1.1); /* Scale up the button to 110% */
+  }
+  
+  .secondaryButton {
+    background-color: transparent; /* Transparent background for secondary button */
+    color: white; /* Primary color for text */
+    border: 2px solid #013220; /* Border for secondary button */
+    padding: 10px 20px; /* Padding for button */
+    border-radius: 50px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+    width: 400px; /* Fixed width */
+  }
+  
+  .secondaryButton:hover {
+    background-color: #013220; /* Change background color on hover */
+    color: white; /* Change text color on hover */
+    transform: scale(1.1); /* Scale up the button to 110% */
+  }
+  
+  
+
+
+.wementor {
+  font-size: 4.5rem; /* Increase size as needed */
+  /* text-decoration: underline;  */
+  color: #fff; /* Ensure the color matches your design */
+  font-family: 'Montserrat', sans-serif; /* Font for the <h1> */
+  display: inline-table; /* Keep it on the same line */
+  margin-right: 35px; /* Add some margin between the words */
+}
+
+.platform {
+  font-size: 4.5rem; /* Same size as WE-MEN-TOR */
+  color: #fff;
+  font-family: 'Montserrat', sans-serif; /* Font for the <h1> */
+  display: inline; /* Keep it on the same line */
+  margin-left: 35px; /* You can remove this if needed */
+}
+.overlayTextContainer h4 {
+  font-size: 2rem; /* Increase the size (adjust as needed) */
+  font-weight: bold; /* Make it bold if needed */
+  color: white; /* You can also customize the color */
+}
