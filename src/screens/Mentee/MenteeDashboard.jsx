@@ -8,6 +8,8 @@ import BookingPage from "./BookingPage";
 import SettingsPage from './SettingsPage'
 import AnnouncementPage2 from "./AnnouncementPage2";
 import RegisterPage from './RegisterPage';
+import MenteeModulePage from './MenteeModulePage';
+import MenteeModuleDetails from './MenteeModuleDetails';
 
 const MenteeDashboard = () => {
   return (
@@ -21,6 +23,8 @@ const MenteeDashboard = () => {
         <Route path="bookings" element={<BookingPage />} />
         <Route path="RegisterPage" element={<RegisterPage />}/>
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="modules/:moduleId" element={<MenteeModuleDetails />} />
+        <Route path="modules" element={<MenteeModulePage />} />
       </Routes>
     </>
   );
