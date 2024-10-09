@@ -133,7 +133,7 @@ const ChatBoard = () => {
 
   return (
     <div className={styles.chatBoard}>
-      
+    
       <div className={styles.chatBoardMain}>
         <div className={styles.chatBoardHeader}>
           <h2>{moduleId ? moduleId.replace(/[^a-zA-Z ]/g, " ").trim() : "Chat Board"}</h2>

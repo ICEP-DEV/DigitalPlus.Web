@@ -5,7 +5,7 @@ import SideBar from './MenteeModuleDetails/SideBar';
 import styles from './MenteeModuleDetails.module.css'; // Import the CSS module
 import MenteeModulePage from './MenteeModulePage';
 import MentorsPage from './MenteeModuleDetails/MentorsPage';
-import MenteeDmPage from './MenteeModuleDetails/MenteeDmPage';
+import DMComponent from './MenteeModuleDetails/DMComponent';
 import QuizPage from  './MenteeModuleDetails/QuizPage';
 import ChatBoard from './MenteeModuleDetails/ChatBoard';
 
@@ -22,7 +22,7 @@ function App() {
           {activePage === 'quizz' && <QuizPage  />}
           {activePage === 'mentorslist' && <MentorsPage />}
           {activePage === 'chatboard' && <ChatBoard />}  {/* Correct capitalization */}
-          {activePage === 'mentordm' && <MenteeDmPage />}
+          {activePage === 'mentordm' && <DMComponent />}
           {activePage === 'back' && <MenteeModulePage />}
         </div>
       </div>
