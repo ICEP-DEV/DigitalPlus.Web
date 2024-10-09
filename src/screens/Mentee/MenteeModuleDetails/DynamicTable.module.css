@@ -11,7 +11,7 @@ table, th, td {
 th, td {
   padding: 10px;
   text-align: left;
-  color: black;
+  color:black;
 }
 
 input[type="text"], textarea {

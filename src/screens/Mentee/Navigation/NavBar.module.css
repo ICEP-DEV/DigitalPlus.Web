@@ -54,4 +54,15 @@
       font-size: 80px;
     }
   }
+  .profileIcon {
+    width: 90px;  /* Adjust width */
+    height: 90px; /* Adjust height */
+    border-radius: 50%; /* Make the image round */
+    object-fit: cover; /* Ensures the image covers the area without stretching */
+    margin-right: 8px; /* Space between image and text */
+  }
+  
+  .profileText {
+    font-size: 16px; /* Adjust font size as needed */
+  }
   

@@ -87,7 +87,7 @@ const Report = () => {
                     <h1>Mentor Monthly Report</h1>
                     <div className={styles['report-form-row']}>
                         <div className={styles['report-form-group']}>
-                            <label htmlFor="student-number">No. Of Students:</label>
+                            <label htmlFor="student-number" className={styles['label']}>No. Of Students:</label>
                             <input
                                 type="number"
                                 id="student-number"
@@ -95,37 +95,41 @@ const Report = () => {
                                 value={formData.studentNumber}
                                 onChange={handleChange}
                                 required
+                                className={styles['input-number']}
                             />
                         </div>
                     </div>
                     <div className={styles['report-form-group']}>
-                        <label htmlFor="remarks">REMARKS</label>
+                        <label htmlFor="remarks" className={styles['label']}>REMARKS</label>
                         <textarea
                             id="remarks"
                             name="remarks"
                             value={formData.remarks}
                             onChange={handleChange}
                             required
+                            className={styles['textarea']}
                         />
                     </div>
                     <div className={styles['report-form-group']}>
-                        <label htmlFor="challenges">WRITE CHALLENGES/ RECOMMENDATIONS:</label>
+                        <label htmlFor="challenges" className={styles['label']}>WRITE CHALLENGES/ RECOMMENDATIONS:</label>
                         <textarea
                             id="challenges"
                             name="challenges"
                             value={formData.challenges}
                             onChange={handleChange}
                             required
+                            className={styles['textarea']}
                         />
                     </div>
                     <div className={styles['report-form-group']}>
-                        <label htmlFor="social-engagement">WRITE SOCIAL ENGAGEMENT:</label>
+                        <label htmlFor="social-engagement" className={styles['label']}>WRITE SOCIAL ENGAGEMENT:</label>
                         <textarea
                             id="social-engagement"
                             name="socialEngagement"
                             value={formData.socialEngagement}
                             onChange={handleChange}
                             required
+                            className={styles['textarea']}
                         />
                     </div>
                     <div className={styles['report-button-container']}>
@@ -153,7 +157,7 @@ const Report = () => {
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
                         <p>{modalMessage}</p>
-                        <button onClick={closeModal}>Close</button>
+                        <button onClick={closeModal} className={styles['button']}>Close</button>
                     </div>
                 </div>
             )}

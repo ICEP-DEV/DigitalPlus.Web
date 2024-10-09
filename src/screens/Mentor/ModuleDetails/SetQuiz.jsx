@@ -54,7 +54,7 @@ const SetQuiz = () => {
       <form onSubmit={handleSubmit}>
         {/* Quiz Title */}
         <div>
-          <label htmlFor="quizTitle">Quiz Title:</label>
+          <label htmlFor="quizTitle" className={styles.label}>Quiz Title:</label>
           <input
             type="text"
             id="quizTitle"
@@ -79,7 +79,7 @@ const SetQuiz = () => {
 
             {/* Answer Type Selection */}
             <div>
-              <label>Answer Type:</label>
+              <label className={styles.label}>Answer Type:</label>
               <select
                 value={q.answerType}
                 onChange={(e) => handleAnswerTypeChange(index, e.target.value)}
