@@ -4,6 +4,9 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BsPersonFillAdd } from "react-icons/bs";
+import { CiEdit } from "react-icons/ci";
+import { RiUserSearchFill } from "react-icons/ri";
+import { SiCodementor } from "react-icons/si";
 
 
 const MenteesContent = () => {
@@ -174,15 +177,17 @@ const MenteesContent = () => {
   return (
     <div className={styles.menteesContainer}>
       <ToastContainer />
+      <h2> <SiCodementor /> MENTEES</h2>
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
           <input
             type="text"
-            placeholder="Search by Student Email"
+            placeholder="Search by Student Email "
             className={styles.searchBar}
             value={searchTerm}
             onChange={handleSearchChange}
           />
+          <RiUserSearchFill />
         </div>
         <div className={styles.buttonGroup}>
           <button className={styles.addMenteeButton} onClick={openAddMenteeModal}>
@@ -229,6 +234,7 @@ const MenteesContent = () => {
                   </td>
                   <td>
                     <button className={styles.manageButton} onClick={() => openEditMenteeModal(mentee)}>
+                    <CiEdit />
                       Manage
                     </button>
                   </td>

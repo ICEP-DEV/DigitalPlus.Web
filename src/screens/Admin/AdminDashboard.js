@@ -14,7 +14,11 @@ import ScheduleComponent from './ScheduleComponent';
 import AccountContent from './AccountContent';
 import CreateMentorContent from './CreateMentorContent';
 import AnalyticsReportsContent from './AnalyticsReportsContent';
-import { FaBars, FaCog, FaSignOutAlt, FaEnvelope, FaBook, FaUserFriends, FaHome } from 'react-icons/fa';
+import { FaBars, FaCog, FaBook, FaHome } from 'react-icons/fa';
+import { GoReport } from "react-icons/go";
+import { GrSchedules, GrLogout } from "react-icons/gr";
+import { SiCodementor } from "react-icons/si";
+import { GrCompliance } from "react-icons/gr";
 
 const AdminDashboard = () => {
   const [isOpen, setIsOpen] = useState(true); // State to toggle the sidebar
@@ -59,31 +63,31 @@ const AdminDashboard = () => {
             </li>
             <li>
               <Link to="/admin-dashboard/mentors" className={styles.sidebarItem}>
-                <FaUserFriends />
+              <SiCodementor />
                 {isOpen && <span>Mentors</span>}
               </Link>
             </li>
             <li>
               <Link to="/admin-dashboard/mentees" className={styles.sidebarItem}>
-                <FaUserFriends />
+              <SiCodementor />
                 {isOpen && <span>Mentees</span>}
               </Link>
             </li>
             <li>
               <Link to="/admin-dashboard/reports" className={styles.sidebarItem}>
-                <FaUserFriends />
+              <GoReport />
                 {isOpen && <span>Reports</span>}
               </Link>
             </li>
             <li>
               <Link to="/admin-dashboard/Schedule" className={styles.sidebarItem}>
-                <FaUserFriends />
+              <GrSchedules />
                 {isOpen && <span>Schedule</span>}
               </Link>
             </li>
             <li>
               <Link to="/admin-dashboard/complains" className={styles.sidebarItem}>
-                <FaEnvelope />
+              <GrCompliance />
                 {isOpen && <span>Complains</span>}
               </Link>
             </li>
@@ -102,7 +106,7 @@ const AdminDashboard = () => {
           </ul>
           <div className={styles.sidebarLogout}>
             <Link to="/admin-dashboard/logout" className={styles.sidebarItem}>
-              <FaSignOutAlt />
+            <GrLogout />
               {isOpen && <span>Logout</span>}
             </Link>
           </div>

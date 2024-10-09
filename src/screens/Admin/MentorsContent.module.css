@@ -17,7 +17,10 @@
 .searchBarContainer {
   width: 35%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  
 }
 
 .searchBar {
@@ -31,7 +34,7 @@
 }
 
 .searchBar:focus {
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  box-shadow: 0 0 10px rgba(202, 209, 216, 0.5);
 }
 
 .buttonGroup {
@@ -132,22 +135,6 @@
   font-size: 14px;
   font-weight: bold;
 }
-
-/* .registerButton {
-  padding: 12px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.registerButton:hover {
-  background-color: #0056b3;
-} */
 
 .modal {
   position: fixed;

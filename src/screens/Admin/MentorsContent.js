@@ -4,6 +4,11 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BsPersonFillAdd } from "react-icons/bs";
+import { CiEdit } from "react-icons/ci";
+import { RiUserSearchFill } from "react-icons/ri";
+import { SiCodementor } from "react-icons/si";
+
+
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
@@ -169,6 +174,7 @@ const MentorsContent = () => {
 
   return (
     <div className={styles.mentorsContainer}>
+      <h2> <SiCodementor /> MENTORS</h2>
       <ToastContainer />
 
       <div className={styles.header}>
@@ -180,6 +186,7 @@ const MentorsContent = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
+          <RiUserSearchFill />
         </div>
         <div className={styles.buttonGroup}>
           <button className={styles.addMentorButton} onClick={openAddMentorModal}>
@@ -188,6 +195,7 @@ const MentorsContent = () => {
           </button>
         </div>
       </div>
+      
 
       <div className={styles.tableWrapper}>
         <table className={styles.mentorsTable}>
@@ -222,6 +230,7 @@ const MentorsContent = () => {
                   </td>
                   <td>
                     <button className={styles.manageButton} onClick={() => openEditMentorModal(mentor)}>
+                    <CiEdit />
                       Manage
                     </button>
                   </td>

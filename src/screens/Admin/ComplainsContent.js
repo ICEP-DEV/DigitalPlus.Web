@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
+import { GrCompliance } from "react-icons/gr";
+import styles from './ComplainsContent.module.css';
+
+
 
 const ComplainsContent = () => {
   // Initialize complaints as an empty array
@@ -95,9 +99,9 @@ const ComplainsContent = () => {
   
 
   return (
-    <div>
-      <h1>Complaints</h1>
-      <table>
+    <div className={styles.container}>
+      <h1> <GrCompliance /> Complaints</h1>
+      <table className={styles.complainTable}>
         <thead>
           <tr>
             <th>Date Logged</th>

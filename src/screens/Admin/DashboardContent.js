@@ -14,6 +14,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import styles from './DashboardContent.module.css';
+import { FaHome } from "react-icons/fa";
 
 const DashboardContent = () => {
   // State to hold the data from the API
@@ -86,6 +87,7 @@ const DashboardContent = () => {
 
   return (
     <div className={styles.dashboardContainer}>
+      <h2> <FaHome /> DASHBOARD</h2>
       <div className={styles.header}>
         <div className={styles.statItem}>
           <div className={styles.statItemIcon}>👥</div>

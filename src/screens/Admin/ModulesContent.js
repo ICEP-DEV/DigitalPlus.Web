@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { FaBook, FaTrash } from 'react-icons/fa'; // Import the FaTrash icon
 import styles from './ModulesContent.module.css'; // Import CSS module
+import { MdAssignmentInd } from "react-icons/md";
+import { MdAssignmentAdd } from "react-icons/md";
 
 const ModulesContent = () => {
   const carouselRef = useRef(null);
@@ -91,7 +93,7 @@ const ModulesContent = () => {
 
   return (
     <div className={styles.modulesContainer}>
-      <h2 className={styles.modulesTitle}>Modules</h2>
+      <h2 className={styles.modulesTitle}> <FaBook /> Modules</h2>
 
       {/* Faculty Dropdown */}
       <div className={styles.modulesFacultyDropdown}>
@@ -173,6 +175,7 @@ const ModulesContent = () => {
           </div>
 
           <button className={styles.assignMentorButton} onClick={handleAssignMentor}>
+          <MdAssignmentInd />
             Assign Mentor
           </button>
         </div>
@@ -191,6 +194,7 @@ const ModulesContent = () => {
           </div>
 
           <button className={styles.addModuleButton} onClick={handleAddModule}>
+          <MdAssignmentAdd />
             Add Module
           </button>
         </div>
