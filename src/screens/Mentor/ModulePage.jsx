@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import styles from './ModulePage.module.css';
 import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
-import HeaderAnnouncementPage from './Headers/HeaderAnnouncementPage.js';
 
 export default function ModulePage() {
   const [modules, setModules] = useState([]);
@@ -37,31 +36,47 @@ export default function ModulePage() {
       <SideBar />
       <div className={styles['course-modules']}>
         <h1>Modules</h1>
+        
         {/* Top two modules */}
         <div className={styles['module-grid']}>
           {modules.slice(0, 2).map((module) => (
             <div key={module.assignModId} className={styles['module-card']}>
-              <img src={`https://picsum.photos/seed/${module.moduleCode}/300/200`} alt={module.moduleDescription} />
+              <img
+                src={`https://picsum.photos/seed/${module.moduleCode}/300/200`}
+                alt={module.moduleDescription}
+                className={styles['module-image']}
+              />
               <div className={styles['module-content']}>
-                <h2>{module.moduleName}</h2>
-                <p>{module.moduleDescription}</p>
-                <button onClick={() => handleNavigation(module.moduleCode)}>
-                  {module.moduleCode}
+                <h2 className={styles['module-title']}>{module.moduleName}</h2>
+                <p className={styles['module-description']}>{module.moduleDescription}</p>
+                <button
+                  className={styles['module-button']}
+                  onClick={() => handleNavigation(module.moduleCode)}
+                >
+                  View {module.moduleCode}
                 </button>
               </div>
             </div>
           ))}
         </div>
+        
         {/* Bottom two modules */}
         <div className={styles['module-grid']}>
           {modules.slice(2, 4).map((module) => (
             <div key={module.assignModId} className={styles['module-card']}>
-              <img src={`https://picsum.photos/seed/${module.moduleCode}/300/200`} alt={module.moduleDescription} />
+              <img
+                src={`https://picsum.photos/seed/${module.moduleCode}/300/200`}
+                alt={module.moduleDescription}
+                className={styles['module-image']}
+              />
               <div className={styles['module-content']}>
-                <h2>{module.moduleName}</h2>
-                <p>{module.moduleDescription}</p>
-                <button onClick={() => handleNavigation(module.moduleCode)}>
-                  {module.moduleCode}
+                <h2 className={styles['module-title']}>{module.moduleName}</h2>
+                <p className={styles['module-description']}>{module.moduleDescription}</p>
+                <button
+                  className={styles['module-button']}
+                  onClick={() => handleNavigation(module.moduleCode)}
+                >
+                  View {module.moduleCode}
                 </button>
               </div>
             </div>

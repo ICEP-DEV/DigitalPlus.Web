@@ -5,7 +5,7 @@
   --button-hover-color: #0056b3;
   --button-submit-color: #28a745;
   --button-submit-hover-color: #218838;
-  --text-color: black;;
+  --text-color: black;
   --input-bg-color: #e0e0e0;
   --border-radius: 10px;
 }
@@ -139,16 +139,6 @@
   background-color: var(--button-submit-hover-color);
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-}
-/* Remove Question Button */
 .removeQuestionButton {
   background-color: #dc3545;
   color: white;
@@ -167,6 +157,15 @@ html, body {
   background-color: #c82333;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
 
 @media (max-width: 768px) {
   .quizContainer {
