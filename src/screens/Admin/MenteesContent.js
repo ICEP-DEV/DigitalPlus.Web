@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
+import { Add, Save, Update, ManageAccounts } from '@mui/icons-material'; // Material UI icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MenteesContent.module.css';
@@ -163,9 +164,14 @@ const MenteesContent = () => {
           />
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.addMenteeButton} onClick={openAddMenteeDialog}>
-            Add Mentee
-          </button>
+          <Button 
+            onClick={openAddMenteeDialog} 
+            startIcon={<Add />} 
+            variant="contained" 
+            sx={{ color: 'black', backgroundColor: 'lightgray' }} // Setting text color to black
+          >
+            Add
+          </Button>
         </div>
       </div>
 
@@ -194,16 +200,25 @@ const MenteesContent = () => {
                   <td>{mentee.personalEmail}</td>
                   <td>{mentee.contactNo}</td>
                   <td>
-                    <button
+                    <Button
+                      startIcon={mentee.activated ? <Save /> : <Update />}
+                      variant="outlined"
+                      sx={{ color: 'black' }} // Black text color
                       className={`${styles.statusToggleButton} ${mentee.activated ? styles.activate : styles.deactivate}`}
                     >
                       {mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'}
-                    </button>
+                    </Button>
                   </td>
                   <td>
-                    <button className={styles.manageButton} onClick={() => openEditMenteeDialog(mentee)}>
+                    <Button
+                      startIcon={<ManageAccounts />}
+                      variant="outlined"
+                      sx={{ color: 'black' }} // Black text color
+                      className={styles.manageButton}
+                      onClick={() => openEditMenteeDialog(mentee)}
+                    >
                       Manage
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))
@@ -313,11 +328,16 @@ const MenteesContent = () => {
           </Select>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog} color="secondary">
+          <Button onClick={closeDialog} color="secondary" sx={{ color: 'black' }}>
             Cancel
           </Button>
-          <Button onClick={isEditing ? handleEditMentee : handleAddMentee} color="primary">
-            {isEditing ? 'Save Changes' : 'Add Mentee'}
+          <Button 
+            onClick={isEditing ? handleEditMentee : handleAddMentee} 
+            startIcon={isEditing ? <Update /> : <Save />} 
+            color="primary" 
+            sx={{ color: 'black' }} // Black text color
+          >
+            {isEditing ? 'Update Mentee' : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>

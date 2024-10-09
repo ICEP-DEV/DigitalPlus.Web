@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
+import { Add, Save, Update, ManageAccounts } from '@mui/icons-material'; // Material UI icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
@@ -52,14 +53,12 @@ const MentorsContent = () => {
 
   const handleFormChange = (field, value) => {
     if (field === 'mentorId') {
-      // Automatically generate the studentEmail based on the mentorId
       const studentEmail = `${value}@tut4life.ac.za`;
       setMentorForm({ ...mentorForm, mentorId: value, studentEmail });
     } else {
       setMentorForm({ ...mentorForm, [field]: value });
     }
   };
-  
 
   const handleAddMentor = async () => {
     try {
@@ -168,38 +167,41 @@ const MentorsContent = () => {
 
   return (
     <div className={styles.mentorsContainer}>
-      <ToastContainer 
-        position="top-center"  // Toast appears at the top-center
-        autoClose={3000}       // Auto close after 3 seconds
-        hideProgressBar={false} 
-        newestOnTop={true} 
-        closeOnClick 
-        rtl={false} 
-        pauseOnFocusLoss 
-        draggable 
-        pauseOnHover 
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
       />
 
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
-        <input type="text" style={{ display: 'none' }} autoComplete="off" />
-  
-  <input
-    type="search"
-    placeholder="Search by Student Email"
-    className={styles.searchBar}
-    value={searchTerm}
-    onChange={handleSearchChange}
-    autoComplete="off"  // Disable autofill
-    name="unique-search-email" // Use a unique name that is not 'email'
-    id="search-email-unique" // Use a unique id
-  />
-
+          <input type="text" style={{ display: 'none' }} autoComplete="off" />
+          <input
+            type="search"
+            placeholder="Search by Student Email"
+            className={styles.searchBar}
+            value={searchTerm}
+            onChange={handleSearchChange}
+            autoComplete="off"
+            name="unique-search-email"
+            id="search-email-unique"
+          />
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.addMentorButton} onClick={openAddMentorDialog}>
-            Add Mentor
-          </button>
+          <Button 
+            onClick={openAddMentorDialog} 
+            startIcon={<Add />} 
+            variant="contained" 
+            sx={{ color: 'black', backgroundColor: 'lightgray' }} // Black text color
+          >
+            Add
+          </Button>
         </div>
       </div>
 
@@ -228,16 +230,25 @@ const MentorsContent = () => {
                   <td>{mentor.personalEmail}</td>
                   <td>{mentor.contactNo}</td>
                   <td>
-                    <button
+                    <Button
+                      startIcon={mentor.activated ? <Save /> : <Update />}
+                      variant="outlined"
+                      sx={{ color: 'black' }} // Black text color
                       className={`${styles.statusToggleButton} ${mentor.activated ? styles.activate : styles.deactivate}`}
                     >
                       {mentor.activated ? 'ACTIVATED' : 'DEACTIVATED'}
-                    </button>
+                    </Button>
                   </td>
                   <td>
-                    <button className={styles.manageButton} onClick={() => openEditMentorDialog(mentor)}>
+                    <Button
+                      startIcon={<ManageAccounts />}
+                      variant="outlined"
+                      sx={{ color: 'black' }} // Black text color
+                      className={styles.manageButton}
+                      onClick={() => openEditMentorDialog(mentor)}
+                    >
                       Manage
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))
@@ -254,63 +265,63 @@ const MentorsContent = () => {
 
       {/* Dialog for Adding/Editing Mentor */}
       <Dialog
-  open={isDialogOpen}
-  onClose={(event, reason) => {
-    if (reason !== 'backdropClick') {
-      closeDialog();
-    }
-  }}
-  disableEscapeKeyDown // Prevent closing by pressing Escape key
->
+        open={isDialogOpen}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            closeDialog();
+          }
+        }}
+        disableEscapeKeyDown
+      >
         <DialogTitle>{isEditing ? 'Edit Mentor' : 'Add Mentor'}</DialogTitle>
         <DialogContent>
-  <TextField
-    label="Mentor ID (Student Number)"
-    value={mentorForm.mentorId}
-    onChange={(e) => handleFormChange('mentorId', e.target.value)}
-    fullWidth
-    margin="normal"
-    required
-  />
-  <TextField
-    label="First Name"
-    value={mentorForm.firstName}
-    onChange={(e) => handleFormChange('firstName', e.target.value)}
-    fullWidth
-    margin="normal"
-    required
-  />
-  <TextField
-    label="Last Name"
-    value={mentorForm.lastName}
-    onChange={(e) => handleFormChange('lastName', e.target.value)}
-    fullWidth
-    margin="normal"
-    required
-  />
-  <TextField
-    label="Student Email"
-    value={mentorForm.studentEmail}
-    fullWidth
-    margin="normal"
-    disabled // Make this field disabled as it's automatically generated
-  />
-  <TextField
-    label="Personal Email"
-    value={mentorForm.personalEmail}
-    onChange={(e) => handleFormChange('personalEmail', e.target.value)}
-    fullWidth
-    margin="normal"
-    required
-  />
-  <TextField
-    label="Contact No"
-    value={mentorForm.contactNo}
-    onChange={(e) => handleFormChange('contactNo', e.target.value)}
-    fullWidth
-    margin="normal"
-    required
-  />
+          <TextField
+            label="Mentor ID (Student Number)"
+            value={mentorForm.mentorId}
+            onChange={(e) => handleFormChange('mentorId', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="First Name"
+            value={mentorForm.firstName}
+            onChange={(e) => handleFormChange('firstName', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Last Name"
+            value={mentorForm.lastName}
+            onChange={(e) => handleFormChange('lastName', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Student Email"
+            value={mentorForm.studentEmail}
+            fullWidth
+            margin="normal"
+            disabled
+          />
+          <TextField
+            label="Personal Email"
+            value={mentorForm.personalEmail}
+            onChange={(e) => handleFormChange('personalEmail', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Contact No"
+            value={mentorForm.contactNo}
+            onChange={(e) => handleFormChange('contactNo', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
           <TextField
             label="Password"
             type={showPassword ? 'text' : 'password'}
@@ -333,11 +344,16 @@ const MentorsContent = () => {
           </Select>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog} color="secondary">
+          <Button onClick={closeDialog} color="secondary" sx={{ color: 'black' }}>
             Cancel
           </Button>
-          <Button onClick={isEditing ? handleEditMentor : handleAddMentor} color="primary">
-            {isEditing ? 'Save Changes' : 'Add Mentor'}
+          <Button 
+            onClick={isEditing ? handleEditMentor : handleAddMentor} 
+            startIcon={isEditing ? <Update /> : <Save />} 
+            color="primary" 
+            sx={{ color: 'black' }} // Black text color
+          >
+            {isEditing ? 'Update Mentor' : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>
