@@ -28,9 +28,9 @@ function SideBar({ setActivePage }) {
             MENTORS LIST <MdMenuBook className={styles.icon} />
           </div>
         </a>
-        <a href="#livechat" onClick={() => setActivePage('quizhistory')}>
+        <a href="#livechat" onClick={() => setActivePage('chatboard')}>
           <div className={styles.navItem}>
-            LIVE CHAT <HiOutlineChatAlt2 className={styles.icon} />
+            Chat Board <HiOutlineChatAlt2 className={styles.icon} />
           </div>
         </a>
         <a href="#dm" onClick={() => setActivePage('mentordm')}>

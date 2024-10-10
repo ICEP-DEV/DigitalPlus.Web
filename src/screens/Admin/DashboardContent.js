@@ -14,6 +14,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import styles from './DashboardContent.module.css';
+import { FaHome } from "react-icons/fa";
 
 const DashboardContent = () => {
   // State to hold the data from the API
@@ -33,7 +34,7 @@ const DashboardContent = () => {
     if (user && user.admin_Id) {
       const fetchDashboardData = async () => {
         try {
-          const response = await fetch(`https://localhost:7163/api/AdminDashboard/${user.admin_Id}`);
+          const response = await fetch(`https://localhost:7163/api/admin-dashboard/Dashboard/${user.admin_Id}`);
           const data = await response.json();
           setDashboardData(data); // Update state with API data
         } catch (error) {
@@ -86,6 +87,7 @@ const DashboardContent = () => {
 
   return (
     <div className={styles.dashboardContainer}>
+      <h2> <FaHome /> DASHBOARD</h2>
       <div className={styles.header}>
         <div className={styles.statItem}>
           <div className={styles.statItemIcon}>👥</div>

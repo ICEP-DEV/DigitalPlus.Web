@@ -120,7 +120,7 @@ const Booking = () => {
             <div className={styles.inputGroup}>
               <FaClock className={styles.icon} />
               <input
-                type="time"
+                type="datetime-local"
                 name="time"
                 value={formData.time}
                 onChange={handleChange}

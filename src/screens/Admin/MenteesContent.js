@@ -1,36 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import styles from './MenteesContent.module.css';
 import axios from 'axios';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
+import { Add, Save, Update, ManageAccounts } from '@mui/icons-material'; // Material UI icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import styles from './MenteesContent.module.css';
+import { BsPersonFillAdd } from "react-icons/bs";
+import { CiEdit } from "react-icons/ci";
+import { RiUserSearchFill } from "react-icons/ri";
+import { SiCodementor } from "react-icons/si";
+
 
 const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [menteeForm, setMenteeForm] = useState({
-    mentee_Id: '', // Editable Mentee_Id field
+    mentee_Id: 0,
     firstName: '',
     lastName: '',
     studentEmail: '',
     personalEmail: '',
     contactNo: '',
     password: '',
-    semester: '', // Semester field
+    semester: '',
     activated: true,
   });
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Fetch mentees data from the API
   useEffect(() => {
     const fetchMentees = async () => {
       try {
-        const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentees');
+        const response = await axios.get(`https://localhost:7163/api/DigitalPlusUser/GetAllMentees`);
         const data = response.data.map(mentee => ({
           ...mentee,
-          activated: !!mentee.activated, // Convert bit to boolean
-          mentee_Id: mentee.mentee_Id, // Use menteeId
+          activated: !!mentee.activated,
+          mentee_Id: mentee.mentee_Id,
         }));
         setMentees(data);
       } catch (error) {
@@ -40,38 +46,27 @@ const MenteesContent = () => {
     fetchMentees();
   }, []);
 
-  // Handle search input change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
   };
 
-  // Filter mentees based on search term
   const filteredMentees = mentees.filter(mentee =>
     mentee.studentEmail.toLowerCase().includes(searchTerm)
   );
 
-  // Handle form input change
   const handleFormChange = (field, value) => {
     setMenteeForm({ ...menteeForm, [field]: value });
   };
 
-  // Handle adding a new mentee
   const handleAddMentee = async () => {
     try {
       const newMentee = {
-        mentee_Id: menteeForm.mentee_Id, // Use the user-entered mentee_Id
-        firstName: menteeForm.firstName,
-        lastName: menteeForm.lastName,
-        studentEmail: menteeForm.studentEmail,
-        personalEmail: menteeForm.personalEmail,
-        contactNo: menteeForm.contactNo,
-        password: menteeForm.password,
-        semester: menteeForm.semester,
+        ...menteeForm,
         activated: menteeForm.activated ? true : false,
       };
 
       const response = await axios.post(
-        'https://localhost:7163/api/DigitalPlusUser/AddMentee',
+        `https://localhost:7163/api/DigitalPlusUser/AddMentee`,
         newMentee,
         {
           headers: {
@@ -80,9 +75,9 @@ const MenteesContent = () => {
         }
       );
 
-      setMentees([...mentees, response.data]); // Add new mentee to the list
+      setMentees([...mentees, response.data]);
       resetForm();
-      setIsModalVisible(false);
+      setIsDialogOpen(false);
       toast.success('Mentee added successfully!');
     } catch (error) {
       console.error('Error adding mentee:', error.response ? error.response.data : error.message);
@@ -90,23 +85,15 @@ const MenteesContent = () => {
     }
   };
 
-  // Handle editing an existing mentee
   const handleEditMentee = async () => {
-    try {
-      if (!menteeForm.mentee_Id) {
-        console.error('Mentee_Id is null or undefined');
-        return;
-      }
+    if (!menteeForm.mentee_Id) {
+      toast.error('Mentee ID is missing');
+      return;
+    }
 
+    try {
       const updatedMentee = {
-        mentee_Id: menteeForm.mentee_Id, // Use the user-entered mentee_Id
-        firstName: menteeForm.firstName,
-        lastName: menteeForm.lastName,
-        studentEmail: menteeForm.studentEmail,
-        personalEmail: menteeForm.personalEmail,
-        contactNo: menteeForm.contactNo,
-        password: menteeForm.password,
-        semester: menteeForm.semester,
+        ...menteeForm,
         activated: menteeForm.activated ? true : false,
       };
 
@@ -120,13 +107,12 @@ const MenteesContent = () => {
         }
       );
 
-      // Update the mentees list locally after the update
       const updatedMentees = mentees.map(mentee =>
         mentee.mentee_Id === menteeForm.mentee_Id ? { ...mentee, ...updatedMentee } : mentee
       );
       setMentees(updatedMentees);
       resetForm();
-      setIsModalVisible(false);
+      setIsDialogOpen(false);
       toast.success('Mentee updated successfully!');
     } catch (error) {
       console.error('Error updating mentee:', error.response ? error.response.data : error.message);
@@ -134,24 +120,21 @@ const MenteesContent = () => {
     }
   };
 
-  // Open modal for adding a mentee
-  const openAddMenteeModal = () => {
+  const openAddMenteeDialog = () => {
     resetForm();
     setIsEditing(false);
-    setIsModalVisible(true);
+    setIsDialogOpen(true);
   };
 
-  // Open modal for editing an existing mentee
-  const openEditMenteeModal = (mentee) => {
+  const openEditMenteeDialog = (mentee) => {
     setMenteeForm(mentee);
     setIsEditing(true);
-    setIsModalVisible(true);
+    setIsDialogOpen(true);
   };
 
-  // Reset form fields
   const resetForm = () => {
     setMenteeForm({
-      mentee_Id: '', // Reset the mentee_Id field
+      mentee_Id: 0,
       firstName: '',
       lastName: '',
       studentEmail: '',
@@ -161,10 +144,13 @@ const MenteesContent = () => {
       semester: '',
       activated: true,
     });
-    setShowPassword(false); // Reset password visibility
+    setShowPassword(false);
   };
 
-  // Toggle password visibility
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -172,6 +158,7 @@ const MenteesContent = () => {
   return (
     <div className={styles.menteesContainer}>
       <ToastContainer />
+      <h2> <SiCodementor /> MENTEES</h2>
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
           <input
@@ -181,9 +168,10 @@ const MenteesContent = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
+          <RiUserSearchFill />
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.addMenteeButton} onClick={openAddMenteeModal}>
+          <button className={styles.addMenteeButton} onClick={openAddMenteeDialog}>
             Add Mentee
           </button>
         </div>
@@ -199,8 +187,6 @@ const MenteesContent = () => {
               <th>Student Email</th>
               <th>Personal Email</th>
               <th>Contact No</th>
-              <th>Password</th>
-              <th>Semester</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -215,17 +201,19 @@ const MenteesContent = () => {
                   <td>{mentee.studentEmail}</td>
                   <td>{mentee.personalEmail}</td>
                   <td>{mentee.contactNo}</td>
-                  <td>{mentee.password}</td>
-                  <td>{mentee.semester}</td>
                   <td>
-                    <button
+                    <Button
+                      startIcon={mentee.activated ? <Save /> : <Update />}
+                      variant="outlined"
+                      sx={{ color: 'black' }} // Black text color
                       className={`${styles.statusToggleButton} ${mentee.activated ? styles.activate : styles.deactivate}`}
                     >
                       {mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'}
-                    </button>
+                    </Button>
                   </td>
                   <td>
-                    <button className={styles.manageButton} onClick={() => openEditMenteeModal(mentee)}>
+                    <button className={styles.manageButton} onClick={() => openAddMenteeDialog(mentee)}>
+                    <CiEdit />
                       Manage
                     </button>
                   </td>
@@ -233,7 +221,7 @@ const MenteesContent = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="10" className={styles.noMenteesMessage}>
+                <td colSpan="8" className={styles.noMenteesMessage}>
                   No mentees found.
                 </td>
               </tr>
@@ -242,111 +230,114 @@ const MenteesContent = () => {
         </table>
       </div>
 
-      {isModalVisible && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <h2>{isEditing ? 'Edit Mentee' : 'Add Mentee'}</h2>
-            <div>
-              <label>Mentee ID:</label>
-              <input
-                type="text"
-                value={menteeForm.mentee_Id}
-                readOnly={isEditing}
-                onChange={(e) => handleFormChange('mentee_Id', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>First Name:</label>
-              <input
-                type="text"
-                value={menteeForm.firstName}
-                onChange={(e) => handleFormChange('firstName', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Last Name:</label>
-              <input
-                type="text"
-                value={menteeForm.lastName}
-                onChange={(e) => handleFormChange('lastName', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Student Email:</label>
-              <input
-                type="email"
-                value={menteeForm.studentEmail}
-                onChange={(e) => handleFormChange('studentEmail', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Personal Email:</label>
-              <input
-                type="email"
-                value={menteeForm.personalEmail}
-                onChange={(e) => handleFormChange('personalEmail', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Contact No:</label>
-              <input
-                type="text"
-                value={menteeForm.contactNo}
-                onChange={(e) => handleFormChange('contactNo', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div className={styles.passwordField}>
-              <label>Password:</label>
-              <span className={styles.eyeIcon} onClick={togglePasswordVisibility}>
-                {showPassword ? '🙈' : '👁️'}
-              </span>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={menteeForm.password}
-                onChange={(e) => handleFormChange('password', e.target.value)}
-                className={styles.inputField}
-              />
-            </div>
-            <div>
-              <label>Semester:</label>
-              <select
-                value={menteeForm.semester}
-                onChange={(e) => handleFormChange('semester', e.target.value)}
-                className={styles.selectField}
-              >
-                <option value="">Select Semester</option>
-                <option value="1st">1st Semester</option>
-                <option value="2nd">2nd Semester</option>
-                <option value="3rd">3rd Semester</option>
-                <option value="4th">4th Semester</option>
-              </select>
-            </div>
-            <div>
-              <label>Status:</label>
-              <select
-                value={menteeForm.activated ? 1 : 0}
-                onChange={(e) => handleFormChange('activated', !!parseInt(e.target.value))}
-                className={styles.selectField}
-              >
-                <option value={1}>ACTIVATED</option>
-                <option value={0}>DEACTIVATED</option>
-              </select>
-            </div>
-            <div className={styles.modalButtons}>
-              <button onClick={isEditing ? handleEditMentee : handleAddMentee}>
-                {isEditing ? 'Update Mentee' : 'Add Mentee'}
-              </button>
-              <button onClick={() => setIsModalVisible(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Dialog for Adding/Editing Mentee */}
+      <Dialog
+        open={isDialogOpen}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            closeDialog();
+          }
+        }}
+        disableEscapeKeyDown
+      >
+        <DialogTitle>{isEditing ? 'Edit Mentee' : 'Add Mentee'}</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Mentee ID"
+            value={menteeForm.mentee_Id}
+            fullWidth
+            margin="normal"
+            disabled={isEditing}
+            required
+          />
+          <TextField
+            label="First Name"
+            value={menteeForm.firstName}
+            onChange={(e) => handleFormChange('firstName', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Last Name"
+            value={menteeForm.lastName}
+            onChange={(e) => handleFormChange('lastName', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Student Email"
+            value={menteeForm.studentEmail}
+            onChange={(e) => handleFormChange('studentEmail', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Personal Email"
+            value={menteeForm.personalEmail}
+            onChange={(e) => handleFormChange('personalEmail', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Contact No"
+            value={menteeForm.contactNo}
+            onChange={(e) => handleFormChange('contactNo', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            value={menteeForm.password}
+            onChange={(e) => handleFormChange('password', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <Select
+            label="Semester"
+            value={menteeForm.semester}
+            onChange={(e) => handleFormChange('semester', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          >
+            <MenuItem value="1st">1st Semester</MenuItem>
+            <MenuItem value="2nd">2nd Semester</MenuItem>
+            <MenuItem value="3rd">3rd Semester</MenuItem>
+            <MenuItem value="4th">4th Semester</MenuItem>
+          </Select>
+          <Select
+            label="Status"
+            value={menteeForm.activated}
+            onChange={(e) => handleFormChange('activated', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          >
+            <MenuItem value={true}>Activated</MenuItem>
+            <MenuItem value={false}>Deactivated</MenuItem>
+          </Select>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog} color="secondary" sx={{ color: 'black' }}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={isEditing ? handleEditMentee : handleAddMentee} 
+            startIcon={isEditing ? <Update /> : <Save />} 
+            color="primary" 
+            sx={{ color: 'black' }} // Black text color
+          >
+            {isEditing ? 'Update Mentee' : 'Save'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

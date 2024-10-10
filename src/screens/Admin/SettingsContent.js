@@ -3,7 +3,10 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import styles from "./SettingsContent.module.css";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
+import { CiEdit, CiSaveDown2 } from "react-icons/ci";
+import { ImProfile } from "react-icons/im";
+import { FaCog } from 'react-icons/fa';
 
 
 const Settings = () => {
@@ -18,12 +21,12 @@ const Settings = () => {
     contact: "",
     password: "",
     departmentId: "",
-    adminId: ""
+    adminId: "",
   });
 
   // Fetch user data from localStorage on component mount
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -35,23 +38,23 @@ const Settings = () => {
 
   const handleEditAdmin = async () => {
     try {
-      if (!adminForm.admin_Id) {
+      if (!adminForm.adminId) {
         console.error("Admin_Id is null or undefined");
         return;
       }
 
       const updatedAdmin = {
-        adminId: adminForm.admin_Id,
+        adminId: adminForm.adminId,
         firstName: adminForm.firstName,
         lastName: adminForm.lastName,
         email: adminForm.email,
         contactNo: adminForm.contact,
         password: adminForm.password,
-        departmentId: adminForm.departmentId
+        departmentId: adminForm.departmentId,
       };
 
       const response = await axios.put(
-        `https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${adminForm.admin_Id}`,
+        `https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${adminForm.adminId}`,
         updatedAdmin,
         {
           headers: {
@@ -60,8 +63,9 @@ const Settings = () => {
         }
       );
 
+      // eslint-disable-next-line no-const-assign
       updatedAdmin = admin.map((admin) =>
-        admin.admin_Id === adminForm.admin_Id
+        admin.adminId === adminForm.adminId
           ? { ...admin, ...updatedAdmin }
           : admin
       );
@@ -94,126 +98,89 @@ const Settings = () => {
   // If user data is not available yet, return null or a loading state
   if (!user) {
     return <div>Loading...</div>;
+    const user = JSON.parse(localStorage.getItem("user"));
   }
 
   return (
     <div className={styles.settingsContainer}>
       <ToastContainer />
-      <div className={styles.sidebar}>
-        <h2>SETTINGS</h2>
-        <button
-          onClick={() => setActiveSection("account")}
-          className={activeSection === "account" ? styles.active : ""}
-        >
-          Account
-        </button>
-        <button
-          onClick={() => setActiveSection("analytics")}
-          className={activeSection === "analytics" ? styles.active : ""}
-        >
-          Analytics & Report
-        </button>
-      </div>
-
       <div className={styles.content}>
+      <h2> <FaCog /> SETTINGS</h2>
         {activeSection === "account" && (
           <div className={styles.accountSection}>
-            <h2>Profile</h2>
+            <h2> <ImProfile /> Profile</h2>
             <div className={styles.profileInfo}>
               <div className={styles.inputGroup}>
                 <span>First Name:</span>
                 <input
                   type="text"
-                  value={`${adminForm.firstName}`}
-                  onChange={(e) => handleFormChange('firstName', e.target.value)}
+                  value={`${user.firstName}`}
+                  onChange={(e) => handleEditAdmin("firstName", e.target.value)}
                   disabled={!adminForm.firstName}
                 />
-                <button onClick={() => toggleEdit("firstName")}>Edit</button>
+                <button className={styles.editBtn} onClick={() => toggleEdit("firstName")}> <CiEdit /> Edit</button>
               </div>
 
               <div className={styles.inputGroup}>
                 <span>Last Name:</span>
                 <input
                   type="text"
-                  value={`${adminForm.lastName}`}
-                  onChange={(e) => handleFormChange('lastName', e.target.value)}
+                  value={`${user.lastName}`}
+                  onChange={(e) => handleFormChange("lastName", e.target.value)}
                   disabled={!adminForm.lastName}
                 />
-                <button onClick={() => toggleEdit("lastName")}>Edit</button>
+                <button className={styles.editBtn} onClick={() => toggleEdit("lastName")}>
+                  {" "}
+                  <CiEdit /> Edit
+                </button>
               </div>
 
               <div className={styles.inputGroup}>
                 <span>Email Address:</span>
                 <input
                   type="email"
-                  value={adminForm.email}
-                  onChange={(e) => handleFormChange('email', e.target.value)}
+                  value={`${user.email}`}
+                  onChange={(e) => handleFormChange("email", e.target.value)}
                   disabled={!adminForm.email}
                 />
-                <button onClick={() => toggleEdit("email")}>Edit</button>
+                <button className={styles.editBtn} onClick={() => toggleEdit("email")}> <CiEdit /> Edit</button>
               </div>
 
               <div className={styles.inputGroup}>
                 <span>Contact:</span>
                 <input
                   type="text"
-                  value={adminForm.contactNo}
-                  onChange={(e) => handleFormChange('contact', e.target.value)}
+                  value={`${user.contactNo}`}
+                  onChange={(e) => handleFormChange("contact", e.target.value)}
                   disabled={!adminForm.contact}
                 />
-                <button onClick={() => toggleEdit("contact")}>Edit</button>
+                <button className={styles.editBtn} onClick={() => toggleEdit("contact")}> <CiEdit /> Edit</button>
               </div>
 
               <div className={styles.inputGroup}>
                 <span>Department:</span>
                 <input
                   type="text"
-                  value={adminForm.departmentId}
-                  onChange={(e) => handleFormChange('department', e.target.value)}
+                  value={`${user.departmentId}`}
+                  onChange={(e) =>
+                    handleFormChange("department", e.target.value)
+                  }
                   disabled={!adminForm.contact}
                 />
-                <button onClick={() => toggleEdit("department")}>Edit</button>
+                <button className={styles.editBtn} onClick={() => toggleEdit("department")}> <CiEdit /> Edit</button>
               </div>
 
               <div className={styles.inputGroup}>
                 <span>Password:</span>
                 <input
                   type="password"
-                  value={adminForm.password}
+                  value={`${user.password}`}
+                  onChange={(e) => handleFormChange("password", e.target.value)}
                   disabled={!adminForm.password}
                 />
-                <button onClick={() => toggleEdit("password")}>Edit</button>
+                <button className={styles.editBtn} onClick={(e) => toggleEdit("password")}> <CiEdit /> Edit</button>
               </div>
-              <button className={styles.save}>Save</button>
-            </div>
-          </div>
-        )}
-
-        {activeSection === "analytics" && (
-          <div className={styles.analyticsSection}>
-            <h2>Analysis Reports</h2>
-            <div className={styles.analyticsGrid}>
-              <div className={styles.reportCard} id="report1">
-                <h3>Classes allocation</h3>
-                <img src="/path-to-chart1" alt="Chart 1" />
-                <button onClick={() => handleDownloadPdf("report1")}>
-                  Download
-                </button>
-              </div>
-              <div className={styles.reportCard} id="report2">
-                <h3>Monthly activity</h3>
-                <img src="/path-to-chart2" alt="Chart 2" />
-                <button onClick={() => handleDownloadPdf("report2")}>
-                  Download
-                </button>
-              </div>
-              <div className={styles.reportCard} id="report3">
-                <h3>Number of Feedback</h3>
-                <img src="/path-to-chart3" alt="Chart 3" />
-                <button onClick={() => handleDownloadPdf("report3")}>
-                  Download
-                </button>
-              </div>
+              <button className={styles.save}> <CiSaveDown2 /> Save</button>
             </div>
           </div>
         )}
