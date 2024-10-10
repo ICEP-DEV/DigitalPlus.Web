@@ -42,12 +42,22 @@ const RegisterPage = () => {
                             <form>
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Student Number:</label>
-                                    <input type="text" placeholder="Enter student number" style={styles.input} />
+                                    <input
+                                        type="text"
+                                        placeholder="Enter student number"
+                                        style={styles.input}
+                                        // This input remains editable
+                                    />
                                 </div>
 
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Module Code:</label>
-                                    <select value={selectedModule} onChange={handleModuleChange} style={styles.input}>
+                                    <select
+                                        value={selectedModule}
+                                        onChange={handleModuleChange}
+                                        style={styles.input}
+                                        disabled // Disable this field
+                                    >
                                         <option value="" disabled>Select the module</option>
                                         <option value="PPA F05D">PPA F05D</option>
                                         <option value="PPB 216D">PPB 216D</option>
@@ -58,18 +68,16 @@ const RegisterPage = () => {
 
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Choose Mentor:</label>
-                                    <select style={styles.input}>
+                                    <select
+                                        style={styles.input}
+                                        disabled // Disable this field
+                                    >
                                         <option value="" disabled>Select mentor</option>
                                         {mentors.map((mentor, index) => (
                                             <option key={index} value={mentor}>{mentor}</option>
                                         ))}
                                     </select>
                                 </div>
-
-                                {/* <div style={styles.formGroup}>
-                                    <label style={styles.formLabel}>Signature:</label>
-                                    <div style={styles.signaturePlaceholder}>[SIGNATURE AREA]</div>
-                                </div> */}
 
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Rating:</label>
@@ -81,6 +89,7 @@ const RegisterPage = () => {
                                         value={rating} // Bind the value to the state
                                         onChange={handleRatingChange} // Handle the slider value change
                                         style={styles.rangeSlider}
+                                        disabled // Disable this field
                                     />
                                     <div style={styles.sliderLabels}>
                                         <span>0</span>
@@ -99,14 +108,24 @@ const RegisterPage = () => {
 
                                 {/* Wrap submit button with a container for centering */}
                                 <div style={styles.buttonContainer}>
-                                    <button type="submit" style={styles.submitButton}>Activate</button>
+                                    <button
+                                        type="submit"
+                                        style={styles.submitButton}
+                                        // This button remains clickable
+                                    >
+                                        Activate
+                                    </button>
                                 </div>
                             </form>
                         </div>
                         <div style={styles.commentContainer}>
                             <div style={styles.formGroup}>
                                 <label style={styles.formLabel}>Comment:</label>
-                                <textarea placeholder="Write your comment" style={styles.textarea} />
+                                <textarea
+                                    placeholder="Write your comment"
+                                    style={styles.textarea}
+                                    disabled // Disable this field
+                                />
                                 <i className="fas fa-upload" style={styles.uploadIcon}></i>
                             </div>
                         </div>
@@ -215,7 +234,6 @@ const styles = {
     },
     rangeSlider: {
         width: '100%',
-        // Slider color changes via pseudo-elements
         WebkitAppearance: 'none', // Remove default appearance for Webkit browsers
         backgroundColor: '#000C24', // Track color
         height: '8px', // Track height

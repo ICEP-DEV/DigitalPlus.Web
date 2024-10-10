@@ -60,7 +60,7 @@ function AnnouncementPage() {
             <div className={styles.date}>{currentDateTime.toLocaleDateString()}</div>
         </div> */}
     </div>
-    <div className={styles.rightVerticalLine}></div>
+    {/* <div className={styles.rightVerticalLine}></div> */}
                     <div className={styles.currentDateTime}>
                         <div className={styles.time}>
                             {currentDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}

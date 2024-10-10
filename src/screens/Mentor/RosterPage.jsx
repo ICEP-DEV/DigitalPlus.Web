@@ -72,7 +72,7 @@ function RosterPage() {
             <SideBar />
             <div style={styles.content}>
                 <Nav.Link href ='/AnnouncementPage'><button style={styles.backButton} onClick={() => navigate('/announcement')}>Back</button></Nav.Link>
-                <h1 style={styles.header}>ROSTER</h1>
+                <h1 style={styles.header}>Mentor's Lab 10-252</h1>
                 <div style={styles.rosterTable}>
                     <table style={styles.table}>
                         <thead>

@@ -11,6 +11,8 @@
     flex: 1;
     overflow: hidden;
     padding: 20px;
+    position: relative;
+    
 }
 
 .header {
@@ -32,7 +34,8 @@
 
 .timeline {
     position: relative;
-    flex: 1;
+    padding: 20px;
+    flex-grow: 1;
 }
 
 .timelineItem {
@@ -59,11 +62,12 @@
 
 .rightVerticalLine {
     width: 3px;
-    height: 100%;
+    height: 50%;
     background-color: #000000;
     position: absolute;
-    right: 0;
+    right: 20%;
     bottom: 0;
+    top:0;
 }
 
 .circle {
@@ -78,7 +82,8 @@
 }
 
 .card {
-    background-color: white;
+    border: 3px solid #000; /* Increase the border width (e.g., from 1px to 3px) */
+    background-color: #D9D9D9;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px 15px;
@@ -88,19 +93,20 @@
 .date {
     font-size: 16px;
     color: #000000;
-    margin-bottom: 5px;
+    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 .message {
-    font-size: 14px;
+    font-size: 16px;
     color: black;
     display: flex;
     align-items: center;
 }
 
 .icon {
-    margin-right: 5px;
-    color: #00796b;
+    margin-right: 8px;
+    color: black;
 }
 
 .viewRosterLink {
@@ -123,14 +129,26 @@
 }
 
 .currentDateTime {
-    position: absolute;
+    position: relative;
     right: 30px;
     top: 0;
     text-align: right;
-    margin-bottom: 10px;
+    margin-top:20px;
+    font-size: 18px;
+    
 }
 
 .time {
     font-size: 16px;
     color: #000000;
 }
+
+.currentDateTime .time {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .currentDateTime .date {
+    font-size: 16px;
+    margin-left: 100px;
+  }

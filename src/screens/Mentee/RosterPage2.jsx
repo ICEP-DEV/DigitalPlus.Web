@@ -72,7 +72,7 @@ function RosterPage() {
         <div style={styles.container}>
             <div style={styles.content}>
                 <Nav.Link href ='/AnnouncementPage2'><button style={styles.backButton} onClick={() => navigate('/home')}>Back</button></Nav.Link>
-                <h1 style={styles.header}>ROSTER</h1>
+                <h1 style={styles.header}>Mentor's Lab 10-252</h1>
                 <div style={styles.rosterTable}>
                     <table style={styles.table}>
                         <thead>
