@@ -5,12 +5,6 @@ import { Add, Save, Update, ManageAccounts } from '@mui/icons-material'; // Mate
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
-import { BsPersonFillAdd } from "react-icons/bs";
-import { CiEdit } from "react-icons/ci";
-import { RiUserSearchFill } from "react-icons/ri";
-import { SiCodementor } from "react-icons/si";
-
-
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
@@ -35,7 +29,7 @@ const MentorsContent = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const response = await axios.get(`https://localhost:7163/api/DigitalPlusUser/GetAllMentors`);
+        const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentors');
         const data = response.data.map(mentor => ({
           ...mentor,
           activated: !!mentor.activated,
@@ -184,8 +178,6 @@ const MentorsContent = () => {
         draggable
         pauseOnHover
       />
-      <h2> <SiCodementor /> MENTORS</h2>
-      <ToastContainer />
 
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
@@ -200,7 +192,6 @@ const MentorsContent = () => {
             name="unique-search-email"
             id="search-email-unique"
           />
-          <RiUserSearchFill />
         </div>
         <div className={styles.buttonGroup}>
           <Button 
@@ -211,13 +202,8 @@ const MentorsContent = () => {
           >
             Add
           </Button>
-          <button className={styles.addMentorButton} onClick={openEditMentorDialog}>
-            <BsPersonFillAdd />
-            Add Mentor
-          </button>
         </div>
       </div>
-      
 
       <div className={styles.tableWrapper}>
         <table className={styles.mentorsTable}>
@@ -254,10 +240,15 @@ const MentorsContent = () => {
                     </Button>
                   </td>
                   <td>
-                    <button className={styles.manageButton} onClick={() => openEditMentorDialog(mentor)}>
-                    <CiEdit />
+                    <Button
+                      startIcon={<ManageAccounts />}
+                      variant="outlined"
+                      sx={{ color: 'black' }} // Black text color
+                      className={styles.manageButton}
+                      onClick={() => openEditMentorDialog(mentor)}
+                    >
                       Manage
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))

@@ -5,11 +5,6 @@ import { Add, Save, Update, ManageAccounts } from '@mui/icons-material'; // Mate
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MenteesContent.module.css';
-import { BsPersonFillAdd } from "react-icons/bs";
-import { CiEdit } from "react-icons/ci";
-import { RiUserSearchFill } from "react-icons/ri";
-import { SiCodementor } from "react-icons/si";
-
 
 const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
@@ -32,7 +27,7 @@ const MenteesContent = () => {
   useEffect(() => {
     const fetchMentees = async () => {
       try {
-        const response = await axios.get(`https://localhost:7163/api/DigitalPlusUser/GetAllMentees`);
+        const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentees');
         const data = response.data.map(mentee => ({
           ...mentee,
           activated: !!mentee.activated,
@@ -66,7 +61,7 @@ const MenteesContent = () => {
       };
 
       const response = await axios.post(
-        `https://localhost:7163/api/DigitalPlusUser/AddMentee`,
+        'https://localhost:7163/api/DigitalPlusUser/AddMentee',
         newMentee,
         {
           headers: {
@@ -158,22 +153,25 @@ const MenteesContent = () => {
   return (
     <div className={styles.menteesContainer}>
       <ToastContainer />
-      <h2> <SiCodementor /> MENTEES</h2>
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
           <input
-            type="text"
+            type="search"
             placeholder="Search by Student Email"
             className={styles.searchBar}
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <RiUserSearchFill />
         </div>
         <div className={styles.buttonGroup}>
-          <button className={styles.addMenteeButton} onClick={openAddMenteeDialog}>
-            Add Mentee
-          </button>
+          <Button 
+            onClick={openAddMenteeDialog} 
+            startIcon={<Add />} 
+            variant="contained" 
+            sx={{ color: 'black', backgroundColor: 'lightgray' }} // Setting text color to black
+          >
+            Add
+          </Button>
         </div>
       </div>
 
@@ -212,10 +210,15 @@ const MenteesContent = () => {
                     </Button>
                   </td>
                   <td>
-                    <button className={styles.manageButton} onClick={() => openAddMenteeDialog(mentee)}>
-                    <CiEdit />
+                    <Button
+                      startIcon={<ManageAccounts />}
+                      variant="outlined"
+                      sx={{ color: 'black' }} // Black text color
+                      className={styles.manageButton}
+                      onClick={() => openEditMenteeDialog(mentee)}
+                    >
                       Manage
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               ))
