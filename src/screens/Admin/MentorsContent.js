@@ -25,6 +25,14 @@ const MentorsContent = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({
+    mentorId: '',
+    firstName: '',
+    lastName: '',
+    personalEmail: '',
+    contactNo: '',
+    password: ''
+  });
 
   useEffect(() => {
     const fetchMentors = async () => {
@@ -60,7 +68,62 @@ const MentorsContent = () => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!mentorForm.mentorId || mentorForm.mentorId.length !== 9) {
+      newErrors.mentorId = 'Mentor ID must be exactly 9 digits.';
+    }
+    if (!mentorForm.firstName) {
+      newErrors.firstName = 'First Name is required.';
+    }
+    if (!mentorForm.lastName) {
+      newErrors.lastName = 'Last Name is required.';
+    }
+    if (!mentorForm.personalEmail) {
+      newErrors.personalEmail = 'Personal Email is required.';
+    }
+    if (!mentorForm.contactNo) {
+      newErrors.contactNo = 'Contact No is required.';
+    }
+    if (!mentorForm.password) {
+      newErrors.password = 'Password is required.';
+    }
+    
+    setErrors(newErrors);
+    
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
+  const generatePassword = () => {
+    const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const digits = '0123456789';
+    const specialCharacters = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    
+    const passwordArray = [];
+    
+    // Ensure at least one character from each required category
+    passwordArray.push(lowercaseLetters.charAt(Math.floor(Math.random() * lowercaseLetters.length)));
+    passwordArray.push(uppercaseLetters.charAt(Math.floor(Math.random() * uppercaseLetters.length)));
+    passwordArray.push(digits.charAt(Math.floor(Math.random() * digits.length)));
+    passwordArray.push(specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length)));
+    
+    // Fill the remaining 4 characters with random choices from all categories
+    const allCharacters = lowercaseLetters + uppercaseLetters + digits + specialCharacters;
+    for (let i = 0; i < 4; i++) {
+      passwordArray.push(allCharacters.charAt(Math.floor(Math.random() * allCharacters.length)));
+    }
+    
+    // Shuffle the password array to randomize character order
+    const shuffledPassword = passwordArray.sort(() => Math.random() - 0.5).join('');
+    
+    return shuffledPassword;
+  };
+
   const handleAddMentor = async () => {
+    if (!validateForm()) return; // Validate before proceeding
+
     try {
       const newMentor = {
         mentorId: mentorForm.mentorId,
@@ -69,7 +132,7 @@ const MentorsContent = () => {
         studentEmail: mentorForm.studentEmail,
         personalEmail: mentorForm.personalEmail,
         contactNo: mentorForm.contactNo,
-        password: mentorForm.password,
+        password: generatePassword(), // Generate random password
         available: mentorForm.available !== undefined ? mentorForm.available : 0,
         activated: mentorForm.activated ? true : false
       };
@@ -83,7 +146,7 @@ const MentorsContent = () => {
       setMentors([...mentors, response.data]);
       resetForm();
       setIsDialogOpen(false);
-      toast.success('Mentor added successfully!');
+      toast.success('Mentor added successfully! Password: ' + newMentor.password); // Optionally display password
     } catch (error) {
       console.error('Error adding mentor:', error.response ? error.response.data : error.message);
       toast.error('Failed to add mentor. Please try again.');
@@ -104,7 +167,7 @@ const MentorsContent = () => {
         studentEmail: mentorForm.studentEmail,
         personalEmail: mentorForm.personalEmail,
         contactNo: mentorForm.contactNo,
-        password: mentorForm.password,
+        password: mentorForm.password, // Keep the existing password
         available: mentorForm.available !== undefined ? mentorForm.available : 0,
         activated: mentorForm.activated ? true : false
       };
@@ -155,10 +218,7 @@ const MentorsContent = () => {
       lab: ''
     });
     setShowPassword(false);
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    setErrors({}); // Reset errors on form reset
   };
 
   const closeDialog = () => {
@@ -167,18 +227,7 @@ const MentorsContent = () => {
 
   return (
     <div className={styles.mentorsContainer}>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-
+      <ToastContainer />
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
           <input type="text" style={{ display: 'none' }} autoComplete="off" />
@@ -276,12 +325,14 @@ const MentorsContent = () => {
         <DialogTitle>{isEditing ? 'Edit Mentor' : 'Add Mentor'}</DialogTitle>
         <DialogContent>
           <TextField
-            label="Mentor ID (Student Number)"
+            label="Mentor ID (9 digits)"
             value={mentorForm.mentorId}
             onChange={(e) => handleFormChange('mentorId', e.target.value)}
             fullWidth
             margin="normal"
             required
+            error={!!errors.mentorId}
+            helperText={errors.mentorId} // Display error message
           />
           <TextField
             label="First Name"
@@ -290,6 +341,8 @@ const MentorsContent = () => {
             fullWidth
             margin="normal"
             required
+            error={!!errors.firstName}
+            helperText={errors.firstName} // Display error message
           />
           <TextField
             label="Last Name"
@@ -298,6 +351,8 @@ const MentorsContent = () => {
             fullWidth
             margin="normal"
             required
+            error={!!errors.lastName}
+            helperText={errors.lastName} // Display error message
           />
           <TextField
             label="Student Email"
@@ -313,6 +368,8 @@ const MentorsContent = () => {
             fullWidth
             margin="normal"
             required
+            error={!!errors.personalEmail}
+            helperText={errors.personalEmail} // Display error message
           />
           <TextField
             label="Contact No"
@@ -321,6 +378,8 @@ const MentorsContent = () => {
             fullWidth
             margin="normal"
             required
+            error={!!errors.contactNo}
+            helperText={errors.contactNo} // Display error message
           />
           <TextField
             label="Password"
@@ -330,6 +389,8 @@ const MentorsContent = () => {
             fullWidth
             margin="normal"
             required
+            error={!!errors.password}
+            helperText={errors.password} // Display error message
           />
           <Select
             label="Status"

@@ -10,11 +10,10 @@ const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [menteeForm, setMenteeForm] = useState({
-    mentee_Id: 0,
+    mentee_Id: '',
     firstName: '',
     lastName: '',
     studentEmail: '',
-    personalEmail: '',
     contactNo: '',
     password: '',
     semester: '',
@@ -23,6 +22,15 @@ const MenteesContent = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({
+    mentee_Id: '',
+    firstName: '',
+    lastName: '',
+    studentEmail: '',
+    contactNo: '',
+    password: '',
+    semester: '',
+  });
 
   useEffect(() => {
     const fetchMentees = async () => {
@@ -50,13 +58,79 @@ const MenteesContent = () => {
   );
 
   const handleFormChange = (field, value) => {
-    setMenteeForm({ ...menteeForm, [field]: value });
+    let newForm = { ...menteeForm, [field]: value };
+
+    // Auto-fill studentEmail based on mentee_Id
+    if (field === 'mentee_Id') {
+      newForm.studentEmail = `${value}@tut4life.ac.za`;
+    }
+
+    setMenteeForm(newForm);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!menteeForm.mentee_Id || menteeForm.mentee_Id.length !== 9) {
+      newErrors.mentee_Id = 'Mentee ID must be 9 digits.';
+    }
+    if (!menteeForm.firstName) {
+      newErrors.firstName = 'First Name is required.';
+    }
+    if (!menteeForm.lastName) {
+      newErrors.lastName = 'Last Name is required.';
+    }
+    if (!menteeForm.studentEmail) {
+      newErrors.studentEmail = 'Student Email is required.';
+    }
+    if (!menteeForm.contactNo) {
+      newErrors.contactNo = 'Contact No is required.';
+    }
+    if (!menteeForm.password) {
+      newErrors.password = 'Password is required.';
+    }
+    if (!menteeForm.semester) {
+      newErrors.semester = 'Semester is required.';
+    }
+    
+    setErrors(newErrors);
+    
+    return Object.keys(newErrors).length === 0; // Return true if no errors
+  };
+
+  const generatePassword = () => {
+    const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const digits = '0123456789';
+    const specialCharacters = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    
+    const passwordArray = [];
+    
+    // Ensure at least one character from each required category
+    passwordArray.push(lowercaseLetters.charAt(Math.floor(Math.random() * lowercaseLetters.length)));
+    passwordArray.push(uppercaseLetters.charAt(Math.floor(Math.random() * uppercaseLetters.length)));
+    passwordArray.push(digits.charAt(Math.floor(Math.random() * digits.length)));
+    passwordArray.push(specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length)));
+    
+    // Fill the remaining 4 characters with random choices from all categories
+    const allCharacters = lowercaseLetters + uppercaseLetters + digits + specialCharacters;
+    for (let i = 0; i < 4; i++) {
+      passwordArray.push(allCharacters.charAt(Math.floor(Math.random() * allCharacters.length)));
+    }
+    
+    // Shuffle the password array to randomize character order
+    const shuffledPassword = passwordArray.sort(() => Math.random() - 0.5).join('');
+    
+    return shuffledPassword;
   };
 
   const handleAddMentee = async () => {
+    if (!validateForm()) return; // Validate before proceeding
+
     try {
       const newMentee = {
         ...menteeForm,
+        password: generatePassword(), // Generate random password
         activated: menteeForm.activated ? true : false,
       };
 
@@ -73,7 +147,7 @@ const MenteesContent = () => {
       setMentees([...mentees, response.data]);
       resetForm();
       setIsDialogOpen(false);
-      toast.success('Mentee added successfully!');
+      toast.success('Mentee added successfully! Password: ' + newMentee.password); // Optionally display password
     } catch (error) {
       console.error('Error adding mentee:', error.response ? error.response.data : error.message);
       toast.error('Failed to add mentee. Please try again.');
@@ -81,6 +155,8 @@ const MenteesContent = () => {
   };
 
   const handleEditMentee = async () => {
+    if (!validateForm()) return; // Validate before proceeding
+
     if (!menteeForm.mentee_Id) {
       toast.error('Mentee ID is missing');
       return;
@@ -129,17 +205,17 @@ const MenteesContent = () => {
 
   const resetForm = () => {
     setMenteeForm({
-      mentee_Id: 0,
+      mentee_Id: '',
       firstName: '',
       lastName: '',
       studentEmail: '',
-      personalEmail: '',
       contactNo: '',
       password: '',
       semester: '',
       activated: true,
     });
     setShowPassword(false);
+    setErrors({}); // Reset errors on form reset
   };
 
   const closeDialog = () => {
@@ -183,7 +259,6 @@ const MenteesContent = () => {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Student Email</th>
-              <th>Personal Email</th>
               <th>Contact No</th>
               <th>Status</th>
               <th>Actions</th>
@@ -197,7 +272,6 @@ const MenteesContent = () => {
                   <td>{mentee.firstName}</td>
                   <td>{mentee.lastName}</td>
                   <td>{mentee.studentEmail}</td>
-                  <td>{mentee.personalEmail}</td>
                   <td>{mentee.contactNo}</td>
                   <td>
                     <Button
@@ -224,7 +298,7 @@ const MenteesContent = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="8" className={styles.noMenteesMessage}>
+                <td colSpan="7" className={styles.noMenteesMessage}>
                   No mentees found.
                 </td>
               </tr>
@@ -248,10 +322,16 @@ const MenteesContent = () => {
           <TextField
             label="Mentee ID"
             value={menteeForm.mentee_Id}
+            onChange={(e) => handleFormChange('mentee_Id', e.target.value)}
             fullWidth
             margin="normal"
-            disabled={isEditing}
             required
+            className={styles.fieldMargin}
+            InputLabelProps={{
+              classes: { root: styles.labelSpacing } // Apply label spacing class
+            }}
+            error={!!errors.mentee_Id}
+            helperText={errors.mentee_Id} // Display error message
           />
           <TextField
             label="First Name"
@@ -260,6 +340,12 @@ const MenteesContent = () => {
             fullWidth
             margin="normal"
             required
+            className={styles.fieldMargin}
+            InputLabelProps={{
+              classes: { root: styles.labelSpacing } // Apply label spacing class
+            }}
+            error={!!errors.firstName}
+            helperText={errors.firstName} // Display error message
           />
           <TextField
             label="Last Name"
@@ -268,22 +354,26 @@ const MenteesContent = () => {
             fullWidth
             margin="normal"
             required
+            className={styles.fieldMargin}
+            InputLabelProps={{
+              classes: { root: styles.labelSpacing } // Apply label spacing class
+            }}
+            error={!!errors.lastName}
+            helperText={errors.lastName} // Display error message
           />
           <TextField
             label="Student Email"
             value={menteeForm.studentEmail}
-            onChange={(e) => handleFormChange('studentEmail', e.target.value)}
             fullWidth
             margin="normal"
             required
-          />
-          <TextField
-            label="Personal Email"
-            value={menteeForm.personalEmail}
-            onChange={(e) => handleFormChange('personalEmail', e.target.value)}
-            fullWidth
-            margin="normal"
-            required
+            disabled
+            className={styles.fieldMargin}
+            InputLabelProps={{
+              classes: { root: styles.labelSpacing } // Apply label spacing class
+            }}
+            error={!!errors.studentEmail}
+            helperText={errors.studentEmail} // Display error message
           />
           <TextField
             label="Contact No"
@@ -292,6 +382,12 @@ const MenteesContent = () => {
             fullWidth
             margin="normal"
             required
+            className={styles.fieldMargin}
+            InputLabelProps={{
+              classes: { root: styles.labelSpacing } // Apply label spacing class
+            }}
+            error={!!errors.contactNo}
+            helperText={errors.contactNo} // Display error message
           />
           <TextField
             label="Password"
@@ -301,6 +397,12 @@ const MenteesContent = () => {
             fullWidth
             margin="normal"
             required
+            className={styles.fieldMargin}
+            InputLabelProps={{
+              classes: { root: styles.labelSpacing } // Apply label spacing class
+            }}
+            error={!!errors.password}
+            helperText={errors.password} // Display error message
           />
           <Select
             label="Semester"
@@ -309,6 +411,12 @@ const MenteesContent = () => {
             fullWidth
             margin="normal"
             required
+            className={styles.fieldMargin}
+            InputLabelProps={{
+              classes: { root: styles.labelSpacing } // Apply label spacing class
+            }}
+            error={!!errors.semester}
+            helperText={errors.semester} // Display error message
           >
             <MenuItem value="1st">1st Semester</MenuItem>
             <MenuItem value="2nd">2nd Semester</MenuItem>
@@ -322,6 +430,10 @@ const MenteesContent = () => {
             fullWidth
             margin="normal"
             required
+            className={styles.fieldMargin}
+            InputLabelProps={{
+              classes: { root: styles.labelSpacing } // Apply label spacing class
+            }}
           >
             <MenuItem value={true}>Activated</MenuItem>
             <MenuItem value={false}>Deactivated</MenuItem>
