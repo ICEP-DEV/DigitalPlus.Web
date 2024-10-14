@@ -22,6 +22,7 @@ const MentorsContent = () => {
     module: '',
     lab: ''
   });
+ 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -123,8 +124,9 @@ const MentorsContent = () => {
 
   const handleAddMentor = async () => {
     if (!validateForm()) return; // Validate before proceeding
-
+  
     try {
+      const generatedPassword = generatePassword(); // Generate random password
       const newMentor = {
         mentorId: mentorForm.mentorId,
         firstName: mentorForm.firstName,
@@ -132,27 +134,50 @@ const MentorsContent = () => {
         studentEmail: mentorForm.studentEmail,
         personalEmail: mentorForm.personalEmail,
         contactNo: mentorForm.contactNo,
-        password: generatePassword(), // Generate random password
+        password: generatedPassword, // Use the generated password
         available: mentorForm.available !== undefined ? mentorForm.available : 0,
         activated: mentorForm.activated ? true : false
       };
-
+  
+      // Add the mentor
       const response = await axios.post(
         `https://localhost:7163/api/DigitalPlusUser/AddMentor`,
         newMentor,
         { headers: { 'Content-Type': 'application/json' } }
       );
-
+  
+      // Add the new mentor to the state
       setMentors([...mentors, response.data]);
       resetForm();
       setIsDialogOpen(false);
-      toast.success('Mentor added successfully! Password: ' + newMentor.password); // Optionally display password
+      toast.success('Mentor added successfully! Password: ' + generatedPassword);
+  
+      // Send the welcome email to the mentor using HTML formatting for the email body
+      const emailMessage = `
+        <p>Hi ${newMentor.firstName} ${newMentor.lastName} (Mentor),</p>
+        <p>Your account is created by the administrator. Use your student email <strong>${newMentor.studentEmail}</strong> and password <strong>${generatedPassword}</strong> to log in.</p>
+        <p>Regards,<br>Administrator</p>
+      `;
+  
+      // Make the API call to send the email
+      await axios.post(
+        'https://localhost:7163/api/Email/Send',
+        {
+          email: newMentor.studentEmail,
+          subject: 'Your Mentor Account is Created',
+          message: emailMessage
+        },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+  
+      toast.success('Email sent to the mentor successfully!');
     } catch (error) {
-      console.error('Error adding mentor:', error.response ? error.response.data : error.message);
-      toast.error('Failed to add mentor. Please try again.');
+      console.error('Error adding mentor or sending email:', error.response ? error.response.data : error.message);
+      toast.error('Failed to add mentor or send email. Please try again.');
     }
   };
-
+  
+  
   const handleEditMentor = async () => {
     if (!mentorForm.mentorId) {
       toast.error('Mentor ID is missing');
