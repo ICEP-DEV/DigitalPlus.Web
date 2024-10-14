@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
-import { Add, Save, Update, ManageAccounts } from '@mui/icons-material'; // Material UI icons
+import { Add, Save, Update, ManageAccounts, Delete } from '@mui/icons-material'; // Material UI icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MenteesContent.module.css';
@@ -22,6 +22,9 @@ const MenteesContent = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [menteeToDelete, setMenteeToDelete] = useState(null); // Track which mentee to delete
+
   const [errors, setErrors] = useState({
     mentee_Id: '',
     firstName: '',
@@ -67,7 +70,32 @@ const MenteesContent = () => {
 
     setMenteeForm(newForm);
   };
-
+  const generatePassword = () => {
+    const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const digits = '0123456789';
+    const specialCharacters = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    
+    const passwordArray = [];
+    
+    // Ensure at least one character from each required category
+    passwordArray.push(lowercaseLetters.charAt(Math.floor(Math.random() * lowercaseLetters.length)));
+    passwordArray.push(uppercaseLetters.charAt(Math.floor(Math.random() * uppercaseLetters.length)));
+    passwordArray.push(digits.charAt(Math.floor(Math.random() * digits.length)));
+    passwordArray.push(specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length)));
+    
+    // Fill the remaining characters with random choices from all categories
+    const allCharacters = lowercaseLetters + uppercaseLetters + digits + specialCharacters;
+    for (let i = 0; i < 4; i++) {
+      passwordArray.push(allCharacters.charAt(Math.floor(Math.random() * allCharacters.length)));
+    }
+    
+    // Shuffle the password array to randomize character order
+    const shuffledPassword = passwordArray.sort(() => Math.random() - 0.5).join('');
+    
+    return shuffledPassword;
+  };
+  
   const validateForm = () => {
     const newErrors = {};
     
@@ -98,42 +126,74 @@ const MenteesContent = () => {
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
-  const generatePassword = () => {
-    const lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
-    const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const digits = '0123456789';
-    const specialCharacters = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    
-    const passwordArray = [];
-    
-    // Ensure at least one character from each required category
-    passwordArray.push(lowercaseLetters.charAt(Math.floor(Math.random() * lowercaseLetters.length)));
-    passwordArray.push(uppercaseLetters.charAt(Math.floor(Math.random() * uppercaseLetters.length)));
-    passwordArray.push(digits.charAt(Math.floor(Math.random() * digits.length)));
-    passwordArray.push(specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length)));
-    
-    // Fill the remaining 4 characters with random choices from all categories
-    const allCharacters = lowercaseLetters + uppercaseLetters + digits + specialCharacters;
-    for (let i = 0; i < 4; i++) {
-      passwordArray.push(allCharacters.charAt(Math.floor(Math.random() * allCharacters.length)));
+  const handleDeleteMentee = async () => {
+    if (menteeToDelete) {
+      try {
+        await axios.delete(`https://localhost:7163/api/DigitalPlusUser/DeleteMentee/${menteeToDelete.mentee_Id}`);
+        setMentees(mentees.filter(mentee => mentee.mentee_Id !== menteeToDelete.mentee_Id));
+        toast.success('Mentee deleted successfully!');
+        setDeleteDialogOpen(false); // Close the dialog after deletion
+        setMenteeToDelete(null); // Clear the mentee to delete
+      } catch (error) {
+        console.error('Error deleting mentee:', error);
+        toast.error('Failed to delete mentee. Please try again.');
+      }
     }
-    
-    // Shuffle the password array to randomize character order
-    const shuffledPassword = passwordArray.sort(() => Math.random() - 0.5).join('');
-    
-    return shuffledPassword;
+  };
+  const handleEditMentee = async () => {
+    if (!validateForm()) return; // Validate before proceeding
+  
+    if (!menteeForm.mentee_Id) {
+      toast.error('Mentee ID is missing');
+      return;
+    }
+  
+    try {
+      const updatedMentee = {
+        ...menteeForm,
+        activated: menteeForm.activated ? true : false,
+      };
+  
+      await axios.put(
+        `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.mentee_Id}`,
+        updatedMentee,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      const updatedMentees = mentees.map(mentee =>
+        mentee.mentee_Id === menteeForm.mentee_Id ? { ...mentee, ...updatedMentee } : mentee
+      );
+      setMentees(updatedMentees);
+      resetForm();
+      setIsDialogOpen(false);
+      toast.success('Mentee updated successfully!');
+    } catch (error) {
+      console.error('Error updating mentee:', error.response ? error.response.data : error.message);
+      toast.error('Failed to update mentee. Please try again.');
+    }
+  };
+  
+  const openDeleteDialog = (mentee) => {
+    setMenteeToDelete(mentee); // Set the mentee to delete
+    setDeleteDialogOpen(true); // Open the delete confirmation dialog
   };
 
   const handleAddMentee = async () => {
     if (!validateForm()) return; // Validate before proceeding
 
     try {
+      const generatedPassword = generatePassword(); // Generate random password
       const newMentee = {
         ...menteeForm,
-        password: generatePassword(), // Generate random password
+        password: generatedPassword, // Use the generated password
         activated: menteeForm.activated ? true : false,
       };
 
+      // Add the mentee
       const response = await axios.post(
         'https://localhost:7163/api/DigitalPlusUser/AddMentee',
         newMentee,
@@ -151,43 +211,6 @@ const MenteesContent = () => {
     } catch (error) {
       console.error('Error adding mentee:', error.response ? error.response.data : error.message);
       toast.error('Failed to add mentee. Please try again.');
-    }
-  };
-
-  const handleEditMentee = async () => {
-    if (!validateForm()) return; // Validate before proceeding
-
-    if (!menteeForm.mentee_Id) {
-      toast.error('Mentee ID is missing');
-      return;
-    }
-
-    try {
-      const updatedMentee = {
-        ...menteeForm,
-        activated: menteeForm.activated ? true : false,
-      };
-
-      await axios.put(
-        `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.mentee_Id}`,
-        updatedMentee,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      const updatedMentees = mentees.map(mentee =>
-        mentee.mentee_Id === menteeForm.mentee_Id ? { ...mentee, ...updatedMentee } : mentee
-      );
-      setMentees(updatedMentees);
-      resetForm();
-      setIsDialogOpen(false);
-      toast.success('Mentee updated successfully!');
-    } catch (error) {
-      console.error('Error updating mentee:', error.response ? error.response.data : error.message);
-      toast.error('Failed to update mentee. Please try again.');
     }
   };
 
@@ -292,6 +315,16 @@ const MenteesContent = () => {
                       onClick={() => openEditMenteeDialog(mentee)}
                     >
                       Manage
+                    </Button>
+                    {/* Delete Icon */}
+                    <Button
+                      startIcon={<Delete />}
+                      variant="outlined"
+                      sx={{ color: 'red' }} // Red text for delete
+                      className={styles.deleteButton}
+                      onClick={() => openDeleteDialog(mentee)} // Open delete dialog
+                    >
+                      Delete
                     </Button>
                   </td>
                 </tr>
@@ -447,9 +480,28 @@ const MenteesContent = () => {
             onClick={isEditing ? handleEditMentee : handleAddMentee} 
             startIcon={isEditing ? <Update /> : <Save />} 
             color="primary" 
-            sx={{ color: 'black' }} // Black text color
+            sx={{ color: 'blue' }} // Black text color
           >
             {isEditing ? 'Update Mentee' : 'Save'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this mentee?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteMentee} color="primary">
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
