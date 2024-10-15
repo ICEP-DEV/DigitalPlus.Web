@@ -42,6 +42,9 @@ const AdminDashboard = () => {
             {adminEmail && <span className={styles.adminEmail}>{adminEmail}</span>} {/* Display the admin email */}
           </div>
         </div>
+        <NavLink to="/admin-dashboard/logout" className={styles.logoutButton}>
+          <FaSignOutAlt /> Logout
+        </NavLink>
       </header>
 
       <div className={styles.adminDashboard}>
@@ -116,14 +119,6 @@ const AdminDashboard = () => {
               </NavLink>
             </li>
           </ul>
-          <div className={styles.sidebarLogout}>
-            <NavLink 
-              to="/admin-dashboard/logout" 
-              className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
-              <FaSignOutAlt />
-              {isOpen && <span>Logout</span>}
-            </NavLink>
-          </div>
         </nav>
 
         {/* Main content */}
