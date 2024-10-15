@@ -19,11 +19,7 @@ const ClassListPage = () => {
 
     return (
         <div className={styles.container}>
-<<<<<<< HEAD
             <h1>List of Students enrolled for {moduleId}</h1> {/* Display moduleId dynamically */}
-=======
-            <h1>List of Students Enrolled for PPAF 216D</h1>
->>>>>>> ec32dfbdd1e52ee1f48cf3a23069786eaa4391de
             <div className={styles.tableContainer}>
                 <div className={styles.tableWrapper}>
                     <table className={styles.table}>

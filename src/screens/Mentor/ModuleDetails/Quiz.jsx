@@ -44,10 +44,6 @@ const QuizHistory = ({ setActivePage }) => {
                   <th>Title</th>
                   <th>Date Created</th>
                   <th>Number of Questions</th>
-<<<<<<< HEAD
-=======
-                
->>>>>>> ec32dfbdd1e52ee1f48cf3a23069786eaa4391de
                   <th>Actions</th> {/* New column for actions */}
                 </tr>
               </thead>
@@ -56,7 +52,6 @@ const QuizHistory = ({ setActivePage }) => {
                   <td>1. Methods</td>
                   <td>2024-10-05</td>
                   <td>10</td>
-<<<<<<< HEAD
                   <td>
                     <button 
                       className={styles.viewButton} 
@@ -64,18 +59,12 @@ const QuizHistory = ({ setActivePage }) => {
                     >
                       View Ratings
                     </button>
-=======
-                  
-                  <td>
-                    <button className={styles.viewButton}>View Ratings</button> {/* Button to view ratings */}
->>>>>>> ec32dfbdd1e52ee1f48cf3a23069786eaa4391de
                   </td>
                 </tr>
                 <tr>
                   <td>2. If Statement</td>
                   <td>2024-10-03</td>
                   <td>8</td>
-<<<<<<< HEAD
                   <td>
                     <button 
                       className={styles.viewButton} 
@@ -83,18 +72,12 @@ const QuizHistory = ({ setActivePage }) => {
                     >
                       View Ratings
                     </button>
-=======
-                  
-                  <td>
-                    <button className={styles.viewButton}>View Ratings</button> {/* Button to view ratings */}
->>>>>>> ec32dfbdd1e52ee1f48cf3a23069786eaa4391de
                   </td>
                 </tr>
                 <tr>
                   <td>3. Switch Statement</td>
                   <td>2024-10-01</td>
                   <td>7</td>
-<<<<<<< HEAD
                   <td>
                     <button 
                       className={styles.viewButton} 
@@ -102,11 +85,6 @@ const QuizHistory = ({ setActivePage }) => {
                     >
                       View Ratings
                     </button>
-=======
-                  
-                  <td>
-                    <button className={styles.viewButton}>View Ratings</button> {/* Button to view ratings */}
->>>>>>> ec32dfbdd1e52ee1f48cf3a23069786eaa4391de
                   </td>
                 </tr>
               </tbody>
