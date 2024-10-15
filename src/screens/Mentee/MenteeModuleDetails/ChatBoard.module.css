@@ -1,22 +1,3 @@
-/* Root Variables */
-:root {
-    --primary-color: #0d1431;
-    --secondary-color: #f9fafb;
-    --accent-color: #e5e7eb;
-    --hover-color: #bdbfc2;
-    --text-color: #ffffff;
-    --border-radius: 15px;
-    --transition-time: 0.3s;
-    --shadow-color: rgba(0, 0, 0, 0.08);
-    --online-color: #4caf50;
-    --offline-color: #f44336;
-    --sent-color: rgba(13, 20, 49, 0.1);
-    --received-color: #f1f3f5;
-    --header-background: linear-gradient(90deg, #0d1431, #1f2a63);
-    --input-background: #e5e7eb;
-    --reply-bar-color: #007bff;
-    --delete-color: #ff6347; /* Tomato color */
-}
 
 /* Chat container layout */
 .chatBoard {
