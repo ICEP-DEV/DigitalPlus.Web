@@ -72,7 +72,10 @@ const Login = () => {
 
                     {error && <p className={styles.error}>{error}</p>}
 
-                    <button className={styles.forgotPassword} type="button">Forgot Password?</button>
+                    {/* Replace with Link to reset password */}
+                    <Link to="/forgot-password" className={styles.forgotPassword}>
+                        Forgot Password?
+                    </Link>
 
                     <input type="submit" value="Sign in" className={styles.submitBtn} />
                 </form>
