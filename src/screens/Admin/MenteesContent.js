@@ -75,30 +75,30 @@ const MenteesContent = () => {
     const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const digits = '0123456789';
     const specialCharacters = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    
+
     const passwordArray = [];
-    
+
     // Ensure at least one character from each required category
     passwordArray.push(lowercaseLetters.charAt(Math.floor(Math.random() * lowercaseLetters.length)));
     passwordArray.push(uppercaseLetters.charAt(Math.floor(Math.random() * uppercaseLetters.length)));
     passwordArray.push(digits.charAt(Math.floor(Math.random() * digits.length)));
     passwordArray.push(specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length)));
-    
+
     // Fill the remaining characters with random choices from all categories
     const allCharacters = lowercaseLetters + uppercaseLetters + digits + specialCharacters;
     for (let i = 0; i < 4; i++) {
       passwordArray.push(allCharacters.charAt(Math.floor(Math.random() * allCharacters.length)));
     }
-    
+
     // Shuffle the password array to randomize character order
     const shuffledPassword = passwordArray.sort(() => Math.random() - 0.5).join('');
-    
+
     return shuffledPassword;
   };
-  
+
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!menteeForm.mentee_Id || menteeForm.mentee_Id.length !== 9) {
       newErrors.mentee_Id = 'Mentee ID must be 9 digits.';
     }
@@ -120,9 +120,9 @@ const MenteesContent = () => {
     if (!menteeForm.semester) {
       newErrors.semester = 'Semester is required.';
     }
-    
+
     setErrors(newErrors);
-    
+
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
@@ -141,29 +141,29 @@ const MenteesContent = () => {
     }
   };
   const handleEditMentee = async () => {
-    if (!validateForm()) return; // Validate before proceeding
-  
     if (!menteeForm.mentee_Id) {
       toast.error('Mentee ID is missing');
       return;
     }
-  
+
     try {
       const updatedMentee = {
-        ...menteeForm,
-        activated: menteeForm.activated ? true : false,
+        mentee_Id: menteeForm.mentee_Id,
+        firstName: menteeForm.firstName,
+        lastName: menteeForm.lastName,
+        studentEmail: menteeForm.studentEmail,
+        contactNo: menteeForm.contactNo,
+        password: menteeForm.password, // Keep the existing password
+        semester: menteeForm.semester,
+        activated: menteeForm.activated ? true : false
       };
-  
+
       await axios.put(
         `https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${menteeForm.mentee_Id}`,
         updatedMentee,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+        { headers: { 'Content-Type': 'application/json' } }
       );
-  
+
       const updatedMentees = mentees.map(mentee =>
         mentee.mentee_Id === menteeForm.mentee_Id ? { ...mentee, ...updatedMentee } : mentee
       );
@@ -176,7 +176,8 @@ const MenteesContent = () => {
       toast.error('Failed to update mentee. Please try again.');
     }
   };
-  
+
+
   const openDeleteDialog = (mentee) => {
     setMenteeToDelete(mentee); // Set the mentee to delete
     setDeleteDialogOpen(true); // Open the delete confirmation dialog
@@ -207,12 +208,36 @@ const MenteesContent = () => {
       setMentees([...mentees, response.data]);
       resetForm();
       setIsDialogOpen(false);
-      toast.success('Mentee added successfully! Password: ' + newMentee.password); // Optionally display password
+      toast.success('Mentee added and Email sent to the mentee successfully!');
+
+      // Send the welcome email to the mentee using HTML formatting for the email body
+      const emailMessage = `
+  <p>Hi ${newMentee.firstName.charAt(0)} ${newMentee.lastName},</p>
+  <p>Your account has been created by the administrator. Please use your student email <strong>${newMentee.studentEmail}</strong> and password <strong>${generatedPassword}</strong> to log in. You can access the platform using the following link:</p>
+  <p><a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a></p>
+  <p>You are reminded to change your password by clicking on the 'Forgotten Password' link on the login page.</p>
+  <p>Regards,<br>Administrator</p>
+`;
+
+
+      // Make the API call to send the email
+      await axios.post(
+        'https://localhost:7163/api/Email/Send',
+        {
+          email: newMentee.studentEmail,
+          subject: 'Your Mentee Account is Created',
+          message: emailMessage
+        },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      toast.success('Email sent to the mentee successfully!');
     } catch (error) {
-      console.error('Error adding mentee:', error.response ? error.response.data : error.message);
-      toast.error('Failed to add mentee. Please try again.');
+      console.error('Error adding mentee or sending email:', error.response ? error.response.data : error.message);
+      toast.error('Failed to add mentee or send email. Please try again.');
     }
   };
+
 
   const openAddMenteeDialog = () => {
     resetForm();
@@ -245,9 +270,7 @@ const MenteesContent = () => {
     setIsDialogOpen(false);
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+
 
   return (
     <div className={styles.menteesContainer}>
@@ -263,10 +286,10 @@ const MenteesContent = () => {
           />
         </div>
         <div className={styles.buttonGroup}>
-          <Button 
-            onClick={openAddMenteeDialog} 
-            startIcon={<Add />} 
-            variant="contained" 
+          <Button
+            onClick={openAddMenteeDialog}
+            startIcon={<Add />}
+            variant="contained"
             sx={{ color: 'black', backgroundColor: 'lightgray' }} // Setting text color to black
           >
             Add
@@ -307,25 +330,26 @@ const MenteesContent = () => {
                     </Button>
                   </td>
                   <td>
-                    <Button
-                      startIcon={<ManageAccounts />}
-                      variant="outlined"
-                      sx={{ color: 'black' }} // Black text color
-                      className={styles.manageButton}
-                      onClick={() => openEditMenteeDialog(mentee)}
-                    >
-                      Manage
-                    </Button>
-                    {/* Delete Icon */}
-                    <Button
-                      startIcon={<Delete />}
-                      variant="outlined"
-                      sx={{ color: 'red' }} // Red text for delete
-                      className={styles.deleteButton}
-                      onClick={() => openDeleteDialog(mentee)} // Open delete dialog
-                    >
-                      Delete
-                    </Button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Button
+                        startIcon={<ManageAccounts />}
+                        variant="outlined"
+                        sx={{ color: 'black' }} // Black text color
+                        className={styles.manageButton}
+                        onClick={() => openEditMenteeDialog(mentee)}
+                      >
+                      </Button>
+
+                      <Button
+                        startIcon={<Delete />}
+                        variant="outlined"
+                        sx={{ color: 'red' }} // Red text for delete
+                        className={styles.deleteButton}
+                        onClick={() => openDeleteDialog(mentee)} // Open delete dialog
+                      >
+                      </Button>
+                    </div>
+
                   </td>
                 </tr>
               ))
@@ -473,17 +497,33 @@ const MenteesContent = () => {
           </Select>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog} color="secondary" sx={{ color: 'black' }}>
+          <Button
+            onClick={closeDialog}
+            sx={{
+              backgroundColor: '#f0ad4e', // Light orange background
+              color: '#fff', // White text color
+              '&:hover': {
+                backgroundColor: '#ec971f', // Darker orange on hover
+              },
+            }}
+          >
             Cancel
           </Button>
-          <Button 
-            onClick={isEditing ? handleEditMentee : handleAddMentee} 
-            startIcon={isEditing ? <Update /> : <Save />} 
-            color="primary" 
-            sx={{ color: 'blue' }} // Black text color
+
+          <Button
+            onClick={isEditing ? handleEditMentee : handleAddMentee}
+            startIcon={isEditing ? <Update /> : <Save />}
+            sx={{
+              backgroundColor: '#5bc0de', // Light blue background
+              color: '#fff', // White text color
+              '&:hover': {
+                backgroundColor: '#31b0d5', // Darker blue on hover
+              },
+            }}
           >
             {isEditing ? 'Update Mentee' : 'Save'}
           </Button>
+
         </DialogActions>
       </Dialog>
 
@@ -491,20 +531,52 @@ const MenteesContent = () => {
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
+        PaperProps={{
+          style: {
+            padding: '20px',
+            borderRadius: '10px',
+            backgroundColor: '#f8f9fa', // Light background for better contrast
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+          },
+        }}
       >
-        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogTitle sx={{ color: '#d32f2f', fontWeight: 'bold' }}>Confirm Deletion</DialogTitle>
+
         <DialogContent>
-          Are you sure you want to delete this mentee?
+          <p style={{ color: '#333', fontSize: '16px', fontWeight: '500' }}>
+            Are you sure you want to delete this mentee? This action cannot be undone.
+          </p>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)} color="secondary">
+
+        <DialogActions sx={{ padding: '16px' }}>
+          <Button
+            onClick={() => setDeleteDialogOpen(false)}
+            sx={{
+              color: '#fff',
+              backgroundColor: '#6c757d',
+              '&:hover': {
+                backgroundColor: '#5a6268',
+              },
+            }}
+          >
             Cancel
           </Button>
-          <Button onClick={handleDeleteMentee} color="primary">
+
+          <Button
+            onClick={handleDeleteMentee}
+            sx={{
+              color: '#fff',
+              backgroundColor: '#d32f2f',
+              '&:hover': {
+                backgroundColor: '#c62828',
+              },
+            }}
+          >
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+
     </div>
   );
 };
