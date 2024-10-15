@@ -1,5 +1,3 @@
-// src/pages/ComplaintsPage/ComplaintsPage.js
-
 import React, { useState } from 'react';
 import styles from './FeedbackPage.module.css'; 
 import { FaCheckCircle } from 'react-icons/fa'; // Import success icon
@@ -51,7 +49,7 @@ const FeedbackPage = () => {
             <form onSubmit={handleSubmit} className={styles.complaintsForm}>
               <div className={styles.inputGroup}>
                 <div className={styles.inputContainer}>
-                  <label htmlFor="menteeEmail">MENTEE'S EMAIL:</label>
+                  <label htmlFor="menteeEmail">MENTEE's EMAIL:</label>
                   <input
                     type="email"
                     id="menteeEmail"
@@ -63,37 +61,17 @@ const FeedbackPage = () => {
                   />
                 </div>
                 <div className={styles.inputContainer}>
-                  <label htmlFor="mentorSelect">MENTOR:</label>
-                  <select
-                    id="mentorSelect"
+                  <label htmlFor="mentorEmail">MENTOR's EMAIL:</label>
+                  <input
+                    type="text"
+                    id="mentorEmail"
                     value={mentorEmail}
-                    onChange={(e) => {
-                      const selectedMentor = mentors.find(mentor => mentor.email === e.target.value);
-                      setMentorEmail(selectedMentor ? selectedMentor.email : '');
-                    }}
+                    onChange={(e) => setMentorEmail(e.target.value)}
+                    placeholder="Enter mentor email"
                     className={styles.inputField}
                     required
-                  >
-                    <option value="">Select a mentor</option>
-                    {mentors.map((mentor) => (
-                      <option key={mentor.email} value={mentor.email}>
-                        {mentor.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
-              </div>
-              <div className={styles.inputContainer}>
-                <label htmlFor="moduleName">MENTOR EMAIL:</label>
-                <input
-                  type="text"
-                  id="mentorEmail"
-                  value={mentorEmail}
-                  onChange={(e) => setModuleName(e.target.value)}
-                  placeholder="Enter Mentor Email"
-                  className={styles.inputField}
-                  required
-                />
               </div>
               <div className={styles.inputContainer}>
                 <label htmlFor="moduleName">MODULE NAME:</label>
@@ -107,6 +85,27 @@ const FeedbackPage = () => {
                   required
                 />
               </div>
+              <div className={styles.inputContainer}>
+                <label htmlFor="mentorSelect">MENTOR's NAME:</label>
+                <select
+                  id="mentorSelect"
+                  value={mentorEmail}
+                  onChange={(e) => {
+                    const selectedMentor = mentors.find(mentor => mentor.email === e.target.value);
+                    setMentorEmail(selectedMentor ? selectedMentor.email : '');
+                  }}
+                  className={styles.inputField}
+                  required
+                >
+                  <option value="">Select a mentor</option>
+                  {mentors.map((mentor) => (
+                    <option key={mentor.email} value={mentor.email}>
+                      {mentor.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className={styles.inputContainer}>
                 <label htmlFor="complaint">YOUR COMPLAINT:</label>
                 <textarea
