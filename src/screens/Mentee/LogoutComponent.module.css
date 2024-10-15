@@ -70,3 +70,11 @@ h2 {
     background-color: #c82333; /* Darker red on hover */
     transform: translateY(-2px); /* Slight lift effect */
 }
+
+.confirmationMessage {
+    margin-top: 20px;
+    font-size: 16px;
+    color: green; /* Change to your preferred color */
+    text-align: center;
+  }
+  

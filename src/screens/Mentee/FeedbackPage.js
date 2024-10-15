@@ -1,16 +1,23 @@
-// src/pages/FeedbackPage/FeedbackPage.js
+// src/pages/ComplaintsPage/ComplaintsPage.js
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link
 import styles from './FeedbackPage.module.css'; 
-import { FaCheckCircle, FaUserCircle } from 'react-icons/fa'; // Import profile icon
+import { FaCheckCircle } from 'react-icons/fa'; // Import success icon
 import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const FeedbackPage = () => {
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [comment, setComment] = useState('');
+  const [menteeEmail, setMenteeEmail] = useState('');
+  const [mentorEmail, setMentorEmail] = useState('');
+  const [moduleName, setModuleName] = useState('');
+  const [complaint, setComplaint] = useState('');
   const [showModal, setShowModal] = useState(false); // State for showing modal
+
+  // Sample mentor options
+  const mentors = [
+    { name: "John Doe", email: "john@example.com" },
+    { name: "Jane Smith", email: "jane@example.com" },
+    { name: "Bob Johnson", email: "bob@example.com" },
+  ];
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -24,81 +31,113 @@ const FeedbackPage = () => {
 
   // Clear form fields
   const clearForm = () => {
-    setName('');
-    setSurname('');
-    setComment('');
+    setMenteeEmail('');
+    setMentorEmail('');
+    setModuleName('');
+    setComplaint('');
   };
 
   return (
     <SideBarNavBar>
-    <div className={styles.pageContainer}>
+      <div className={styles.pageContainer}>
+        <div className={styles.contentWrapper}>
 
-
-      <div className={styles.contentWrapper}>
-
-        {/* Feedback Section */}
-        <div className={styles.feedbackSection}>
-          <h1 className={styles.feedbackTitle}>We Value Your Feedback</h1>
-          <p className={styles.anonymityNotice}>
-            Please provide your feedback below...Your responses will remain anonymous.
-          </p>
-          <form onSubmit={handleSubmit} className={styles.feedbackForm}>
-            <div className={styles.inputGroup}>
+          {/* Complaints Section */}
+          <div className={styles.complaintsSection}>
+            <h1 className={styles.complaintsTitle}>We Value Your Complaints</h1>
+            <p className={styles.anonymityNotice}>
+              Please provide your complaint below. Your responses will remain anonymous.
+            </p>
+            <form onSubmit={handleSubmit} className={styles.complaintsForm}>
+              <div className={styles.inputGroup}>
+                <div className={styles.inputContainer}>
+                  <label htmlFor="menteeEmail">MENTEE'S EMAIL:</label>
+                  <input
+                    type="email"
+                    id="menteeEmail"
+                    value={menteeEmail}
+                    onChange={(e) => setMenteeEmail(e.target.value)}
+                    placeholder="Enter mentee's email"
+                    className={styles.inputField}
+                    required
+                  />
+                </div>
+                <div className={styles.inputContainer}>
+                  <label htmlFor="mentorSelect">MENTOR:</label>
+                  <select
+                    id="mentorSelect"
+                    value={mentorEmail}
+                    onChange={(e) => {
+                      const selectedMentor = mentors.find(mentor => mentor.email === e.target.value);
+                      setMentorEmail(selectedMentor ? selectedMentor.email : '');
+                    }}
+                    className={styles.inputField}
+                    required
+                  >
+                    <option value="">Select a mentor</option>
+                    {mentors.map((mentor) => (
+                      <option key={mentor.email} value={mentor.email}>
+                        {mentor.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
               <div className={styles.inputContainer}>
-                <label htmlFor="name">MENTOR'S NAME:</label>
+                <label htmlFor="moduleName">MENTOR EMAIL:</label>
                 <input
                   type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter mentor's first name"
+                  id="mentorEmail"
+                  value={mentorEmail}
+                  onChange={(e) => setModuleName(e.target.value)}
+                  placeholder="Enter Mentor Email"
                   className={styles.inputField}
                   required
                 />
               </div>
               <div className={styles.inputContainer}>
-                <label htmlFor="surname">MENTOR'S SURNAME</label>
+                <label htmlFor="moduleName">MODULE NAME:</label>
                 <input
                   type="text"
-                  id="surname"
-                  value={surname}
-                  onChange={(e) => setSurname(e.target.value)}
-                  placeholder="Enter mentor's last name"
+                  id="moduleName"
+                  value={moduleName}
+                  onChange={(e) => setModuleName(e.target.value)}
+                  placeholder="Enter module name"
                   className={styles.inputField}
                   required
                 />
               </div>
-            </div>
-            <div className={styles.inputContainer}>
-              <label htmlFor="comment">YOUR FEEDBACK:</label>
-              <textarea
-                id="comment"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                rows="5"
-                placeholder="Share your experience or any concerns"
-                className={styles.textArea}
-                required
-              />
-            </div>
-            <div className={styles.buttonGroup}>
-              <button type="submit" className={styles.submitButton}>Submit Feedback</button>
-              <button type="button" onClick={clearForm} className={styles.clearButton}>Clear Form</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      {/* Modal for thank you message */}
-      {showModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <FaCheckCircle className={styles.modalIcon} />
-            <p>Thank you for your feedback!</p>
+              <div className={styles.inputContainer}>
+                <label htmlFor="complaint">YOUR COMPLAINT:</label>
+                <textarea
+                  id="complaint"
+                  value={complaint}
+                  onChange={(e) => setComplaint(e.target.value)}
+                  rows="5"
+                  placeholder="Share your complaint"
+                  className={styles.textArea}
+                  required
+                />
+              </div>
+              <div className={styles.buttonGroup}>
+                <button type="submit" className={styles.submitButton}>Submit Complaint</button>
+                <button type="button" onClick={clearForm} className={styles.clearButton}>Clear Form</button>
+              </div>
+            </form>
           </div>
         </div>
-      )}
-    </div>
+
+        {/* Modal for thank you message */}
+        {showModal && (
+          <div className={styles.modalOverlay}>
+            <div className={styles.modalContent}>
+              <FaCheckCircle className={styles.modalIcon} />
+              <p>Thank you for your complaint!</p>
+              <p>Timestamp: {new Date().toLocaleString()}</p> {/* Display timestamp */}
+            </div>
+          </div>
+        )}
+      </div>
     </SideBarNavBar>
   );
 };

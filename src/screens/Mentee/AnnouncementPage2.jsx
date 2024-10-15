@@ -68,7 +68,7 @@ function AnnouncementPage() {
                         <div className={styles.date}>{currentDateTime.toLocaleDateString()}</div>
                     </div>
                 </div>
-                <a href="/roster" className={styles.viewRosterLink}>VIEW ROSTER</a>
+  
                 <div className={styles.sidebarContainer}>
                     <Sidebar />
                 </div>

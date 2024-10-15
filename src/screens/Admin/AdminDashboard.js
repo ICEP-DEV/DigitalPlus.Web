@@ -27,11 +27,13 @@ const AdminDashboard = () => {
   // Fetch the admin email from the user object stored in localStorage
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user')); // Retrieve user data from localStorage
-    if (user && user.emailAddress) {
+ // Retrieve user data from localStorage
+    if ( user && user.emailAddress ) {
       setAdminEmail(user.emailAddress); // Set admin email from the API response
     }
   }, []);
 
+  
   return (
     <div className={styles.adminDashboardContainer}>
       <header className={styles.adminHeader}>

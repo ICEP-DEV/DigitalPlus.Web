@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
-import { Add, Save, Update, ManageAccounts } from '@mui/icons-material'; // Material UI icons
+import { Add, Save, Update, ManageAccounts, Delete } from '@mui/icons-material'; // Material UI icons
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
@@ -9,6 +9,9 @@ import styles from './MentorsContent.module.css';
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); // Control the delete confirmation dialog
+  const [mentorToDelete, setMentorToDelete] = useState(null); // Track the mentor to be deleted
+
   const [mentorForm, setMentorForm] = useState({
     mentorId: '',
     firstName: '',
@@ -22,6 +25,7 @@ const MentorsContent = () => {
     module: '',
     lab: ''
   });
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -67,10 +71,28 @@ const MentorsContent = () => {
       setMentorForm({ ...mentorForm, [field]: value });
     }
   };
+  const handleDeleteMentor = async () => {
+    if (mentorToDelete) {
+      try {
+        await axios.delete(`https://localhost:7163/api/DigitalPlusUser/DeleteMentor/${mentorToDelete.mentorId}`);
+        setMentors(mentors.filter(mentor => mentor.mentorId !== mentorToDelete.mentorId));
+        toast.success('Mentor deleted successfully!');
+        setDeleteDialogOpen(false); // Close the dialog after deletion
+        setMentorToDelete(null); // Clear the mentor to delete
+      } catch (error) {
+        console.error('Error deleting mentor:', error);
+        toast.error('Failed to delete mentor. Please try again.');
+      }
+    }
+  };
+  const openDeleteDialog = (mentor) => {
+    setMentorToDelete(mentor); // Set the mentor to delete
+    setDeleteDialogOpen(true); // Open the delete confirmation dialog
+  };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!mentorForm.mentorId || mentorForm.mentorId.length !== 9) {
       newErrors.mentorId = 'Mentor ID must be exactly 9 digits.';
     }
@@ -89,9 +111,9 @@ const MentorsContent = () => {
     if (!mentorForm.password) {
       newErrors.password = 'Password is required.';
     }
-    
+
     setErrors(newErrors);
-    
+
     return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
@@ -100,24 +122,24 @@ const MentorsContent = () => {
     const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const digits = '0123456789';
     const specialCharacters = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-    
+
     const passwordArray = [];
-    
+
     // Ensure at least one character from each required category
     passwordArray.push(lowercaseLetters.charAt(Math.floor(Math.random() * lowercaseLetters.length)));
     passwordArray.push(uppercaseLetters.charAt(Math.floor(Math.random() * uppercaseLetters.length)));
     passwordArray.push(digits.charAt(Math.floor(Math.random() * digits.length)));
     passwordArray.push(specialCharacters.charAt(Math.floor(Math.random() * specialCharacters.length)));
-    
+
     // Fill the remaining 4 characters with random choices from all categories
     const allCharacters = lowercaseLetters + uppercaseLetters + digits + specialCharacters;
     for (let i = 0; i < 4; i++) {
       passwordArray.push(allCharacters.charAt(Math.floor(Math.random() * allCharacters.length)));
     }
-    
+
     // Shuffle the password array to randomize character order
     const shuffledPassword = passwordArray.sort(() => Math.random() - 0.5).join('');
-    
+
     return shuffledPassword;
   };
 
@@ -125,6 +147,7 @@ const MentorsContent = () => {
     if (!validateForm()) return; // Validate before proceeding
 
     try {
+      const generatedPassword = generatePassword(); // Generate random password
       const newMentor = {
         mentorId: mentorForm.mentorId,
         firstName: mentorForm.firstName,
@@ -132,26 +155,52 @@ const MentorsContent = () => {
         studentEmail: mentorForm.studentEmail,
         personalEmail: mentorForm.personalEmail,
         contactNo: mentorForm.contactNo,
-        password: generatePassword(), // Generate random password
+        password: generatedPassword, // Use the generated password
         available: mentorForm.available !== undefined ? mentorForm.available : 0,
         activated: mentorForm.activated ? true : false
       };
 
+      // Add the mentor
       const response = await axios.post(
         `https://localhost:7163/api/DigitalPlusUser/AddMentor`,
         newMentor,
         { headers: { 'Content-Type': 'application/json' } }
       );
 
+      // Add the new mentor to the state
       setMentors([...mentors, response.data]);
       resetForm();
       setIsDialogOpen(false);
-      toast.success('Mentor added successfully! Password: ' + newMentor.password); // Optionally display password
+
+      // Send the welcome email to the mentor using HTML formatting for the email body
+
+      const emailMessage = `
+      <p>Hi ${newMentor.firstName.charAt(0)} ${newMentor.lastName},</p>
+      <p>Your account has been created by the administrator. Please use your student email <strong>${newMentor.studentEmail}</strong> and password <strong>${generatedPassword}</strong> to log in. You can access the platform using the following link:</p>
+      <p><a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a></p>
+      <p>You are reminded to change your password by clicking on the 'Forgotten Password' link on the login page.</p>
+      <p>Regards,<br>Administrator</p>
+    `;
+
+
+      // Make the API call to send the email
+      await axios.post(
+        'https://localhost:7163/api/Email/Send',
+        {
+          email: newMentor.studentEmail,
+          subject: 'Your Mentor Account is Created',
+          message: emailMessage
+        },
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      toast.success('Mentor added and Email sent to the mentor successfully!');
     } catch (error) {
-      console.error('Error adding mentor:', error.response ? error.response.data : error.message);
-      toast.error('Failed to add mentor. Please try again.');
+      console.error('Error adding mentor or sending email:', error.response ? error.response.data : error.message);
+      toast.error('Failed to add mentor or send email. Please try again.');
     }
   };
+
 
   const handleEditMentor = async () => {
     if (!mentorForm.mentorId) {
@@ -243,10 +292,10 @@ const MentorsContent = () => {
           />
         </div>
         <div className={styles.buttonGroup}>
-          <Button 
-            onClick={openAddMentorDialog} 
-            startIcon={<Add />} 
-            variant="contained" 
+          <Button
+            onClick={openAddMentorDialog}
+            startIcon={<Add />}
+            variant="contained"
             sx={{ color: 'black', backgroundColor: 'lightgray' }} // Black text color
           >
             Add
@@ -289,16 +338,27 @@ const MentorsContent = () => {
                     </Button>
                   </td>
                   <td>
-                    <Button
-                      startIcon={<ManageAccounts />}
-                      variant="outlined"
-                      sx={{ color: 'black' }} // Black text color
-                      className={styles.manageButton}
-                      onClick={() => openEditMentorDialog(mentor)}
-                    >
-                      Manage
-                    </Button>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Button
+                        startIcon={<ManageAccounts />}
+                        variant="outlined"
+                        sx={{ color: 'black' }} // Black text color
+                        className={styles.manageButton}
+                        onClick={() => openEditMentorDialog(mentor)}
+                      >
+                      </Button>
+
+                      <Button
+                        startIcon={<Delete />}
+                        variant="outlined"
+                        sx={{ color: 'red' }} // Red text for delete
+                        className={styles.deleteButton}
+                        onClick={() => openDeleteDialog(mentor)} // Open delete dialog
+                      >
+                      </Button>
+                    </div>
                   </td>
+
                 </tr>
               ))
             ) : (
@@ -405,19 +465,86 @@ const MentorsContent = () => {
           </Select>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog} color="secondary" sx={{ color: 'black' }}>
+          <Button
+            onClick={closeDialog}
+            sx={{
+              backgroundColor: '#f0ad4e', // Light orange background
+              color: '#fff', // White text color
+              '&:hover': {
+                backgroundColor: '#ec971f', // Darker orange on hover
+              },
+            }}
+          >
             Cancel
           </Button>
-          <Button 
-            onClick={isEditing ? handleEditMentor : handleAddMentor} 
-            startIcon={isEditing ? <Update /> : <Save />} 
-            color="primary" 
-            sx={{ color: 'black' }} // Black text color
+
+          <Button
+            onClick={isEditing ? handleEditMentor : handleAddMentor}
+            startIcon={isEditing ? <Update /> : <Save />}
+            sx={{
+              backgroundColor: '#5bc0de', // Light blue background
+              color: '#fff', // White text color
+              '&:hover': {
+                backgroundColor: '#31b0d5', // Darker blue on hover
+              },
+            }}
           >
             {isEditing ? 'Update Mentor' : 'Save'}
           </Button>
+
         </DialogActions>
       </Dialog>
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        PaperProps={{
+          style: {
+            padding: '20px',
+            borderRadius: '10px',
+            backgroundColor: '#f8f9fa', // Light background for better contrast
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+          },
+        }}
+      >
+        <DialogTitle sx={{ color: '#d32f2f', fontWeight: 'bold' }}>Confirm Deletion</DialogTitle>
+
+        <DialogContent>
+          <p style={{ color: '#333', fontSize: '16px', fontWeight: '500' }}>
+            Are you sure you want to delete this mentor? This action cannot be undone.
+          </p>
+        </DialogContent>
+
+        <DialogActions sx={{ padding: '16px' }}>
+          <Button
+            onClick={() => setDeleteDialogOpen(false)}
+            sx={{
+              color: '#fff',
+              backgroundColor: '#6c757d',
+              '&:hover': {
+                backgroundColor: '#5a6268',
+              },
+            }}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            onClick={handleDeleteMentor}
+            sx={{
+              color: '#fff',
+              backgroundColor: '#d32f2f',
+              '&:hover': {
+                backgroundColor: '#c62828',
+              },
+            }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
     </div>
   );
 };

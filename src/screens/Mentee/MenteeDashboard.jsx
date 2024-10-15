@@ -10,6 +10,7 @@ import AnnouncementPage2 from "./AnnouncementPage2";
 import RegisterPage from './RegisterPage';
 import MenteeModulePage from './MenteeModulePage';
 import MenteeModuleDetails from './MenteeModuleDetails';
+import Rosterpage2 from './RosterPage2'
 
 const MenteeDashboard = () => {
   return (
@@ -25,6 +26,8 @@ const MenteeDashboard = () => {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="modules/:moduleId" element={<MenteeModuleDetails />} />
         <Route path="modules" element={<MenteeModulePage />} />
+        <Route path="roster" element={<Rosterpage2 />} />
+        
       </Routes>
     </>
   );
