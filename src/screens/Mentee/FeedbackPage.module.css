@@ -17,7 +17,7 @@
 
 /* Complaints Title Styling */
 .complaintsTitle {
-  font-size: 60px;
+  font-size: 50px;
   font-weight: bolder;
   margin-bottom: 60px;
   color: #05273f;
@@ -67,11 +67,11 @@
 .inputField, 
 .textArea {
   padding: 12px;
-  border: 2px solid #0000009f; /* Black border for strokes */
+  border: 2px solid #00000056; /* Black border for strokes */
   border-radius: 8px;
   font-size: 16px;
   outline: none;
-  background-color: #ABAAAA;
+  background-color: #ffffffd8;
   transition: border-color 0.3s ease;
   box-sizing: border-box;
 }

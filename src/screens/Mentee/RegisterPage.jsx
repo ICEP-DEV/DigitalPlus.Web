@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import HeaderAnnouncementPage from '../Mentor/Headers/HeaderAnnouncementPage';
-import SideBar from './Navigation/SideBar';
 import styles from './RegisterPage.module.css'; // Import CSS module
-import NavBar from './Navigation/NavBar';
+import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const RegisterPage = () => {
   const [selectedModule, setSelectedModule] = useState('');
@@ -30,16 +28,11 @@ const RegisterPage = () => {
   };
 
   return (
+    <SideBarNavBar>
     <div className={styles.pageContainer}>
-      {/* <HeaderAnnouncementPage /> */}
-        <NavBar/>
-      <SideBar />
+        <h1 className={styles.registerTitle}>REGISTER TO BE SIGNED AFTER THE SESSION</h1> 
       <div className={styles.registerPageContainer}>
         <div className={styles.mainContent}>
-          <div className={styles.header}>
-            {/* <h1 className={styles.headerTitle}>REGISTER</h1> */}
-            {/* <div className={styles.userInfo}>B MDLULI</div> */}
-          </div>
           <div className={styles.formWrapper}>
             <div className={styles.formContainer}>
               <form>
@@ -111,7 +104,9 @@ const RegisterPage = () => {
         </div>
       </div>
     </div>
+    </SideBarNavBar>
   );
 };
+
 
 export default RegisterPage;

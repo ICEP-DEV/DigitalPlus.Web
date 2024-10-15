@@ -12,7 +12,18 @@ import RosterPage from './screens/Mentor/RosterPage';
 import SignUp from './screens/Register/SignUp.js';
 import AnnouncementPage from './screens/Mentor/AnnouncementPage';
 import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
+<<<<<<< HEAD
 import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
+=======
+import RosterPage2 from './screens/Mentee/RosterPage2.jsx';
+import AnnouncementPage2 from './screens/Mentee/AnnouncementPage2.jsx';
+import AnnouncePage from './screens/Landing/AnnouncePage.jsx';
+import RosterPg from './screens/Landing/RosterPg.jsx';
+import CreateNewAnnouncement from './screens/Admin/CreateNewAnnouncement'; // Import the new component
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+>>>>>>> efe548610da924517a7589a6450c70cdb72f8f36
 
 const App = () => {
   return (
