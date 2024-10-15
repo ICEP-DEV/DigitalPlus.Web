@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import styles from './ScheduleComponent.module.css'; // Importing CSS for styling
+import { GrSchedules } from "react-icons/gr";
+
+
 
 const timeslots = ['08:00-10:00', '10:00-12:00', '12:00-14:00', '14:00-16:00'];
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -55,7 +58,7 @@ const Schedule = () => {
   return (
     <div className={styles.scheduleContainer}>
   <div className={styles.scheduleHeader}>
-    <h1>Mentor Roster</h1>
+    <h1><GrSchedules /> Mentor Roster</h1>
   </div>
   
   {/* Add the tableWrapper div to make the table scrollable */}

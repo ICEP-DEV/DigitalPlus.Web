@@ -1,17 +1,39 @@
+<<<<<<< HEAD
+=======
+/* Root Variables */
+:root {
+    --chatBoard-primary-color: #0d1431;
+    --chatBoard-secondary-color: #f9fafb;
+    --chatBoard-accent-color: #e5e7eb;
+    --chatBoard-hover-color: #bdbfc2;
+    --chatBoard-text-color: #ffffff;
+    --chatBoard-border-radius: 15px;
+    --chatBoard-transition-time: 0.3s;
+    --chatBoard-shadow-color: rgba(0, 0, 0, 0.08);
+    --chatBoard-online-color: #4caf50;
+    --chatBoard-offline-color: #f44336;
+    --chatBoard-sent-color: rgba(13, 20, 49, 0.1);
+    --chatBoard-received-color: #f1f3f5;
+    --chatBoard-header-background: linear-gradient(90deg, #0d1431, #1f2a63);
+    --chatBoard-input-background: #e5e7eb;
+    --chatBoard-reply-bar-color: #007bff;
+    --chatBoard-delete-color: #ff6347; /* Tomato color */
+}
+>>>>>>> ec32dfbdd1e52ee1f48cf3a23069786eaa4391de
 
 /* Chat container layout */
 .chatBoard {
     display: flex;
     height: 80vh;
     width: 85vw;
-    background-color: var(--secondary-color);
+    background-color: var(--chatBoard-secondary-color);
     font-family: 'Helvetica', 'Arial', sans-serif;
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 10px var(--shadow-color);
+    border-radius: var(--chatBoard-border-radius);
+    box-shadow: 0 4px 10px var(--chatBoard-shadow-color);
 }
 
 /* Sidebar for user list */
-.chatSidebar {
+.chatBoardSidebar {
     width: 25%;
     background-color: #ffffff;
     border-right: 1px solid #e2e8f0;
@@ -20,62 +42,62 @@
     flex-direction: column;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
     overflow-y: auto;
-    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    border-radius: var(--chatBoard-border-radius) 0 0 var(--chatBoard-border-radius);
 }
 
-.chatSidebar ul {
+.chatBoardSidebar ul {
     list-style-type: none;
     padding: 0;
     margin-top: 10px;
 }
 
-.chatSidebar ul li {
+.chatBoardSidebar ul li {
     padding: 15px;
     background-color: #eef0f5;
-    border: 1px solid var(--primary-color);
+    border: 1px solid var(--chatBoard-primary-color);
     margin-bottom: 10px;
     border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
-    transition: all var(--transition-time) ease;
+    transition: all var(--chatBoard-transition-time) ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
-.chatSidebar ul li:hover {
-    background-color: var(--hover-color);
-    box-shadow: 0 4px 12px var(--shadow-color);
+.chatBoardSidebar ul li:hover {
+    background-color: var(--chatBoard-hover-color);
+    box-shadow: 0 4px 12px var(--chatBoard-shadow-color);
 }
 
-.online {
-    color: var(--online-color);
+.chatBoardOnline {
+    color: var(--chatBoard-online-color);
 }
 
-.offline {
-    color: var(--offline-color);
+.chatBoardOffline {
+    color: var(--chatBoard-offline-color);
 }
 
 /* Main chat area */
-.chatMain {
+.chatBoardMain {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    background-color: var(--secondary-color);
-    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    background-color: var(--chatBoard-secondary-color);
+    border-radius: 0 var(--chatBoard-border-radius) var(--chatBoard-border-radius) 0;
 }
 
-.chatHeader {
-    background: var(--header-background);
-    color: var(--text-color);
+.chatBoardHeader {
+    background: var(--chatBoard-header-background);
+    color: var(--chatBoard-text-color);
     padding: 15px 20px;
     font-size: 24px;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-radius: var(--chatBoard-border-radius) var(--chatBoard-border-radius) 0 0;
 }
 
-.chatMessages {
+.chatBoardMessages {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
@@ -86,7 +108,7 @@
     gap: 15px;
 }
 
-.messageItem {
+.chatBoardMessageItem {
     max-width: 60%;
     padding: 10px;
     border-radius: 20px;
@@ -94,46 +116,46 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    transition: background-color var(--transition-time);
+    transition: background-color var(--chatBoard-transition-time);
 }
 
-.messageItem:hover {
+.chatBoardMessageItem:hover {
     background-color: #f9fafb;
 }
 
-.sent {
-    background-color: var(--sent-color);
+.chatBoardSent {
+    background-color: var(--chatBoard-sent-color);
     align-self: flex-end;
     margin-left: auto;
     text-align: right;
 }
 
-.received {
-    background-color: var(--received-color);
+.chatBoardReceived {
+    background-color: var(--chatBoard-received-color);
     align-self: flex-start;
     margin-right: auto;
     text-align: left;
 }
 
-.senderInfo {
+.chatBoardSenderInfo {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
-    color: var(--hover-color);
+    color: var(--chatBoard-hover-color);
     margin-bottom: 5px;
 }
 
-.senderName {
+.chatBoardSenderName {
     font-weight: bold;
 }
 
-.messageText {
+.chatBoardMessageText {
     font-size: 16px;
     line-height: 1.6;
 }
 
 /* WhatsApp-style reply container */
-.replyTo {
+.chatBoardReplyTo {
     display: flex;
     align-items: center;
     background-color: #e9ecef;
@@ -142,110 +164,112 @@
     margin-bottom: 10px;
     position: relative;
     font-size: 14px;
-    color: var(--primary-color);
-    border-left: 4px solid var(--reply-bar-color);
+    color: var(--chatBoard-primary-color);
+    border-left: 4px solid var(--chatBoard-reply-bar-color);
 }
 
-.replySender {
+.chatBoardReplySender {
     font-weight: bold;
     margin-right: 5px;
 }
 
-.timestamp {
+.chatBoardTimestamp {
     display: block;
     font-size: 12px;
-    color: var(--hover-color);
+    color: var(--chatBoard-hover-color);
     margin-top: 5px;
 }
 
 /* Hidden icons until hover */
-.replyIcon, .editIcon, .deleteIcon {
+.chatBoardReplyIcon,
+.chatBoardEditIcon,
+.chatBoardDeleteIcon {
     display: none;
     font-size: 12px;
-    color: var(--primary-color);
+    color: var(--chatBoard-primary-color);
     cursor: pointer;
-    transition: color var(--transition-time);
+    transition: color var(--chatBoard-transition-time);
     padding: 10px;
 }
 
-.messageItem:hover .replyIcon,
-.messageItem:hover .editIcon,
-.messageItem:hover .deleteIcon {
+.chatBoardMessageItem:hover .chatBoardReplyIcon,
+.chatBoardMessageItem:hover .chatBoardEditIcon,
+.chatBoardMessageItem:hover .chatBoardDeleteIcon {
     display: inline-block;
 }
 
-.replyIcon:hover {
-    color: var(--hover-color);
+.chatBoardReplyIcon:hover {
+    color: var(--chatBoard-hover-color);
 }
 
-.editIcon:hover {
-    color: var(--reply-bar-color);
+.chatBoardEditIcon:hover {
+    color: var(--chatBoard-reply-bar-color);
 }
 
-.deleteIcon:hover {
-    color: var(--delete-color);
+.chatBoardDeleteIcon:hover {
+    color: var(--chatBoard-delete-color);
 }
 
 /* File Attachment Styling */
-.fileAttachment {
+.chatBoardFileAttachment {
     display: flex;
     align-items: center;
     background-color: #ffffff;
     padding: 10px;
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--chatBoard-accent-color);
     border-radius: 10px;
     margin-top: 10px;
-    box-shadow: 0 2px 8px var(--shadow-color);
-    transition: background-color var(--transition-time);
+    box-shadow: 0 2px 8px var(--chatBoard-shadow-color);
+    transition: background-color var(--chatBoard-transition-time);
     gap: 10px;
 }
 
-.fileAttachment:hover {
+.chatBoardFileAttachment:hover {
     background-color: #f3f4f6;
 }
 
-.fileIcon {
+.chatBoardFileIcon {
     font-size: 24px;
-    color: var(--primary-color);
+    color: var(--chatBoard-primary-color);
 }
 
-.fileName {
+.chatBoardFileName {
     font-size: 16px;
     color: #333;
     flex-grow: 1;
 }
 
-.downloadButton {
+.chatBoardDownloadButton {
     display: flex;
     align-items: center;
     gap: 5px;
     text-decoration: none;
-    background-color: var(--primary-color);
-    color: var(--text-color);
+    background-color: var(--chatBoard-primary-color);
+    color: var(--chatBoard-text-color);
     padding: 8px 12px;
     border-radius: 5px;
-    transition: background-color var(--transition-time), transform var(--transition-time);
+    transition: background-color var(--chatBoard-transition-time), transform var(--chatBoard-transition-time);
     font-size: 14px;
 }
 
-.downloadButton:hover {
-    background-color: var(--hover-color);
+.chatBoardDownloadButton:hover {
+    background-color: var(--chatBoard-hover-color);
     transform: scale(1.05);
 }
 
 /* Chat Input Area */
-.chatInputArea {
+.chatBoardInputArea {
     display: flex;
     flex-direction: column;
-    background-color: var(--input-background);
+    background-color: var(--chatBoard-input-background);
     border-top: 1px solid #e2e8f0;
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    border-radius: 0 0 var(--chatBoard-border-radius) var(--chatBoard-border-radius);
     padding: 10px;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Reply Box Positioned Above Input Text */
-.replyBox {
+.chatBoardReplyBox {
     display: flex;
     align-items: center;
     padding: 5px 10px;
@@ -253,29 +277,29 @@
     border-radius: 10px;
     margin-bottom: 10px;
     font-size: 14px;
-    color: var(--primary-color);
-    border-left: 4px solid var(--reply-bar-color);
+    color: var(--chatBoard-primary-color);
+    border-left: 4px solid var(--chatBoard-reply-bar-color);
     position: relative;
 }
 
-.replyBox span {
+.chatBoardReplyBox span {
     flex-grow: 1;
 }
 
-.cancelReplyIcon {
+.chatBoardCancelReplyIcon {
     font-size: 20px;
-    color: var(--primary-color);
+    color: var(--chatBoard-primary-color);
     cursor: pointer;
     margin-left: 10px;
-    transition: color var(--transition-time);
+    transition: color var(--chatBoard-transition-time);
 }
 
-.cancelReplyIcon:hover {
-    color: var(--hover-color);
+.chatBoardCancelReplyIcon:hover {
+    color: var(--chatBoard-hover-color);
 }
 
 /* File preview before sending */
-.filePreviewBox {
+.chatBoardFilePreviewBox {
     display: flex;
     align-items: center;
     padding: 10px;
@@ -285,85 +309,87 @@
     position: relative;
 }
 
-.filePreviewContent {
+.chatBoardFilePreviewContent {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.previewImage {
+.chatBoardPreviewImage {
     max-width: 100px;
     border-radius: 10px;
 }
 
-.previewVideo {
+.chatBoardPreviewVideo {
     max-width: 150px;
     border-radius: 10px;
 }
 
-.cancelFileIcon {
+.chatBoardCancelFileIcon {
     font-size: 20px;
-    color: var(--primary-color);
+    color: var(--chatBoard-primary-color);
     cursor: pointer;
-    transition: color var(--transition-time);
+    transition: color var(--chatBoard-transition-time);
     position: absolute;
     right: 10px;
 }
 
-.cancelFileIcon:hover {
-    color: var(--hover-color);
+.chatBoardCancelFileIcon:hover {
+    color: var(--chatBoard-hover-color);
 }
 
 /* Input Row Adjustments for Horizontal Alignment */
-.inputRow {
+.chatBoardInputRow {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     width: 100%;
 }
 
-textarea {
+.chatBoardTextArea {
     flex-grow: 1;
-    border: 1px solid var(--accent-color);
+    border: 1px solid var(--chatBoard-accent-color);
     border-radius: 25px;
     padding: 10px 15px;
     font-size: 16px;
     outline: none;
     resize: none;
-    background-color: var(--secondary-color);
-    transition: border-color var(--transition-time);
+    background-color: var(--chatBoard-secondary-color);
+    transition: border-color var(--chatBoard-transition-time);
 }
 
-textarea:focus {
-    border-color: var(--primary-color);
+.chatBoardTextArea:focus {
+    border-color: var(--chatBoard-primary-color);
     box-shadow: 0 0 8px rgba(14, 165, 233, 0.1);
 }
 
-.fileUploadIcon {
-    font-size: 24px;
-    color: var(--primary-color);
+.chatBoardFileUploadIcon {
+    margin-top: 20px;
+    font-size: 30px;
+    color: var(--chatBoard-primary-color);
     cursor: pointer;
-    transition: color var(--transition-time);
+    transition: color var(--chatBoard-transition-time);
 }
 
-.fileUploadIcon:hover {
-    color: var(--hover-color);
+.chatBoardFileUploadIcon:hover {
+    color: var(--chatBoard-hover-color);
 }
 
-button {
+.chatBoardButton {
     padding: 12px;
-    background-color: var(--primary-color);
-    color: var(--text-color);
+    background-color: var(--chatBoard-primary-color);
+    color: var(--chatBoard-text-color);
     border: none;
     border-radius: 50%;
     font-size: 20px;
     cursor: pointer;
-    transition: transform var(--transition-time);
+    transition: transform var(--chatBoard-transition-time);
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 40px;
 }
 
-button:hover {
+.chatBoardButton:hover {
     transform: scale(1.1);
 }

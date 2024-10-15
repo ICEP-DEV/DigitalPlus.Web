@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { IoHome, IoSettingsSharp } from "react-icons/io5";
+import { IoHome, IoSettingsSharp, IoListOutline } from "react-icons/io5"; // Import IoListOutline
 import { BsBookmarkCheckFill } from "react-icons/bs";
 import { MdMenuBook, MdLogout, MdFeedback } from "react-icons/md";
 import { RiContactsBook3Fill, RiRobot2Fill } from "react-icons/ri";
-import { HiLightBulb } from "react-icons/hi";
 import { useNavigate } from 'react-router-dom';
 import styles from "./SideBar.module.css"; // Import module.css styles
 
@@ -30,6 +29,12 @@ function SideBar() {
           {!isCollapsed && <span>HOME</span>}
         </div>
 
+        {/* New VIEW ROSTER item */}
+        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/roster')}>
+          <IoListOutline className={styles.icon} />
+          {!isCollapsed && <span>ROSTER</span>}
+        </div>
+
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/modules')}>
           <MdMenuBook className={styles.icon} />
           {!isCollapsed && <span>MODULES</span>}
@@ -45,10 +50,11 @@ function SideBar() {
           {!isCollapsed && <span>REGISTER</span>}
         </div>
 
+
         {/* New FEEDBACK item */}
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/feedback')}>
           <MdFeedback className={styles.icon} />
-          {!isCollapsed && <span>FEEDBACK</span>}
+          {!isCollapsed && <span>COMPLAIN</span>}
         </div>
 
         {/* New USE AI item */}
@@ -56,6 +62,9 @@ function SideBar() {
           <RiRobot2Fill className={styles.icon} />
           {!isCollapsed && <span>USE AI</span>}
         </div>
+
+        
+        
 
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/settings')}>
           <IoSettingsSharp className={styles.icon} />

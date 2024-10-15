@@ -81,6 +81,9 @@
 .inputGroup{
   padding-bottom: 10px;
   border-bottom: 1px solid black;
+  width: 500px;
+  justify-content: space-between;
+  margin-left: 100px;
 }
 
 .profileInfo input[disabled] {
@@ -102,7 +105,7 @@
 
 .save {
   margin-top: 20px;
-  background-color: #1a4b8e;
+  background-color: #01182e;
   padding: 15px 25px;
   border-radius: 10px;
   font-size: 18px;
@@ -112,11 +115,18 @@
   display: block;
   width: 100px;
   margin-left: auto;
-  transition: background-color 0.3s;
 }
 
+
 .save:hover {
-  background-color: #103469;
+  background-color: #01182e;
+}
+
+.editBtn {
+  background-color: #01182e;
+  padding: 15px 25px;
+  width: 100px;
+  color: white;
 }
 
 /* Analytics Section */

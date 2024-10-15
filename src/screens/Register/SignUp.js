@@ -156,8 +156,8 @@ const SignUp = () => {
                             <label>Last Name:</label>
                             <input type="text" name="LastName" value={mentee.LastName} onChange={handleChange} required />
                         
-                             {/* <label >Email:</label>  */}
-                             {/* <input type="email" name="StudentEmail" value={mentee.StudentEmail} onChange={handleChange}  required />  */}
+                              <label >Email:</label>  
+                              <input type="email" name="StudentEmail" value={mentee.StudentEmail} onChange={handleChange}  required />  
                     
                             <label>Contact No:</label>
                             <input type="text" name="ContactNo" value={mentee.ContactNo} onChange={handleChange} required />
@@ -167,8 +167,9 @@ const SignUp = () => {
                                 <option value="">Select Department</option>
                                 <option value="1">Computer Science</option>
                                 <option value="2">Multimedia</option>
-                                <option value="3">Information Technology</option>
-                                <option value="4">Informatics</option>
+                                <option value="3">Informations</option>
+                                <option value="4">Computer systems Engineering</option>
+                                <option>Information Technology</option>
                             </select>
 
                             <label>Semester:</label>

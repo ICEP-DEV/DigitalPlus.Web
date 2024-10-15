@@ -3,6 +3,8 @@ import styles from './ReportContent.module.css';  // Importing CSS Module
 import { BsFillPersonCheckFill, BsFileEarmarkTextFill } from 'react-icons/bs';  // Importing Bootstrap Icons
 import { RiShareFill, RiDownload2Fill } from 'react-icons/ri';  // Importing React Icons
 import { FaArrowLeft } from 'react-icons/fa';  // Importing back arrow icon
+import { GoReport } from "react-icons/go";
+import { IoFilter } from "react-icons/io5";
 
 const reportsData = [
   { studentNumber: '22145553', mentor: 'Sfiso Vinjwa', course: 'Computer Science', month: 'May' },
@@ -56,7 +58,7 @@ const ReportContent = () => {
     <div className={styles.reportsContainer}>
       {viewType === 'main' && (
         <div className={styles.mainView}>
-          <h2 className={styles.header}>Reports</h2>
+          <h2 className={styles.header}> <GoReport /> Reports</h2>
           <div className={styles.filterContainer}>
             <input
               type="text"
@@ -77,7 +79,7 @@ const ReportContent = () => {
               <option value="May">May</option>
               <option value="June">June</option>
             </select>
-            <button className={styles.filterBtn} onClick={handleFilter}>Filter</button>
+            <button className={styles.filterBtn} onClick={handleFilter}> <IoFilter /> Filter</button>
           </div>
 
           <table className={styles.reportTable}>
@@ -117,12 +119,14 @@ const ReportContent = () => {
               className={`${styles.tabBtn} ${tabView === 'register' ? styles.activeTab : ''}`}
               onClick={() => setTabView('register')}
             >
+              <BsFillPersonCheckFill />
               Register
             </button>
             <button
               className={`${styles.tabBtn} ${tabView === 'mentorReport' ? styles.activeTab : ''}`}
               onClick={() => setTabView('mentorReport')}
             >
+              <BsFileEarmarkTextFill />
               Mentor Report
             </button>
           </div>

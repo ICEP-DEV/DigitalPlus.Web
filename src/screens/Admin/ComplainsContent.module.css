@@ -108,4 +108,136 @@
       width: 100%;
     }
   }
+
+  .iconButton {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
   
+  .iconButton:hover .tooltipText {
+    display: inline-block;
+  }
+  
+  .tooltipText {
+    display: none;
+    position: absolute;
+    left: -150%; /* Move the tooltip to the left */
+    top: 80%;
+    transform: translateY(-50%);
+    color: black; /* Text color */
+    padding: 5px 10px;
+    z-index: 1;
+    white-space: nowrap;
+    background-color: transparent; /* Removed the background color */
+  }
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.heading {
+  font-weight: bold;
+  color: black;
+}
+
+.searchBar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.searchInput {
+  width: 250px;
+  padding: 8px;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 16px;
+  color: #000;
+  border-bottom: 1px solid #ccc;
+}
+
+.searchInput::placeholder {
+  color: #999;
+}
+
+.complainTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px ridge #c5c1c1;
+}
+
+.tableHeader,
+.tableData {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.complainTable th {
+  background-color: #01182e;
+  color: #eff2f4;
+  text-transform: uppercase;
+}
+
+.tableData {
+  font-size: 0.9em;
+}
+
+.menteeName,
+.menteeEmail {
+  background-color: #e0f7fa;
+  color: #006064;
+}
+
+.mentorName,
+.mentorEmail {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.statusResolved {
+  color: green;
+  font-weight: bold;
+}
+
+.statusUnresolved {
+  color: red;
+  font-weight: bold;
+}
+
+.actionButton {
+  padding: 5px 10px;
+  cursor: pointer;
+  border: none;
+  background-color: #ccc;
+}
+
+.resolved {
+  background-color: #4caf50;
+  color: white;
+}
+
+.unresolved {
+  background-color: #f44336;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .tableHeader,
+  .tableData {
+    font-size: 0.8em;
+    padding: 8px;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+}

@@ -1,15 +1,16 @@
 /* Container and general styling */
 .reportsContainer {
-  padding: 20px;
+  padding: 50px;
   background-color: #f9f9f9;
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full height of the viewport */
+  min-height: 100vh; /* Full height of the viewport */
 }
 
 .mainView {
+  padding: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -63,10 +64,17 @@
 
 /* Table Styling */
 .reportTable {
-  width: 80%; /* Reduced table width for a more compact appearance */
+  width: 100%; /* Reduced table width for a more compact appearance */
   margin: 0 auto; /* Center the table horizontally */
   border-collapse: collapse;
   margin-bottom: 20px;
+  border: 2px ridge #c5c1c1;
+}
+
+.reportTable th {
+  background-color: #01182e;
+  color: #eff2f4;
+  text-transform: uppercase;
 }
 
 .reportTable th,
@@ -74,6 +82,7 @@
   padding: 8px; /* Reduced padding to make the table more compact */
   border: 1px solid #ddd;
   text-align: left;
+
 }
 
 /* Unique class names for specific columns */
@@ -101,9 +110,15 @@
   align-items: center;
 }
 
+
+
+.tabBtn {
+  background-color: #01182e;
+}
+
 .registerIconBtn,
 .reportIconBtn {
-  background-color: #007bff;
+  background-color: #01182e;
   color: white;
   border: none;
   cursor: pointer;
@@ -117,9 +132,15 @@
   height: 40px;
 }
 
+.registerTable th {
+  background-color: #01182e;
+  color: #eff2f4;
+  text-transform: uppercase;
+}
+
 .registerIconBtn:hover,
 .reportIconBtn:hover {
-  background-color: #0056b3;
+  background-color: #01182e;
   color: white;
 }
 
@@ -132,11 +153,14 @@
   margin-top: 20px;
 }
 
+.registerView {
+}
+
 .actionButtons button,
 .shareBtn,
 .downloadBtn,
 .backBtn {
-  background-color: black;
+  background-color: #01182e;
   color: white;
   border: none;
   cursor: pointer;

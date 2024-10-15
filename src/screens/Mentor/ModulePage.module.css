@@ -1,23 +1,16 @@
 .course-modules {
     max-width: 1200px;
-  margin: 0 auto; /* Keeps it centered */
-  padding: 20px;
-  position: relative;
-  left: 100px; /* Moves it 100px to the right */
-}
-
-h1 {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 24px;
+    margin: 0 auto; /* Centers the content */
+    padding: 20px;
+    position: relative;
+    left: 100px; /* Moves it 100px to the right */
 }
 
 .module-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
-    margin-bottom: 40px; /* Add some space between the grids */
+    margin-bottom: 40px;
 }
 
 .module-card {
@@ -32,7 +25,7 @@ h1 {
     transform: translateY(-5px);
 }
 
-.module-card img {
+.module-image {
     width: 100%;
     height: 160px;
     object-fit: cover;
@@ -42,19 +35,19 @@ h1 {
     padding: 16px;
 }
 
-.module-content h2 {
+.module-title {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 8px;
 }
 
-.module-content p {
+.module-description {
     font-size: 14px;
     color: #666;
     margin-bottom: 16px;
 }
 
-button {
+.module-button {
     width: 100%;
     padding: 10px;
     background-color: #0070f3;
@@ -67,7 +60,7 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:hover {
+.module-button:hover {
     background-color: #0056b3;
 }
 

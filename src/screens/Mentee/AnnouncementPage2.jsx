@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import HeaderAnnouncementPage from '../Mentor/Headers/HeaderAnnouncementPage';
+// import HeaderAnnouncementPage from '../Mentor/Headers/HeaderAnnouncementPage';
 import Sidebar from './Bars/Sidebar';
 import { FaInfoCircle } from 'react-icons/fa';
 import styles from './AnnouncementPage2.module.css'; // Importing the CSS module
@@ -32,30 +32,35 @@ function AnnouncementPage() {
 
     return (
         <div className={styles.container}>
-            {/* <HeaderAnnouncementPage /> */}
-            <NavBar/>
+            <NavBar />
             <SideBar/>
             <div className={styles.content}>
                 <h1 className={styles.header}>ANNOUNCEMENTS</h1>
                 <div className={styles.timelineWrapper}>
-                    <div className={styles.timeline}>
-                        {announcements.map((item, index) => (
-                            <div key={index} className={styles.timelineItem}>
-                                <div className={styles.lineAndCircle}>
-                                    <div className={styles.circle}></div>
-                                    <div className={styles.verticalLine}></div>
-                                </div>
-                                <div className={styles.card}>
-                                    <div className={styles.date}>{item.date}</div>
-                                    <div className={styles.message}>
-                                        <FaInfoCircle className={styles.icon} />
-                                        {item.message}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+    <div className={styles.timeline}>
+        {announcements.map((item, index) => (
+            <div key={index} className={styles.timelineItem}>
+                <div className={styles.lineAndCircle}>
+                    <div className={styles.circle}></div>
+                    <div className={styles.verticalLine}></div>
+                </div>
+                <div className={styles.card}>
+                    <div className={styles.date}>{item.date}</div>
+                    <div className={styles.message}>
+                        <FaInfoCircle className={styles.icon} />
+                        {item.message}
                     </div>
-                    <div className={styles.rightVerticalLine}></div>
+                </div>
+            </div>
+        ))}
+        {/* <div className={styles.currentDateTime}>
+            <div className={styles.time}>
+                {currentDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
+            </div>
+            <div className={styles.date}>{currentDateTime.toLocaleDateString()}</div>
+        </div> */}
+    </div>
+    {/* <div className={styles.rightVerticalLine}></div> */}
                     <div className={styles.currentDateTime}>
                         <div className={styles.time}>
                             {currentDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
@@ -63,7 +68,7 @@ function AnnouncementPage() {
                         <div className={styles.date}>{currentDateTime.toLocaleDateString()}</div>
                     </div>
                 </div>
-                <a href="/roster2" className={styles.viewRosterLink}>VIEW ROSTER</a>
+  
                 <div className={styles.sidebarContainer}>
                     <Sidebar />
                 </div>

@@ -1,5 +1,5 @@
 .menteesContainer {
-  padding: 40px;
+  padding: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,9 +15,11 @@
 }
 
 .searchBarContainer {
-  width: 30%;
+  width: 35%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+  gap: 20px
 }
 
 .searchBar {
@@ -49,8 +51,12 @@
   font-weight: bold;
   transition: background-color 0.3s ease;
   color: white;
-  background-color: #007bff;
+  background-color: #396ba0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.downloadCsvButton {
+  background-color: #007bff;
 }
 
 .downloadCsvButton:hover {
@@ -59,6 +65,7 @@
 
 .addMenteeButton {
   background-color: #6c757d;
+  justify-content: space-between;
 }
 
 .addMenteeButton:hover {
@@ -73,20 +80,21 @@
 .menteesTable {
   width: 100%;
   border-collapse: collapse;
-  border: 2px solid #000;
+  border: 2px ridge #c5c1c1;
+  border-radius: 5px;
 }
 
 .menteesTable th,
 .menteesTable td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+  padding: 10px;
+  text-align:start;
+  border-bottom: 1px double #bdacac;
+  border-right: 1px double #bdacac;
 }
 
 .menteesTable th {
-  background-color: #f8f9fa;
-  color: #003366;
+  background-color: #01182e;
+  color: #eff2f4;
   text-transform: uppercase;
 }
 
@@ -118,7 +126,7 @@
 }
 
 .manageButton {
-  background-color: #8b4513;
+  background-color: #01182e;
   color: white;
   padding: 8px 16px;
   border-radius: 5px;
@@ -148,12 +156,12 @@
 
 .modalContent {
   background: white;
-  padding: 20px;
+  padding: 40px;
   border-radius: 8px;
-  width: 400px;
+  width: 300px;
   max-height: 90vh;
   /* Limit height to 90% of the viewport height */
-  overflow-y: auto;
+  overflow-y:auto;
   /* Add vertical scrolling inside the modal if needed */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 10000;
@@ -165,73 +173,63 @@ select {
   width: 100%;
   padding: 10px;
   margin: 5px 0;
-  border: 1px solid #ddd;
+  border: 2px solid #74777b; /* Make the border thicker and use a color like blue */
   border-radius: 5px;
   box-sizing: border-box;
+  background-color: #fff; /* Ensure background color is white */
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover/focus states */
+}
+
+input:focus,
+select:focus {
+  border-color: #74777b; /* Border color on focus */
+  box-shadow: 0 0 5px rgba(112, 113, 115, 0.3); /* Slight glow on focus */
+  outline: none; /* Remove default outline */
 }
 
 .inputField {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
+  border: 2px solid #d2d5d8; /* Make the border more visible */
+  border-radius: 5px;
   box-sizing: border-box;
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition effect for focus */
+  background-color: #f2f2f2;
 }
 
 .passwordField {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  border: 2px solid #c0c1c3; /* Ensure password field border is visible */
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(112, 113, 115, 0.3); /* Subtle shadow */
 }
 
 .eyeIcon {
   cursor: pointer;
   margin-left: 10px;
+  color: #74777b; /* Eye icon color to match the input border */
 }
 
 .selectField {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
-  box-sizing: border-box;
-}
-
-.modalButtons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-
-input,
-select {
-  width: 100%;
-  padding: 10px;
-  margin: 5px 0;
-  border: 1px solid #ddd;
+  border: 2px solid #74777b; /* Enhanced border visibility */
   border-radius: 5px;
-}
-
-.inputField {
-  width: 100%;
-  /* Ensure full width */
-  padding: 10px;
-  /* Adjust padding for consistency */
-  margin-bottom: 10px;
-  /* Add margin for spacing */
   box-sizing: border-box;
-  /* Include padding and border in the element's width and height */
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition effect for focus */
 }
 
-.passwordField {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  /* Add margin for consistent spacing */
-}
 
-.eyeIcon {
-  cursor: pointer;
-  margin-left: 10px;
+input:focus,
+select:focus {
+  border-color: #74777b; /* Border color on focus */
+  box-shadow: 0 0 5px rgba(112, 113, 115, 0.3); /* Slight glow on focus */
+  outline: none; /* Remove default outline */
 }
 
 .selectField {
@@ -239,7 +237,10 @@ select {
   /* Ensure full width for dropdown */
   padding: 10px;
   margin-bottom: 10px;
+  border: 2px solid #74777b; /* Enhanced border visibility */
+  border-radius: 5px;
   box-sizing: border-box;
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition effect for focus */
 }
 
 .noMenteesMessage {
@@ -254,3 +255,4 @@ select {
   justify-content: space-between;
   margin-top: 20px;
 }
+

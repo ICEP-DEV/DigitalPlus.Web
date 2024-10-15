@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './AdminDashboard.module.css'; // Import as a module
-import { Link, Route, Routes } from 'react-router-dom';
+import { NavLink, Route, Routes } from 'react-router-dom';
 import DashboardContent from './DashboardContent';
 import MentorsContent from '../Admin/MentorsContent';
 import MenteesContent from './MenteesContent';
@@ -42,6 +42,9 @@ const AdminDashboard = () => {
             {adminEmail && <span className={styles.adminEmail}>{adminEmail}</span>} {/* Display the admin email */}
           </div>
         </div>
+        <NavLink to="/admin-dashboard/logout" className={styles.logoutButton}>
+          <FaSignOutAlt /> Logout
+        </NavLink>
       </header>
 
       <div className={styles.adminDashboard}>
@@ -52,60 +55,70 @@ const AdminDashboard = () => {
           </button>
           <ul>
             <li>
-              <Link to="/admin-dashboard/dashboard" className={styles.sidebarItem}>
+              <NavLink 
+                to="/admin-dashboard/dashboard" 
+                className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
                 <FaHome />
                 {isOpen && <span>Dashboard</span>}
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/admin-dashboard/mentors" className={styles.sidebarItem}>
+              <NavLink 
+                to="/admin-dashboard/mentors" 
+                className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
                 <FaUserFriends />
                 {isOpen && <span>Mentors</span>}
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/admin-dashboard/mentees" className={styles.sidebarItem}>
+              <NavLink 
+                to="/admin-dashboard/mentees" 
+                className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
                 <FaUserFriends />
                 {isOpen && <span>Mentees</span>}
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/admin-dashboard/reports" className={styles.sidebarItem}>
+              <NavLink 
+                to="/admin-dashboard/reports" 
+                className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
                 <FaUserFriends />
                 {isOpen && <span>Reports</span>}
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/admin-dashboard/Schedule" className={styles.sidebarItem}>
+              <NavLink 
+                to="/admin-dashboard/schedule" 
+                className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
                 <FaUserFriends />
                 {isOpen && <span>Schedule</span>}
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/admin-dashboard/complains" className={styles.sidebarItem}>
+              <NavLink 
+                to="/admin-dashboard/complains" 
+                className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
                 <FaEnvelope />
                 {isOpen && <span>Complains</span>}
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/admin-dashboard/modules" className={styles.sidebarItem}>
+              <NavLink 
+                to="/admin-dashboard/modules" 
+                className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
                 <FaBook />
                 {isOpen && <span>Modules</span>}
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/admin-dashboard/settings" className={styles.sidebarItem}>
+              <NavLink 
+                to="/admin-dashboard/settings" 
+                className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
                 <FaCog />
                 {isOpen && <span>Settings</span>}
-              </Link>
+              </NavLink>
             </li>
           </ul>
-          <div className={styles.sidebarLogout}>
-            <Link to="/admin-dashboard/logout" className={styles.sidebarItem}>
-              <FaSignOutAlt />
-              {isOpen && <span>Logout</span>}
-            </Link>
-          </div>
         </nav>
 
         {/* Main content */}

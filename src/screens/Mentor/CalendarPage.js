@@ -12,61 +12,50 @@ const CalenderPage = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    const dummyData = [
-      {
-        name: 'John',
-        surname: 'Doe',
-        date: '2024-10-09',
-        time: '10:10 AM',
-        sessionType: 'Online',
-        module: 'PPAFO5D',
-      },
-      {
-        name: 'Jane',
-        surname: 'Smith',
-        date: '2024-10-08',
-        time: '02:30 PM',
-        sessionType: 'In-person',
-        module: 'ITMAF5H',
-      },
-      {
-        name: 'Alice',
-        surname: 'Johnson',
-        date: '2024-10-07',
-        time: '11:00 AM',
-        sessionType: 'Online',
-        module: 'DBADF4B',
-      },
-    ];
+    // Fetch data from the API
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllAppointments');
+        const data = await response.json();
 
-    const formattedEvents = dummyData.map(event => ({
-      title: `${event.name} ${event.surname} (${event.module})`,
-      start: new Date(`${event.date} ${event.time}`),
-      end: new Date(`${event.date} ${moment(event.time, 'h:mm A').add(1, 'hours').format('hh:mm A')}`),
-      allDay: false,
-    }));
+        if (data.success) {
+          const formattedEvents = data.result.map(event => ({
+            title: `${event.fullNames} (Module ${event.module_code})`,
+            start: new Date(event.dateTime),
+            end: new Date(moment(event.dateTime).add(1, 'hours').format()), // Adds 1 hour for end time
+            allDay: false,
+          }));
 
-    setEvents(formattedEvents);
+          setEvents(formattedEvents);
+        } else {
+          console.error('Failed to fetch appointments:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
     <>
-    <div className={styles.container}>
+      <div className={styles.container}>
         <NavBar />
         <SideBar />
 
-
         <div className={styles.calendarContainer}>
-        <Calendar
+          <h1>Mentor calendar</h1>
+          <Calendar
             localizer={localizer}
             events={events}
             startAccessor="start"
             endAccessor="end"
             toolbar={false}
             style={{ height: '70vh' }}
-        />
+          />
         </div>
-    </div>
+      </div>
     </>
   );
 };

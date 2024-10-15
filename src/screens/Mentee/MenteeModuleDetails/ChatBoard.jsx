@@ -125,87 +125,79 @@ const ChatBoard = () => {
     const fileExtension = fileName.split('.').pop().toLowerCase();
     switch (fileExtension) {
       case 'pdf':
-        return <FaFilePdf className={styles.fileIcon} />;
+        return <FaFilePdf className={styles.chatBoardFileIcon} />;
       default:
-        return <FaFileAlt className={styles.fileIcon} />;
+        return <FaFileAlt className={styles.chatBoardFileIcon} />;
     }
   };
 
   return (
     <div className={styles.chatBoard}>
-      <div className={styles.chatSidebar}>
-        <ul>
-          {activeUsers.map((user) => (
-            <li key={user.id} className={user.online ? styles.online : styles.offline}>
-              {user.name} ({user.role}) {user.online ? '(Online)' : '(Offline)'}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className={styles.chatMain}>
-        <div className={styles.chatHeader}>
+    
+      <div className={styles.chatBoardMain}>
+        <div className={styles.chatBoardHeader}>
           <h2>{moduleId ? moduleId.replace(/[^a-zA-Z ]/g, " ").trim() : "Chat Board"}</h2>
         </div>
-        <div className={styles.chatMessages}>
+        <div className={styles.chatBoardMessages}>
           {messages.map((message) => (
-            <div key={message.id} className={`${styles.messageItem} ${message.senderId === currentUser.id ? styles.sent : styles.received}`}>
-              <div className={styles.senderInfo}>
-                <span className={styles.senderName}>{message.sender} ({message.role})</span>
-                <span className={styles.timestamp}>{message.timestamp}</span>
+            <div key={message.id} className={`${styles.chatBoardMessageItem} ${message.senderId === currentUser.id ? styles.chatBoardSent : styles.chatBoardReceived}`}>
+              <div className={styles.chatBoardSenderInfo}>
+                <span className={styles.chatBoardSenderName}>{message.sender} ({message.role})</span>
+                <span className={styles.chatBoardTimestamp}>{message.timestamp}</span>
               </div>
               {message.replyTo && (
-                <div className={styles.replyTo}>
-                  <span className={styles.replySender}>{message.replyTo.sender}:</span> {message.replyTo.text || 'Attachment'}
+                <div className={styles.chatBoardReplyTo}>
+                  <span className={styles.chatBoardReplySender}>{message.replyTo.sender}:</span> {message.replyTo.text || 'Attachment'}
                 </div>
               )}
-              <div className={styles.messageText}>
+              <div className={styles.chatBoardMessageText}>
                 <p>{message.text}</p>
                 {message.fileURL && (
-                  <div className={styles.fileAttachment}>
+                  <div className={styles.chatBoardFileAttachment}>
                     {getFileIcon(message.fileName)}
-                    <span className={styles.fileName}>{message.fileName}</span>
-                    <a href={message.fileURL} download={message.fileName} className={styles.downloadButton}>
+                    <span className={styles.chatBoardFileName}>{message.fileName}</span>
+                    <a href={message.fileURL} download={message.fileName} className={styles.chatBoardDownloadButton}>
                       <FaDownload /> Download
                     </a>
                   </div>
                 )}
-                <div className={styles.messageActions}>
-                  <FaReply className={styles.replyIcon} onClick={() => handleReply(message)} />
+                <div className={styles.chatBoardMessageActions}>
+                  <FaReply className={styles.chatBoardReplyIcon} onClick={() => handleReply(message)} />
                   {message.senderId === currentUser.id && (
                     <>
-                      <FaEdit className={styles.editIcon} onClick={() => handleEditMessage(message)} />
-                      <FaTrash className={styles.deleteIcon} onClick={() => handleDeleteMessage(message.id)} />
+                      <FaEdit className={styles.chatBoardEditIcon} onClick={() => handleEditMessage(message)} />
+                      <FaTrash className={styles.chatBoardDeleteIcon} onClick={() => handleDeleteMessage(message.id)} />
                     </>
                   )}
                 </div>
               </div>
             </div>
           ))}
-          {isTyping && <div className={styles.typingIndicator}>Someone is typing...</div>}
+          {isTyping && <div className={styles.chatBoardTypingIndicator}>Someone is typing...</div>}
         </div>
-        <div className={styles.chatInputArea}>
+        <div className={styles.chatBoardInputArea}>
           {replyTo && (
-            <div className={styles.replyBox}>
+            <div className={styles.chatBoardReplyBox}>
               <span>Replying to: {replyTo.sender} - {replyTo.text || 'Attachment'}</span>
-              <FaTimes className={styles.cancelReplyIcon} onClick={handleCancelReply} />
+              <FaTimes className={styles.chatBoardCancelReplyIcon} onClick={handleCancelReply} />
             </div>
           )}
           {file && (
-            <div className={styles.filePreviewBox}>
-              <div className={styles.filePreviewContent}>
+            <div className={styles.chatBoardFilePreviewBox}>
+              <div className={styles.chatBoardFilePreviewContent}>
                 <span>File ready to send: </span>
                 <p>{file.name}</p>
               </div>
-              <FaTimes className={styles.cancelFileIcon} onClick={handleCancelFile} />
+              <FaTimes className={styles.chatBoardCancelFileIcon} onClick={handleCancelFile} />
             </div>
           )}
-          <div className={styles.inputRow}>
-            <textarea
+          <div className={styles.chatBoardInputRow}>
+            <textarea className={styles.chatBoardTextArea}
               value={newMessage}
               onChange={handleTyping}
               placeholder="Type a message..."
             />
-            <label htmlFor="file-upload" className={styles.fileUploadIcon}>
+            <label htmlFor="file-upload" className={styles.chatBoardFileUploadIcon}>
               <FaPaperclip />
             </label>
             <input
@@ -214,7 +206,7 @@ const ChatBoard = () => {
               style={{ display: 'none' }}
               onChange={handleFileUpload}
             />
-            <button onClick={handleSendMessage}>
+            <button className={styles.chatBoardButton} onClick={handleSendMessage}>
               <FaPaperPlane />
             </button>
           </div>
