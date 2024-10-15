@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Link } from 'react-router-dom'; // Import Link for navigation
 import styles from './ProfilePage.module.css';
 import defaultProfilePicture from '../../Assets/profile.jpeg'; // Default profile picture
@@ -6,18 +6,31 @@ import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const ProfilePage = () => {
   const [profilePicture, setProfilePicture] = useState(defaultProfilePicture); // State for profile picture
+  const [userData, setUserData] = useState('');
+//  const [department, setDepartment]=useState('');
 
-  // Replace these with actual data from your state or API
-  const user = {
-    name: 'Nobuhle',
-    surname: 'Mkhize',
-    email: '221418714@tut4life.ac.za',
-    yearofstudy: '1st Year',
-    contact: '0637234846',
-    modules: ['PPAF05D', 'COHF05D', 'CFBF05D'],
-    course: 'MULTIMEDIA COMPUTING',
-  };
-
+ 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user')); // Retrieve user data from localStorage
+    if (user && user.departmentId && user.studentEmail && user.firstName && user.lastName && user.contactNo && user.semester) {
+      setUserData(user)  ; // Set admin email from the API response
+    }
+    
+    // const fetchDepartment = async () => {
+    //   try{
+    //     const response = await fetch(`https://localhost:7163/api/DigitalPlusCrud/GetDepartment/${userData.departmentId}`,{
+    //       method:'GET',
+    //     });
+    //     const depRes=await response.json();
+    //     setDepartment(depRes.department_Name);
+    //     console.log(depRes.department_Name);
+    //   }catch(err){
+    //     console.log('Error fetching the department: ', err);
+    //   }
+    // };
+  
+    // fetchDepartment();
+  }, []);
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -29,6 +42,9 @@ const ProfilePage = () => {
     }
   };
 
+  
+
+  
   return (
     <SideBarNavBar>
       <div className={styles.pageContainer}>
@@ -39,7 +55,9 @@ const ProfilePage = () => {
             alt="Profile" 
             className={styles.profilePicture} 
           />
-          <h3 className={styles.courseName}>{user.course}</h3>
+          <h3 className={styles.courseName}>
+          Computer Science
+          </h3>
           {/* Image upload input */}
           <input 
             type="file" 
@@ -54,12 +72,28 @@ const ProfilePage = () => {
           {/* Left: Personal Details */}
           <div className={styles.leftSection}>
             <div className={styles.personalDetails}>
-              <h2>Personal Details</h2>
-              <p><strong>First Name:</strong> {user.name}</p>
-              <p><strong>Last Name:</strong> {user.surname}</p>
-              <p><strong>Student Email:</strong> {user.email}</p>
-              <p><strong>Year of Study:</strong> {user.yearofstudy}</p>
-              <p><strong>Contact:</strong> {user.contact}</p>
+            <div className="profile-details">
+          <div className="detail-group">
+            <label>FIRSTNAME:</label>
+            <input type="text" value={userData.firstName}   readOnly />
+          </div>
+          <div className="detail-group">
+            <label>LASTNAME:</label>
+            <input type="text" value={userData.lastName}   readOnly />
+          </div>
+          <div className="detail-group">
+            <label>STUDENT EMAIL:</label>
+            <input type="text" value={userData.studentEmail}   readOnly />
+          </div>
+          <div className="detail-group">
+            <label>YEAR OF STUDY:</label>
+            <input type="text" value={userData.semester}   readOnly />
+          </div>
+          <div className="detail-group">
+            <label>CONTACT:</label>
+            <input type="text" value={userData.contactNo}   readOnly />
+          </div>
+        </div>
 
               {/* Add Edit Button */}
               <Link to="/settings" className={styles.editButton}>
@@ -72,11 +106,11 @@ const ProfilePage = () => {
           <div className={styles.rightSection}>
             <div className={styles.moduleDetails}>
               <h2>Registered Modules</h2>
-              <ul>
+              {/* <ul>
                 {user.modules.map((module, index) => (
                   <li key={index}>{module}</li>
                 ))}
-              </ul>
+              </ul> */}
             </div>
           </div>
         </div>
