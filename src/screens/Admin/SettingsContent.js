@@ -4,9 +4,12 @@ import html2canvas from "html2canvas";
 import styles from "./SettingsContent.module.css";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import { CiEdit, CiSaveDown2 } from "react-icons/ci";
+import { CiEdit } from "react-icons/ci";
 import { ImProfile } from "react-icons/im";
 import { FaCog } from 'react-icons/fa';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { Save, Update } from '@mui/icons-material';
+
 
 
 const Settings = () => {
@@ -23,6 +26,10 @@ const Settings = () => {
     departmentId: "",
     adminId: "",
   });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
 
   // Fetch user data from localStorage on component mount
   useEffect(() => {
@@ -37,12 +44,12 @@ const Settings = () => {
   };
 
   const handleEditAdmin = async () => {
-    try {
-      if (!adminForm.adminId) {
-        console.error("Admin_Id is null or undefined");
-        return;
-      }
+    if (!adminForm.adminId) {
+      console.error("Admin_Id is null or undefined");
+      return;
+    }
 
+    try {
       const updatedAdmin = {
         adminId: adminForm.adminId,
         firstName: adminForm.firstName,
@@ -53,7 +60,7 @@ const Settings = () => {
         departmentId: adminForm.departmentId,
       };
 
-      const response = await axios.put(
+      await axios.put(
         `https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${adminForm.adminId}`,
         updatedAdmin,
         {
@@ -64,20 +71,20 @@ const Settings = () => {
       );
 
       // eslint-disable-next-line no-const-assign
-      updatedAdmin = admin.map((admin) =>
+       updatedAdmin = admin.map((admin) =>
         admin.adminId === adminForm.adminId
           ? { ...admin, ...updatedAdmin }
           : admin
       );
       setAdmin(updatedAdmin);
-
+      setIsDialogOpen(false)
       toast.success("Admin updated successfully!");
     } catch (error) {
       console.error(
-        "Error updating mentor:",
+        "Error updating Admin:",
         error.response ? error.response.data : error.message
       );
-      toast.error("Failed to update mentor. Please try again.");
+      toast.error("Failed to update Admin. Please try again.");
     }
   };
 
@@ -93,6 +100,20 @@ const Settings = () => {
 
   const toggleEdit = (field) => {
     setEditForm((prevState) => ({ ...prevState, [field]: !prevState[field] }));
+  };
+
+  const openEditAdminDialog = (admin) => {
+    setAdmin(admin);
+    setIsEditing(true);
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   // If user data is not available yet, return null or a loading state
@@ -115,10 +136,9 @@ const Settings = () => {
                 <input
                   type="text"
                   value={`${user.firstName}`}
-                  onChange={(e) => handleEditAdmin("firstName", e.target.value)}
+                  // onChange={(e) => toggleEdit('firstName', e.target.value)}
                   disabled={!adminForm.firstName}
                 />
-                <button className={styles.editBtn} onClick={() => toggleEdit("firstName")}> <CiEdit /> Edit</button>
               </div>
 
               <div className={styles.inputGroup}>
@@ -126,13 +146,9 @@ const Settings = () => {
                 <input
                   type="text"
                   value={`${user.lastName}`}
-                  onChange={(e) => handleFormChange("lastName", e.target.value)}
+                  onChange={(e) => handleFormChange('lastName', e.target.value)}
                   disabled={!adminForm.lastName}
                 />
-                <button className={styles.editBtn} onClick={() => toggleEdit("lastName")}>
-                  {" "}
-                  <CiEdit /> Edit
-                </button>
               </div>
 
               <div className={styles.inputGroup}>
@@ -140,10 +156,9 @@ const Settings = () => {
                 <input
                   type="email"
                   value={`${user.email}`}
-                  onChange={(e) => handleFormChange("email", e.target.value)}
+                  onChange={(e) => handleFormChange('email', e.target.value)}
                   disabled={!adminForm.email}
                 />
-                <button className={styles.editBtn} onClick={() => toggleEdit("email")}> <CiEdit /> Edit</button>
               </div>
 
               <div className={styles.inputGroup}>
@@ -151,10 +166,9 @@ const Settings = () => {
                 <input
                   type="text"
                   value={`${user.contactNo}`}
-                  onChange={(e) => handleFormChange("contact", e.target.value)}
+                  onChange={(e) => handleFormChange('contact', e.target.value)}
                   disabled={!adminForm.contact}
                 />
-                <button className={styles.editBtn} onClick={() => toggleEdit("contact")}> <CiEdit /> Edit</button>
               </div>
 
               <div className={styles.inputGroup}>
@@ -163,11 +177,10 @@ const Settings = () => {
                   type="text"
                   value={`${user.departmentId}`}
                   onChange={(e) =>
-                    handleFormChange("department", e.target.value)
+                    handleFormChange('department', e.target.value)
                   }
                   disabled={!adminForm.contact}
                 />
-                <button className={styles.editBtn} onClick={() => toggleEdit("department")}> <CiEdit /> Edit</button>
               </div>
 
               <div className={styles.inputGroup}>
@@ -175,16 +188,95 @@ const Settings = () => {
                 <input
                   type="password"
                   value={`${user.password}`}
-                  onChange={(e) => handleFormChange("password", e.target.value)}
+                  onChange={(e) => handleFormChange('password', e.target.value)}
                   disabled={!adminForm.password}
                 />
-                <button className={styles.editBtn} onClick={(e) => toggleEdit("password")}> <CiEdit /> Edit</button>
               </div>
-              <button className={styles.save}> <CiSaveDown2 /> Save</button>
+
+              <button className={styles.save} onClick={() => openEditAdminDialog(admin)}> <CiEdit /> Edit</button>
+
             </div>
           </div>
         )}
       </div>
+
+      {/* Dialog for Adding/Editing Mentor */}
+      <Dialog
+        open={isDialogOpen}
+        onClose={(event, reason) => {
+          if (reason !== 'backdropClick') {
+            closeDialog();
+          }
+        }}
+        disableEscapeKeyDown
+      >
+        <DialogTitle>{isEditing ? 'Edit Admin' : 'Add Mentor'}</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="First Name"
+            value={`${user.firstName}`}
+            onChange={(e) => handleEditAdmin('firstName', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Last Name"
+            value={`${user.lastName}`}
+            onChange={(e) => handleEditAdmin('lastName', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Personal Email"
+            value={`${user.email}`}
+            onChange={(e) => handleEditAdmin('email', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Contact No"
+            value={`${user.contactNo}`}
+            onChange={(e) => handleEditAdmin('contactNo', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Department"
+            value={`${user.departmentId}`}
+            onChange={(e) => handleEditAdmin('department', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            value={`${user.password}`}
+            onChange={(e) => handleEditAdmin('password', e.target.value)}
+            fullWidth
+            margin="normal"
+            required
+          />
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog} color="secondary" sx={{ color: 'black' }}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={isEditing ? handleEditAdmin : handleFormChange} 
+            startIcon={isEditing ? <Update /> : <Save />} 
+            color="primary" 
+            sx={{ color: 'black' }} // Black text color
+          >
+            {isEditing ? 'Update Admin' : 'Save'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

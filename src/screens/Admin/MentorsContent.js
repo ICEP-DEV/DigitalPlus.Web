@@ -5,6 +5,8 @@ import { Add, Save, Update, ManageAccounts, Delete } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
+import { SiCodementor } from "react-icons/si";
+
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
@@ -276,6 +278,7 @@ const MentorsContent = () => {
 
   return (
     <div className={styles.mentorsContainer}>
+      <h2> <SiCodementor /> MENTORS</h2>
       <ToastContainer />
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
