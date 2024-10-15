@@ -13,14 +13,14 @@ import RosterPage from './screens/Mentor/RosterPage';
 import SignUp from './screens/Register/SignUp.js';
 import AnnouncementPage from './screens/Mentor/AnnouncementPage';
 import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
-// import SignUp from './screens/Register/SignUp.js';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import RosterPage2 from './screens/Mentee/RosterPage2.jsx';
 import AnnouncementPage2 from './screens/Mentee/AnnouncementPage2.jsx';
-import AnnouncePage from './screens/Landing/AnnouncePage.jsx'
+import AnnouncePage from './screens/Landing/AnnouncePage.jsx';
 import RosterPg from './screens/Landing/RosterPg.jsx';
+import CreateNewAnnouncement from './screens/Admin/CreateNewAnnouncement'; // Import the new component
 
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const App = () => {
   return (
@@ -39,9 +39,11 @@ const App = () => {
         <Route path="/AnnouncementPage2" element={<AnnouncementPage2 />} />
         <Route path="/roster" element={<RosterPage />} />
         <Route path="/roster2" element={<RosterPage2 />} />
-        <Route path="/SignUp" element={<SignUp />} />
         <Route path="/AnnouncePage" element={<AnnouncePage />} />
         <Route path="/RosterPg" element={<RosterPg />} />
+
+        {/* Route for Create New Announcement */}
+        <Route path="/create-new-announcement" element={<CreateNewAnnouncement />} />
 
         {/* Nested routing for the Admin, Mentor, and Mentee Dashboards */}
         <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
