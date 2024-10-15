@@ -1,8 +1,7 @@
-import { useState } from 'react';  // Import useState for managing state
+import { useState } from 'react';  
 import NavBar from './MenteeModuleDetails/NavBar';
 import SideBar from './MenteeModuleDetails/SideBar';
-// Import the MenteeDmPage component
-import styles from './MenteeModuleDetails.module.css'; // Import the CSS module
+import styles from './MenteeModuleDetails.module.css'; 
 import MenteeModulePage from './MenteeModulePage';
 import MentorsPage from './MenteeModuleDetails/MentorsPage';
 import DMComponent from './MenteeModuleDetails/DMComponent';
@@ -10,7 +9,8 @@ import QuizPage from  './MenteeModuleDetails/QuizPage';
 import ChatBoard from './MenteeModuleDetails/ChatBoard';
 
 function App() {
-  const [activePage, setActivePage] = useState('chat');  // Default page is ChatPage (LIVE CHAT)
+  // Set the default page to 'quizz' so the QuizPage is loaded first
+  const [activePage, setActivePage] = useState('quizz');  
 
   return (
     <div className={styles.appC}>
@@ -18,10 +18,10 @@ function App() {
       <div className={styles.content}>
         <SideBar setActivePage={setActivePage} />
         <div className={styles.mainContent}>
-        
-          {activePage === 'quizz' && <QuizPage  />}
+          {/* Default page is QuizPage, and other pages will load based on activePage */}
+          {activePage === 'quizz' && <QuizPage />}
           {activePage === 'mentorslist' && <MentorsPage />}
-          {activePage === 'chatboard' && <ChatBoard />}  {/* Correct capitalization */}
+          {activePage === 'chatboard' && <ChatBoard />}
           {activePage === 'mentordm' && <DMComponent />}
           {activePage === 'back' && <MenteeModulePage />}
         </div>

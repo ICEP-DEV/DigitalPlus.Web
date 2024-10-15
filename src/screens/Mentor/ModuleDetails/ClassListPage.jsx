@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './ClassListPage.module.css'; // Import the CSS module
+import { useParams } from 'react-router-dom'; 
 
 const students = [
     { studentNumber: '22145553', name: 'Sifiso Vinjwa', course: 'Computer Science' },
@@ -9,6 +10,8 @@ const students = [
 ];
 
 const ClassListPage = () => {
+    const { moduleId } = useParams();  // Get moduleId from URL parameters
+    
     const handleMessageClick = (studentName) => {
         alert(`Message sent to ${studentName}`);
         // Logic for messaging
@@ -16,7 +19,7 @@ const ClassListPage = () => {
 
     return (
         <div className={styles.container}>
-            <h1>List of Students Enrolled for PPAF 216D</h1>
+            <h1>List of Students enrolled for {moduleId}</h1> {/* Display moduleId dynamically */}
             <div className={styles.tableContainer}>
                 <div className={styles.tableWrapper}>
                     <table className={styles.table}>

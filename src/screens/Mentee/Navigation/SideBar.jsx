@@ -29,6 +29,12 @@ function SideBar() {
           {!isCollapsed && <span>HOME</span>}
         </div>
 
+        {/* New VIEW ROSTER item */}
+        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/roster')}>
+          <IoListOutline className={styles.icon} />
+          {!isCollapsed && <span>ROSTER</span>}
+        </div>
+
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/modules')}>
           <MdMenuBook className={styles.icon} />
           {!isCollapsed && <span>MODULES</span>}
@@ -48,7 +54,7 @@ function SideBar() {
         {/* New FEEDBACK item */}
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/feedback')}>
           <MdFeedback className={styles.icon} />
-          {!isCollapsed && <span>FEEDBACK</span>}
+          {!isCollapsed && <span>COMPLAIN</span>}
         </div>
 
         {/* New USE AI item */}
@@ -58,11 +64,7 @@ function SideBar() {
         </div>
 
         
-        {/* New VIEW ROSTER item */}
-        <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/roster')}>
-          <IoListOutline className={styles.icon} />
-          {!isCollapsed && <span>ROSTER</span>}
-        </div>
+        
 
         <div className={styles.navItem} onClick={() => navigate('/mentee-dashboard/settings')}>
           <IoSettingsSharp className={styles.icon} />

@@ -4,7 +4,6 @@
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
-    /* Prevent scrolling on the entire dashboard */
 }
 
 /* Header styles */
@@ -12,6 +11,7 @@
     background-color: #0a1f44;
     padding: 20px 30px;
     display: flex;
+    justify-content: space-between; /* Adjust space between admin info and logout button */
     align-items: center;
     color: white;
     font-size: 20px;
@@ -30,11 +30,31 @@
     margin-right: 15px;
 }
 
+/* Logout button styling */
+.logoutButton {
+    background-color: transparent;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.logoutButton:hover {
+    color: #ff3b30;
+}
+
+.logoutButton svg {
+    margin-right: 8px;
+}
+
 /* Sidebar styles */
 .adminDashboard {
     display: flex;
     height: calc(100vh - 80px);
-    /* Full height minus header and gap */
 }
 
 .sidebar {
@@ -44,7 +64,6 @@
     transition: width 0.3s ease;
     padding-top: 10px;
     overflow-y: auto;
-    /* Enable vertical scrolling */
 }
 
 .sidebarOpen {
@@ -86,6 +105,13 @@
     display: none;
 }
 
+/* Active sidebar item styling */
+.active {
+    background-color: #1871a5;
+    color: #fff;
+    border-left: 5px solid #ffffff;
+}
+
 /* Toggle button */
 .toggleButton {
     background: none;
@@ -98,25 +124,17 @@
     align-self: flex-start;
 }
 
-/* Logout section */
-.sidebarLogout {
-    padding: 15px 20px;
-}
-
 /* Main content area */
 .dashboardContent {
     flex-grow: 1;
     background-color: #e0e0e0;
     padding: 30px;
     overflow-y: auto;
-    /* Enable vertical scrolling */
     height: calc(100vh - 80px);
-    /* Full height minus the header */
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
 
-/* MentorsContent specific styling to avoid scrolling */
 .mentorsContainer {
     padding: 30px;
     display: flex;
@@ -125,14 +143,6 @@
     background-color: #f0f0f0;
     height: calc(100vh - 80px);
     overflow-y: auto;
-    /* Allow vertical scrolling for mentors content */
-}
-
-/* General adjustments for better spacing */
-.adminInfo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .adminText {

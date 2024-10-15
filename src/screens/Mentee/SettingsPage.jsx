@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import styles from './SettingsPage.module.css';  // Import the module.css file
 import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('changePassword'); // Default to 'Change Password'
   const [isEditing, setIsEditing] = useState(false); // State to toggle between view and edit mode
-  const [formData, setFormData] = useState({
-    firstName: 'Jonathan',
-    lastName: 'Wick',
-    email: '222870097@tut4life.com',
-    contact: '0780275153',
-    yearOfStudy: '3',
-  });
+  const [userData, setUserData] = useState('');
 
+
+  useEffect(() =>{
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.departmentId && user.studentEmail && user.firstName && user.lastName && user.contactNo && user.semester) {
+      setUserData(user)  ; // Set admin email from the API response
+    }
+  },[]);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setUserData({ ...userData, [name]: value });
   };
 
   const handleEdit = () => {
@@ -58,7 +59,7 @@ const Settings = () => {
                   <input
                     type="text"
                     name="firstName"
-                    value={formData.firstName}
+                    value={userData.firstName}
                     onChange={handleChange}
                     disabled={!isEditing}
                   />
@@ -69,7 +70,7 @@ const Settings = () => {
                   <input
                     type="text"
                     name="lastName"
-                    value={formData.lastName}
+                    value={userData.lastName}
                     onChange={handleChange}
                     disabled={!isEditing}
                   />
@@ -80,7 +81,7 @@ const Settings = () => {
                   <input
                     type="email"
                     name="email"
-                    value={formData.email}
+                    value={userData.studentEmail}
                     onChange={handleChange}
                     disabled={!isEditing}
                   />
@@ -91,7 +92,7 @@ const Settings = () => {
                   <input
                     type="text"
                     name="contact"
-                    value={formData.contact}
+                    value={userData.contactNo}
                     onChange={handleChange}
                     disabled={!isEditing}
                   />
@@ -102,7 +103,7 @@ const Settings = () => {
                   <input
                     type="text"
                     name="yearOfStudy"
-                    value={formData.yearOfStudy}
+                    value={userData.semester}
                     onChange={handleChange}
                     disabled={!isEditing}
                   />
@@ -116,12 +117,13 @@ const Settings = () => {
                     onChange={handleChange}
                     disabled={!isEditing} // Make it editable only when isEditing is true
                   >
-                    <option value="">Select a department</option>
-                    <option value="IT">IT</option>
-                    <option value="HR">Human Resources</option>
-                    <option value="Finance">Finance</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Sales">Sales</option>
+                    <option value="">Select Department</option>
+                    <option value="1">Computer Science</option>
+                    <option value="2">Multimedia</option>
+                    <option value="3">Informations</option>
+                    <option value="4">Computer systems Engineering</option>
+                    <option value="5">Information Technology</option>
+                    
                   </select>
                 </div>
 
