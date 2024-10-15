@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 /* Root Variables */
 :root {
     --chatBoard-primary-color: #0d1431;
@@ -17,6 +19,7 @@
     --chatBoard-reply-bar-color: #007bff;
     --chatBoard-delete-color: #ff6347; /* Tomato color */
 }
+>>>>>>> ec32dfbdd1e52ee1f48cf3a23069786eaa4391de
 
 /* Chat container layout */
 .chatBoard {
