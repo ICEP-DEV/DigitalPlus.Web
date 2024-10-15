@@ -124,18 +124,59 @@ const ComplainsContent = () => {
         </tbody>
       </table>
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Confirm Status Change</DialogTitle>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            padding: '20px',
+            borderRadius: '10px',
+            backgroundColor: '#f0f4f7', // Soft background color
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+          },
+        }}
+      >
+        <DialogTitle sx={{ color: '#1976d2', fontWeight: 'bold' }}>
+          Confirm Status Change
+        </DialogTitle>
+
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to change the status of this complaint to {selectedComplaint?.action === 1 ? 'Unresolved' : 'Resolved'}?
+          <DialogContentText sx={{ color: '#333', fontSize: '16px', fontWeight: '500' }}>
+            Are you sure you want to change the status of this complaint to
+            <strong>{selectedComplaint?.action === 1 ? ' Unresolved' : ' Resolved'}</strong>?
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">No</Button>
-          <Button onClick={handleStatusChange} color="primary" autoFocus>Yes</Button>
+
+        <DialogActions sx={{ padding: '16px' }}>
+          <Button
+            onClick={handleClose}
+            sx={{
+              color: '#fff',
+              backgroundColor: '#6c757d',
+              '&:hover': {
+                backgroundColor: '#5a6268',
+              },
+            }}
+          >
+            No
+          </Button>
+
+          <Button
+            onClick={handleStatusChange}
+            sx={{
+              color: '#fff',
+              backgroundColor: '#1976d2',
+              '&:hover': {
+                backgroundColor: '#1565c0',
+              },
+            }}
+            autoFocus
+          >
+            Yes
+          </Button>
         </DialogActions>
       </Dialog>
+
     </div>
   );
 };
