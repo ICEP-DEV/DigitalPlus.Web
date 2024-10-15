@@ -99,7 +99,7 @@ const DashboardContent = () => {
     <div className={styles.dashboardContainer}>
       {/* Announcement Section */}
       <div className={styles.announcementContainer}>
-        <h3 className={styles.announcementLabel}>Announcement</h3>
+        <h3 className={styles.announcementLabel}>Create Announcements</h3>
         <button className={styles.iconButton} onClick={handleAddAnnouncement}>
           <BsPlusCircle size={20} color="#000" />
         </button>
