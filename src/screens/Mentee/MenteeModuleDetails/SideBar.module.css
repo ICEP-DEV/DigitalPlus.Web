@@ -20,6 +20,8 @@
   width: 100%;
   flex-grow: 1;
   padding-left: 10px;
+  border-bottom: none;
+  text-decoration: none;
 }
 
 .menteeNavItem {
@@ -34,25 +36,18 @@
   transition: background-color 0.3s ease;
   text-transform: uppercase;
   font-weight: bold;
-  text-decoration: none !important;
-  border-bottom: none !important;/* Ensure no underline on links */
+  text-decoration: none !important; /* Ensure no underline on links */
+  border-bottom: none !important; /* Remove any borders that might appear as lines */
 }
-
-.menteeNavItem a {
-  text-decoration: none !important;
-  border-bottom: none !important; /* In case there's a border causing the line */
-}
-
 
 .menteeNavItem:hover {
   background-color: lightgray; /* Hover effect consistent with dark theme */
 }
 
 .menteeNavItem span {
-  text-decoration: none !important;
-  border-bottom: none !important;
+  margin-left: 15px;
+  text-decoration: none !important; /* Ensure no underline on span text */
 }
-
 
 .menteeSidebarClosed .menteeNavItem span {
   display: none; /* Hide text when the sidebar is closed */
