@@ -5,7 +5,7 @@ import SideBar from './ModuleDetails/SideBar';
 import styles from './ModuleDetails.module.css'; // Import the CSS module
 import ModulePage from './ModulePage';
 import ClassListPage from './ModuleDetails/ClassListPage';
-import MentorDmPage from './ModuleDetails/MentorDmPage';
+import MentorDMComponent from './ModuleDetails/MentorDMComponent';
 import QuizhiPage from './ModuleDetails/Quiz';  // Correct capitalization
 import RattingPage from './ModuleDetails/DynamicTable';  // Correct capitalization
 
@@ -21,8 +21,8 @@ function App() {
         
           {activePage === 'quizz' && <QuizhiPage  setActivePage={setActivePage} />}
           {activePage === 'classlist' && <ClassListPage />}
-          {activePage === 'quizhistory' && <MentorDmPage setActivePage={setActivePage}  />}  {/* Correct capitalization */}
-          {activePage === 'mentordm' && <MentorDmPage />}
+          
+          {activePage === 'mentordm' && <MentorDMComponent />}
           {activePage === 'back' && <ModulePage />}
           {activePage === 'ratting' && <RattingPage setActivePage={setActivePage}  />}
         </div>
