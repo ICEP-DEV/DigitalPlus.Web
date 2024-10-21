@@ -22,7 +22,7 @@ function App() {
         
           {activePage === 'quizz' && <QuizhiPage  setActivePage={setActivePage} />}
           {activePage === 'classlist' && <ClassListPage />}
-          {activePage === 'quizhistory' && <MentorChatBoard setActivePage={setActivePage}  />}  {/* Correct capitalization */}
+          {activePage === 'chatboard' && <MentorChatBoard setActivePage={setActivePage}  />}  
           {activePage === 'mentordm' && <MentorDMComponent />}
           {activePage === 'back' && <ModulePage />}
           {activePage === 'ratting' && <RattingPage setActivePage={setActivePage}  />}
