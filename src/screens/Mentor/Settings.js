@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';  // Import toast styles
 import Header from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar'; 
 import styles from './settings.module.css'; // Import the CSS module
@@ -42,13 +44,14 @@ const Settings = () => {
                     studentEmail: mentorData.studentEmail,
                     personalEmail: mentorData.personalEmail,
                     contactNo: mentorData.contactNo,
-                    password: mentorData.password, // We do not fetch or display the password for security reasons
+                    password: mentorData.password,
                     activated: !!mentorData.activated,
                     available: mentorData.available,
                     module: mentorData.module,
                     lab: mentorData.lab
                 });
             } catch (error) {
+                toast.error('Error fetching mentor details');
                 console.error('Error fetching mentor details:', error);
             }
         };
@@ -68,41 +71,56 @@ const Settings = () => {
     // Handle form submission for password change
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Basic validation: Check if new password matches confirm password
         if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-            alert('New password and confirm password do not match');
+            toast.error('New password and confirm password do not match');
             return;
         }
 
         try {
+            const updatedMentorData = {
+                ...mentorForm, // Include all the existing mentor details
+                password: passwordForm.newPassword // Only change the password
+            };
+
             const response = await axios.put(
-                `https://localhost:7163/api/DigitalPlusUser/UpdatePassword/1`, 
-                {
-                    currentPassword: passwordForm.currentPassword,
-                    newPassword: passwordForm.newPassword
-                }
+                'https://localhost:7163/api/DigitalPlusUser/UpdateMentor/1',
+                updatedMentorData
             );
-            
+
             if (response.status === 200) {
-                alert('Password updated successfully');
+                toast.success('Password updated successfully', {
+                    position: 'top-right'
+                });
+                // Optionally clear the form after successful update
+                setPasswordForm({
+                    currentPassword: '',
+                    newPassword: '',
+                    confirmPassword: ''
+                });
             } else {
-                alert('Failed to update password');
+                toast.error('Failed to update password');
             }
         } catch (error) {
             console.error('Error updating password:', error);
-            alert('Error updating password');
+            toast.error('Error updating password. Please try again.');
         }
-    };    
+    };
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
 
+    
+
     return (
         <div>
             <Header />
             <SideBar />
+             {/* Toast container to show notifications */}
+             <ToastContainer  
+                style={{ zIndex: 10000 }}/>
       
             <div className={styles['settings-container']}>
                 <h1 className={styles['settings-title']}>ACCOUNT SETTINGS</h1>
@@ -235,6 +253,8 @@ const Settings = () => {
                     </form>
                 )}
             </div>
+
+           
         </div>
     );
 };
