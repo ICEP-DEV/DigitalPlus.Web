@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';  // Import useLocation to get state
 import styles from './QuizPage.module.css'; // Import the CSS module
 import DynamicTable from './DynamicTable';
-import { BsJustify } from 'react-icons/bs';
 
 const QuizPage = () => {
+  const location = useLocation();  // Get the navigation state
+  const moduleId = location.state?.moduleId || "Ongoing Quizz"; // Use moduleId if provided
+
   const questions = [
     "What is the time complexity of a binary search algorithm?",
     "Explain the difference between HTTP and HTTPS.",
@@ -23,6 +26,27 @@ const QuizPage = () => {
   const [answer, setAnswer] = useState('');
   const [showTable, setShowTable] = useState(false);
   const [submittedData, setSubmittedData] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(1800); // 1800 seconds = 30 minutes
+
+  // Handle the countdown timer
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else {
+      alert('Time is up! Please submit your answers.');
+      setShowTable(true); // Show the answers or navigate based on your requirements
+    }
+  }, [timeLeft]);
+
+  // Convert seconds to mm:ss format
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,8 +70,11 @@ const QuizPage = () => {
         <DynamicTable onBack={handleBackToQuiz} submittedData={submittedData} />
       ) : (
         <>
-          
-          <h1>Computer Science Quiz</h1><br/><br/>
+          <h1>{moduleId}</h1>
+          <div style={inlineStyles.timer}>
+            <strong>Time Left: {formatTime(timeLeft)}</strong>
+          </div>
+          <br/><br/>
           <div style={inlineStyles.questionContainer}>
             <h3>{currentQuestion}</h3>
           </div>
@@ -63,11 +90,11 @@ const QuizPage = () => {
               required
             />
             <br />
-            <button type="submit" style={inlineStyles.submitButton}>Submit</button>
+            <button type="submit" style={inlineStyles.quizz_submitButton}>Submit</button>
             <button 
               type="button" 
               onClick={handleViewAnswers} 
-              className={styles.viewButton}  // Use the module's viewButton class
+              className={styles.quizz_viewButton}
             >
               View Answers
             </button>
@@ -75,22 +102,26 @@ const QuizPage = () => {
         </>
       )}
     </div>
-    
   );
 };
 
 const inlineStyles = {
   container: {
-    position: 'relative', // Add this
-    left: '70px', // Add this to move the container 100px to the right
-    top:'44px',
-    marginRight:'10%',
-   width: '80%',
+    position: 'relative',
+    left: '70px',
+    top: '44px',
+    marginRight: '10%',
+    width: '80%',
     textAlign: 'center',
     padding: '20px',
     fontFamily: 'Arial, sans-serif',
     border: 'solid 1px #0d1431',
-    borderRadius:'15px'
+    borderRadius: '15px'
+  },
+  timer: {
+    fontSize: '18px',
+    marginBottom: '10px',
+    color: '#0d1431',
   },
   questionContainer: {
     backgroundColor: '#f9f9f9',
