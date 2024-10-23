@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './CreateNewAnnouncement.module.css'; // Ensure your CSS file exists
-import { BsPlusCircle, BsTrash, BsCheckCircle } from 'react-icons/bs'; // Importing icons
+import { BsPlusCircle, BsTrash, BsCheckCircle, BsXCircleFill } from 'react-icons/bs'; // Importing icons
 
 const CreateNewAnnouncement = ({ isOpen, onClose }) => {
     const [announcementName, setAnnouncementName] = useState('');
@@ -52,6 +52,16 @@ const CreateNewAnnouncement = ({ isOpen, onClose }) => {
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
+                {/* Close Icon */}
+                <div
+                    className={styles.closeButton}
+                    onClick={onClose}
+                    title="Close"
+                    aria-label="Close"
+                >
+                    <BsXCircleFill size={24} color="red" />
+                </div>
+
                 <h2 className={styles.title}>Create New Announcement</h2>
                 <div className={styles.mainContent}>
                     <div className={styles.flexContainer}>
@@ -75,7 +85,8 @@ const CreateNewAnnouncement = ({ isOpen, onClose }) => {
                                             value="one-time"
                                             checked={announcementType === 'one-time'}
                                             onChange={() => setAnnouncementType('one-time')}
-                                        /> One-Time
+                                        />{' '}
+                                        One-Time
                                     </div>
                                     <div className={styles.announcementTypeBox}>
                                         <input
@@ -83,7 +94,8 @@ const CreateNewAnnouncement = ({ isOpen, onClose }) => {
                                             value="recurring"
                                             checked={announcementType === 'recurring'}
                                             onChange={() => setAnnouncementType('recurring')}
-                                        /> Recurring
+                                        />{' '}
+                                        Recurring
                                     </div>
                                     <div className={styles.announcementTypeBox}>
                                         <input
@@ -91,7 +103,8 @@ const CreateNewAnnouncement = ({ isOpen, onClose }) => {
                                             value="drip"
                                             checked={announcementType === 'drip'}
                                             onChange={() => setAnnouncementType('drip')}
-                                        /> Drip
+                                        />{' '}
+                                        Drip
                                     </div>
                                 </div>
                             </label>
@@ -118,7 +131,13 @@ const CreateNewAnnouncement = ({ isOpen, onClose }) => {
                                     <option value="mentors">Mentors</option>
                                     <option value="all">All</option>
                                 </select>
-                                <span role="img" aria-label="icon" className={styles.icon}>👥</span>
+                                <span
+                                    role="img"
+                                    aria-label="icon"
+                                    className={styles.icon}
+                                >
+                                    👥
+                                </span>
                             </label>
                             <label className={styles.label}>
                                 Select a Photo For Your Announcement:
