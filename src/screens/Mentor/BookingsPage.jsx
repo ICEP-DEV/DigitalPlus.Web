@@ -1,36 +1,19 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Header from './Navigation/NavBar';
+import NavBar from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
 import styles from './BookingsPage.module.css';
-import NavBar from './Navigation/NavBar'; // Adjust the path if NavBar is in a different folder
-
+import { useFetchBookings } from './useFetchBookings'; // Import the shared hook
 
 const MentorBookingsPage = () => {
-  const [bookings, setBookings] = useState([
-    {
-      id: 1,
-      name: 'John',
-      surname: 'Doe',
-      date: '2024-09-22',
-      time: '10:10 AM',
-      sessionType: 'Online',
-      module: 'PPAFO5D',
-    },
-    {
-      id: 2,
-      name: 'Jane',
-      surname: 'Smith',
-      date: '2024-09-23',
-      time: '12:00 PM',
-      sessionType: 'Contact',
-      module: 'PPB115D',
-    },
-  ]);
-
+  const { bookings, error } = useFetchBookings();
   const [modalInfo, setModalInfo] = useState({ show: false, action: '', bookingId: null });
   const [reason, setReason] = useState('');
+
+  if (error) {
+    toast.error(error);
+  }
 
   // Handle modal open
   const openModal = (action, id) => {
@@ -66,9 +49,6 @@ const MentorBookingsPage = () => {
         break;
     }
 
-    // Remove the booking from the list after action
-    setBookings(bookings.filter((booking) => booking.id !== bookingId));
-
     closeModal();
   };
 
@@ -76,7 +56,7 @@ const MentorBookingsPage = () => {
     <div className={styles.pageContainer}>
       <NavBar />
       <SideBar />
-      
+
       <div className={styles.contentWrapper}>
         <div className={styles.bookingSection}>
           <h2 className={styles.bookingsTitle}>Upcoming Bookings</h2>
@@ -105,15 +85,15 @@ const MentorBookingsPage = () => {
                     <td>{booking.time}</td>
                     <td>{booking.sessionType}</td>
                     <td>{booking.module}</td>
-                    <td>
+                    <td className={styles.actionButtons}>
                       <button className={styles.confirmButton} onClick={() => openModal('Confirm', booking.id)}>
                         Confirm
                       </button>
-                      <button className={styles.cancelButton} onClick={() => openModal('Cancel', booking.id)}>
-                        Cancel
-                      </button>
                       <button className={styles.rescheduleButton} onClick={() => openModal('Reschedule', booking.id)}>
                         Reschedule
+                      </button>
+                      <button className={styles.cancelButton} onClick={() => openModal('Cancel', booking.id)}>
+                        Cancel
                       </button>
                     </td>
                   </tr>

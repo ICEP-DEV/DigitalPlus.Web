@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { FaUser, FaBook, FaClock, FaPen, FaIdCard, FaCheckCircle } from 'react-icons/fa'; // Importing icons
 import styles from './BookingPage.module.css'; // Import the CSS Module
 import SideBarNavBar from "./Navigation/SideBarNavBar";
+import axios from 'axios'; // Import axios for API requests
 
 const Booking = () => {
   const [formData, setFormData] = useState({
     studentNumber: '',
-    module: '',
-    mentor: '',
-    name: '',
-    time: '',
+    moduleId: '',
+    menteeId: '',
+    fullNames: '',
+    dateTime: '',
     lessonType: '',
   });
 
@@ -20,17 +21,25 @@ const Booking = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    
-    // Show success popup
-    setShowSuccess(true);
 
-    // Hide popup after 3 seconds
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
+    try {
+      const response = await axios.post( 'https://localhost:7163/api/DigitalPlusCrud/AddAppointment', formData); // Replace with your API endpoint
+      console.log(response.data);
+
+      // Show success popup
+      setShowSuccess(true);
+
+      // Hide popup after 3 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
+
+    } catch (error) {
+      console.error('Error creating booking:', error);
+    }
   };
 
   return (
@@ -51,8 +60,6 @@ const Booking = () => {
                 placeholder="Enter student number"
               />
             </div>
-
-
           </div>
           <div className={styles.formGroup}>
             <label>NAME AND SURNAME:</label>
@@ -60,47 +67,43 @@ const Booking = () => {
               <FaUser className={styles.icon} />
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="fullNames"
+                value={formData.fullNames}
                 onChange={handleChange}
                 placeholder="Enter name and surname"
               />
             </div>
           </div>
-
         </div>
 
         <div className={styles.formRow}>
-
-        <div className={styles.formGroup}>
+          <div className={styles.formGroup}>
             <label>MODULE:</label>
             <div className={styles.inputGroup}>
               <FaBook className={styles.icon} />
-              <select name="module" value={formData.module} onChange={handleChange}>
-                <option value="">Select a module</option>
-                <option value="Math">INT316D</option>
-                <option value="Physics">MOB316D</option>
-                <option value="Programming">DBP316D</option>
+              <select name="moduleId" value={formData.moduleId} onChange={handleChange}>
+                <option value="">Select Department</option>
+                <option value="1">Computer Science</option>
+                <option value="2">Multimedia</option>
+                <option value="3">Informations</option>
+                <option value="4">Computer systems Engineering</option>
               </select>
             </div>
           </div>
-
 
           <div className={styles.formGroup}>
-            <label>MENTOR:</label>
+            <label>MENTEE:</label>
             <div className={styles.inputGroup}>
               <FaUser className={styles.icon} />
-              <select name="mentor" value={formData.mentor} onChange={handleChange}>
-                <option value="">Select a mentor</option>
-                <option value="Danny Dietz">Danny Dietz</option>
-                <option value="Mike Murphy">Mike Murphy</option>
-                <option value="Axelson">Axelson</option>
-                <option value="Marcus Luttrell">Marcus Luttrell</option>
+              <select name="menteeId" value={formData.menteeId} onChange={handleChange}>
+                <option value="">Select a mentee</option>
+                <option value="1">Danny Dietz</option>
+                <option value="2">Mike Murphy</option>
+                <option value="3">Axelson</option>
+                <option value="4">Marcus Luttrell</option>
               </select>
             </div>
           </div>
-        
-         
         </div>
 
         <div className={styles.formRow}>
@@ -110,8 +113,8 @@ const Booking = () => {
               <FaPen className={styles.icon} />
               <select name="lessonType" value={formData.lessonType} onChange={handleChange}>
                 <option value="">Select lesson type</option>
-                <option value="Theory">Contact</option>
-                <option value="Practical">Online</option>
+                <option value="Contact">Contact</option>
+                <option value="Online">Online</option>
               </select>
             </div>
           </div>
@@ -121,8 +124,8 @@ const Booking = () => {
               <FaClock className={styles.icon} />
               <input
                 type="datetime-local"
-                name="time"
-                value={formData.time}
+                name="dateTime"
+                value={formData.dateTime}
                 onChange={handleChange}
               />
             </div>

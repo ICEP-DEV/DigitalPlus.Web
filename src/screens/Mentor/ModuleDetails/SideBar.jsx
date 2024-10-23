@@ -28,8 +28,8 @@ function SideBar({ setActivePage }) {
           MENTEE LIST <MdMenuBook className={styles.icon} />
         </div>
 
-        <div className={styles.navItem} onClick={() => setActivePage('quizhistory')}>
-          LIVE CHAT <HiOutlineChatAlt2 className={styles.icon} />
+        <div className={styles.navItem} onClick={() => setActivePage('chatboard')}>
+          CHAT BOARD <HiOutlineChatAlt2 className={styles.icon} />
         </div>
 
         <div className={styles.navItem} onClick={() => setActivePage('mentordm')}>

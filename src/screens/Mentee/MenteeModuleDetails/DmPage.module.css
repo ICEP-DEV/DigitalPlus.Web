@@ -22,7 +22,7 @@
 .dmPage {
     display: flex;
     height: 80vh;
-    width: 85vw;
+    width: 80vw;
     background-color: var(--dmPage-secondary-color);
     font-family: 'Helvetica', 'Arial', sans-serif;
     border-radius: var(--dmPage-border-radius);
