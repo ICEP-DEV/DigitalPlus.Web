@@ -4,6 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import styles from './SendOTP.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons'; // Import the edit icon
 
 function SendOTP() {
     const navigate = useNavigate();
@@ -106,7 +108,11 @@ function SendOTP() {
                                 placeholder="Enter the OTP sent to your email"
                             />
                             <button onClick={confirmOTP} className={styles.submitBtn}>Confirm OTP</button>
-                            <button onClick={editEmail} className={styles.editEmailBtn}>Edit Email</button> {/* New button */}
+                            <button onClick={editEmail} className={styles.editEmailBtn} title="Edit Email">
+    <FontAwesomeIcon icon={faEdit} /> {/* This displays the edit icon */}
+    <span className={styles.editEmailText}> Edit Email</span>
+</button>
+
                         </>
                     )}
                 </div>

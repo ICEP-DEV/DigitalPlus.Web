@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link and useNavigate
-import styles from './LoginPage.module.css'; // Import the CSS module
+import React, { useState, useEffect } from 'react'; // Import useEffect
+import { useNavigate, Link } from 'react-router-dom';
+import styles from './LoginPage.module.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -8,9 +8,16 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = 'We-me-ntor'; // Update page title
+
+        // Modify the URL to remove the '/login' path and replace it with 'We-me-ntor'
+        window.history.pushState({}, '', '/We-me-ntor');
+    }, []);
+
     const handleLogin = async (e) => {
         e.preventDefault();
-    
+
         try {
             const response = await fetch('https://localhost:7163/api/DigitalPlusLogin/Login', {
                 method: 'POST',
@@ -19,14 +26,12 @@ const Login = () => {
                 },
                 body: JSON.stringify({ email, password }),
             });
-    
+
             const data = await response.json();
-    
+
             if (response.ok && data.success) {
-                // Store the entire user object (including email) in localStorage
                 localStorage.setItem('user', JSON.stringify(data.user));
-    
-                // Redirect user based on their role
+
                 if (data.role === 'Admin') {
                     navigate('/admin-dashboard/dashboard');
                 } else if (data.role === 'Mentor') {
@@ -43,7 +48,7 @@ const Login = () => {
             setError('Login failed. Please check your network or try again.');
         }
     };
-    
+
     return (
         <div className={styles.loginContainer}>
             <div className={styles.formBox}>
@@ -72,7 +77,6 @@ const Login = () => {
 
                     {error && <p className={styles.error}>{error}</p>}
 
-                    {/* Replace with Link to reset password */}
                     <Link to="/Send-OTP" className={styles.forgotPassword}>
                         Forgot Password?
                     </Link>
@@ -81,7 +85,7 @@ const Login = () => {
                 </form>
 
                 <p className={styles.signupText}>
-                    Don’t have an account yet? <Link to="/SignUp" className={styles.signupLink}>Sign Up</Link> {/* Using Link */}
+                    Don’t have an account yet? <Link to="/SignUp" className={styles.signupLink}>Sign Up</Link>
                 </p>
             </div>
         </div>

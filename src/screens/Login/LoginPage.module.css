@@ -113,3 +113,14 @@
 .signupLink:hover {
   text-decoration: underline;
 }
+/* Error message styling */
+.error {
+  color: #d9534f; /* Red error text */
+  background-color: #f2dede; /* Light red background */
+  padding: 0.75rem;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: bold;
+}

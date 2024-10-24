@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './screens/Login/LoginPage.js';
 import AboutPage from './screens/about/AboutPage.js';
@@ -26,6 +26,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const App = () => {
+  useEffect(() => {
+    // This will update the URL to display only 'We-me-ntor' on every route
+    window.history.pushState({}, '', '/We-me-ntor');
+  }, []); // This effect runs once when the component is mounted
+
   return (
     <Router>
       <Routes>
