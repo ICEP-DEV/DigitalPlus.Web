@@ -1,3 +1,5 @@
+// DashboardContent.js
+
 import React, { useState, useEffect } from 'react';
 import {
   PieChart,
@@ -14,11 +16,32 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import styles from './DashboardContent.module.css';
-import { BsPlusCircle, BsPersonCheckFill, BsPersonXFill, BsPeopleFill } from 'react-icons/bs';
-import CreateNewAnnouncement from './CreateNewAnnouncement'; 
+import {
+  BsPlusCircle,
+  BsPersonCheckFill,
+  BsPersonXFill,
+  BsPeopleFill,
+  BsEyeFill,
+} from 'react-icons/bs';
+import CreateNewAnnouncement from './CreateNewAnnouncement';
+import AnnouncementModal from './AnnouncementModal';
 
 const DashboardContent = () => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isAnnouncementModalOpen, setAnnouncementModalOpen] = useState(false);
+  const [announcements, setAnnouncements] = useState([
+    // Sample data; replace with actual data fetching
+    {
+      id: 1,
+      name: 'Holiday Notice',
+      type: 'One-Time',
+      sendDate: '2023-12-24 10:00 AM',
+      recipient: 'All',
+      content: 'We will be closed on Christmas Day.',
+    },
+    // Add more announcements as needed
+  ]);
+
   const [dashboardData, setDashboardData] = useState({
     totalMentees: 0,
     activatedMentors: 0,
@@ -28,12 +51,52 @@ const DashboardContent = () => {
     deactivatedMentees: 0,
   });
 
+  const [editingAnnouncement, setEditingAnnouncement] = useState(null);
+
   const handleAddAnnouncement = () => {
+    setEditingAnnouncement(null); // Reset editing state
     setModalOpen(true);
   };
 
   const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const openAnnouncementModal = () => {
+    setAnnouncementModalOpen(true);
+  };
+
+  const closeAnnouncementModal = () => {
+    setAnnouncementModalOpen(false);
+  };
+
+  const addAnnouncement = (newAnnouncement) => {
+    if (newAnnouncement.id) {
+      // Editing an existing announcement
+      setAnnouncements((prevAnnouncements) =>
+        prevAnnouncements.map((announcement) =>
+          announcement.id === newAnnouncement.id ? newAnnouncement : announcement
+        )
+      );
+    } else {
+      // Adding a new announcement
+      newAnnouncement.id = Date.now(); // Assign a unique ID
+      setAnnouncements([...announcements, newAnnouncement]);
+    }
+  };
+
+  const editAnnouncement = (announcement) => {
+    setEditingAnnouncement(announcement);
+    setModalOpen(true);
+    setAnnouncementModalOpen(false); // Close the announcements modal when editing
+  };
+
+  const deleteAnnouncement = (id) => {
+    if (window.confirm('Are you sure you want to delete this announcement?')) {
+      setAnnouncements((prevAnnouncements) =>
+        prevAnnouncements.filter((announcement) => announcement.id !== id)
+      );
+    }
   };
 
   useEffect(() => {
@@ -53,6 +116,9 @@ const DashboardContent = () => {
       };
 
       fetchDashboardData();
+
+      // Fetch announcements here if you have an API
+      // fetchAnnouncements();
     } else {
       console.error('No admin_Id found in local storage.');
     }
@@ -99,13 +165,33 @@ const DashboardContent = () => {
     <div className={styles.dashboardContainer}>
       {/* Announcement Section */}
       <div className={styles.announcementContainer}>
-        <h3 className={styles.announcementLabel}>Create Announcements</h3>
-        <button className={styles.iconButton} onClick={handleAddAnnouncement}>
-          <BsPlusCircle size={20} color="#000" />
-        </button>
+        <h3 className={styles.announcementLabel}>Announcements</h3>
+        <div className={styles.buttonGroup}>
+          <button className={styles.iconButton} onClick={handleAddAnnouncement}>
+            <BsPlusCircle size={20} color="#000" />
+          </button>
+          <button className={styles.iconButton} onClick={openAnnouncementModal}>
+            <BsEyeFill size={20} color="#000" />
+          </button>
+        </div>
       </div>
 
-      <CreateNewAnnouncement isOpen={isModalOpen} onClose={closeModal} />
+      {/* Create Announcement Modal */}
+      <CreateNewAnnouncement
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        addAnnouncement={addAnnouncement}
+        editingAnnouncement={editingAnnouncement}
+      />
+
+      {/* Announcement Modal */}
+      <AnnouncementModal
+        isOpen={isAnnouncementModalOpen}
+        onClose={closeAnnouncementModal}
+        announcements={announcements}
+        editAnnouncement={editAnnouncement}
+        deleteAnnouncement={deleteAnnouncement}
+      />
 
       {/* Dashboard Stats */}
       <div className={styles.header}>

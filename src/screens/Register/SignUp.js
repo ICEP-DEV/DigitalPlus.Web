@@ -18,6 +18,8 @@ const SignUp = () => {
         Semester: ''
     });
 
+    
+    const [departments,setDepartments]=useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [passwordStrength, setPasswordStrength] = useState({
@@ -43,6 +45,23 @@ const SignUp = () => {
             return () => clearTimeout(timer);
         }
     }, [successMessage, errorMessage]);
+
+    useEffect(() =>{
+    
+        const FetchDepartments= async () =>{
+          try {
+            const response = await axios.get( 'https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments');
+          setDepartments(response.data.result);
+          console.log(response.data.result);
+          
+          } catch(error) {
+            console.error('Error fetching departments:', error);
+          }
+        }
+      
+  
+      FetchDepartments()
+    },[]);
 
     // Handle input changes
     const handleChange = (e) => {
@@ -164,12 +183,12 @@ const SignUp = () => {
                     
                             <label>Department:</label>
                             <select name="DepartmentId" value={mentee.DepartmentId} onChange={handleChange} required>
-                                <option value="">Select Department</option>
-                                <option value="1">Computer Science</option>
-                                <option value="2">Multimedia</option>
-                                <option value="3">Informatics</option>
-                                <option value="4">Computer systems Engineering</option>
-                                <option>Information Technology</option>
+                            <option value="">Select department</option>
+                                {departments.map((dep, xid) =>(
+                                <option key={xid+1} value={xid+1}>
+                                {dep.department_Name}
+                            </option>
+                            ))}
                             </select>
 
                             <label>Semester:</label>
