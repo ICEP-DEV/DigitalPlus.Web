@@ -25,14 +25,14 @@ function SideBar({ setActivePage }) {
       <button className={styles.menteeToggleButton} onClick={toggleSidebar}>
         <FaBars />
       </button>
-      <nav className={styles.menteeNavLinks}>
+      <nav className={styles.menteeNavLinks}> 
         <div className={styles.menteeNavItem}>
           <span className={styles.menteeIcon}>{moduleId}</span>
         </div>
 
         <NavLink
-          to="#quizzes"
-          onClick={() => setActivePage("quizz")}
+          to="#quizzLanding"
+          onClick={() => setActivePage("quizzLanding")}
           className={styles.menteeNavItem}
         >
           <RiContactsBook3Fill className={styles.menteeIcon} />

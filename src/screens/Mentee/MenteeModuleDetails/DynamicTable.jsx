@@ -22,6 +22,13 @@ const DynamicTable = ({ onBack, submittedData }) => {
     setRows(newRows);
   };
 
+  const duplicateRow = (index) => {
+    const newRows = [...rows];
+    const rowToDuplicate = { ...newRows[index] }; // Copy the row
+    newRows.splice(index + 1, 0, rowToDuplicate); // Insert the copy below the original row
+    setRows(newRows);
+  };
+
   const handleRatingChange = (index, rating) => {
     const newRows = [...rows];
     newRows[index].ratings = rating;
@@ -30,10 +37,10 @@ const DynamicTable = ({ onBack, submittedData }) => {
 
   return (
     <div className={styles.container}>
-      <button onClick={onBack} className={styles.backButton}>Back Quizes</button>
+      <button onClick={onBack} className={styles.back_Button}>Back Quizes</button>
       <h2 className={styles.title}>Rate a Mentee's Answer</h2>
 
-      <table className={styles.table}>
+      <table className={styles.rating_table}>
         <thead>
           <tr>
             <th>Name</th>
@@ -51,6 +58,7 @@ const DynamicTable = ({ onBack, submittedData }) => {
                 <input 
                   type="text" 
                   name="name" 
+                  className={styles.rate_name_input}
                   value={row.name || ''} 
                   onChange={(e) => handleInputChange(index, e)}
                 />
@@ -59,6 +67,7 @@ const DynamicTable = ({ onBack, submittedData }) => {
                 <input 
                   type="text" 
                   name="surname" 
+                  className={styles.rate_surname_input}
                   value={row.surname || ''} 
                   onChange={(e) => handleInputChange(index, e)}
                 />
@@ -77,7 +86,7 @@ const DynamicTable = ({ onBack, submittedData }) => {
                   readOnly
                 />
               </td>
-              <td className={styles.rating}>
+              <td className={styles.answer_rating}>
                 {[...Array(5)].map((_, starIndex) => (
                   <FaStar
                     key={starIndex}
@@ -88,8 +97,11 @@ const DynamicTable = ({ onBack, submittedData }) => {
                 ))}
               </td>
               <td>
-                <button onClick={() => deleteRow(index)} className={styles.deleteButton}>
+                <button onClick={() => deleteRow(index)} className={styles.rate_deleteButton}>
                   Delete
+                </button>
+                <button onClick={() => duplicateRow(index)} className={styles.rate_duplicateButton}>
+                  + Rate
                 </button>
               </td>
             </tr>
