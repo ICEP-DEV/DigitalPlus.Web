@@ -149,13 +149,13 @@ const Settings = () => {
                   <select
                     id="department"
                     name="department"
-                    
+                    // value={userData.departmentId}
                     onChange={handleChange}
                     disabled={!isEditing} 
                   >
                     <option value="">{department ? department : 'Department not found'}</option>
-                    {departments.map((dep) =>(
-                      <option key={dep.departmentId} value={dep.departmentId}>
+                    {departments.map((dep,xid) =>(
+                      <option key={xid+1} value={xid+1}>
                         {dep.department_Name}
                       </option>
                     ))}
