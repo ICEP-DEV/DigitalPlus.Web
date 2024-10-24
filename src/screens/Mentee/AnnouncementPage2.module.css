@@ -134,6 +134,10 @@
     text-align: right;
     margin-top:20px;
     font-size: 18px;
+    position: absolute; 
+    top: 20px; 
+    right: 0; 
+    text-align: right; 
     
 }
 
@@ -145,9 +149,14 @@
 .currentDateTime .time {
     font-size: 20px;
     font-weight: bold;
+    position: absolute; 
+    top: 20px; 
+    right: 0; 
+    text-align: right; 
   }
 
   .currentDateTime .date {
     font-size: 16px;
     margin-left: 100px;
+    right: 20px; 
   }

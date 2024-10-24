@@ -31,6 +31,7 @@ const RegisterPage = () => {
         <div style={styles.pageContainer}>
             <NavBar />
             <SideBar />
+            
             <div style={styles.registerPageContainer}>
                 <div style={styles.mainContent}>
                     <div style={styles.header}>
