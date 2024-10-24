@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
+import axios from 'axios'; // Make sure to import axios
 import styles from './FeedbackPage.module.css'; 
 import { FaCheckCircle } from 'react-icons/fa'; // Import success icon
 import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const FeedbackPage = () => {
-  const [menteeEmail, setMenteeEmail] = useState('');
-  const [mentorEmail, setMentorEmail] = useState('');
-  const [moduleName, setModuleName] = useState('');
-  const [complaint, setComplaint] = useState('');
+  const [complains, setComplains] = useState({
+    menteeEmail: '',
+    mentorEmail: '',
+    moduleName: '',
+    complaint: '',
+  });
   const [showModal, setShowModal] = useState(false); // State for showing modal
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setComplains({ ...complains, [name]: value });
+  };
 
   // Sample mentor options
   const mentors = [
@@ -18,28 +26,35 @@ const FeedbackPage = () => {
   ];
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowModal(true); // Show modal after form submission
-    setTimeout(() => {
-      setShowModal(false); // Hide modal after 3 seconds
-    }, 3000);
-    clearForm();
+    try {
+      const response = await axios.post('https://localhost:7163/api/DigitalPlusCrud/AddComplaint', complains);
+      console.log('ComplainsSent', response.data);
+      setShowModal(true); // Show modal after form submission
+      setTimeout(() => {
+        setShowModal(false); // Hide modal after 3 seconds
+      }, 3000);
+      clearForm();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Clear form fields
   const clearForm = () => {
-    setMenteeEmail('');
-    setMentorEmail('');
-    setModuleName('');
-    setComplaint('');
+    setComplains({
+      menteeEmail: '',
+      mentorEmail: '',
+      moduleName: '',
+      complaint: '',
+    });
   };
 
   return (
     <SideBarNavBar>
       <div className={styles.pageContainer}>
         <div className={styles.contentWrapper}>
-
           {/* Complaints Section */}
           <div className={styles.complaintsSection}>
             <h1 className={styles.complaintsTitle}>We Value Your Complaints</h1>
@@ -53,8 +68,9 @@ const FeedbackPage = () => {
                   <input
                     type="email"
                     id="menteeEmail"
-                    value={menteeEmail}
-                    onChange={(e) => setMenteeEmail(e.target.value)}
+                    name="menteeEmail" // Ensure name matches state
+                    value={complains.menteeEmail}
+                    onChange={handleChange}
                     placeholder="Enter mentee's email"
                     className={styles.inputField}
                     required
@@ -65,8 +81,9 @@ const FeedbackPage = () => {
                   <input
                     type="text"
                     id="mentorEmail"
-                    value={mentorEmail}
-                    onChange={(e) => setMentorEmail(e.target.value)}
+                    name="mentorEmail" // Ensure name matches state
+                    value={complains.mentorEmail}
+                    onChange={handleChange}
                     placeholder="Enter mentor email"
                     className={styles.inputField}
                     required
@@ -78,8 +95,9 @@ const FeedbackPage = () => {
                 <input
                   type="text"
                   id="moduleName"
-                  value={moduleName}
-                  onChange={(e) => setModuleName(e.target.value)}
+                  name="moduleName" // Ensure name matches state
+                  value={complains.moduleName}
+                  onChange={handleChange}
                   placeholder="Enter module name"
                   className={styles.inputField}
                   required
@@ -89,10 +107,11 @@ const FeedbackPage = () => {
                 <label htmlFor="mentorSelect">MENTOR's NAME:</label>
                 <select
                   id="mentorSelect"
-                  value={mentorEmail}
+                  name="mentorEmail" // Ensure name matches state
+                  value={complains.mentorEmail}
                   onChange={(e) => {
                     const selectedMentor = mentors.find(mentor => mentor.email === e.target.value);
-                    setMentorEmail(selectedMentor ? selectedMentor.email : '');
+                    setComplains({ ...complains, mentorEmail: selectedMentor ? selectedMentor.email : '' });
                   }}
                   className={styles.inputField}
                   required
@@ -110,8 +129,9 @@ const FeedbackPage = () => {
                 <label htmlFor="complaint">YOUR COMPLAINT:</label>
                 <textarea
                   id="complaint"
-                  value={complaint}
-                  onChange={(e) => setComplaint(e.target.value)}
+                  name="complaint" // Ensure name matches state
+                  value={complains.complaint}
+                  onChange={handleChange}
                   rows="5"
                   placeholder="Share your complaint"
                   className={styles.textArea}
