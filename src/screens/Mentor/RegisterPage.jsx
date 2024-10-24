@@ -31,11 +31,11 @@ const RegisterPage = () => {
         <div style={styles.pageContainer}>
             <NavBar />
             <SideBar />
-            
+            <div><h1 style={styles.headerTitle}>Register</h1> {/* Added Register heading */}</div>
             <div style={styles.registerPageContainer}>
                 <div style={styles.mainContent}>
                     <div style={styles.header}>
-                        {/* <h1 style={styles.headerTitle}>REGISTER</h1> */}
+                        
                         {/* <div style={styles.userInfo}>B MDLULI</div> */}
                     </div>
                     <div style={styles.formWrapper}>
@@ -47,7 +47,6 @@ const RegisterPage = () => {
                                         type="text"
                                         placeholder="Enter student number"
                                         style={styles.input}
-                                        // This input remains editable
                                     />
                                 </div>
 
@@ -107,12 +106,10 @@ const RegisterPage = () => {
                                     </div>
                                 </div>
 
-                                {/* Wrap submit button with a container for centering */}
                                 <div style={styles.buttonContainer}>
                                     <button
                                         type="submit"
                                         style={styles.submitButton}
-                                        // This button remains clickable
                                     >
                                         Activate
                                     </button>
@@ -131,7 +128,6 @@ const RegisterPage = () => {
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -147,7 +143,7 @@ const styles = {
     },
     registerPageContainer: {
         display: 'flex',
-        height: '100%',
+        height: '70%',
         fontFamily: 'Arial, sans-serif',
         justifyContent: 'center',
         alignItems: 'center',
@@ -224,14 +220,6 @@ const styles = {
         fontSize: '20px',
         cursor: 'pointer',
         marginLeft: '10px',
-    },
-    signaturePlaceholder: {
-        border: '1px solid #333',
-        height: '50px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f5f5f5',
     },
     rangeSlider: {
         width: '100%',

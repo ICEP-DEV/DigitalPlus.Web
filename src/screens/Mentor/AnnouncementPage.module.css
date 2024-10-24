@@ -128,13 +128,16 @@
 }
 
 .currentDateTime {
-    position: relative;
+    
     right: 30px;
     top: 0;
     text-align: right;
     margin-top:20px;
     font-size: 18px;
-    
+    position: absolute;
+    top: -70px;
+    right: -280px;
+    text-align: right; 
     
 }
 
