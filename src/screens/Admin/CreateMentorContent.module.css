@@ -1,40 +1,182 @@
-.createMentorContent {
-    padding: 20px;
+/* CreateNewAnnouncement.module.css */
+
+/* Modal overlay that dims the background */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal content (the dialog itself) */
+.modalContent {
+  background-color: rgb(220, 238, 245);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 800px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative; /* Ensure this is set for absolute positioning */
+  z-index: 1001;
+}
+
+/* Close Button Styles */
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+/* Title of the modal */
+.title {
+  text-align: center;
+  color: black;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Main content area */
+.mainContent {
+  width: 100%;
+  border-top: 4px solid black;
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Flex container for form sections */
+.flexContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Left and right sections of the form */
+.leftSection,
+.rightSection {
+  width: 48%;
+  box-sizing: border-box;
+}
+
+/* Label styles */
+.label {
+  display: block;
+  margin-bottom: 10px;
+  color: black;
+  font-weight: bold;
+}
+
+/* Input, select, and textarea styles */
+.input,
+.select,
+.fileInput,
+.textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: black;
+  box-sizing: border-box;
+}
+
+.textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+/* Announcement type radio buttons container */
+.announcementTypeContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.announcementTypeBox {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.announcementTypeContainer input {
+  margin-right: 5px;
+}
+
+/* Icon next to the "Send To" select */
+.icon {
+  margin-left: 10px;
+}
+
+/* Button container */
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 20px; /* Space between buttons */
+}
+
+/* General icon button styles */
+.iconButton {
+  background-color: #4CAF50; /* Default Green */
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px; /* Fixed size */
+  height: 50px; /* Fixed size */
+  transition: background-color 0.3s;
+}
+
+.iconButton:hover {
+  opacity: 0.8;
+}
+
+/* Specific button colors */
+.createButton {
+  background-color: #4CAF50; /* Green */
+}
+
+.deleteButton {
+  background-color: red; /* Red */
+}
+
+.doneButton {
+  background-color: #008CBA; /* Blue */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .flexContainer {
+      flex-direction: column;
   }
-  
-  .createMentorContent h2 {
-    margin-bottom: 20px;
+
+  .leftSection,
+  .rightSection {
+      width: 100%;
   }
-  
-  .createMentorContentForm {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+
+  .buttonContainer {
+      flex-direction: column;
+      gap: 10px;
   }
-  
-  .createMentorContentInput, .createMentorContentSelect {
-    width: calc(50% - 20px);
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+
+  .iconButton {
+      width: 40px;
+      height: 40px;
   }
-  
-  .createButtons {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .createButton {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .createButton:hover {
-    background-color: #0056b3;
-  }
-  
+}

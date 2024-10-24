@@ -1,12 +1,14 @@
 import React, { useState,useEffect } from 'react';
 import styles from './SettingsPage.module.css';  // Import the module.css file
 import SideBarNavBar from './Navigation/SideBarNavBar';
+import axios from 'axios';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('changePassword'); // Default to 'Change Password'
   const [isEditing, setIsEditing] = useState(false); // State to toggle between view and edit mode
   const [userData, setUserData] = useState('');
-
+  const [department, setDepartment] = useState(''); 
+  const [departments,setDepartments]=useState([]);
 
   useEffect(() =>{
     const user = JSON.parse(localStorage.getItem('user'));
@@ -14,18 +16,51 @@ const Settings = () => {
       setUserData(user)  ; // Set admin email from the API response
     }
   },[]);
+  useEffect(() => {
+    if (userData && userData.departmentId) {
+      const getDepartment = async () => {
+        try {
+          const response = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetDepartment/${userData.departmentId}`);
+          if (response.data) {
+             setDepartment(response.data.result.department_Name); 
+            console.log(response.data.result.department_Name);
+          }
+        } catch (error) {
+          console.error('Error fetching department:', error);
+        }
+      };
+      getDepartment();
+    }
+  }, [userData]);
+
+  useEffect(() =>{
+    
+      const FetchDepartments= async () =>{
+        try {
+          const response = await axios.get( 'https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments');
+        setDepartments(response.data.result);
+        console.log(response.data);
+        
+        } catch(error) {
+          console.error('Error fetching departments:', error);
+        }
+      }
+    
+
+    FetchDepartments()
+  },[]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
 
   const handleEdit = () => {
-    setIsEditing(!isEditing); // Toggle edit mode
+    setIsEditing(!isEditing); 
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsEditing(false); // Submit and exit edit mode
+    setIsEditing(false); 
   };
 
   return (
@@ -114,15 +149,16 @@ const Settings = () => {
                   <select
                     id="department"
                     name="department"
+                    // value={userData.departmentId}
                     onChange={handleChange}
-                    disabled={!isEditing} // Make it editable only when isEditing is true
+                    disabled={!isEditing} 
                   >
-                    <option value="">Select Department</option>
-                    <option value="1">Computer Science</option>
-                    <option value="2">Multimedia</option>
-                    <option value="3">Informations</option>
-                    <option value="4">Computer systems Engineering</option>
-                    <option value="5">Information Technology</option>
+                    <option value="">{department ? department : 'Department not found'}</option>
+                    {departments.map((dep,xid) =>(
+                      <option key={xid+1} value={xid+1}>
+                        {dep.department_Name}
+                      </option>
+                    ))}
                     
                   </select>
                 </div>

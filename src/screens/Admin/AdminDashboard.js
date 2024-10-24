@@ -14,7 +14,11 @@ import ScheduleComponent from './ScheduleComponent';
 import AccountContent from './AccountContent';
 import CreateMentorContent from './CreateMentorContent';
 import AnalyticsReportsContent from './AnalyticsReportsContent';
-import { FaBars, FaCog, FaSignOutAlt, FaEnvelope, FaBook, FaUserFriends, FaHome } from 'react-icons/fa';
+import { FaBars, FaCog, FaBook, FaHome } from 'react-icons/fa';
+import { SiCodementor } from "react-icons/si";
+import { GoReport } from "react-icons/go";
+import { GrSchedules, GrLogout } from "react-icons/gr";
+import { GrCompliance } from "react-icons/gr";
 
 const AdminDashboard = () => {
   const [isOpen, setIsOpen] = useState(true); // State to toggle the sidebar
@@ -42,6 +46,9 @@ const AdminDashboard = () => {
             {adminEmail && <span className={styles.adminEmail}>{adminEmail}</span>} {/* Display the admin email */}
           </div>
         </div>
+        <NavLink to="/admin-dashboard/logout" className={styles.logoutButton}>
+        <GrLogout /> Logout
+        </NavLink>
       </header>
 
       <div className={styles.adminDashboard}>
@@ -63,7 +70,7 @@ const AdminDashboard = () => {
               <NavLink 
                 to="/admin-dashboard/mentors" 
                 className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
-                <FaUserFriends />
+                <SiCodementor />
                 {isOpen && <span>Mentors</span>}
               </NavLink>
             </li>
@@ -71,7 +78,7 @@ const AdminDashboard = () => {
               <NavLink 
                 to="/admin-dashboard/mentees" 
                 className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
-                <FaUserFriends />
+                <SiCodementor />
                 {isOpen && <span>Mentees</span>}
               </NavLink>
             </li>
@@ -79,7 +86,7 @@ const AdminDashboard = () => {
               <NavLink 
                 to="/admin-dashboard/reports" 
                 className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
-                <FaUserFriends />
+                <GoReport />
                 {isOpen && <span>Reports</span>}
               </NavLink>
             </li>
@@ -87,7 +94,7 @@ const AdminDashboard = () => {
               <NavLink 
                 to="/admin-dashboard/schedule" 
                 className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
-                <FaUserFriends />
+                <GrSchedules />
                 {isOpen && <span>Schedule</span>}
               </NavLink>
             </li>
@@ -95,7 +102,7 @@ const AdminDashboard = () => {
               <NavLink 
                 to="/admin-dashboard/complains" 
                 className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
-                <FaEnvelope />
+                <GrCompliance />
                 {isOpen && <span>Complains</span>}
               </NavLink>
             </li>
@@ -116,14 +123,6 @@ const AdminDashboard = () => {
               </NavLink>
             </li>
           </ul>
-          <div className={styles.sidebarLogout}>
-            <NavLink 
-              to="/admin-dashboard/logout" 
-              className={({ isActive }) => isActive ? `${styles.sidebarItem} ${styles.active}` : styles.sidebarItem}>
-              <FaSignOutAlt />
-              {isOpen && <span>Logout</span>}
-            </NavLink>
-          </div>
         </nav>
 
         {/* Main content */}

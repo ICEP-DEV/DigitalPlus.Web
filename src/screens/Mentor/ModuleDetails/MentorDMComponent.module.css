@@ -1,0 +1,441 @@
+/* Root Variables */
+:root {
+  --mentorDMComponent-primary-color: #0d1431;
+  --mentorDMComponent-secondary-color: #f9fafb;
+  --mentorDMComponent-accent-color: #e5e7eb;
+  --mentorDMComponent-hover-color: #bdbfc2;
+  --mentorDMComponent-text-color: #ffffff;
+  --mentorDMComponent-border-radius: 15px;
+  --mentorDMComponent-transition-time: 0.3s;
+  --mentorDMComponent-shadow-color: rgba(0, 0, 0, 0.08);
+  --mentorDMComponent-online-color: #4caf50;
+  --mentorDMComponent-offline-color: #f44336;
+  --mentorDMComponent-sent-color: rgba(13, 20, 49, 0.1);
+  --mentorDMComponent-received-color: #f1f3f5;
+  --mentorDMComponent-header-background: linear-gradient(90deg, #0d1431, #1f2a63);
+  --mentorDMComponent-input-background: #e5e7eb;
+  --mentorDMComponent-reply-bar-color: #007bff;
+  --mentorDMComponent-delete-color: #ff6347;
+}
+
+/* General Layout */
+.mentorDMComponentPage {
+  display: flex;
+  height: 80vh;
+  width: 80vw;
+  background-color: var(--mentorDMComponent-secondary-color);
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  border-radius: var(--mentorDMComponent-border-radius);
+  box-shadow: 0 4px 10px var(--mentorDMComponent-shadow-color);
+}
+
+/* Sidebar for Mentees */
+.mentorDMComponentSidebar {
+  width: 25%;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: width var(--mentorDMComponent-transition-time);
+  position: relative;
+}
+
+.mentorDMComponentSidebarCollapsed {
+  width: 5%;
+  transition: width var(--mentorDMComponent-transition-time);
+}
+
+/* Sidebar Header */
+.mentorDMComponentSidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mentorDMComponentSearchContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.mentorDMComponentSearchIcon {
+  margin-right: 5px;
+  color: var(--mentorDMComponent-primary-color);
+}
+
+.mentorDMComponentSearchInput {
+  border: 1px solid var(--mentorDMComponent-accent-color);
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 14px;
+}
+
+.mentorDMComponentMenteeList {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.mentorDMComponentMenteeItem {
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background-color: var(--mentorDMComponent-secondary-color);
+  cursor: pointer;
+  transition: background-color var(--mentorDMComponent-transition-time);
+}
+
+.mentorDMComponentMenteeItem:hover {
+  background-color: var(--mentorDMComponent-hover-color);
+}
+
+
+/* Main chat area */
+.mentorDMComponentMain {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--mentorDMComponent-secondary-color);
+  border-radius: 0 var(--mentorDMComponent-border-radius) var(--mentorDMComponent-border-radius) 0;
+}
+/* Chat Header */
+.mentorDMComponentHeader {
+  background: var(--mentorDMComponent-header-background);
+  color: var(--mentorDMComponent-text-color);
+  padding: 15px 20px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: var(--mentorDMComponent-border-radius) var(--mentorDMComponent-border-radius) 0 0;
+}
+
+/* Messages Area */
+.mentorDMComponentMessages {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #f3f4f6;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Individual Message */
+.mentorDMComponentMessageItem {
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: background-color var(--mentorDMComponent-transition-time);
+}
+
+.mentorDMComponentMessageItem:hover {
+  background-color: #f9fafb;
+}
+
+.mentorDMComponentSent {
+  background-color: var(--mentorDMComponent-sent-color);
+  align-self: flex-end;
+  margin-left: auto;
+  text-align: right;
+}
+
+.mentorDMComponentReceived {
+  background-color: var(--mentorDMComponent-received-color);
+  align-self: flex-start;
+  margin-right: auto;
+  text-align: left;
+}
+
+/* Sender Info */
+.mentorDMComponentSenderInfo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--mentorDMComponent-hover-color);
+  margin-bottom: 5px;
+}
+
+.mentorDMComponentSenderName {
+  font-weight: bold;
+}
+
+.mentorDMComponentTimestamp {
+  font-size: 12px;
+  color: var(--mentorDMComponent-hover-color);
+  margin-top: 5px;
+}
+
+/* Message Text */
+.mentorDMComponentMessageText {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* WhatsApp-style Reply */
+.mentorDMComponentReplyTo {
+  display: flex;
+  align-items: center;
+  background-color: #e9ecef;
+  padding: 8px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--mentorDMComponent-primary-color);
+  border-left: 4px solid var(--mentorDMComponent-reply-bar-color);
+}
+
+.mentorDMComponentReplySender {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+/* Message Actions (Reply, Edit, Delete) */
+.mentorDMComponentMessageActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  opacity: 0; /* Hide icons */
+  transition: opacity 0.3s ease; /* Smooth transition */
+}
+
+/* Show icons on hover */
+.mentorDMComponentMessageItem:hover .mentorDMComponentMessageActions {
+  opacity: 1; /* Show icons */
+}
+
+.mentorDMComponentReplyIcon,
+.mentorDMComponentEditIcon,
+.mentorDMComponentDeleteIcon {
+  font-size: 16px;
+  color: var(--mentorDMComponent-primary-color);
+  cursor: pointer;
+  transition: color var(--mentorDMComponent-transition-time);
+}
+
+.mentorDMComponentReplyIcon:hover {
+  color: var(--mentorDMComponent-hover-color);
+}
+
+.mentorDMComponentEditIcon:hover {
+  color: var(--mentorDMComponent-reply-bar-color);
+}
+
+.mentorDMComponentDeleteIcon:hover {
+  color: var(--mentorDMComponent-delete-color);
+}
+
+/* File Attachments */
+.mentorDMComponentFileAttachment {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 10px;
+  border: 1px solid var(--mentorDMComponent-accent-color);
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px var(--mentorDMComponent-shadow-color);
+  transition: background-color var(--mentorDMComponent-transition-time);
+  gap: 10px;
+}
+
+.mentorDMComponentFileAttachment:hover {
+  background-color: #f3f4f6;
+}
+
+.mentorDMComponentFileIcon {
+  font-size: 24px;
+  color: var(--mentorDMComponent-primary-color);
+}
+
+.mentorDMComponentFileName {
+  font-size: 16px;
+  color: #333;
+  flex-grow: 1;
+}
+
+.mentorDMComponentDownloadButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  background-color: var(--mentorDMComponent-primary-color);
+  color: var(--mentorDMComponent-text-color);
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color var(--mentorDMComponent-transition-time), transform var(--mentorDMComponent-transition-time);
+  font-size: 14px;
+}
+
+.mentorDMComponentDownloadButton:hover {
+  background-color: var(--mentorDMComponent-hover-color);
+  transform: scale(1.05);
+}
+
+/* Chat Input Area */
+.mentorDMComponentInputArea {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--mentorDMComponent-input-background);
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0 0 var(--mentorDMComponent-border-radius) var(--mentorDMComponent-border-radius);
+  padding: 10px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Reply Box Positioned Above Input */
+.mentorDMComponentReplyBox {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--mentorDMComponent-primary-color);
+  border-left: 4px solid var(--mentorDMComponent-reply-bar-color);
+}
+
+.mentorDMComponentReplyBox span {
+  flex-grow: 1;
+}
+
+.mentorDMComponentCancelReplyIcon {
+  font-size: 20px;
+  color: var(--mentorDMComponent-primary-color);
+  cursor: pointer;
+  margin-left: 10px;
+  transition: color var(--mentorDMComponent-transition-time);
+}
+
+.mentorDMComponentCancelReplyIcon:hover {
+  color: var(--mentorDMComponent-hover-color);
+}
+
+/* File preview before sending */
+.mentorDMComponentFilePreviewBox {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f1f3f5;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.mentorDMComponentFilePreviewContent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mentorDMComponentPreviewImage {
+  max-width: 100px;
+  border-radius: 10px;
+}
+
+.mentorDMComponentPreviewVideo {
+  max-width: 150px;
+  border-radius: 10px;
+}
+
+.mentorDMComponentCancelFileIcon {
+  font-size: 20px;
+  color: var(--mentorDMComponent-primary-color);
+  cursor: pointer;
+  transition: color var(--mentorDMComponent-transition-time);
+  position: absolute;
+  right: 10px;
+}
+
+.mentorDMComponentCancelFileIcon:hover {
+  color: var(--mentorDMComponent-hover-color);
+}
+
+/* Input Row Adjustments for Horizontal Alignment */
+.mentorDMComponentInputRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.mentorDMComponentTextArea {
+  flex-grow: 1;
+  border: 1px solid var(--mentorDMComponent-accent-color);
+  border-radius: 25px;
+  padding: 10px 15px;
+  font-size: 16px;
+  outline: none;
+  resize: none;
+  background-color: var(--mentorDMComponent-secondary-color);
+  transition: border-color var(--mentorDMComponent-transition-time);
+}
+
+.mentorDMComponentTextArea:focus {
+  border-color: var(--mentorDMComponent-primary-color);
+  box-shadow: 0 0 8px rgba(14, 165, 233, 0.1);
+}
+
+/* File Upload Button */
+.mentorDMComponentFileUploadIcon {
+  margin-top: 20px;
+  font-size: 30px;
+  color: var(--mentorDMComponent-primary-color);
+  cursor: pointer;
+  transition: color var(--mentorDMComponent-transition-time);
+}
+
+.mentorDMComponentFileUploadIcon:hover {
+  color: var(--mentorDMComponent-hover-color);
+}
+
+/* Send Button */
+.mentorDMComponentButton {
+  padding: 12px;
+  background-color: var(--mentorDMComponent-primary-color);
+  color: var(--mentorDMComponent-text-color);
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform var(--mentorDMComponent-transition-time);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+}
+
+.mentorDMComponentButton:hover {
+  transform: scale(1.1);
+}
+
+/* Typing Indicator */
+.mentorDMComponentTypingIndicator {
+  font-size: 14px;
+  color: var(--mentorDMComponent-hover-color);
+  padding: 10px;
+  text-align: center;
+}
+
+/* Upload Error */
+.mentorDMComponentUploadError {
+  color: red;
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+/* Disabled Send Button */
+.mentorDMComponentButton:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}

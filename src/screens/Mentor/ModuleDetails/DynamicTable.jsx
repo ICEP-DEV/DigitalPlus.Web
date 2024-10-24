@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa';
 import styles from './DynamicTable.module.css'; // Import the CSS module
 
-const DynamicTable = ({ onBack, submittedData }) => {
+const DynamicTable = ({ setActivePage, submittedData }) => {  // Remove duplicate submittedData
   const [rows, setRows] = useState([]);
 
+  // Ensure that submittedData is always an array
   useEffect(() => {
-    setRows(submittedData);
+    setRows(Array.isArray(submittedData) ? submittedData : []);
   }, [submittedData]);
 
   const handleInputChange = (index, event) => {
@@ -22,25 +23,23 @@ const DynamicTable = ({ onBack, submittedData }) => {
     setRows(newRows);
   };
 
-  const duplicateRow = (index) => {
-    const newRows = [...rows];
-    const rowToDuplicate = { ...newRows[index] }; // Copy the row
-    newRows.splice(index + 1, 0, rowToDuplicate); // Insert the copy below the original row
-    setRows(newRows);
-  };
-
   const handleRatingChange = (index, rating) => {
     const newRows = [...rows];
     newRows[index].ratings = rating;
     setRows(newRows);
   };
 
+  const handleBackClick = () => {
+    alert("Hello"); // Show the alert when the back button is clicked
+    setActivePage('quizz'); // Change the page to 'quizz'
+  };
+
   return (
     <div className={styles.container}>
-      <button onClick={onBack} className={styles.back_Button}>Back Quizes</button>
+      <button onClick={handleBackClick} className={styles.backButton}>Back Quizes</button>
       <h2 className={styles.title}>Rate a Mentee's Answer</h2>
 
-      <table className={styles.rating_table}>
+      <table className={styles.table}>
         <thead>
           <tr>
             <th>Name</th>
@@ -58,8 +57,7 @@ const DynamicTable = ({ onBack, submittedData }) => {
                 <input 
                   type="text" 
                   name="name" 
-                  className={styles.rate_name_input}
-                  value={row.name || ''} 
+                  value={row.name || ''} // Handle undefined name
                   onChange={(e) => handleInputChange(index, e)}
                 />
               </td>
@@ -67,41 +65,37 @@ const DynamicTable = ({ onBack, submittedData }) => {
                 <input 
                   type="text" 
                   name="surname" 
-                  className={styles.rate_surname_input}
-                  value={row.surname || ''} 
+                  value={row.surname || ''} // Handle undefined surname
                   onChange={(e) => handleInputChange(index, e)}
                 />
               </td>
               <td>
                 <textarea 
                   name="questions" 
-                  value={row.question} 
+                  value={row.question || ''} // Handle undefined question
                   readOnly
                 />
               </td>
               <td>
                 <textarea 
                   name="answers" 
-                  value={row.answer} 
+                  value={row.answer || ''} // Handle undefined answer
                   readOnly
                 />
               </td>
-              <td className={styles.answer_rating}>
+              <td className={styles.rating}>
                 {[...Array(5)].map((_, starIndex) => (
                   <FaStar
                     key={starIndex}
-                    color={starIndex < (row.ratings || 0) ? "#0d1431" : "gray"}
+                    color={starIndex < (row.ratings || 0) ? "#0d1431" : "gray"} // Handle undefined ratings
                     onClick={() => handleRatingChange(index, starIndex + 1)}
                     style={{ cursor: 'pointer' }}
                   />
                 ))}
               </td>
               <td>
-                <button onClick={() => deleteRow(index)} className={styles.rate_deleteButton}>
+                <button onClick={() => deleteRow(index)} className={styles.deleteButton}>
                   Delete
-                </button>
-                <button onClick={() => duplicateRow(index)} className={styles.rate_duplicateButton}>
-                  + Rate
                 </button>
               </td>
             </tr>
@@ -112,5 +106,4 @@ const DynamicTable = ({ onBack, submittedData }) => {
   );
 };
 
-// Styles specific to DynamicTable component are in DynamicTable.module.css
 export default DynamicTable;

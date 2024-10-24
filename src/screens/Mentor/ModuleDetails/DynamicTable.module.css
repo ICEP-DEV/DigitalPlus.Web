@@ -1,35 +1,26 @@
-.rating_table {
+table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
 }
 
-.rating_table, th, td {
+table, th, td {
   border: 1px solid black;
-
 }
 
-.rating_table , th, td {
+th, td {
   padding: 10px;
   text-align: left;
-  color: black;
 }
 
-.rate_name_input[type="text"], textarea {
+input[type="text"], textarea {
   width: 100%;
   padding: 5px;
   box-sizing: border-box;
   border: black solid 1px;
 }
 
-.rate_surname_input[type="text"], textarea {
-  width: 100%;
-  padding: 5px;
-  box-sizing: border-box;
-  border: black solid 1px;
-}
-
-.back_Button {
+button {
   padding: 5px 10px;
   background-color: #0d1431;
   color: white;
@@ -38,7 +29,7 @@
   border-radius: 3px;
 }
 
-.back_Button:hover {
+button:hover {
   background-color: #0c163b;
 }
 
@@ -50,24 +41,14 @@ textarea {
   resize: none;
 }
 
-.answer_rating {
+.rating {
   text-align: center;
 }
 
-.rate_deleteButton {
-  background-color: #0d1431;
- 
-}
-
-.rate_duplicateButton {
+.addButton {
   background-color: #0d1431;
 }
 
-.rate_duplicateButton:hover {
-  background-color: #202e6e;
-}
-
-.rate_deleteButton:hover {
-  background-color: #202e6e;
- 
+.deleteButton {
+  background-color: #0d1431;
 }

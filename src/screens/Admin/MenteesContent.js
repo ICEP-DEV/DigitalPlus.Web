@@ -5,6 +5,8 @@ import { Add, Save, Update, ManageAccounts, Delete } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MenteesContent.module.css';
+import { SiCodementor } from "react-icons/si";
+
 
 const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
@@ -274,6 +276,7 @@ const MenteesContent = () => {
 
   return (
     <div className={styles.menteesContainer}>
+      <h2> <SiCodementor /> MENTEES</h2>
       <ToastContainer />
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>

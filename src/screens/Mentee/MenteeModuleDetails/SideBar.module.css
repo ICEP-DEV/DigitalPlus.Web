@@ -20,6 +20,8 @@
   width: 100%;
   flex-grow: 1;
   padding-left: 10px;
+  border-bottom: none;
+  text-decoration: none;
 }
 
 .menteeNavItem {
@@ -34,13 +36,8 @@
   transition: background-color 0.3s ease;
   text-transform: uppercase;
   font-weight: bold;
-  border-bottom: none; /* Remove border/line under links */
-  text-decoration: none; /* Ensure no underline on links */
-}
-
-.menteeNavItem a {
-  color: inherit; /* Inherit text color */
-  text-decoration: none; /* Remove underline from links */
+  text-decoration: none !important; /* Ensure no underline on links */
+  border-bottom: none !important; /* Remove any borders that might appear as lines */
 }
 
 .menteeNavItem:hover {
@@ -49,6 +46,7 @@
 
 .menteeNavItem span {
   margin-left: 15px;
+  text-decoration: none !important; /* Ensure no underline on span text */
 }
 
 .menteeSidebarClosed .menteeNavItem span {

@@ -1,0 +1,90 @@
+/* AnnouncementModal.module.css */
+
+/* Modal overlay that dims the background */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal content */
+.modalContent {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 90%;
+  width: 800px;
+  max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1001;
+}
+
+/* Close Button Styles */
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+/* Title of the modal */
+.title {
+  text-align: center;
+  color: #333;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Table container */
+.tableContainer {
+  overflow-x: auto;
+}
+
+/* Announcement table styles */
+.announcementTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.announcementTable th,
+.announcementTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.announcementTable th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.announcementTable tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.announcementTable tr:hover {
+  background-color: #ddd;
+}
+
+/* Actions column */
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.actionIcon {
+  cursor: pointer;
+}
+
+.actionIcon:hover {
+  opacity: 0.7;
+}
