@@ -8,6 +8,7 @@ const Settings = () => {
   const [isEditing, setIsEditing] = useState(false); // State to toggle between view and edit mode
   const [userData, setUserData] = useState('');
   const [department, setDepartment] = useState(''); 
+  const [departments,setDepartments]=useState([]);
 
   useEffect(() =>{
     const user = JSON.parse(localStorage.getItem('user'));
@@ -31,6 +32,23 @@ const Settings = () => {
       getDepartment();
     }
   }, [userData]);
+
+  useEffect(() =>{
+    
+      const FetchDepartments= async () =>{
+        try {
+          const response = await axios.get( 'https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments');
+        setDepartments(response.data.result);
+        console.log(response.data);
+        
+        } catch(error) {
+          console.error('Error fetching departments:', error);
+        }
+      }
+    
+
+    FetchDepartments()
+  },[]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -131,15 +149,16 @@ const Settings = () => {
                   <select
                     id="department"
                     name="department"
+                    
                     onChange={handleChange}
                     disabled={!isEditing} 
                   >
                     <option value="">{department ? department : 'Department not found'}</option>
-                    <option value="1">Computer Science</option>
-                    <option value="2">Multimedia</option>
-                    <option value="3">Informations</option>
-                    <option value="4">Computer systems Engineering</option>
-                    <option value="5">Information Technology</option>
+                    {departments.map((dep) =>(
+                      <option key={dep.departmentId} value={dep.departmentId}>
+                        {dep.department_Name}
+                      </option>
+                    ))}
                     
                   </select>
                 </div>
