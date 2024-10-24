@@ -13,6 +13,9 @@ import SignUp from './screens/Register/SignUp.js';
 import AnnouncementPage from './screens/Mentor/AnnouncementPage';
 import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
 import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
+import ForgotPassword from './screens/Login/ForgotPassword.js';
+import SendOTP from './screens/Login/SendOTP.js';
+
 import RosterPage2 from './screens/Mentee/RosterPage2.jsx';
 import AnnouncementPage2 from './screens/Mentee/AnnouncementPage2.jsx';
 import AnnouncePage from './screens/Landing/AnnouncePage.jsx';
@@ -37,6 +40,8 @@ const App = () => {
         <Route path="/VideoLandingPage" element={<VideoLandingPage />} />
         <Route path="/AnnouncementPage" element={<AnnouncementPage />} />
         <Route path="/roster" element={<RosterPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/Send-OTP" element={<SendOTP />} />
 
         {/* Protected routes for Admin, Mentor, and Mentee Dashboards */}
         <Route

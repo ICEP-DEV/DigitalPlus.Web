@@ -73,7 +73,7 @@ const Login = () => {
                     {error && <p className={styles.error}>{error}</p>}
 
                     {/* Replace with Link to reset password */}
-                    <Link to="/forgot-password" className={styles.forgotPassword}>
+                    <Link to="/Send-OTP" className={styles.forgotPassword}>
                         Forgot Password?
                     </Link>
 
