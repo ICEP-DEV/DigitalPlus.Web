@@ -4,10 +4,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import styles from './ForgotPassword.module.css';
-
+import { Link } from 'react-router-dom';
 function ForgotPassword() {
     const navigate = useNavigate();
-
+    useEffect(() => {
+        // This will update the URL to display only 'We-me-ntor' on every route
+        window.history.pushState({}, '', '/We-me-ntor');
+      }, []);
     const [email, setEmail] = useState('');  // State to hold the email
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -137,6 +140,10 @@ function ForgotPassword() {
                         placeholder="Confirm new password"
                     />
                     <button onClick={resetPassword} className={styles.submitBtn}>Reset Password</button>
+                 {/* Link to login page */}
+                 <p className={styles.loginLink}>
+                        Remember your mind? <Link to="/login">Go to Login</Link>
+                    </p>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -9,7 +9,11 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'; // Import the edit i
 
 function SendOTP() {
     const navigate = useNavigate();
-
+    useEffect(() => {
+        // This will update the URL to display only 'We-me-ntor' on every route
+        window.history.pushState({}, '', '/We-me-ntor');
+      }, []); // This effect runs once when the component is mounted
+    
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
     const [otpSent, setOtpSent] = useState(false);  // State to manage OTP being sent
