@@ -89,5 +89,9 @@
 .editEmailText {
     margin-left: 5px;  /* Add a small space between the icon and text */
 }
+.loginLink,.timerText
+{
+  color: white;
+}
 
 
