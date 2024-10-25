@@ -8,6 +8,7 @@ import AnnouncementPage from './AnnouncementPage.jsx';
 import BookingsPage from './BookingsPage.jsx';
 import RegisterPage from './RegisterPage.jsx';
 import CalendarPage from './CalendarPage.js';
+import RosterPage from './RosterPage.jsx';
 
 
 function MentorDashboard() {
@@ -25,6 +26,7 @@ function MentorDashboard() {
         <Route path="report" element={<ReportPage />} /> 
         <Route path="module/:moduleId" element={<ModuleDetails />} />
         <Route path="setting" element={<SettingPage />} />
+        <Route path="roster" element={<RosterPage />} />
       </Routes>
     </>
   );

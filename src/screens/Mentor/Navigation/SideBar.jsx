@@ -29,6 +29,11 @@ function SideBar() {
           {!isCollapsed && <span>ANNOUCE</span>}
         </div>
 
+        <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/roster')}>
+          <IoHome className={styles.icon} />
+          {!isCollapsed && <span>ROSTER</span>}
+        </div>
+
         <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/module')}>
           <MdMenuBook className={styles.icon} />
           {!isCollapsed && <span>MODULES</span>}
