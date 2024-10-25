@@ -16,11 +16,6 @@ import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
 import ForgotPassword from './screens/Login/ForgotPassword.js';
 import SendOTP from './screens/Login/SendOTP.js';
 
-import RosterPage2 from './screens/Mentee/RosterPage2.jsx';
-import AnnouncementPage2 from './screens/Mentee/AnnouncementPage2.jsx';
-import AnnouncePage from './screens/Landing/AnnouncePage.jsx';
-import RosterPg from './screens/Landing/RosterPg.jsx';
-import CreateNewAnnouncement from './screens/Admin/CreateNewAnnouncement'; // Import the new component
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
