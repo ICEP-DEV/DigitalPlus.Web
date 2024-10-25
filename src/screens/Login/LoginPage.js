@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react'; // Import useEffect
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './LoginPage.module.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -9,10 +11,8 @@ const Login = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        document.title = 'We-me-ntor'; // Update page title
-
-        // Modify the URL to remove the '/login' path and replace it with 'We-me-ntor'
-        window.history.pushState({}, '', '/We-me-ntor');
+        document.title = 'We-me-ntor';
+        window.history.pushState({}, '', '/we.men.tor.ac.za');
     }, []);
 
     const handleLogin = async (e) => {
@@ -30,17 +30,21 @@ const Login = () => {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                localStorage.setItem('user', JSON.stringify(data.user));
+                toast.success('Login successful!', { autoClose: 2000 });
 
-                if (data.role === 'Admin') {
-                    navigate('/admin-dashboard/dashboard');
-                } else if (data.role === 'Mentor') {
-                    navigate('/mentor-dashboard/AnnouncementPage');
-                } else if (data.role === 'Mentee') {
-                    navigate('/mentee-dashboard/home');
-                } else {
-                    setError('Invalid user role');
-                }
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                setTimeout(() => {
+                    if (data.role === 'Admin') {
+                        navigate('/admin-dashboard/dashboard');
+                    } else if (data.role === 'Mentor') {
+                        navigate('/mentor-dashboard/AnnouncementPage');
+                    } else if (data.role === 'Mentee') {
+                        navigate('/mentee-dashboard/home');
+                    } else {
+                        setError('Invalid user role');
+                    }
+                }, 2000);
             } else {
                 setError(data.message || 'Login failed. Please check your credentials.');
             }
@@ -51,6 +55,7 @@ const Login = () => {
 
     return (
         <div className={styles.loginContainer}>
+            <ToastContainer /> {/* Add ToastContainer here */}
             <div className={styles.formBox}>
                 <h1 className={styles.formTitle}>WE-MEN-TOR</h1>
                 <h2 className={styles.loginTitle}>LOGIN</h2>

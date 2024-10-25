@@ -2,22 +2,37 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styles from './SendOTP.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons'; // Import the edit icon
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 function SendOTP() {
     const navigate = useNavigate();
     useEffect(() => {
-        // This will update the URL to display only 'We-me-ntor' on every route
-        window.history.pushState({}, '', '/We-me-ntor');
-      }, []); // This effect runs once when the component is mounted
+        window.history.pushState({}, '', '/we.men.tor.ac.za');
+    }, []);
     
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');
-    const [otpSent, setOtpSent] = useState(false);  // State to manage OTP being sent
-    const [isLoading, setIsLoading] = useState(false);  // Loading state
+    const [otpSent, setOtpSent] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [timer, setTimer] = useState(120);
+    const [otpExpired, setOtpExpired] = useState(false); // New state to track expiration
+
+    useEffect(() => {
+        if (otpSent && timer > 0) {
+            const countdown = setInterval(() => {
+                setTimer((prevTimer) => prevTimer - 1);
+            }, 1000);
+            return () => clearInterval(countdown);
+        } else if (timer === 0 && !otpExpired) {
+            toast.warn('OTP expired. Please resend OTP.');
+            setOtpExpired(true); // Mark OTP as expired to prevent duplicate toasts
+            setOtpSent(false); // Allow resending the OTP
+            setOtp('');
+        }
+    }, [otpSent, timer, otpExpired]);
 
     const sendOTP = () => {
         if (!email) {
@@ -25,8 +40,8 @@ function SendOTP() {
             return;
         }
 
-        setIsLoading(true); // Start loading
-        const otpCode = Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit OTP
+        setIsLoading(true);
+        const otpCode = Math.floor(100000 + Math.random() * 900000);
         const subject = "Your OTP Code";
         const message = `Your One-Time Password (OTP) is ${otpCode}. Please use this to reset your password.`;
 
@@ -40,9 +55,11 @@ function SendOTP() {
             .then(response => {
                 if (response.status === 200) {
                     toast.success('OTP sent to your email');
-                    localStorage.setItem('otp', otpCode); // Temporarily store OTP for verification
-                    localStorage.setItem('email', email); // Store the email in localStorage
-                    setOtpSent(true);  // OTP was sent, show the confirm OTP field
+                    localStorage.setItem('otp', otpCode);
+                    localStorage.setItem('email', email);
+                    setOtpSent(true);
+                    setTimer(120); // Reset timer to 2 minutes
+                    setOtpExpired(false); // Reset expiration state
                 } else {
                     toast.error('Failed to send OTP');
                 }
@@ -52,7 +69,7 @@ function SendOTP() {
                 toast.error('An error occurred');
             })
             .finally(() => {
-                setIsLoading(false); // Stop loading after the request is done
+                setIsLoading(false);
             });
     };
 
@@ -65,18 +82,19 @@ function SendOTP() {
         const storedOtp = localStorage.getItem('otp');
         if (otp === storedOtp) {
             toast.success('OTP verified');
-            localStorage.removeItem('otp'); // Clear OTP after successful verification
-            navigate('/forgot-password');  // Navigate to Reset Password page after OTP verification
+            localStorage.removeItem('otp');
+            navigate('/forgot-password');
         } else {
             toast.error('Invalid OTP. Please try again.');
         }
     };
 
-    // Function to edit the email (Reset the OTP process)
     const editEmail = () => {
-        localStorage.removeItem('email');  // Optionally clear stored email
-        setOtpSent(false);  // Reset OTP sent state
-        setOtp('');  // Clear OTP input field
+        localStorage.removeItem('email');
+        setOtpSent(false);
+        setOtp('');
+        setTimer(120); // Reset timer if editing email
+        setOtpExpired(false); // Reset expiration state
     };
 
     return (
@@ -113,12 +131,17 @@ function SendOTP() {
                             />
                             <button onClick={confirmOTP} className={styles.submitBtn}>Confirm OTP</button>
                             <button onClick={editEmail} className={styles.editEmailBtn} title="Edit Email">
-    <FontAwesomeIcon icon={faEdit} /> {/* This displays the edit icon */}
-    <span className={styles.editEmailText}> Edit Email</span>
-</button>
-
+                                <FontAwesomeIcon icon={faEdit} />
+                                <span className={styles.editEmailText}> Edit Email</span>
+                            </button>
+                            <p className={styles.timerText}>
+                                Time remaining: {Math.floor(timer / 60)}:{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
+                            </p>
                         </>
                     )}
+                    <p className={styles.loginLink}>
+                        Remember your password? <Link to="/login">Go to Login</Link>
+                    </p>
                 </div>
             </div>
         </div>
