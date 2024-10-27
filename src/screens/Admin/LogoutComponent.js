@@ -14,6 +14,7 @@ const LogoutComponent = () => {
   const handleYesClick = () => {
     // Clear all session-related data from localStorage
     localStorage.clear(); // Clears all data from localStorage
+    sessionStorage.clear();
     navigate('/'); // Redirect to the home or login page
   };
 

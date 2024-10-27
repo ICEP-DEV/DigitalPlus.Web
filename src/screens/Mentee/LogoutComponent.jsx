@@ -10,6 +10,8 @@ const LogoutComponent = () => {
   const handleYesClick = () => {
     setShowMessage(true);
     // Redirect to the landing page after a brief delay
+    localStorage.clear(); // Clears all data from localStorage
+    sessionStorage.clear();
     setTimeout(() => {
       navigate('/');
     }, 2000); // 2 seconds delay
