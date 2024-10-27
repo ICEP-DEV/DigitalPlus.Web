@@ -3,4 +3,12 @@
     padding: 20px;
     margin-left: 250px;
   }
+  .modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    margin: auto;
+  }
+  
   
