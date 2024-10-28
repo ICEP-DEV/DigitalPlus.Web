@@ -10,12 +10,6 @@ const Settings = () => {
   const [department, setDepartment] = useState(''); 
   const [departments, setDepartments] = useState([]);
 
-   // New state for password fields
-   const [passwords, setPasswords] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -83,57 +77,13 @@ const Settings = () => {
   const handleEdit = () => {
     setIsEditing(!isEditing); 
   };
-  const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
-    setPasswords({ ...passwords, [name]: value });
-  };
-
-  const changePassword = async () => {
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      alert('New password and confirm password do not match');
-      return;
-    }
-
-    try {
-     
-
-      if (passwords.currentPassword === userData.password) {
-        // Update password in the database if current password is correct
-        const updateResponse = await axios.put(`https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${userData.mentee_Id}`, {
-          mentee_Id: userData.mentee_Id,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          studentEmail: userData.studentEmail,
-          contactNo: userData.contactNo,
-          departmentId: userData.departmentId,
-          password: passwords.newPassword,
-          semester: userData.semester,
-          activated: userData.activated ? true : false
-          
-        });
-
-        if (updateResponse.status === 200) {
-          alert('Password changed successfully');
-          const updatedUserData = { ...userData, password: passwords.newPassword };
-          setUserData(updatedUserData);
-          localStorage.setItem('user', JSON.stringify(updatedUserData)); // Update password in local storage
-          setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        }
-      } else {
-        alert('Current password is incorrect');
-      }
-    } catch (error) {
-      console.error('Error changing password:', error);
-    }
-  };
+ 
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if(activeTab === 'personalDetails')
     {
       updateDetails();
-    }else if(activeTab === 'personalDetails'){
-      changePassword();
     }
       
   };
@@ -259,18 +209,18 @@ const Settings = () => {
               <div className={styles.passwordForm}>
                 <div className={styles.formGroup}>
                   <label>Current Password:</label>
-                  <input type="password" name="currentPassword" onChange={handlePasswordChange}/>
+                  <input type="password" name="currentPassword" />
                 </div>
                 <div className={styles.formGroup}>
                   <label>New Password:</label>
-                  <input type="password" name="newPassword" onChange={handlePasswordChange}/>
+                  <input type="password" name="newPassword" />
                 </div>
                 <div className={styles.formGroup}>
                   <label>Confirm Password:</label>
-                  <input type="password" name="confirmPassword" onChange={handlePasswordChange}/>
+                  <input type="password" name="confirmPassword" />
                 </div>
               </div>
-              <button className={styles.changePasswordButton} onClick={changePassword}>Change Password</button>
+              <button className={styles.changePasswordButton} >Change Password</button>
             </div>
           )}
         </div>
