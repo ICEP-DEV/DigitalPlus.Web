@@ -4,11 +4,21 @@
     margin-left: 250px;
   }
   .modal {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
+
     width: 300px;
     margin: auto;
   }
+  /* Assuming you have a CSS module named styles.module.css */
+.modal {
+  z-index: 9999;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white; /* Customize background color */
+  padding: 20px; /* Customize padding */
+  border-radius: 8px; /* Customize border radius */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+}
   
   
