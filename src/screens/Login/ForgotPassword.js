@@ -4,13 +4,23 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import styles from './ForgotPassword.module.css';
-
+import { Link } from 'react-router-dom';
 function ForgotPassword() {
     const navigate = useNavigate();
-
+    useEffect(() => {
+        // This will update the URL to display only 'We-me-ntor' on every route
+        window.history.pushState({}, '', '/we.men.tor.ac.za');
+      }, []);
     const [email, setEmail] = useState('');  // State to hold the email
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [validationFeedback, setValidationFeedback] = useState([
+        "At least 8 characters long",
+        "At least one uppercase letter",
+        "At least one lowercase letter",
+        "At least one digit",
+        "At least one special character"
+    ]);
 
     // On component mount, get the email from localStorage and set it to the email state
     useEffect(() => {
@@ -23,6 +33,35 @@ function ForgotPassword() {
         }
     }, [navigate]);
 
+    // Function to validate the password and remove criteria that are satisfied
+    const handlePasswordChange = (password) => {
+        setNewPassword(password);
+
+        const newValidationFeedback = [];
+
+        if (password.length < 8) {
+            newValidationFeedback.push("At least 8 characters long");
+        }
+
+        if (!/[A-Z]/.test(password)) {
+            newValidationFeedback.push("At least one uppercase letter");
+        }
+
+        if (!/[a-z]/.test(password)) {
+            newValidationFeedback.push("At least one lowercase letter");
+        }
+
+        if (!/\d/.test(password)) {
+            newValidationFeedback.push("At least one digit");
+        }
+
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            newValidationFeedback.push("At least one special character");
+        }
+
+        setValidationFeedback(newValidationFeedback);
+    };
+
     const resetPassword = () => {
         if (!email) {
             toast.warn('Email not found');
@@ -31,6 +70,11 @@ function ForgotPassword() {
 
         if (newPassword !== confirmPassword) {
             toast.warn('Passwords do not match');
+            return;
+        }
+
+        if (validationFeedback.length > 0) {
+            toast.warn('Please meet all password requirements.');
             return;
         }
 
@@ -67,23 +111,28 @@ function ForgotPassword() {
         <div className={styles.forgotPasswordContainer}>
             <ToastContainer />
             <div className={styles.formBox}>
-                <h2 className={styles.formTitle}>Reset Your Password</h2>
+                <h2 className={styles.formTitle}>Create Password</h2>
                 <div className={styles.form}>
-                    <label className={styles.label}>Email</label>
-                    <input
-                        type="email"
-                        value={email}  // Pre-fill with the email from localStorage
-                        readOnly  // Make the field non-editable
-                        className={styles.inputField}
-                    />
-                    <label className={styles.label}>New Password</label>
+                    <label className={styles.label}>Password:</label>
                     <input
                         type="password"
-                        onChange={(event) => setNewPassword(event.target.value)}
+                        onChange={(event) => handlePasswordChange(event.target.value)}
                         className={styles.inputField}
                         placeholder="Enter new password"
                     />
-                    <label className={styles.label}>Confirm Password</label>
+
+                    {/* Display only the unmet validation requirements */}
+                    {validationFeedback.length > 0 && (
+                        <ul className={styles.validationFeedback}>
+                            {validationFeedback.map((feedback, index) => (
+                                <li key={index} className={styles.invalid}>
+                                    {feedback}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+
+                    <label className={styles.label}>Confirm Password:</label>
                     <input
                         type="password"
                         onChange={(event) => setConfirmPassword(event.target.value)}
@@ -91,6 +140,10 @@ function ForgotPassword() {
                         placeholder="Confirm new password"
                     />
                     <button onClick={resetPassword} className={styles.submitBtn}>Reset Password</button>
+                 {/* Link to login page */}
+                 <p className={styles.loginLink}>
+                        Remember your mind? <Link to="/login">Go to Login</Link>
+                    </p>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './screens/Login/LoginPage.js';
 import AboutPage from './screens/about/AboutPage.js';
@@ -16,16 +16,16 @@ import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
 import ForgotPassword from './screens/Login/ForgotPassword.js';
 import SendOTP from './screens/Login/SendOTP.js';
 
-import RosterPage2 from './screens/Mentee/RosterPage2.jsx';
-import AnnouncementPage2 from './screens/Mentee/AnnouncementPage2.jsx';
-import AnnouncePage from './screens/Landing/AnnouncePage.jsx';
-import RosterPg from './screens/Landing/RosterPg.jsx';
-import CreateNewAnnouncement from './screens/Admin/CreateNewAnnouncement'; // Import the new component
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const App = () => {
+  useEffect(() => {
+    // This will update the URL to display only 'We-me-ntor' on every route
+    window.history.pushState({}, '', '/we.men.tor.ac.za');
+  }, []); // This effect runs once when the component is mounted
+
   return (
     <Router>
       <Routes>

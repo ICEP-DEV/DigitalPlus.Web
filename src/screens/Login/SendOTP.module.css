@@ -70,7 +70,28 @@
     margin-bottom: 20px;
   }
   
-  .submitBtn:hover {
-    background-color: #3b7edb;
-  }
-  
+  .editEmailBtn {
+    background: none;  /* Removes button background */
+    border: none;      /* Removes button border */
+    color: #007bff;    /* Set the color of the icon and text */
+    cursor: pointer;   /* Makes it look clickable */
+    padding: 0;        /* Removes padding */
+    font-size: 1rem;   /* Adjust font size */
+    display: flex;     /* Align icon and text horizontally */
+    align-items: center;  /* Center the icon and text vertically */
+}
+
+.editEmailBtn:hover {
+    color: #0056b3;    /* Darker shade on hover */
+    background: none;  /* Removes button background */
+}
+
+.editEmailText {
+    margin-left: 5px;  /* Add a small space between the icon and text */
+}
+.loginLink,.timerText
+{
+  color: white;
+}
+
+
