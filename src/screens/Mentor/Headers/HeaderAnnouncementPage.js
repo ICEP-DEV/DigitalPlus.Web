@@ -1,53 +1,39 @@
-import React, { useState } from 'react';
-import { FaBell, FaKey } from 'react-icons/fa';
-import tutLogo from '../Assets/tutLogo.png';
-import Logo1 from '../Assets/Logo1.png';
-import tumelo from '../Assets/tumelo.jpg';
-import styles from './HeaderAnnouncementPage.module.css'; // Import the CSS module
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { FaKey } from 'react-icons/fa';
+import styles from "./HeaderAnnouncementPage.module.css";
+import tutLogo_removebg_preview from "../Assets/tutLogo_removebg_preview.png";
+import { BsPersonFill } from "react-icons/bs";
 
-const HeaderAnnouncementPage = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+function NavBar({ onKeyClick }) {
+  const navigate = useNavigate();
+  const [displayName, setDisplayName] = useState('PROFILE');
 
-  const handleSearchChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const handleSearchSubmit = (event) => {
-    event.preventDefault();
-    console.log('Search Query:', searchQuery);
-  };
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser && storedUser.firstName && storedUser.lastName) {
+      const initials = storedUser.firstName
+        .split(' ')
+        .map(name => name[0])
+        .join('');
+      setDisplayName(`${initials} ${storedUser.lastName}`);
+    }
+  }, []);
 
   return (
-    <header className={styles.header}>
-      <div className={styles.logoContainer}>
-        <img src={tutLogo} alt="Tshwane University of Technology" className={styles.logoStyle2} />
-        <img src={Logo1} alt="Logo" className={styles.logoStyle} />
-      </div>
+    <div className={styles.navBar}>
+      <br />
+      <img src={tutLogo_removebg_preview} alt="Logo" className={styles.appLogo} />
 
-      <div className={styles.searchBarContainer}>
-        <form onSubmit={handleSearchSubmit} style={{ display: 'flex', width: '100%' }}>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            placeholder="Search..."
-            className={styles.inputStyle}
-          />
-          <button type="submit" className={styles.buttonStyle}>
-            Search
-          </button>
-        </form>
+      <div className={styles.profileContainer}>
+        <FaKey className={styles.keyIcon} onClick={onKeyClick} />
+        <div className={styles.profileInfo}>
+          <BsPersonFill className={styles.profileIcon} />
+          <span className={styles.profileText}>{displayName}</span>
+        </div>
       </div>
-
-      <div className={styles.iconContainer}>
-        <FaKey className={styles.keyIcon} />
-        <FaBell className={styles.bellIcon} />
-        <a href="/MentorProfile">
-          <img src={tumelo} alt="Profile" className={styles.tumeloStyle} />
-        </a>
-      </div>
-    </header>
+    </div>
   );
-};
+}
 
-export default HeaderAnnouncementPage;
+export default NavBar;

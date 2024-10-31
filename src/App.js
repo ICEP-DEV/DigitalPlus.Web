@@ -18,6 +18,8 @@ import AnnouncementPage2 from './screens/Mentee/AnnouncementPage2.jsx';
 import AnnouncePage from './screens/Landing/AnnouncePage.jsx';
 import RosterPg from './screens/Landing/RosterPg.jsx';
 import CreateNewAnnouncement from './screens/Admin/CreateNewAnnouncement'; // Import the new component
+import KeyPageAlert from './screens/Mentor/KeyPageAlert.jsx';
+import ParentComponent from './screens/Mentor/ParentComponent.jsx';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -37,6 +39,8 @@ const App = () => {
         <Route path="/VideoLandingPage" element={<VideoLandingPage />} />
         <Route path="/AnnouncementPage" element={<AnnouncementPage />} />
         <Route path="/roster" element={<RosterPage />} />
+        <Route path="/KeyPageAlert" element={<KeyPageAlert />} />
+        <Route path="/ParentComponent" element={<ParentComponent />} />
 
         {/* Protected routes for Admin, Mentor, and Mentee Dashboards */}
         <Route
