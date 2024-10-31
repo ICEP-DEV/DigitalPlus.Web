@@ -33,6 +33,21 @@ const CalenderPage = () => {
         <NavBar />
         <SideBar />
 
+         {/* Modal */}
+      {selectedEvent && (
+        <Modal
+          isOpen={!!selectedEvent}
+          onRequestClose={closeModal}
+          contentLabel="Event Details"
+          className={styles.modal} // Add any styling to the modal
+        >
+          <h2>Event Details</h2>
+          <p><strong>Mentee:</strong> {selectedEvent.name} {selectedEvent.surname}</p>
+          <p><strong>Module:</strong> {selectedEvent.module}</p>
+          <p><strong>Time:</strong> {moment(selectedEvent.start).format('hh:mm A')}</p>
+          <button onClick={closeModal}>Close</button>
+        </Modal>
+      )}
         <div className={styles.calendarContainer}>
           <h1>Mentor calendar</h1>
           <Calendar
@@ -52,22 +67,6 @@ const CalenderPage = () => {
           />
         </div>
       </div>
-
-      {/* Modal */}
-      {selectedEvent && (
-        <Modal
-          isOpen={!!selectedEvent}
-          onRequestClose={closeModal}
-          contentLabel="Event Details"
-          className={styles.modal} // Add any styling to the modal
-        >
-          <h2>Event Details</h2>
-          <p><strong>Mentee:</strong> {selectedEvent.name} {selectedEvent.surname}</p>
-          <p><strong>Module:</strong> {selectedEvent.module}</p>
-          <p><strong>Time:</strong> {moment(selectedEvent.start).format('hh:mm A')}</p>
-          <button onClick={closeModal}>Close</button>
-        </Modal>
-      )}
     </>
   );
 };
