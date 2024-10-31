@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './MentorsPage.module.css';
+import axios from 'axios';
 
 const mentorsData = [
   { surname: 'Dladla', initials: 'T', course: 'PPAF05D', status: 'Not Available', email: 'dladla123@gmail.com' },
@@ -9,6 +10,24 @@ const mentorsData = [
 ];
 
 const MentorsPage = () => {
+
+  const[mentorsDetailsByModule, setMentorsDetailsByModule ] = useState([]);
+
+  // useEffect(() => {
+  //   if(mentorsDetailsByModule && mentorsDetailsByModule){
+  //     const getMentorsDetailsByModule = async () => {
+  //       try {
+  //         const response  = await axios.get('') 
+  //         if(response.data)
+  //       }catch(error){
+  //         console.log(error)
+  //       }
+  //     }
+
+  //   }
+
+  // }, [mentorsDetailsByModule]); 
+
   return (
     <div className="mentorsPage">
       <h1>Assigned Mentors for This Module</h1>
