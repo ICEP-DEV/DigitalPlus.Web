@@ -8,10 +8,11 @@ import DMComponent from './MenteeModuleDetails/DMComponent';
 import QuizPage from  './MenteeModuleDetails/QuizPage';
 import ChatBoard from './MenteeModuleDetails/ChatBoard';
 import QuizLandingPage from './MenteeModuleDetails/QuizLandingPage';
+import ModuleInfo from './MenteeModuleDetails/ModuleInfo';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 function App() {
   // Set the default page to 'quizz' so the QuizPage is loaded first
-  const [activePage, setActivePage] = useState('quizzLanding');  
+  const [activePage, setActivePage] = useState('moduleInfo');  
 
   return (
     
@@ -21,6 +22,7 @@ function App() {
         <SideBar setActivePage={setActivePage} />
         <div className={styles.mainContent}>
           {/* Default page is QuizPage, and other pages will load based on activePage */}
+          {activePage === 'moduleInfo'&& <ModuleInfo/>}
           {activePage === 'quizzLanding'&& <QuizLandingPage />}
           {activePage === 'mentorslist' && <MentorsPage />}
           {activePage === 'chatboard' && <ChatBoard />}
