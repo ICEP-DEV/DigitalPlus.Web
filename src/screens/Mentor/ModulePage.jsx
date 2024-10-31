@@ -4,31 +4,45 @@ import { useNavigate } from 'react-router-dom';
 import styles from './ModulePage.module.css';
 import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
-import HeaderAnnouncementPage from './Headers/HeaderAnnouncementPage.js';
 
 export default function ModulePage() {
   const [modules, setModules] = useState([]);
+  console.log(modules);
   const navigate = useNavigate();
+
+  // Hardcoded mentorId
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  const mentorId = user.mentorId;
 
   useEffect(() => {
     // Fetch the modules assigned to the mentor
     const fetchModules = async () => {
       try {
-        const response = await axios.get('https://localhost:7163/api/AssignMod/mentor/1'); // Adjust mentorId as needed
-        const moduleData = response.data;
-        
-        // Set the modules state with the fetched data
-        setModules(moduleData);
+        // First API call to get assigned modules
+        const assignedModulesResponse = await axios.get(`https://localhost:7163/api/AssignMod/getmodulesBy_MentorId/${mentorId}`);
+        const assignedModules = assignedModulesResponse.data;
+
+        // For each assigned module, fetch detailed information
+        const moduleDetails = await Promise.all(
+          assignedModules.map(async (module) => {
+            const moduleDetailsResponse = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetModule/${module.moduleId}`);
+            return moduleDetailsResponse.data.result; // Use "result" to match the corrected response structure
+          })
+        );
+
+        setModules(moduleDetails);
+        console.log(moduleDetails); // Log to check final module data
       } catch (error) {
         console.error('Error fetching modules:', error);
       }
     };
 
     fetchModules();
-  }, []); // Empty dependency array to run only once when the component mounts
+  }, [mentorId]);
 
-  const handleNavigation = (moduleId) => {
-    navigate(`/mentor-dashboard/module/${moduleId}`);
+  const handleNavigation = (moduleCode) => {
+    navigate(`/mentor-dashboard/module/${moduleCode}`);
   };
 
   return (
@@ -37,36 +51,48 @@ export default function ModulePage() {
       <SideBar />
       <div className={styles['course-modules']}>
         <h1>Modules</h1>
-        {/* Top two modules */}
-        <div className={styles['module-grid']}>
-          {modules.slice(0, 2).map((module) => (
-            <div key={module.assignModId} className={styles['module-card']}>
-              <img src={`https://picsum.photos/seed/${module.moduleCode}/300/200`} alt={module.moduleDescription} />
-              <div className={styles['module-content']}>
-                <h2>{module.moduleName}</h2>
-                <p>{module.moduleDescription}</p>
-                <button onClick={() => handleNavigation(module.moduleCode)}>
-                  {module.moduleCode}
-                </button>
-              </div>
+        {modules.length > 0 ? (
+          <>
+            <div className={styles['module-grid']}>
+              {modules.slice(0, 2).map((module) => (
+                module && module.module_Code ? (
+                  <div key={module.module_Id} className={styles['module-card']}>
+                    <img className={styles['module-image']} src={`https://picsum.photos/seed/${module.module_Code}/300/200`} alt={module.description} />
+                    <div className={styles['module-content']}>
+                      <h2>{module.module_Name}</h2>
+                      <p>{module.description}</p>
+                      <button className={styles['module-button']} onClick={() => handleNavigation(module.module_Code)}>
+                        {module.module_Code}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p>Module data is missing or incomplete</p>
+                )
+              ))}
             </div>
-          ))}
-        </div>
-        {/* Bottom two modules */}
-        <div className={styles['module-grid']}>
-          {modules.slice(2, 4).map((module) => (
-            <div key={module.assignModId} className={styles['module-card']}>
-              <img src={`https://picsum.photos/seed/${module.moduleCode}/300/200`} alt={module.moduleDescription} />
-              <div className={styles['module-content']}>
-                <h2>{module.moduleName}</h2>
-                <p>{module.moduleDescription}</p>
-                <button onClick={() => handleNavigation(module.moduleCode)}>
-                  {module.moduleCode}
-                </button>
-              </div>
+            <div className={styles['module-grid']}>
+              {modules.slice(2, 4).map((module) => (
+                module && module.module_Code ? (
+                  <div key={module.module_Id} className={styles['module-card']}>
+                    <img className={styles['module-image']} src={`https://picsum.photos/seed/${module.module_Code}/300/200`} alt={module.description} />
+                    <div className={styles['module-content']}>
+                      <h2>{module.module_Name}</h2>
+                      <p>{module.description}</p>
+                      <button className={styles['module-button']} onClick={() => handleNavigation(module.module_Code)}>
+                        {module.module_Code}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <p>Module data is missing or incomplete</p>
+                )
+              ))}
             </div>
-          ))}
-        </div>
+          </>
+        ) : (
+          <p>No modules assigned to this mentor yet.</p>
+        )}
       </div>
     </div>
   );

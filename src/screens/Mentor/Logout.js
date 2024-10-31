@@ -11,6 +11,7 @@ const Logout = () => {
     const handleLogout = (confirmation) => {
         if (confirmation) {
             // You can add your actual logout logic here, such as clearing tokens
+            localStorage.clear();
             navigate('/'); // Example of redirecting after logout
         } else {
             navigate('/mentor-dashboard/announcementpage'); 

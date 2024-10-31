@@ -45,7 +45,7 @@ function AnnouncementPage() {
             <HeaderAnnouncementPage onKeyClick={handleOpenModal} />
             <SideBar/>
             <div className={styles.content}>
-                <h1 className={styles.header}>ANNOUNCEMENTS</h1>
+                <h1>Announcements</h1>
                 <div className={styles.timelineWrapper}>
                     <div className={styles.timeline}>
                         {announcements.map((item, index) => (
@@ -71,7 +71,7 @@ function AnnouncementPage() {
                         <div className={styles.date}>{currentDateTime.toLocaleDateString()}</div>
                     </div>
                 </div>
-                <a href="/roster" className={styles.viewRosterLink}>VIEW ROSTER</a>
+                {/* <a href="/roster" className={styles.viewRosterLink}>VIEW ROSTER</a> */}
                 <div className={styles.sidebarContainer}>
                     <Sidebar />
                 </div>

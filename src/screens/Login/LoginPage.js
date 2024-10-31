@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link and useNavigate
-import styles from './LoginPage.module.css'; // Import the CSS module
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import styles from './LoginPage.module.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -8,9 +10,14 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = 'We-me-ntor';
+        window.history.pushState({}, '', '/we.men.tor.ac.za');
+    }, []);
+
     const handleLogin = async (e) => {
         e.preventDefault();
-    
+
         try {
             const response = await fetch('https://localhost:7163/api/DigitalPlusLogin/Login', {
                 method: 'POST',
@@ -19,23 +26,25 @@ const Login = () => {
                 },
                 body: JSON.stringify({ email, password }),
             });
-    
+
             const data = await response.json();
-    
+
             if (response.ok && data.success) {
-                // Store the entire user object (including email) in localStorage
+                toast.success('Login successful!', { autoClose: 2000 });
+
                 localStorage.setItem('user', JSON.stringify(data.user));
-    
-                // Redirect user based on their role
-                if (data.role === 'Admin') {
-                    navigate('/admin-dashboard/dashboard');
-                } else if (data.role === 'Mentor') {
-                    navigate('/mentor-dashboard/AnnouncementPage');
-                } else if (data.role === 'Mentee') {
-                    navigate('/mentee-dashboard/home');
-                } else {
-                    setError('Invalid user role');
-                }
+                
+                setTimeout(() => {
+                    if (data.role === 'Admin') {
+                        navigate('/admin-dashboard/dashboard');
+                    } else if (data.role === 'Mentor') {
+                        navigate('/mentor-dashboard/AnnouncementPage');
+                    } else if (data.role === 'Mentee') {
+                        navigate('/mentee-dashboard/home');
+                    } else {
+                        setError('Invalid user role');
+                    }
+                }, 2000);
             } else {
                 setError(data.message || 'Login failed. Please check your credentials.');
             }
@@ -43,9 +52,10 @@ const Login = () => {
             setError('Login failed. Please check your network or try again.');
         }
     };
-    
+
     return (
         <div className={styles.loginContainer}>
+            <ToastContainer /> {/* Add ToastContainer here */}
             <div className={styles.formBox}>
                 <h1 className={styles.formTitle}>WE-MEN-TOR</h1>
                 <h2 className={styles.loginTitle}>LOGIN</h2>
@@ -72,8 +82,7 @@ const Login = () => {
 
                     {error && <p className={styles.error}>{error}</p>}
 
-                    {/* Replace with Link to reset password */}
-                    <Link to="/forgot-password" className={styles.forgotPassword}>
+                    <Link to="/Send-OTP" className={styles.forgotPassword}>
                         Forgot Password?
                     </Link>
 
@@ -81,7 +90,7 @@ const Login = () => {
                 </form>
 
                 <p className={styles.signupText}>
-                    Don’t have an account yet? <Link to="/SignUp" className={styles.signupLink}>Sign Up</Link> {/* Using Link */}
+                    Don’t have an account yet? <Link to="/SignUp" className={styles.signupLink}>Sign Up</Link>
                 </p>
             </div>
         </div>

@@ -15,7 +15,7 @@ export default function ModulePage() {
   const navigate = useNavigate();  // Create navigate function to handle navigation
 
   const handleNavigation = (moduleId) => {
-    navigate(`/mentee-dashboard/modules/${moduleId}`);  // Navigate to the specific module page
+    navigate(`/mentee-dashboard/modules/${moduleId}`, { state: { moduleId } });  // Pass moduleId as state
   };
 
   return (

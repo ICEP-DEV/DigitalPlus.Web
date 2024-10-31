@@ -1,166 +1,172 @@
+/* DashboardContent.module.css */
+
 .dashboardContainer {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    height: 100%;
-    margin-top: 0;
-    overflow-y: auto;
-    background-color: #f5f5f5;
-  }
-  
-  .announcementContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-    align-self: flex-end;
-  }
-  
-  .announcementLabel {
-    margin: 0;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 1.2em;
-    color: #333;
-  }
-  
-  .iconButton {
-    background-color: #3ca840;
-    color: white;
-    border: none;
-    padding: 5px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    transition: background-color 0.3s;
-  }
-  
-  .iconButton:hover {
-    background-color: #45a049;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-  }
-  
-  .statItem {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-size: 1.2em;
-    width: 150px;
-    text-align: center;
-  }
-  
-  .statItemIcon {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-  }
-  
-  .statItemTitle {
-    margin: 0;
-    font-weight: 600;
-    font-size: 1.1em;
-    color: #333;
-  }
-  
-  .chartGrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
-  }
-  
-  .chart {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 240px;
-    transition: transform 0.3s;
-  }
-  
-  .pieChartContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .chartContent {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .legend {
-    display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-  }
-  
-  .legendItem {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .colorBox {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-    border-radius: 3px;
-  }
-  
-  .chartTitle {
-    margin-bottom: 10px;
-    text-align: center;
-    font-size: 1.1em;
-    font-weight: 600;
-    color: #444;
-  }
-  
-  .responsiveContainer {
-    width: 100%;
-    height: 100%;
-  }
-  
-  /* Unique styles for Mentees */
-  .totalMenteesUnique {
-    background-color: #fff;
-  }
-  
-  .activatedMenteesUnique {
-    background-color: hwb(130 12% 7%); /* Green */
-    color: black;
-  }
-  
-  .deactivatedMenteesUnique {
-    background-color:hwb(130 12% 7%); /* Green */
-    color: black;
-  }
-  
-  /* Unique styles for Mentors */
-  .activatedMentorsUnique {
-    background-color: #ff5252; /* Red */
-    color: white;
-  }
-  
-  .deactivatedMentorsUnique {
-    background-color: #ff5252; /* Red */
-    color: white;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 100%;
+  margin-top: 0;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+}
+
+.announcementContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.announcementLabel {
+  margin-right: auto;
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.iconButton {
+  background-color: #3ca840;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  transition: background-color 0.3s;
+}
+
+.iconButton:hover {
+  background-color: #45a049;
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1.2em;
+  width: 150px;
+  text-align: center;
+}
+
+.statItemIcon {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.statItemTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1em;
+  color: #333;
+}
+
+/* Chart grid styles */
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+
+.chart {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 240px;
+  transition: transform 0.3s;
+}
+
+.pieChartContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chartContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.colorBox {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+.chartTitle {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #444;
+}
+
+.responsiveContainer {
+  width: 100%;
+  height: 100%;
+}
+
+/* Unique styles for Mentees */
+.totalMenteesUnique {
+  background-color: #fff;
+}
+
+.activatedMenteesUnique {
+  background-color: #a5d6a7; /* Light Green */
+  color: black;
+}
+
+.deactivatedMenteesUnique {
+  background-color: #ef9a9a; /* Light Red */
+  color: black;
+}
+
+/* Unique styles for Mentors */
+.activatedMentorsUnique {
+  background-color: #a5d6a7; /* Light Green */
+  color: black;
+}
+
+.deactivatedMentorsUnique {
+  background-color: #a557d3; /* Light Red */
+  color: black;
+}

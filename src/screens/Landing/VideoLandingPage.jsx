@@ -5,7 +5,7 @@ import styles from './VideoLandingPage.module.css';
 import useTypingEffect from './useTypingEffect';
 
 // Import your local video and background image
-import WE_MEN_TOR_CLIP from '../Mentor/Assets/WE_MEN_TOR_CLIP.mp4';
+
 import VideoClip from '../Mentor/Assets/VideoClip.mp4';
 import AboutBG from '../Mentor/Assets/AboutBG.jpg';
 import AboutImage from '../Mentor/Assets/AboutImage.jpg';

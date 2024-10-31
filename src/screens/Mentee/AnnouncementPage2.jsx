@@ -35,7 +35,7 @@ function AnnouncementPage() {
             <NavBar />
             <SideBar/>
             <div className={styles.content}>
-                <h1 className={styles.header}>ANNOUNCEMENTS</h1>
+                <h1>Announcements</h1>
                 <div className={styles.timelineWrapper}>
     <div className={styles.timeline}>
         {announcements.map((item, index) => (
@@ -78,3 +78,4 @@ function AnnouncementPage() {
 }
 
 export default AnnouncementPage;
+
