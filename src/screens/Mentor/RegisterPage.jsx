@@ -203,6 +203,7 @@ const RegisterPage = () => {
             setDisplayName(`${initials} ${storedUser.lastName}`);
         }
     }, []);
+    
 
     const moduleMentors = {
         'PPA F05D': ['B Buthelezi', 'S Vinjwa', 'T Mmethi'],
