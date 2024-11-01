@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import styles from "./SettingsContent.module.css";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -24,7 +22,7 @@ const Settings = () => {
     firstName: "",
     lastName: "",
     email: "",
-    contact: "",
+    contactNo: "",
     password: "",
     departmentId: "",
     adminId: "",
@@ -42,7 +40,10 @@ const Settings = () => {
   }, []);
 
   const handleFormChange = (field, value) => {
-    setEditForm({ ...adminForm, [field]: value });
+    setEditForm((prevForm) => ({
+      ...prevForm,
+      [field]: value,
+    }));
   };
 
   const handleEditAdmin = async () => {
@@ -53,14 +54,16 @@ const Settings = () => {
 
     try {
       const updatedAdmin = {
-        adminId: adminForm.admin_Id,
+        adminId: adminForm.adminId,
         firstName: adminForm.firstName,
         lastName: adminForm.lastName,
-        email: adminForm.emailAddress,
+        email: adminForm.email,
         contactNo: adminForm.contactNo,
         password: adminForm.password,
         departmentId: adminForm.departmentId,
       };
+
+      console.log("Sending updatedAdmin to API:", updatedAdmin);
 
       await axios.put(
         `https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${adminForm.adminId}`,
@@ -77,6 +80,7 @@ const Settings = () => {
         ...prevUser,
         ...updatedAdmin,
       }));
+      localStorage.setItem("user", JSON.stringify({ ...user, ...updatedAdmin }));
       setIsDialogOpen(false);
       toast.success("Admin updated successfully!");
     } catch (error) {
@@ -92,11 +96,11 @@ const Settings = () => {
     setEditForm({
       firstName: user.firstName,
       lastName: user.lastName,
-      email: user.emailAddress,
-      contact: user.contactNo,
+      email: user.email,
+      contactNo: user.contactNo,
       password: user.password,
       departmentId: user.departmentId,
-      adminId: user.admin_Id,
+      adminId: user.adminId,
     });
     setIsEditing(true);
     setIsDialogOpen(true);
@@ -207,8 +211,8 @@ const Settings = () => {
           />
           <TextField
             label="Contact No"
-            value={adminForm.contact}
-            onChange={(e) => handleFormChange("contact", e.target.value)}
+            value={adminForm.contactNo}
+            onChange={(e) => handleFormChange("contactNo", e.target.value)}
             fullWidth
             margin="normal"
             required
