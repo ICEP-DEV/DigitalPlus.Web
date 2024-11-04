@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { FaUser, FaBook, FaClock, FaPen, FaIdCard, FaCheckCircle } from 'react-icons/fa'; // Importing icons
 import styles from './BookingPage.module.css'; // Import the CSS Module
 import SideBarNavBar from "./Navigation/SideBarNavBar";
@@ -17,6 +17,19 @@ const Booking = () => {
 
   const [showSuccess, setShowSuccess] = useState(false); // State to control success popup visibility
 
+
+  useEffect(() =>{
+     
+      const user=JSON.parse(localStorage.getItem('user'));
+      if(user){
+        setFormData((prevData) => ({
+          ...prevData,
+          studentNumber:user.mentee_Id,
+          fullNames : `${user.firstName} ${user.lastName}`
+        }));
+      }
+      
+  },[]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -66,7 +79,7 @@ const Booking = () => {
                 name="studentNumber"
                 value={formData.studentNumber}
                 onChange={handleChange}
-                placeholder="Enter student number"
+                placeholder={formData.studentNumber}
               />
             </div>
           </div>
@@ -79,7 +92,7 @@ const Booking = () => {
                 name="fullNames"
                 value={formData.fullNames}
                 onChange={handleChange}
-                placeholder="Enter name and surname"
+                placeholder={formData.fullNames}
               />
             </div>
           </div>
