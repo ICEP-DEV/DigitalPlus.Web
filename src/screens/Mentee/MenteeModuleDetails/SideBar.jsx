@@ -26,9 +26,16 @@ function SideBar({ setActivePage }) {
         <FaBars />
       </button>
       <nav className={styles.menteeNavLinks}> 
-        <div className={styles.menteeNavItem}>
-          <span className={styles.menteeIcon}>{moduleId}</span>
-        </div>
+        
+
+        <NavLink
+          to="#moduleInfo"
+          onClick={() => setActivePage("moduleInfo")}
+          className={styles.menteeNavItem}
+        >
+          <RiContactsBook3Fill className={styles.menteeIcon} />
+          {isOpen && <span className={styles.menteeIcon}>{moduleId}</span>}
+        </NavLink>
 
         <NavLink
           to="#quizzLanding"

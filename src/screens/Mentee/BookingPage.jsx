@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { FaUser, FaBook, FaClock, FaPen, FaIdCard, FaCheckCircle } from 'react-icons/fa'; // Importing icons
 import styles from './BookingPage.module.css'; // Import the CSS Module
 import SideBarNavBar from "./Navigation/SideBarNavBar";
@@ -7,15 +7,29 @@ import axios from 'axios'; // Import axios for API requests
 const Booking = () => {
   const [formData, setFormData] = useState({
     studentNumber: '',
-    moduleId: '',
-    menteeId: '',
     fullNames: '',
-    dateTime: '',
+    moduleId: '',
+    mentorId: '',
     lessonType: '',
+    dateTime: ''
+   
   });
 
   const [showSuccess, setShowSuccess] = useState(false); // State to control success popup visibility
 
+
+  useEffect(() =>{
+     
+      const user=JSON.parse(localStorage.getItem('user'));
+      if(user){
+        setFormData((prevData) => ({
+          ...prevData,
+          studentNumber:user.mentee_Id,
+          fullNames : `${user.firstName} ${user.lastName}`
+        }));
+      }
+      
+  },[]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -37,6 +51,12 @@ const Booking = () => {
         setShowSuccess(false);
       }, 3000);
 
+      setFormData({
+      moduleId: '',
+      mentorId: '',
+      lessonType: '',
+      dateTime: ''
+    });
     } catch (error) {
       console.error('Error creating booking:', error);
     }
@@ -57,7 +77,7 @@ const Booking = () => {
                 name="studentNumber"
                 value={formData.studentNumber}
                 onChange={handleChange}
-                placeholder="Enter student number"
+                placeholder={formData.studentNumber}
               />
             </div>
           </div>
@@ -70,7 +90,7 @@ const Booking = () => {
                 name="fullNames"
                 value={formData.fullNames}
                 onChange={handleChange}
-                placeholder="Enter name and surname"
+                placeholder={formData.fullNames}
               />
             </div>
           </div>
@@ -82,21 +102,20 @@ const Booking = () => {
             <div className={styles.inputGroup}>
               <FaBook className={styles.icon} />
               <select name="moduleId" value={formData.moduleId} onChange={handleChange}>
-                <option value="">Select Department</option>
-                <option value="1">Computer Science</option>
-                <option value="2">Multimedia</option>
-                <option value="3">Informatics</option>
-                <option value="4">Computer systems Engineering</option>
-                <option value="5">Information Technology</option>
+                <option value="">Select Module</option>
+                <option value="1">PPA</option>
+                <option value="2">PPB</option>
+                <option value="3">OOP</option>
+                <option value="4">AOP</option>
               </select>
             </div>
           </div>
 
           <div className={styles.formGroup}>
-            <label>MENTEE:</label>
+            <label>MENTOR:</label>
             <div className={styles.inputGroup}>
               <FaUser className={styles.icon} />
-              <select name="menteeId" value={formData.menteeId} onChange={handleChange}>
+              <select name="mentorId" value={formData.mentorId} onChange={handleChange}>
                 <option value="">Select a mentee</option>
                 <option value="1">Danny Dietz</option>
                 <option value="2">Mike Murphy</option>

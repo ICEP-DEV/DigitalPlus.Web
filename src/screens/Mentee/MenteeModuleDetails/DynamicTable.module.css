@@ -1,73 +1,100 @@
+/* DynamicTable.module.css */
+
+/* Container Styles */
+.rate_container {
+  max-width: 1200px; /* Set a maximum width for the table */
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Add padding around the container */
+}
+
+/* Table Styles */
 .rating_table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden; /* Ensures rounded corners on table */
 }
 
-.rating_table, th, td {
-  border: 1px solid black;
-
-}
-
-.rating_table , th, td {
-  padding: 10px;
+.rating_table th {
+  background-color: #009688; /* Teal background for header */
+  color: #ffffff; /* White text color */
+  padding: 15px;
+  font-weight: bold;
   text-align: left;
-  color: black;
 }
 
-.rate_name_input[type="text"], textarea {
+.rating_table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #E0E0E0; /* Soft borders for table cells */
+}
+
+.rating_table tr:hover {
+  background-color: #FFEBEE; /* Light coral on hover */
+}
+
+/* Input Styles */
+.rate_name_input[type="text"], 
+.rate_surname_input[type="text"], 
+textarea {
   width: 100%;
-  padding: 5px;
-  box-sizing: border-box;
-  border: black solid 1px;
+  padding: 10px;
+  border: 1px solid #ccc; /* Soft border for inputs */
+  border-radius: 5px; /* Rounded corners */
+  transition: border-color 0.3s; /* Smooth transition */
 }
 
-.rate_surname_input[type="text"], textarea {
-  width: 100%;
-  padding: 5px;
-  box-sizing: border-box;
-  border: black solid 1px;
+.rate_name_input[type="text"]:focus, 
+.rate_surname_input[type="text"]:focus,
+textarea:focus {
+  border-color: #009688; /* Change border color on focus */
+  outline: none; /* Remove outline */
 }
 
-.back_Button {
-  padding: 5px 10px;
-  background-color: #0d1431;
+/* Button Styles */
+.back_Button,
+.rate_deleteButton,
+.rate_duplicateButton {
+  background-color: #FF5722; /* Coral color for buttons */
   color: white;
   border: none;
+  padding: 10px 15px;
+  border-radius: 5px; /* Rounded corners */
   cursor: pointer;
-  border-radius: 3px;
+  transition: background-color 0.3s; /* Smooth transition */
 }
 
-.back_Button:hover {
-  background-color: #0c163b;
+.back_Button:hover,
+.rate_deleteButton:hover,
+.rate_duplicateButton:hover {
+  background-color: #E64A19; /* Darker coral on hover */
 }
 
+/* Title Styles */
 h2 {
-  margin-bottom: 10px;
+  margin-bottom: 20px; /* More spacing below the title */
+  color: #333333; /* Dark gray for title */
+  font-size: 24px; /* Increase title size */
 }
 
+/* Textarea Styles */
 textarea {
-  resize: none;
+  resize: none; /* Prevent resizing */
 }
 
+/* Answer Rating Styles */
 .answer_rating {
   text-align: center;
 }
 
-.rate_deleteButton {
-  background-color: #0d1431;
- 
+/* Star Rating Styles */
+.answer_rating svg {
+  cursor: pointer; /* Cursor pointer for stars */
+  transition: color 0.3s; /* Smooth transition for star color */
 }
 
-.rate_duplicateButton {
-  background-color: #0d1431;
-}
-
-.rate_duplicateButton:hover {
-  background-color: #202e6e;
-}
-
-.rate_deleteButton:hover {
-  background-color: #202e6e;
- 
+.answer_rating svg:hover {
+  color: #FFD700; /* Gold color for stars on hover */
 }

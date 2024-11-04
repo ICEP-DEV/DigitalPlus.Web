@@ -16,7 +16,7 @@ const QuizLandingPage = () => {
   };
 
   return (
-    <div className={styles.quizz_container}>
+    <div className={styles.quizzLanding_container}>
       {showQuizz ? (
         // Render the QuizPage when showQuizz is true
         <QuizPage moduleId={moduleName} />

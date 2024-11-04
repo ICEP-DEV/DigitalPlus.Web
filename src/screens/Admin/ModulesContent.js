@@ -1,171 +1,127 @@
-import React, { useState, useRef } from 'react';
-import { 
-  FaBook, 
-  FaEdit, 
-  FaTrash, 
-  FaPlus, 
-  FaTimes, 
-  FaCheck 
-} from 'react-icons/fa'; // Imported FaCheck for the green tick icon
-import styles from './ModulesContent.module.css';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  FaBook,
+  FaEdit,
+  FaTrash,
+  FaPlus,
+  FaTimes,
+  FaCheck,
+} from "react-icons/fa"; // Imported FaCheck for the green tick icon
+import styles from "./ModulesContent.module.css";
+import axios from "axios";
 
 const ModulesContent = () => {
-  const carouselRef = useRef(null);
 
   // Define an array of random colors
   const backgroundColors = [
-    '#FFEBEE', '#E3F2FD', '#E8F5E9',
-    '#FFF3E0', '#F3E5F5', '#FBE9E7',
-    '#FFFDE7', '#E0F7FA'
+    "#FFEBEE",
+    "#E3F2FD",
+    "#E8F5E9",
+    "#FFF3E0",
+    "#F3E5F5",
+    "#FBE9E7",
+    "#FFFDE7",
+    "#E0F7FA",
   ];
 
   // Function to get a random background color
   const getRandomColor = () =>
     backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
 
-  // Initial modules data
-  const initialModules = [
-    {
-      name: 'Programming Fundamentals',
-      code: 'PF101',
-      courseId: 'CS101',
-      description: 'Introduction to programming concepts.',
-      department: 'Department 1',
-      icon: <FaBook size={40} />, // Adjusted icon size
-      backgroundColor: getRandomColor(),
-    },
-    {
-      name: 'Web Development',
-      code: 'WD201',
-      courseId: 'CS201',
-      description: 'Learn how to build modern web applications.',
-      department: 'Department 1',
-      icon: <FaBook size={40} />,
-      backgroundColor: getRandomColor(),
-    },
-    {
-      name: 'Computer Architecture',
-      code: 'CA301',
-      courseId: 'CS301',
-      description: 'Study the internal workings of computers.',
-      department: 'Department 2',
-      icon: <FaBook size={40} />,
-      backgroundColor: getRandomColor(),
-    },
-    {
-      name: 'Data Structures',
-      code: 'DS401',
-      courseId: 'CS401',
-      description: 'Advanced data structures and algorithms.',
-      department: 'Department 2',
-      icon: <FaBook size={40} />,
-      backgroundColor: getRandomColor(),
-    },
-    {
-      name: 'Cyber Security',
-      code: 'CS501',
-      courseId: 'CS501',
-      description: 'Fundamentals of cyber security.',
-      department: 'Department 3',
-      icon: <FaBook size={40} />,
-      backgroundColor: getRandomColor(),
-    },
-  ];
-
   // State to hold modules
-  const [modules, setModules] = useState(initialModules);
+  const carouselRef = useRef(null);
+  const [modules, setModules] = useState();
 
   // State to hold the currently selected department and filtered modules
-  const [selectedDepartment, setSelectedDepartment] = useState('All');
+  const [selectedDepartment, setSelectedDepartment] = useState("All");
   const [filteredModules, setFilteredModules] = useState(modules);
 
   // State for managing new module creation and editing
-  const [newModuleName, setNewModuleName] = useState('');
-  const [newModuleCode, setNewModuleCode] = useState('');
-  const [newCourseId, setNewCourseId] = useState('');
-  const [newDescription, setNewDescription] = useState('');
+  const [newModuleName, setNewModuleName] = useState("");
+  const [newModuleCode, setNewModuleCode] = useState("");
+  const [newCourseId, setNewCourseId] = useState("");
+  const [newDescription, setNewDescription] = useState("");
   const [editingModule, setEditingModule] = useState(null); // State for the module being edited
 
   // State to manage modal open/close
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Function to handle department dropdown change
-  const handleDepartmentChange = (e) => {
-    const selected = e.target.value;
-    setSelectedDepartment(selected);
+  //Fetch modules
+  useEffect(() => {
+    fetchModules();
+  }, [selectedDepartment]);
 
-    if (selected === 'All') {
-      setFilteredModules(modules); // Show all modules
-    } else {
-      // Filter modules by the selected department
-      const filtered = modules.filter((module) => module.department === selected);
-      setFilteredModules(filtered);
-    }
-  };
+ const fetchModules = async () => {
+  try {
+    const response = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetAllModules`, { params: { department: selectedDepartment } });
+    setModules(response.data || []);
+    setFilteredModules(response.data || []);
+  } catch (error) {
+    console.error("Error fetching modules:", error);
+    setModules([]); // Fallback to an empty array on error
+    setFilteredModules([]); // Fallback to an empty array on error
+  }
+};
+
 
   const handlePrevClick = () => {
     if (carouselRef.current) {
       const scrollAmount = carouselRef.current.clientWidth / 3;
-      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
     }
   };
 
   const handleNextClick = () => {
     if (carouselRef.current) {
       const scrollAmount = carouselRef.current.clientWidth / 3;
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
+  // Function to handle department dropdown change
+  const handleDepartmentChange = async (e) => {
+    const selected = e.target.value;
+    setSelectedDepartment(selected);
+
+    if (selected === "All") {
+      setFilteredModules(modules); // Show all modules
+    } else {
+      // Filter modules by the selected department
+      const department = e.target.value;
+      setSelectedDepartment(department);
+      const response = await axios.get(
+        `https://localhost:7163/api/DigitalPlusCrud/GetModule/${modules}`,
+        { params: { department } }
+      );
+      setFilteredModules(response.data);
+    }
+  };
+
+  
   // Function to add a new module
-  const handleAddModule = () => {
-    if (
-      newModuleName.trim() !== '' &&
-      newModuleCode.trim() !== '' &&
-      newCourseId.trim() !== '' &&
-      newDescription.trim() !== '' &&
-      !modules.some((module) => module.code === newModuleCode)
-    ) {
-      if (window.confirm('Are you sure you want to add this module?')) {
+    const handleAddModule = async () => {
+      if (newModuleName && newModuleCode && newCourseId && newDescription) {
         const newModule = {
           name: newModuleName,
           code: newModuleCode,
           courseId: newCourseId,
           description: newDescription,
           department: selectedDepartment,
-          icon: <FaBook size={40} />, // Adjusted icon size
           backgroundColor: getRandomColor(),
         };
-        const updatedModules = [...modules, newModule];
-        setModules(updatedModules);
-        // Update the filtered modules
-        if (selectedDepartment === 'All' || selectedDepartment === newModule.department) {
-          setFilteredModules([...filteredModules, newModule]);
-        }
-        // Clear the input fields
-        setNewModuleName('');
-        setNewModuleCode('');
-        setNewCourseId('');
-        setNewDescription('');
-        setIsModalOpen(false); // Close the modal
+        await axios.post('/api/modules', newModule);
+        fetchModules();
+        setIsModalOpen(false);
+        resetForm();
       }
-    } else {
-      alert('Please fill in all fields or check if the Module Code is unique.');
-    }
-  };
+    };
 
   // Function to delete a module
-  const handleDeleteModule = (moduleCode) => {
+  const handleDeleteModule = async (moduleCode) => {
     if (window.confirm('Are you sure you want to delete this module?')) {
-      const updatedModules = modules.filter(
-        (module) => module.code !== moduleCode
-      );
-      setModules(updatedModules);
-      // Update the filtered modules
-      const updatedFilteredModules = filteredModules.filter(
-        (module) => module.code !== moduleCode
-      );
-      setFilteredModules(updatedFilteredModules);
+      await axios.delete(`https://localhost:7163/api/DigitalPlusCrud/DeleteModule/${moduleCode}`);
+
+      fetchModules();
     }
   };
 
@@ -180,58 +136,38 @@ const ModulesContent = () => {
   };
 
   // Function to update a module
-  const handleUpdateModule = () => {
-    if (
-      newModuleName.trim() !== '' &&
-      newModuleCode.trim() !== '' &&
-      newCourseId.trim() !== '' &&
-      newDescription.trim() !== ''
-    ) {
-      if (
-        window.confirm('Are you sure you want to update this module?')
-      ) {
-        const updatedModule = {
-          ...editingModule,
-          name: newModuleName,
-          // code: newModuleCode, // Code is not changed during editing
-          courseId: newCourseId,
-          description: newDescription,
-        };
-
-        const updatedModules = modules.map((module) =>
-          module.code === editingModule.code ? updatedModule : module
-        );
-        setModules(updatedModules);
-
-        // Update the filtered modules
-        const updatedFilteredModules = filteredModules.map((module) =>
-          module.code === editingModule.code ? updatedModule : module
-        );
-        setFilteredModules(updatedFilteredModules);
-
-        // Clear the editing state and input fields
-        setEditingModule(null);
-        setNewModuleName('');
-        setNewModuleCode('');
-        setNewCourseId('');
-        setNewDescription('');
-        setIsModalOpen(false); // Close the modal
-      }
-    } else {
-      alert('Please fill in all fields.');
+  const handleUpdateModule = async () => {
+    if (newModuleName && newCourseId && newDescription) {
+      const updatedModule = {
+        name: newModuleName,
+        courseId: newCourseId,
+        description: newDescription,
+      };
+      await axios.put(`https://localhost:7163/api/DigitalPlusCrud/UpdateModule/${editingModule.code}`, updatedModule);
+      fetchModules();
+      setIsModalOpen(false);
+      resetForm();
     }
   };
 
   // Function to cancel editing
   const handleCancelEdit = () => {
-    if (window.confirm('Are you sure you want to cancel editing?')) {
+    if (window.confirm("Are you sure you want to cancel editing?")) {
       setEditingModule(null);
-      setNewModuleName('');
-      setNewModuleCode('');
-      setNewCourseId('');
-      setNewDescription('');
+      setNewModuleName("");
+      setNewModuleCode("");
+      setNewCourseId("");
+      setNewDescription("");
       setIsModalOpen(false); // Close the modal
     }
+  };
+
+  const resetForm = () => {
+    setEditingModule(null);
+    setNewModuleName('');
+    setNewModuleCode('');
+    setNewCourseId('');
+    setNewDescription('');
   };
 
   return (
@@ -257,7 +193,7 @@ const ModulesContent = () => {
           onClick={handlePrevClick}
           aria-label="Previous"
         >
-          {'<'}
+          {"<"}
         </button>
         <div className={styles.modulesCarouselItems} ref={carouselRef}>
           {filteredModules.map((module) => (
@@ -304,7 +240,7 @@ const ModulesContent = () => {
           onClick={handleNextClick}
           aria-label="Next"
         >
-          {'>'}
+          {">"}
         </button>
       </div>
 
@@ -314,10 +250,10 @@ const ModulesContent = () => {
           className={styles.addModuleButton}
           onClick={() => {
             setEditingModule(null); // Clear editingModule
-            setNewModuleName('');
-            setNewModuleCode('');
-            setNewCourseId('');
-            setNewDescription('');
+            setNewModuleName("");
+            setNewModuleCode("");
+            setNewCourseId("");
+            setNewDescription("");
             setIsModalOpen(true); // Open the modal
           }}
           title="Add Module"

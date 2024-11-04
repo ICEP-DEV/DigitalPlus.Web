@@ -1,0 +1,77 @@
+.moduleInficontainer {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+  }
+  
+  .title {
+    text-align: center;
+    color: #0d1431;
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .moduleImage {
+    width: 400px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .section {
+    margin-bottom: 20px;
+  }
+  
+  .section h2 {
+    color: #0d1431;
+    font-size: 20px;
+    border-bottom: 2px solid #0d1431;
+    padding-bottom: 5px;
+  }
+  
+  .section p,
+  .section ul {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .section ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  .section li {
+    margin-bottom: 5px;
+  }
+  
+  .section a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+  
+  .section a:hover {
+    text-decoration: underline;
+  }
+  
+  .downloadButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0d1431;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .downloadButton:hover {
+    background-color: #3b5998;
+  }
+  
