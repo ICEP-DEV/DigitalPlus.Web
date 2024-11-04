@@ -52,8 +52,6 @@ const Booking = () => {
       }, 3000);
 
       setFormData({
-      studentNumber: '',
-      fullNames: '',
       moduleId: '',
       mentorId: '',
       lessonType: '',
