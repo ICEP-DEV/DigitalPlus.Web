@@ -1,43 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
+import axios from 'axios';
 
 const RegisterPage = () => {
     const [selectedModule, setSelectedModule] = useState('');
     const [mentors, setMentors] = useState([]);
-    const [rating, setRating] = useState(0); // State to manage the slider value
+    const [displayName, setDisplayName] = useState('PROFILE');
+    const [allmodules, setAllModules] = useState([]);
+    const [mentorID, setMentorID] = useState(null);
 
-    // Define mentors for each module
-    const moduleMentors = {
-        'PPA F05D': ['B Buthelezi', 'S Vinjwa', 'T Mmethi'],
-        'PPB 216D': ['A Nkosi', 'L Dlamini', 'K Ndlovu'],
-        'OOP 216D': ['M Khumalo', 'R Sithole', 'S Ncube'],
-        'AOP 316D': ['J Moyo', 'C Hadebe', 'G Mthethwa']
-    };
+    useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (storedUser && storedUser.firstName && storedUser.lastName) {
+            const initials = storedUser.firstName
+                .split(' ')
+                .map(name => name[0])
+                .join('');
+            setDisplayName(`${initials} ${storedUser.lastName}`);
+            setMentorID(storedUser.mentorId);
+        }
+    }, []);
 
-    // Handle module change
+    useEffect(() => {
+        const fetchAssignedModules = async () => {
+            if (mentorID) {
+                try {
+                    console.log("Fetching modules for mentor ID:", mentorID);
+
+                    // Fetch assigned modules by mentor ID
+                    const response = await axios.get(`https://localhost:7163/api/AssignMod/getmodulesBy_MentorId/${mentorID}`);
+                    const assignedModules = response.data;
+
+                    if (assignedModules && assignedModules.length > 0) {
+                        console.log("Assigned modules data:", assignedModules);
+
+                        // Fetch detailed information for each module
+                        const moduleDetails = await Promise.all(
+                            assignedModules.map(async (module) => {
+                                try {
+                                    const moduleDetailsResponse = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetModule/${module.moduleId}`);
+                                    console.log("Fetched module detail:", moduleDetailsResponse.data.result);
+                                    return moduleDetailsResponse.data.result; // Ensure "result" matches response structure
+                                } catch (moduleError) {
+                                    console.error("Error fetching module details:", moduleError);
+                                    return null;
+                                }
+                            })
+                        );
+
+                        // Filter out any failed fetches (null entries)
+                        const validModules = moduleDetails.filter(detail => detail !== null);
+                        setAllModules(validModules);
+                        console.log("Final module details set:", validModules);
+                    } else {
+                        console.log("No assigned modules found for this mentor.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching assigned modules:", error);
+                }
+            }
+        };
+        fetchAssignedModules();
+    }, [mentorID]);
+
     const handleModuleChange = (event) => {
-        const selected = event.target.value;
-        setSelectedModule(selected);
-        setMentors(moduleMentors[selected] || []);
-    };
-
-    // Handle rating change
-    const handleRatingChange = (event) => {
-        setRating(event.target.value);
+        setSelectedModule(event.target.value);
     };
 
     return (
         <div style={styles.pageContainer}>
             <NavBar />
             <SideBar />
-            <div><h1 style={styles.headerTitle}>Register</h1> {/* Added Register heading */}</div>
+            <div><h1 style={styles.headerTitle}>Register</h1></div>
             <div style={styles.registerPageContainer}>
                 <div style={styles.mainContent}>
-                    <div style={styles.header}>
-                        
-                        {/* <div style={styles.userInfo}>B MDLULI</div> */}
-                    </div>
+                    <div style={styles.header}></div>
                     <div style={styles.formWrapper}>
                         <div style={styles.formContainer}>
                             <form>
@@ -47,6 +85,7 @@ const RegisterPage = () => {
                                         type="text"
                                         placeholder="Enter student number"
                                         style={styles.input}
+                                        disabled
                                     />
                                 </div>
 
@@ -56,54 +95,32 @@ const RegisterPage = () => {
                                         value={selectedModule}
                                         onChange={handleModuleChange}
                                         style={styles.input}
-                                        disabled // Disable this field
                                     >
-                                        <option value="" disabled>Select the module</option>
-                                        <option value="PPA F05D">PPA F05D</option>
-                                        <option value="PPB 216D">PPB 216D</option>
-                                        <option value="OOP 216D">OOP 216D</option>
-                                        <option value="AOP 316D">AOP 316D</option>
+                                        <option value="">Select the module</option>
+                                        {allmodules.length > 0 ? (
+                                            allmodules.map((module) => (
+                                                <option key={module.moduleId} value={module.module_Code}>
+                                                    {module.module_Code}
+                                                </option>
+                                            ))
+                                        ) : (
+                                            <option disabled>No modules available</option>
+                                        )}
                                     </select>
                                 </div>
 
                                 <div style={styles.formGroup}>
-                                    <label style={styles.formLabel}>Choose Mentor:</label>
+                                    <label style={styles.formLabel}>Mentor's Name:</label>
                                     <select
                                         style={styles.input}
-                                        disabled // Disable this field
+                                        value={displayName}
+                                        disabled
                                     >
-                                        <option value="" disabled>Select mentor</option>
+                                        <option value={displayName}>{displayName}</option>
                                         {mentors.map((mentor, index) => (
                                             <option key={index} value={mentor}>{mentor}</option>
                                         ))}
                                     </select>
-                                </div>
-
-                                <div style={styles.formGroup}>
-                                    <label style={styles.formLabel}>Rating:</label>
-                                    <input
-                                        type="range"
-                                        min="0"
-                                        max="10"
-                                        step="1"
-                                        value={rating} // Bind the value to the state
-                                        onChange={handleRatingChange} // Handle the slider value change
-                                        style={styles.rangeSlider}
-                                        disabled // Disable this field
-                                    />
-                                    <div style={styles.sliderLabels}>
-                                        <span>0</span>
-                                        <span>1</span>
-                                        <span>2</span>
-                                        <span>3</span>
-                                        <span>4</span>
-                                        <span>5</span>
-                                        <span>6</span>
-                                        <span>7</span>
-                                        <span>8</span>
-                                        <span>9</span>
-                                        <span>10</span>
-                                    </div>
                                 </div>
 
                                 <div style={styles.buttonContainer}>
@@ -116,17 +133,6 @@ const RegisterPage = () => {
                                 </div>
                             </form>
                         </div>
-                        <div style={styles.commentContainer}>
-                            <div style={styles.formGroup}>
-                                <label style={styles.formLabel}>Comment:</label>
-                                <textarea
-                                    placeholder="Write your comment"
-                                    style={styles.textarea}
-                                    disabled // Disable this field
-                                />
-                                <i className="fas fa-upload" style={styles.uploadIcon}></i>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -138,8 +144,8 @@ const styles = {
     pageContainer: {
         height: '100vh',
         margin: 0,
-        overflow: 'hidden', // Prevents scrolling
-        backgroundColor: '#D9D9D9', // Set background color of the page
+        overflow: 'hidden',
+        backgroundColor: '#D9D9D9',
     },
     registerPageContainer: {
         display: 'flex',
@@ -147,12 +153,12 @@ const styles = {
         fontFamily: 'Arial, sans-serif',
         justifyContent: 'center',
         alignItems: 'center',
-        overflow: 'hidden',  // Prevents scrolling
+        overflow: 'hidden',
     },
     mainContent: {
-        backgroundColor: '#D9D9D9', // Ensure consistency in background color
+        backgroundColor: '#D9D9D9',
         padding: '20px',
-        maxWidth: '1200px', // Increased max width to accommodate space for comment
+        maxWidth: '1200px',
         boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
         borderRadius: '8px',
         width: '100%',
@@ -170,26 +176,14 @@ const styles = {
         fontSize: '24px',
         color: '#001C4A',
     },
-    userInfo: {
-        backgroundColor: '#D3D3D3',
-        padding: '10px',
-        borderRadius: '50%',
-        textAlign: 'center',
-    },
     formWrapper: {
         display: 'flex',
         width: '100%',
         flex: 1,
-        gap: '30px', // Adds a gap between the form and the comment section
+        gap: '30px',
     },
     formContainer: {
         flex: 1,
-    },
-    commentContainer: {
-        width: '500px', // Adjust the width as needed
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
     },
     formGroup: {
         marginBottom: '15px',
@@ -205,35 +199,8 @@ const styles = {
         width: '100%',
         boxSizing: 'border-box',
         backgroundColor: '#ABAAAA',
-    },
-    textarea: {
-        padding: '10px',
-        borderRadius: '4px',
-        border: '5px solid #000000', // Increased border width
-        width: '100%',
-        height: '300px', // Increased height for the comment
-        boxSizing: 'border-box',
-        backgroundColor: '#ABAAAA',
-    },
-    uploadIcon: {
-        color: 'green',
-        fontSize: '20px',
-        cursor: 'pointer',
-        marginLeft: '10px',
-    },
-    rangeSlider: {
-        width: '100%',
-        WebkitAppearance: 'none', // Remove default appearance for Webkit browsers
-        backgroundColor: '#000C24', // Track color
-        height: '8px', // Track height
-        borderRadius: '5px',
-        outline: 'none',
-        cursor: 'pointer',
-    },
-    sliderLabels: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        fontSize: '14px',
+        color: '#000',
+        fontWeight: 'bolder',
     },
     submitButton: {
         backgroundColor: '#000C24',
@@ -247,7 +214,7 @@ const styles = {
     buttonContainer: {
         display: 'flex',
         justifyContent: 'center',
-        marginTop: '20px', // Adds some space above the button
+        marginTop: '20px',
     },
 };
 
