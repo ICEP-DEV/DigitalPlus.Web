@@ -22,11 +22,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const App = () => {
-  useEffect(() => {
-    // This will update the URL to display only 'We-me-ntor' on every route
-    window.history.pushState({}, '', '/we.men.tor.ac.za');
-  }, []); // This effect runs once when the component is mounted
-
+  
   return (
     <Router>
       <Routes>
