@@ -9,6 +9,7 @@ const RegisterPage = () => {
     const [displayName, setDisplayName] = useState('PROFILE');
     const [allmodules, setAllModules] = useState([]);
     const [mentorID, setMentorID] = useState(null);
+    const [fetchedMentorID, setFetchedMentorID] = useState(''); // New state for displaying mentor ID
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -19,6 +20,7 @@ const RegisterPage = () => {
                 .join('');
             setDisplayName(`${initials} ${storedUser.lastName}`);
             setMentorID(storedUser.mentorId);
+            setFetchedMentorID(storedUser.mentorId); // Display mentor ID in Student Number field
         }
     }, []);
 
@@ -26,33 +28,22 @@ const RegisterPage = () => {
         const fetchAssignedModules = async () => {
             if (mentorID) {
                 try {
-                    console.log("Fetching modules for mentor ID:", mentorID);
-
-                    // Fetch assigned modules by mentor ID
                     const response = await axios.get(`https://localhost:7163/api/AssignMod/getmodulesBy_MentorId/${mentorID}`);
                     const assignedModules = response.data;
-
                     if (assignedModules && assignedModules.length > 0) {
-                        console.log("Assigned modules data:", assignedModules);
-
-                        // Fetch detailed information for each module
                         const moduleDetails = await Promise.all(
                             assignedModules.map(async (module) => {
                                 try {
                                     const moduleDetailsResponse = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetModule/${module.moduleId}`);
-                                    console.log("Fetched module detail:", moduleDetailsResponse.data.result);
-                                    return moduleDetailsResponse.data.result; // Ensure "result" matches response structure
+                                    return moduleDetailsResponse.data.result;
                                 } catch (moduleError) {
                                     console.error("Error fetching module details:", moduleError);
                                     return null;
                                 }
                             })
                         );
-
-                        // Filter out any failed fetches (null entries)
                         const validModules = moduleDetails.filter(detail => detail !== null);
                         setAllModules(validModules);
-                        console.log("Final module details set:", validModules);
                     } else {
                         console.log("No assigned modules found for this mentor.");
                     }
@@ -83,7 +74,7 @@ const RegisterPage = () => {
                                     <label style={styles.formLabel}>Student Number:</label>
                                     <input
                                         type="text"
-                                        placeholder="Enter student number"
+                                        value={fetchedMentorID} // Display fetched mentor ID here
                                         style={styles.input}
                                         disabled
                                     />
@@ -139,6 +130,7 @@ const RegisterPage = () => {
         </div>
     );
 };
+
 
 const styles = {
     pageContainer: {
