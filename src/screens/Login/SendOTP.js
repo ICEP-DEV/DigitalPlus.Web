@@ -9,9 +9,6 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 function SendOTP() {
     const navigate = useNavigate();
-    useEffect(() => {
-        window.history.pushState({}, '', '/we.men.tor.ac.za');
-    }, []);
     
     const [email, setEmail] = useState('');
     const [otp, setOtp] = useState('');

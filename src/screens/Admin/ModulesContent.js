@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import {
   FaBook,
   FaEdit,
@@ -6,11 +7,21 @@ import {
   FaPlus,
   FaTimes,
   FaCheck,
-} from "react-icons/fa"; // Imported FaCheck for the green tick icon
+} from "react-icons/fa";
 import styles from "./ModulesContent.module.css";
-import axios from "axios";
 
 const ModulesContent = () => {
+  const carouselRef = useRef(null);
+   const [modules, setModules] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState("All");
+  const [filteredModules, setFilteredModules] = useState([]);
+  const [Module_Name, setModuleName] = useState("");
+  const [Module_Code, setModuleCode] = useState("");
+  const [Course_Id, setCourseId] = useState("");
+  const [Description, setDescription] = useState("");
+  const [Department_Id, setDepartment] = useState("");
+  const [editingModule, setEditingModule] = useState(null);
+  const [allDepartments, setAllDepartments]= useState([]);
 
   // Define an array of random colors
   const backgroundColors = [
@@ -28,125 +39,137 @@ const ModulesContent = () => {
   const getRandomColor = () =>
     backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
 
-  // State to hold modules
-  const carouselRef = useRef(null);
-  const [modules, setModules] = useState();
-
-  // State to hold the currently selected department and filtered modules
-  const [selectedDepartment, setSelectedDepartment] = useState("All");
-  const [filteredModules, setFilteredModules] = useState(modules);
-
-  // State for managing new module creation and editing
-  const [newModuleName, setNewModuleName] = useState("");
-  const [newModuleCode, setNewModuleCode] = useState("");
-  const [newCourseId, setNewCourseId] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [editingModule, setEditingModule] = useState(null); // State for the module being edited
-
   // State to manage modal open/close
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //Fetch modules
-  useEffect(() => {
-    fetchModules();
-  }, [selectedDepartment]);
 
- const fetchModules = async () => {
-  try {
-    const response = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetAllModules`, { params: { department: selectedDepartment } });
-    setModules(response.data || []);
-    setFilteredModules(response.data || []);
-  } catch (error) {
-    console.error("Error fetching modules:", error);
-    setModules([]); // Fallback to an empty array on error
-    setFilteredModules([]); // Fallback to an empty array on error
-  }
+  // Fetch departments
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments');
+      console.log (response.data.result);
+      setAllDepartments(response.data.result); // assuming response.data is an array
+    } catch (error) {
+      console.error("Error fetching departments:", error);
+    }
+  };
+
+  // Fetch Module
+  const fetchModules = async () => {
+    try {
+        const response = await axios.get("https://localhost:7163/api/DigitalPlusCrud/GetAllModules", {
+            params: { department: selectedDepartment }
+        });
+        console.log("Fetched modules:", response.data); // Add this line
+        setModules(response.data);
+        setFilteredModules(response.data);
+    } catch (error) {
+        console.error("Error fetching modules:", error);
+        // Optionally reset to empty array on error
+        setFilteredModules([]); 
+    }
 };
 
+  // Call fetchDepartments in useEffect
+  useEffect(() => {
+    fetchDepartments();
+    //fetchModules();
+  }, []);
 
+  const handleDepartmentChange = async (e) => {
+    const department = e.target.value;
+    setSelectedDepartment(department);
+
+    // Fetch modules based on the new department selection
+    await fetchModules(); // Call fetchModules directly
+  };
+
+  const handleAddModule = async () => {
+    if (Module_Name && Module_Code && Course_Id && Description && Department_Id) {
+      if (!Module_Name || !Module_Code || !Course_Id || !Description || !Department_Id) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+      try {
+        const newModule = {
+          moduleName: Module_Name, // adjust field names based on API docs
+          moduleCode: Module_Code,
+          courseId: Course_Id,
+          description: Description,
+          departmentId: Department_Id, // assuming single department ID is expected
+          backgroundColor: getRandomColor(),
+        };
+
+        await axios.post("https://localhost:7163/api/DigitalPlusCrud/AddModule", newModule);
+        fetchModules();
+        setIsModalOpen(false);
+        resetForm();
+      } catch (error) {
+        console.error("Error adding module:", error.response ? error.response.data : error.message);
+      }
+    } else {
+      alert("Please fill in all required fields.");
+    }
+};
+
+  const handleDeleteModule = async (Module_Id) => {
+    if (window.confirm("Are you sure you want to delete this module?")) {
+      try {
+        await axios.delete(
+          `https://localhost:7163/api/DigitalPlusCrud/DeleteModule/${Module_Id}`
+        );
+        fetchModules();
+      } catch (error) {
+        console.error("Error deleting module:", error);
+        // Optionally, show a user-friendly error message here
+      }
+    }
+  };
+
+  const handleEditModule = (modules) => {
+    setEditingModule(modules);
+    setModuleName(modules.Module_Name);
+    setModuleCode(modules.Module_Code);
+    setCourseId(modules.Course_Id);
+    setDescription(modules.Description);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdateModule = async (Module_Id) => {
+    if (Module_Name && Course_Id && Description) {
+      const updatedModule = {
+        name: Module_Name,
+        courseId: Course_Id,
+        description: Description,
+      };
+      await axios.put(
+        `https://localhost:7163/api/DigitalPlusCrud/UpdateModule/${Module_Id}`,
+        updatedModule
+      );
+      fetchModules();
+      setIsModalOpen(false);
+      resetForm();
+    }
+  };
+
+  const resetForm = () => {
+    setEditingModule(null);
+    setModuleName("");
+    setModuleCode("");
+    setCourseId("");
+    setDescription("");
+  };
+
+  // Carousel navigation handlers
   const handlePrevClick = () => {
     if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.clientWidth / 3;
-      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      carouselRef.current.scrollLeft -= 200;
     }
   };
 
   const handleNextClick = () => {
     if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.clientWidth / 3;
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
-  };
-
-  // Function to handle department dropdown change
-  const handleDepartmentChange = async (e) => {
-    const selected = e.target.value;
-    setSelectedDepartment(selected);
-
-    if (selected === "All") {
-      setFilteredModules(modules); // Show all modules
-    } else {
-      // Filter modules by the selected department
-      const department = e.target.value;
-      setSelectedDepartment(department);
-      const response = await axios.get(
-        `https://localhost:7163/api/DigitalPlusCrud/GetModule/${modules}`,
-        { params: { department } }
-      );
-      setFilteredModules(response.data);
-    }
-  };
-
-  
-  // Function to add a new module
-    const handleAddModule = async () => {
-      if (newModuleName && newModuleCode && newCourseId && newDescription) {
-        const newModule = {
-          name: newModuleName,
-          code: newModuleCode,
-          courseId: newCourseId,
-          description: newDescription,
-          department: selectedDepartment,
-          backgroundColor: getRandomColor(),
-        };
-        await axios.post('/api/modules', newModule);
-        fetchModules();
-        setIsModalOpen(false);
-        resetForm();
-      }
-    };
-
-  // Function to delete a module
-  const handleDeleteModule = async (moduleCode) => {
-    if (window.confirm('Are you sure you want to delete this module?')) {
-      await axios.delete(`https://localhost:7163/api/DigitalPlusCrud/DeleteModule/${moduleCode}`);
-
-      fetchModules();
-    }
-  };
-
-  // Function to start editing a module
-  const handleEditModule = (module) => {
-    setEditingModule(module);
-    setNewModuleName(module.name);
-    setNewModuleCode(module.code);
-    setNewCourseId(module.courseId);
-    setNewDescription(module.description);
-    setIsModalOpen(true); // Open the modal
-  };
-
-  // Function to update a module
-  const handleUpdateModule = async () => {
-    if (newModuleName && newCourseId && newDescription) {
-      const updatedModule = {
-        name: newModuleName,
-        courseId: newCourseId,
-        description: newDescription,
-      };
-      await axios.put(`https://localhost:7163/api/DigitalPlusCrud/UpdateModule/${editingModule.code}`, updatedModule);
-      fetchModules();
-      setIsModalOpen(false);
-      resetForm();
+      carouselRef.current.scrollLeft += 200;
     }
   };
 
@@ -154,20 +177,12 @@ const ModulesContent = () => {
   const handleCancelEdit = () => {
     if (window.confirm("Are you sure you want to cancel editing?")) {
       setEditingModule(null);
-      setNewModuleName("");
-      setNewModuleCode("");
-      setNewCourseId("");
-      setNewDescription("");
+      setModuleName("");
+      setModuleCode("");
+      setCourseId("");
+      setDescription("");
       setIsModalOpen(false); // Close the modal
     }
-  };
-
-  const resetForm = () => {
-    setEditingModule(null);
-    setNewModuleName('');
-    setNewModuleCode('');
-    setNewCourseId('');
-    setNewDescription('');
   };
 
   return (
@@ -180,9 +195,12 @@ const ModulesContent = () => {
       <div className={styles.modulesDepartmentDropdown}>
         <select value={selectedDepartment} onChange={handleDepartmentChange}>
           <option value="All">All Departments</option>
-          <option value="Department 1">Department 1</option>
-          <option value="Department 2">Department 2</option>
-          <option value="Department 3">Department 3</option>
+          {allDepartments.map((dep,xid) => (
+                        <option key={xid+1} value={xid+1}>
+                          {dep.department_Name}
+                        </option>
+                      ))}
+       
         </select>
       </div>
 
@@ -196,7 +214,7 @@ const ModulesContent = () => {
           {"<"}
         </button>
         <div className={styles.modulesCarouselItems} ref={carouselRef}>
-          {filteredModules.map((module) => (
+        {Array.isArray(filteredModules) && filteredModules.map((module) => (
             <div
               className={styles.modulesCarouselItem}
               key={module.code} // Use module code as the key
@@ -207,16 +225,16 @@ const ModulesContent = () => {
 
               {/* Display module details */}
               <p>
-                <strong>Name:</strong> {module.name}
+                <strong>Name:</strong> {module.Module_Name}
               </p>
               <p>
-                <strong>Code:</strong> {module.code}
+                <strong>Code:</strong> {module.Module_Code}
               </p>
               <p>
-                <strong>Course ID:</strong> {module.courseId}
+                <strong>Course ID:</strong> {module.Course_Id}
               </p>
               <p>
-                <strong>Description:</strong> {module.description}
+                <strong>Description:</strong> {module.Description}
               </p>
 
               {/* Icons for Edit and Delete at the bottom left corner */}
@@ -236,7 +254,7 @@ const ModulesContent = () => {
           ))}
         </div>
         <button
-          className={`${styles.modulesCarouselBtn} ${styles.modulesRightBtn}`}
+          className={`${styles.modulesCarouselBtn} ${styles.modulesLeftBtn}`}
           onClick={handleNextClick}
           aria-label="Next"
         >
@@ -248,12 +266,12 @@ const ModulesContent = () => {
       <div className={styles.addModuleContainer}>
         <button
           className={styles.addModuleButton}
-          onClick={() => {
+          onClick={(handleAddModule) => {
             setEditingModule(null); // Clear editingModule
-            setNewModuleName("");
-            setNewModuleCode("");
-            setNewCourseId("");
-            setNewDescription("");
+            setModuleName("");
+            setModuleCode("");
+            setCourseId("");
+            setDescription("");
             setIsModalOpen(true); // Open the modal
           }}
           title="Add Module"
@@ -275,16 +293,16 @@ const ModulesContent = () => {
                   <label className={styles.label}>Module Name</label>
                   <input
                     type="text"
-                    value={newModuleName}
-                    onChange={(e) => setNewModuleName(e.target.value)}
+                    value={Module_Name}
+                    onChange={(e) => setModuleName(e.target.value)}
                     placeholder="Module Name"
                     className={styles.newModuleInput}
                   />
                   <label className={styles.label}>Module Code</label>
                   <input
                     type="text"
-                    value={newModuleCode}
-                    onChange={(e) => setNewModuleCode(e.target.value)}
+                    value={Module_Code}
+                    onChange={(e) => setModuleCode(e.target.value)}
                     placeholder="Module Code"
                     className={styles.newModuleInput}
                     disabled={!!editingModule} // Disable code input when editing
@@ -295,15 +313,15 @@ const ModulesContent = () => {
                   <label className={styles.label}>Course ID</label>
                   <input
                     type="text"
-                    value={newCourseId}
-                    onChange={(e) => setNewCourseId(e.target.value)}
+                    value={Course_Id}
+                    onChange={(e) => setCourseId(e.target.value)}
                     placeholder="Course ID"
                     className={styles.newModuleInput}
                   />
                   <label className={styles.label}>Description</label>
                   <textarea
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
+                    value={Description}
+                    onChange={(e) => setDescription(e.target.value)}
                     placeholder="Description"
                     className={styles.newModuleTextarea}
                   />
@@ -315,7 +333,7 @@ const ModulesContent = () => {
                 <div className={styles.editModuleActions}>
                   <button
                     className={styles.updateModuleButton}
-                    onClick={handleUpdateModule}
+                    onClick={handleUpdateModule(editingModule.Module_Id)}
                     title="Update Module"
                   >
                     <FaCheck className={styles.updateModuleIcon} />
