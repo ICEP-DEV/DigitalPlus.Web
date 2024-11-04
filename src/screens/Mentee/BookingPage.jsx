@@ -133,7 +133,7 @@ const Booking = () => {
             <div className={styles.inputGroup}>
               <FaUser className={styles.icon} />
               <select name="mentorId" value={formData.mentorId} onChange={handleChange}>
-                <option value="">Select a mentee</option>
+                <option value="">Select a mentor</option>
                 <option value="1">Danny Dietz</option>
                 <option value="2">Mike Murphy</option>
                 <option value="3">Axelson</option>
