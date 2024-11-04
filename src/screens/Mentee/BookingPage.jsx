@@ -15,6 +15,7 @@ const Booking = () => {
    
   });
 
+  const[allmodules, setAllModules] = useState([])
   const [showSuccess, setShowSuccess] = useState(false); // State to control success popup visibility
 
 
@@ -28,7 +29,22 @@ const Booking = () => {
           fullNames : `${user.firstName} ${user.lastName}`
         }));
       }
+
+      const fetchAllModules = async () => {
+        try{
+         const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
+         if(response.data){
+           setAllModules(response.data.result)
+           console.log(response.data.result)
+         }
+   
+        }catch(error){
+          console.log(error)
+        }
+     }
+  
       
+      fetchAllModules()
   },[]);
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,10 +119,11 @@ const Booking = () => {
               <FaBook className={styles.icon} />
               <select name="moduleId" value={formData.moduleId} onChange={handleChange}>
                 <option value="">Select Module</option>
-                <option value="1">PPA</option>
-                <option value="2">PPB</option>
-                <option value="3">OOP</option>
-                <option value="4">AOP</option>
+                {allmodules.map((module,mid) => (
+              <option key={mid} value={mid}>
+                {module.module_Code}
+              </option>
+            ))}
               </select>
             </div>
           </div>
@@ -116,7 +133,7 @@ const Booking = () => {
             <div className={styles.inputGroup}>
               <FaUser className={styles.icon} />
               <select name="mentorId" value={formData.mentorId} onChange={handleChange}>
-                <option value="">Select a mentee</option>
+                <option value="">Select a mentor</option>
                 <option value="1">Danny Dietz</option>
                 <option value="2">Mike Murphy</option>
                 <option value="3">Axelson</option>

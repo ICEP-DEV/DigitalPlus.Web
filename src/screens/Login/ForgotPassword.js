@@ -7,10 +7,7 @@ import styles from './ForgotPassword.module.css';
 import { Link } from 'react-router-dom';
 function ForgotPassword() {
     const navigate = useNavigate();
-    useEffect(() => {
-        // This will update the URL to display only 'We-me-ntor' on every route
-        window.history.pushState({}, '', '/we.men.tor.ac.za');
-      }, []);
+    
     const [email, setEmail] = useState('');  // State to hold the email
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');

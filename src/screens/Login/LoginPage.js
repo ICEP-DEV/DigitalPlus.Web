@@ -10,11 +10,6 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        document.title = 'We-me-ntor';
-        window.history.pushState({}, '', '/we.men.tor.ac.za');
-    }, []);
-
     const handleLogin = async (e) => {
         e.preventDefault();
 
