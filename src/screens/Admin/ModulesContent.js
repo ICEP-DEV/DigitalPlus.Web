@@ -12,7 +12,7 @@ import styles from "./ModulesContent.module.css";
 
 const ModulesContent = () => {
   const carouselRef = useRef(null);
-  const [modules, setModules] = useState([]);
+   const [modules, setModules] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState("All");
   const [filteredModules, setFilteredModules] = useState([]);
   const [Module_Name, setModuleName] = useState("");
@@ -21,6 +21,7 @@ const ModulesContent = () => {
   const [Description, setDescription] = useState("");
   const [Department_Id, setDepartment] = useState("");
   const [editingModule, setEditingModule] = useState(null);
+  const [allDepartments, setAllDepartments]= useState([]);
 
   // Define an array of random colors
   const backgroundColors = [
@@ -41,15 +42,17 @@ const ModulesContent = () => {
   // State to manage modal open/close
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
   // Fetch departments
   const fetchDepartments = async () => {
     try {
-      const response = await axios.get("https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments");
-      setDepartment(response.data); // assuming response.data is an array
+      const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments');
+      console.log (response.data.result);
+      setAllDepartments(response.data.result); // assuming response.data is an array
     } catch (error) {
       console.error("Error fetching departments:", error);
     }
-  };;
+  };
 
   // Fetch Module
   const fetchModules = async () => {
@@ -70,7 +73,7 @@ const ModulesContent = () => {
   // Call fetchDepartments in useEffect
   useEffect(() => {
     fetchDepartments();
-    fetchModules();
+    //fetchModules();
   }, []);
 
   const handleDepartmentChange = async (e) => {
@@ -192,19 +195,12 @@ const ModulesContent = () => {
       <div className={styles.modulesDepartmentDropdown}>
         <select value={selectedDepartment} onChange={handleDepartmentChange}>
           <option value="All">All Departments</option>
-          {Department_Id.length > 0 ? (
-            Department_Id.map((department) => (
-              <option
-                key={department.Department_Id}
-                value={department.Department_Id}
-              >
-                {department.Department_Name}{" "}
-                {/* Adjust this according to your data structure */}
-              </option>
-            ))
-          ) : (
-            <option disabled>No departments available</option>
-          )}
+          {allDepartments.map((dep,xid) => (
+                        <option key={xid+1} value={xid+1}>
+                          {dep.department_Name}
+                        </option>
+                      ))}
+       
         </select>
       </div>
 
@@ -270,7 +266,7 @@ const ModulesContent = () => {
       <div className={styles.addModuleContainer}>
         <button
           className={styles.addModuleButton}
-          onClick={() => {
+          onClick={(handleAddModule) => {
             setEditingModule(null); // Clear editingModule
             setModuleName("");
             setModuleCode("");
