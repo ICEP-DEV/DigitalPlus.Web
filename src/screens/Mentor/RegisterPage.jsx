@@ -14,15 +14,12 @@ const RegisterPage = () => {
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         if (storedUser && storedUser.firstName && storedUser.lastName) {
-            const initials = storedUser.firstName
-                .split(' ')
-                .map(name => name[0])
-                .join('');
-            setDisplayName(`${initials} ${storedUser.lastName}`);
+            setDisplayName(`${storedUser.firstName} ${storedUser.lastName}`);
             setMentorID(storedUser.mentorId);
             setFetchedMentorID(storedUser.mentorId); // Display mentor ID in Student Number field
         }
     }, []);
+    
 
     useEffect(() => {
         const fetchAssignedModules = async () => {
@@ -73,10 +70,11 @@ const RegisterPage = () => {
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Student Number:</label>
                                     <input
-                                        type="text"
+                                        
                                         value={fetchedMentorID} // Display fetched mentor ID here
                                         style={styles.input}
                                         disabled
+                                        readOnly // Make sure it's non-editable
                                     />
                                 </div>
 
@@ -102,16 +100,13 @@ const RegisterPage = () => {
 
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Mentor's Name:</label>
-                                    <select
+                                    <input
+                                        type="text"
+                                        value={displayName} // Display the mentor's name here
                                         style={styles.input}
-                                        value={displayName}
                                         disabled
-                                    >
-                                        <option value={displayName}>{displayName}</option>
-                                        {mentors.map((mentor, index) => (
-                                            <option key={index} value={mentor}>{mentor}</option>
-                                        ))}
-                                    </select>
+                                        readOnly // Ensure it's non-editable
+                                    />
                                 </div>
 
                                 <div style={styles.buttonContainer}>
