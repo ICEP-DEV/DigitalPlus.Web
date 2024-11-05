@@ -120,7 +120,7 @@ const AiPage = () => {
       );
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const prompt = `Generate questions and answers based on the following text, clearly separating each question and answer pair with "Q: " for questions and "A: " for answers:\n\n${text}`;
+      const prompt = `Generate questions and answers based on the following text, clearly separating each question and answer pair with "Q: " for questions and "A: " for answers if it is a programming notes a last question should be coding:\n\n${text}`;
       const chat = model.startChat({
         history: messages.map((msg) => ({
           role: msg.role,
@@ -262,7 +262,7 @@ const AiPage = () => {
               >
                 {message.text
                   .replace(/[*#]/g, "") // Remove * and # from the text
-                  .split("\n")
+                  .split("\n\n")
                   .map((line, idx) => (
                     <p key={idx} className={styles.messageLine}>
                       {line}
