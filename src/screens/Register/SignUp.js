@@ -185,7 +185,7 @@ const SignUp = () => {
                             <select name="DepartmentId" value={mentee.DepartmentId} onChange={handleChange} required>
                             <option value="">Select department</option>
                                 {departments.map((dep, xid) =>(
-                                <option key={xid+1} value={xid+1}>
+                                <option key={dep.department_Id} value={dep.department_Id}>
                                 {dep.department_Name}
                             </option>
                             ))}

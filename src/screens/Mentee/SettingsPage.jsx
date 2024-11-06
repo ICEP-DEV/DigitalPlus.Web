@@ -177,8 +177,8 @@ const Settings = () => {
                       disabled={!isEditing} 
                     >
                       <option value="">{department || 'Department not found'}</option>
-                      {departments.map((dep,xid) => (
-                        <option key={xid+1} value={xid+1}>
+                      {departments.map((dep) => (
+                        <option key={dep.department_Id} value={dep.department_Id}>
                           {dep.department_Name}
                         </option>
                       ))}
