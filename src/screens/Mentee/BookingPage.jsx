@@ -17,7 +17,8 @@ const Booking = () => {
 
   const[allmodules, setAllModules] = useState([])
   const [showSuccess, setShowSuccess] = useState(false); 
-
+  const [mentors, setMentors] = useState([]); // State to store mentors based on moduleId
+ 
 
   useEffect(() =>{
      
@@ -35,7 +36,6 @@ const Booking = () => {
          const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
          if(response.data){
            setAllModules(response.data.result)
-           console.log(response.data.result)
          }
    
         }catch(error){
@@ -46,9 +46,34 @@ const Booking = () => {
       
       fetchAllModules()
   },[]);
+
+  const fetchMentorsByModule = async (moduleId) => {
+    try {
+      const response = await axios.get(`https://localhost:7163/api/AssignMod/module/${moduleId}/mentors`);
+      console.log(response.data.data);
+      if (response.data && response.data.data) {
+        setMentors(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching mentors:', error);
+      setMentors([]); // Reset mentors on error
+    }
+  };
+
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    if (name === 'moduleId' && value) {
+      fetchMentorsByModule(value);
+      // Reset mentor selection when module changes
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        mentorId: '' // Reset mentor selection
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -67,12 +92,14 @@ const Booking = () => {
         setShowSuccess(false);
       }, 3000);
 
-      setFormData({
+      setFormData(prev =>({
+        ...prev,
       moduleId: '',
       mentorId: '',
       lessonType: '',
       dateTime: ''
-    });
+    }));
+    setMentors([]); // Clear mentors list
     } catch (error) {
       console.error('Error creating booking:', error);
     }
@@ -122,7 +149,7 @@ const Booking = () => {
               <select name="moduleId" value={formData.moduleId} onChange={handleChange}>
                 <option value="">Select Module</option>
                 {allmodules.map((module,mid) => (
-              <option key={mid} value={mid}>
+              <option key={mid+1} value={mid+1}>
                 {module.module_Code}
               </option>
             ))}
@@ -134,12 +161,13 @@ const Booking = () => {
             <label>MENTOR:</label>
             <div className={styles.inputGroup}>
               <FaUser className={styles.icon} />
-              <select name="mentorId" value={formData.mentorId} onChange={handleChange}>
-                <option value="">Select a mentor</option>
-                <option value="1">Danny Dietz</option>
-                <option value="2">Mike Murphy</option>
-                <option value="3">Axelson</option>
-                <option value="4">Marcus Luttrell</option>
+              <select name="mentorId" value={formData.mentorId} onChange={handleChange} disabled={!formData.moduleId}>
+              <option value="">Select a mentor</option>
+                  {mentors.map((mentor) => (
+                    <option key={mentor.mentorId} value={mentor.mentorId}>
+                      {`${mentor.firstName} ${mentor.lastName}`}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
