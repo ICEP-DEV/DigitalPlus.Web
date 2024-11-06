@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { FaUser, FaBook, FaClock, FaPen, FaIdCard, FaCheckCircle } from 'react-icons/fa'; // Importing icons
 import styles from './BookingPage.module.css'; // Import the CSS Module
 import SideBarNavBar from "./Navigation/SideBarNavBar";
-import axios from 'axios'; // Import axios for API requests
+import axios from 'axios'; 
 
 const Booking = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +16,7 @@ const Booking = () => {
   });
 
   const[allmodules, setAllModules] = useState([])
-  const [showSuccess, setShowSuccess] = useState(false); // State to control success popup visibility
+  const [showSuccess, setShowSuccess] = useState(false); 
 
 
   useEffect(() =>{
@@ -56,7 +56,7 @@ const Booking = () => {
     console.log(formData);
 
     try {
-      const response = await axios.post( 'https://localhost:7163/api/DigitalPlusCrud/AddAppointment', formData); // Replace with your API endpoint
+      const response = await axios.post( 'https://localhost:7163/api/DigitalPlusCrud/AddAppointment', formData); 
       console.log(response.data);
 
       // Show success popup
@@ -94,6 +94,7 @@ const Booking = () => {
                 value={formData.studentNumber}
                 onChange={handleChange}
                 placeholder={formData.studentNumber}
+                disabled
               />
             </div>
           </div>
@@ -107,6 +108,7 @@ const Booking = () => {
                 value={formData.fullNames}
                 onChange={handleChange}
                 placeholder={formData.fullNames}
+                disabled
               />
             </div>
           </div>
