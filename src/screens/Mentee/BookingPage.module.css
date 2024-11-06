@@ -1,13 +1,15 @@
 .bookingContainer {
-    width: 83%;
+    width: 100%;
     padding: 20px;
-    background-color: #D9D9D9;
+    background-color:  #D9D9D9;
     color: #212121;
     border-radius: 10px;
     text-align: center;
     z-index: -1;
-    margin-left: 180px;
-    min-height: 20vh;
+    /* margin-left: 180px; */
+    /* min-height: 20vh; */
+    height: 57vh;
+    padding: 200px;
 }
   
 .bookingTitle {
@@ -17,13 +19,15 @@
     font-weight: bold;
     margin-bottom: 20px;
     border-bottom: 1px solid black;
+    margin-left: 150px; 
 }
   
 .bookingForm {
     display: flex;
     flex-direction: column;
     align-items: center;
-   
+    margin-left: 150px; 
+    margin-right: 500px;
 }
   
 .formRow {
@@ -50,7 +54,7 @@
     align-items: center;
     background-color: #ABAAAA;
     border-radius: 5px;
-    padding: 5px;
+    padding: 10px;
 }
  .inputGroup input{
     margin-top: 10px;
