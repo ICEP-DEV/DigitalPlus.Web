@@ -57,8 +57,8 @@ const FeedbackPage = () => {
       try{
        const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
        if(response.data){
-         setAllModules(response.data.result)
-         console.log(response.data.result)
+         setAllModules(response.data)
+         console.log(response.data)
        }
  
       }catch(error){
@@ -185,8 +185,8 @@ const handleSubmit = async (e) => {
             required
           >
             <option value="">Select a module</option>
-            {allmodules.map((module,mid) => (
-              <option key={mid} value={module.module_Code}>
+            {allmodules.map((module) => (
+              <option key={module.module_Id} value={module.module_Id}>
                 {module.module_Code}
               </option>
             ))}
