@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import styles from './ReportContent.module.css';  // Importing CSS Module
-import { BsFillPersonCheckFill, BsFileEarmarkTextFill } from 'react-icons/bs';  // Importing Bootstrap Icons
-import { RiShareFill, RiDownload2Fill } from 'react-icons/ri';  // Importing React Icons
-import { FaArrowLeft } from 'react-icons/fa';  // Importing back arrow icon
+import styles from './ReportContent.module.css';
+import { BsFillPersonCheckFill, BsFileEarmarkTextFill } from 'react-icons/bs';
+import { RiShareFill, RiDownload2Fill } from 'react-icons/ri';
+import { FaArrowLeft } from 'react-icons/fa';
 import { GoReport } from "react-icons/go";
 import { IoFilter } from "react-icons/io5";
 
@@ -16,8 +16,8 @@ const reportsData = [
 const ReportContent = () => {
   const [filteredReports, setFilteredReports] = useState(reportsData);
   const [selectedReport, setSelectedReport] = useState(null);
-  const [viewType, setViewType] = useState('main'); // 'main', 'register', or 'mentorReport'
-  const [tabView, setTabView] = useState('register'); // Tabs to switch between register and mentor report
+  const [viewType, setViewType] = useState('main');
+  const [tabView, setTabView] = useState('register');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
 
@@ -58,7 +58,7 @@ const ReportContent = () => {
     <div className={styles.reportsContainer}>
       {viewType === 'main' && (
         <div className={styles.mainView}>
-          <h2 className={styles.header}> <GoReport /> Reports</h2>
+          <h2 className={styles.header}><GoReport /> Reports</h2>
           <div className={styles.filterContainer}>
             <input
               type="text"
@@ -79,30 +79,30 @@ const ReportContent = () => {
               <option value="May">May</option>
               <option value="June">June</option>
             </select>
-            <button className={styles.filterBtn} onClick={handleFilter}> <IoFilter /> Filter</button>
+            <button className={styles.filterBtn} onClick={handleFilter}><IoFilter /> Filter</button>
           </div>
 
           <table className={styles.reportTable}>
             <thead>
               <tr>
-                <th className={styles.studentNumberCol}>Student Number</th>
-                <th className={styles.mentorNameCol}>Mentor Name & Surname</th>
-                <th className={styles.courseCol}>Course</th>
-                <th className={styles.actionCol}>Action</th> {/* Added unique class name */}
+                <th>Student Number</th>
+                <th>Mentor Name & Surname</th>
+                <th>Course</th>
+                <th className={styles.actionCol}>Action</th>
               </tr>
             </thead>
             <tbody>
               {filteredReports.map((report) => (
                 <tr key={report.studentNumber}>
-                  <td className={styles.studentNumberCol}>{report.studentNumber}</td>
-                  <td className={styles.mentorNameCol}>{report.mentor}</td>
-                  <td className={styles.courseCol}>{report.course}</td>
-                  <td className={`${styles.actionCell} ${styles.actionCol}`}> {/* Added unique class name */}
+                  <td>{report.studentNumber}</td>
+                  <td>{report.mentor}</td>
+                  <td>{report.course}</td>
+                  <td className={styles.actionCell}>
                     <button className={styles.registerIconBtn} onClick={() => viewRegister(report.studentNumber)} title="Register">
-                      <BsFillPersonCheckFill /> {/* Register Icon */}
+                      <BsFillPersonCheckFill />
                     </button>
                     <button className={styles.reportIconBtn} onClick={() => viewMentorReport(report.studentNumber)} title="Mentor Report">
-                      <BsFileEarmarkTextFill /> {/* Mentor Report Icon */}
+                      <BsFileEarmarkTextFill />
                     </button>
                   </td>
                 </tr>
@@ -119,15 +119,13 @@ const ReportContent = () => {
               className={`${styles.tabBtn} ${tabView === 'register' ? styles.activeTab : ''}`}
               onClick={() => setTabView('register')}
             >
-              <BsFillPersonCheckFill />
-              Register
+              <BsFillPersonCheckFill /> Register
             </button>
             <button
               className={`${styles.tabBtn} ${tabView === 'mentorReport' ? styles.activeTab : ''}`}
               onClick={() => setTabView('mentorReport')}
             >
-              <BsFileEarmarkTextFill />
-              Mentor Report
+              <BsFileEarmarkTextFill /> Mentor Report
             </button>
           </div>
 
@@ -179,13 +177,13 @@ const RegisterComponent = ({ studentNumber, goBack }) => {
       </table>
       <div className={styles.actionButtons}>
         <button className={styles.shareBtn} title="Share">
-          <RiShareFill />  {/* Share Icon Only */}
+          <RiShareFill />
         </button>
         <button className={styles.downloadBtn} title="Download">
-          <RiDownload2Fill />  {/* Download Icon Only */}
+          <RiDownload2Fill />
         </button>
         <button className={styles.backBtn} onClick={goBack} title="Back">
-          <FaArrowLeft />  {/* Back Icon Only */}
+          <FaArrowLeft />
         </button>
       </div>
     </div>
@@ -224,13 +222,13 @@ const MentorReportComponent = ({ studentNumber, goBack }) => {
 
       <div className={styles.actionButtons}>
         <button className={styles.shareMentorBtn} title="Share">
-          <RiShareFill />  {/* Share Icon Only */}
+          <RiShareFill />
         </button>
         <button className={styles.downloadMentorBtn} title="Download">
-          <RiDownload2Fill />  {/* Download Icon Only */}
+          <RiDownload2Fill />
         </button>
         <button className={styles.backBtn} onClick={goBack} title="Back">
-          <FaArrowLeft />  {/* Back Icon Only */}
+          <FaArrowLeft />
         </button>
       </div>
     </div>
