@@ -1,8 +1,6 @@
-// CreateNewAnnouncement.js
-
 import React, { useState, useEffect } from 'react';
 import styles from './CreateNewAnnouncement.module.css';
-import { BsPlusCircle, BsTrash, BsCheckCircle, BsXCircleFill } from 'react-icons/bs';
+import { BsCheckCircle, BsXCircleFill } from 'react-icons/bs';
 
 const CreateNewAnnouncement = ({
   isOpen,
@@ -24,7 +22,7 @@ const CreateNewAnnouncement = ({
       setAnnouncementType(editingAnnouncement.type.toLowerCase());
       setSendDate(editingAnnouncement.sendDate);
       setRecipientType(editingAnnouncement.recipient);
-      setPhoto(null); // Assuming photo is not handled
+      setPhoto(null);
       setPhotoUrl(editingAnnouncement.photoUrl || '');
       setContent(editingAnnouncement.content);
     } else {
@@ -45,16 +43,9 @@ const CreateNewAnnouncement = ({
         photoUrl,
       };
       console.log('Announcement Saved:', newAnnouncement);
-      addAnnouncement(newAnnouncement); // Add or update the announcement
+      addAnnouncement(newAnnouncement);
       resetForm();
-      onClose(); // Close the modal after saving the announcement
-    }
-  };
-
-  const handleDeleteAnnouncement = () => {
-    if (window.confirm('Are you sure you want to clear this form?')) {
-      resetForm();
-      console.log('Form Cleared');
+      onClose();
     }
   };
 
@@ -68,7 +59,7 @@ const CreateNewAnnouncement = ({
     setContent('');
   };
 
-  if (!isOpen) return null; // If modal is not open, return nothing
+  if (!isOpen) return null;
 
   return (
     <div className={styles.modalOverlay}>
@@ -193,27 +184,25 @@ const CreateNewAnnouncement = ({
               title="Save Announcement"
               aria-label="Save Announcement"
             >
-              <BsPlusCircle size={24} />
+              <BsCheckCircle size={24} />
             </button>
 
-            {/* Clear Form Button */}
+            {/* Cancel Button with Confirmation */}
             <button
-              className={`${styles.iconButton} ${styles.deleteButton}`}
-              onClick={handleDeleteAnnouncement}
-              title="Clear Form"
-              aria-label="Clear Form"
-            >
-              <BsTrash size={24} />
-            </button>
-
-            {/* Cancel Button */}
-            <button
-              className={`${styles.iconButton} ${styles.doneButton}`}
-              onClick={onClose}
+              className={`${styles.iconButton} ${styles.cancelButton}`}
+              onClick={() => {
+                if (
+                  window.confirm(
+                    'Are you sure you want to cancel? Any unsaved changes will be lost.'
+                  )
+                ) {
+                  onClose();
+                }
+              }}
               title="Cancel"
               aria-label="Cancel"
             >
-              <BsCheckCircle size={24} />
+              <BsXCircleFill size={24} />
             </button>
           </div>
         </div>

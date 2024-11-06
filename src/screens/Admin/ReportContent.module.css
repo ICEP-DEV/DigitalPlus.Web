@@ -1,21 +1,20 @@
-/* Container and general styling */
 .reportsContainer {
-  padding: 50px;
+  padding: 20px;
   background-color: #f9f9f9;
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* Full height of the viewport */
+  align-items: flex-start;
+  min-height: 100vh;
 }
 
-.mainView {
-  padding: 50px;
+.mainView, .registerView, .mentorReportView {
+  width: 100%;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 100%;
+  margin-top: 20px;
 }
 
 .header {
@@ -25,18 +24,17 @@
   text-align: center;
 }
 
-/* Filter and Search Styling */
 .filterContainer {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .searchInput {
   padding: 10px;
   margin-right: 10px;
-  border: 1px solid #0e0505;
+  border: 1px solid #ccc;
   border-radius: 4px;
   width: 250px;
 }
@@ -58,108 +56,85 @@
   font-size: 16px;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
 }
 
-/* Table Styling */
-.reportTable {
-  width: 100%; /* Reduced table width for a more compact appearance */
-  margin: 0 auto; /* Center the table horizontally */
+.reportTable, .registerTable, .mentorReportTable {
+  width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
-  border: 2px ridge #c5c1c1;
+  margin-top: 20px;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
-.reportTable th {
+.reportTable th, .registerTable th, .mentorReportTable th {
   background-color: #01182e;
-  color: #eff2f4;
+  color: #efeff4;
+  padding: 12px;
+  text-align: left;
   text-transform: uppercase;
 }
 
-.reportTable th,
-.reportTable td {
-  padding: 8px; /* Reduced padding to make the table more compact */
-  border: 1px solid #ddd;
-  text-align: left;
-
+.reportTable th, .reportTable td,
+.registerTable th, .registerTable td,
+.mentorReportTable th, .mentorReportTable td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
 }
 
-/* Unique class names for specific columns */
-.studentNumberColumn {
-  width: 20%; /* Adjust the width for better alignment */
-}
-
-.mentorNameColumn {
-  width: 30%; /* Adjust the width for better alignment */
-}
-
-.courseColumn {
-  width: 25%; /* Adjust the width for better alignment */
-}
-
-.actionColumn {
-  width: 25%; /* Adjust the width for better alignment */
-  text-align: center;
-}
-
-/* Action Buttons in the Action Column */
 .actionCell {
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  gap: 10px;
+  justify-content: center;
 }
 
-
-
-.tabBtn {
-  background-color: #01182e;
-}
-
-.registerIconBtn,
-.reportIconBtn {
+.registerIconBtn, .reportIconBtn {
   background-color: #01182e;
   color: white;
   border: none;
+  padding: 8px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+}
+
+.registerIconBtn:hover, .reportIconBtn:hover {
+  background-color: #003366;
+}
+
+.tabSwitcher {
   display: flex;
-  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
   justify-content: center;
-  padding: 8px 12px;
-  border-radius: 5px;
-  width: 40px;
-  height: 40px;
 }
 
-.registerTable th {
-  background-color: #01182e;
-  color: #eff2f4;
-  text-transform: uppercase;
-}
-
-.registerIconBtn:hover,
-.reportIconBtn:hover {
+.tabBtn {
   background-color: #01182e;
   color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-/* Icon-only Action Buttons in Details View */
+.tabBtn:hover, .tabBtn.activeTab {
+  background-color: #003366;
+}
+
+.extraReport, .actionButtons {
+  margin-top: 20px;
+}
+
 .actionButtons {
   display: flex;
   gap: 10px;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
 }
 
-.registerView {
-}
-
-.actionButtons button,
-.shareBtn,
-.downloadBtn,
-.backBtn {
+.actionButtons button, .shareBtn, .downloadBtn, .backBtn {
   background-color: #01182e;
   color: white;
   border: none;
@@ -174,10 +149,7 @@
   height: 35px;
 }
 
-.actionButtons button:hover,
-.shareBtn:hover,
-.downloadBtn:hover,
-.backBtn:hover {
+.actionButtons button:hover, .shareBtn:hover, .downloadBtn:hover, .backBtn:hover {
   background-color: #3e3e3e;
   color: white;
 }
