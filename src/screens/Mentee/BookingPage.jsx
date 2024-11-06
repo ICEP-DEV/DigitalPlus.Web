@@ -35,7 +35,8 @@ const Booking = () => {
         try{
          const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
          if(response.data){
-           setAllModules(response.data.result)
+           setAllModules(response.data)
+           console.log(response.data)
          }
    
         }catch(error){
@@ -148,8 +149,8 @@ const Booking = () => {
               <FaBook className={styles.icon} />
               <select name="moduleId" value={formData.moduleId} onChange={handleChange}>
                 <option value="">Select Module</option>
-                {allmodules.map((module,mid) => (
-              <option key={mid+1} value={mid+1}>
+                {allmodules.map((module) => (
+              <option key={module.module_Id} value={module.module_Id}>
                 {module.module_Code}
               </option>
             ))}
