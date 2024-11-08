@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
-import { Add, Save, Update, ManageAccounts, Delete } from '@mui/icons-material'; // Material UI icons
+import { Add, Save, Update, ManageAccounts, Delete, AssignmentInd } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
@@ -13,7 +13,10 @@ const MentorsContent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); // Control the delete confirmation dialog
   const [mentorToDelete, setMentorToDelete] = useState(null); // Track the mentor to be deleted
-
+  const [modules, setModules] = useState([]); // List of all available modules
+  const [moduleDialogOpen, setModuleDialogOpen] = useState(false);
+  const [selectedModules, setSelectedModules] = useState([]);
+  const [selectedMentorId, setSelectedMentorId] = useState(null);
   const [mentorForm, setMentorForm] = useState({
     mentorId: '',
     firstName: '',
@@ -56,6 +59,51 @@ const MentorsContent = () => {
     };
     fetchMentors();
   }, []);
+  // Fetch modules
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
+        setModules(response.data); // Assuming response data is a list of module codes
+      } catch (error) {
+        console.error('Error fetching modules:', error);
+      }
+    };
+
+    fetchModules(); // Call fetchModules inside the useEffect body
+  }, []);
+
+  const openModuleDialog = (mentorId) => {
+    setModuleDialogOpen(true);
+    // Optionally track mentor ID if needed for saving later
+  };
+
+  const handleModuleSelection = (event) => {
+    setSelectedModules(event.target.value); // Assume multiple selection allowed
+  };
+
+  const handleSaveModules = async () => {
+    if (!selectedMentorId || selectedModules.length === 0) {
+      toast.error("Please select a mentor and at least one module.");
+      return;
+    }
+
+    const moduleAssignments = selectedModules.map((moduleId) => ({
+      assignModId: 0, // Placeholder as instructed
+      mentorId: selectedMentorId,
+      moduleId: moduleId,
+    }));
+
+    try {
+      await axios.post('https://localhost:7163/api/AssignMod/AssignModule', moduleAssignments);
+      toast.success('Modules assigned successfully!');
+      setModuleDialogOpen(false);
+      setSelectedModules([]);
+    } catch (error) {
+      console.error('Error assigning modules:', error);
+      toast.error('Failed to assign modules. Please try again.');
+    }
+  };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
@@ -348,6 +396,7 @@ const MentorsContent = () => {
                         sx={{ color: 'black' }} // Black text color
                         className={styles.manageButton}
                         onClick={() => openEditMentorDialog(mentor)}
+                        title="Manage Mentor Account"
                       >
                       </Button>
 
@@ -357,6 +406,15 @@ const MentorsContent = () => {
                         sx={{ color: 'red' }} // Red text for delete
                         className={styles.deleteButton}
                         onClick={() => openDeleteDialog(mentor)} // Open delete dialog
+                        title="Delete Mentor"
+                      >
+                      </Button>
+                      <Button
+                        startIcon={<AssignmentInd />}
+                        onClick={() => openModuleDialog(mentor.mentorId)}
+                        variant="outlined"
+                        sx={{ color: 'black' }}
+                        title="Assign Modules"
                       >
                       </Button>
                     </div>
@@ -546,8 +604,33 @@ const MentorsContent = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-
+      {/* Module Assignment Dialog */}
+      <Dialog open={moduleDialogOpen} onClose={() => setModuleDialogOpen(false)}>
+        <DialogTitle>Assign Modules</DialogTitle>
+        <DialogContent>
+          <Select
+            multiple
+            value={selectedModules}
+            onChange={handleModuleSelection}
+            fullWidth
+            renderValue={(selected) => selected.map((id) => modules.find((m) => m.module_Id === id)?.module_Code).join(', ')}
+          >
+            {modules.map((module) => (
+              <MenuItem key={module.module_Id} value={module.module_Id}>
+                {module.module_Code}
+              </MenuItem>
+            ))}
+          </Select>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setModuleDialogOpen(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleSaveModules} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
