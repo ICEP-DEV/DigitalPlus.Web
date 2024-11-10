@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
-import { Add, Save, Update, ManageAccounts, Delete, AssignmentInd } from '@mui/icons-material';
+import { Add, Save, Update, ManageAccounts, Delete, AssignmentInd, Cancel, Book } from '@mui/icons-material';
+import { Icon, Typography } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
@@ -606,27 +607,32 @@ const MentorsContent = () => {
       </Dialog>
       {/* Module Assignment Dialog */}
       <Dialog open={moduleDialogOpen} onClose={() => setModuleDialogOpen(false)}>
-        <DialogTitle>Assign Modules</DialogTitle>
-        <DialogContent>
+        <DialogTitle style={{ backgroundColor: '#3f51b5', color: 'white', display: 'flex', alignItems: 'center' }}>
+
+          <Typography variant="h6" display="inline">Assign Modules</Typography>
+        </DialogTitle>
+        <DialogContent dividers style={{ backgroundColor: '#f5f5f5' }}>
           <Select
             multiple
             value={selectedModules}
             onChange={handleModuleSelection}
             fullWidth
             renderValue={(selected) => selected.map((id) => modules.find((m) => m.module_Id === id)?.module_Code).join(', ')}
+            style={{ backgroundColor: 'white', borderRadius: 4 }}
           >
             {modules.map((module) => (
-              <MenuItem key={module.module_Id} value={module.module_Id}>
-                {module.module_Code}
+              <MenuItem key={module.module_Id} value={module.module_Id} style={{ display: 'flex', alignItems: 'center' }}>
+
+                <Typography>{module.module_Code}</Typography>
               </MenuItem>
             ))}
           </Select>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setModuleDialogOpen(false)} color="secondary">
+        <DialogActions style={{ backgroundColor: '#e8eaf6' }}>
+          <Button onClick={() => setModuleDialogOpen(false)} color="secondary" startIcon={<Cancel />} style={{ color: '#f44336' }}>
             Cancel
           </Button>
-          <Button onClick={handleSaveModules} color="primary">
+          <Button onClick={handleSaveModules} color="primary" variant="contained" startIcon={<Save />} style={{ backgroundColor: '#4caf50', color: 'white' }}>
             Save
           </Button>
         </DialogActions>
