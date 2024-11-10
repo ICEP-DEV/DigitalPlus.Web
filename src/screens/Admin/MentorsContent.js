@@ -18,6 +18,8 @@ const MentorsContent = () => {
   const [moduleDialogOpen, setModuleDialogOpen] = useState(false);
   const [selectedModules, setSelectedModules] = useState([]);
   const [selectedMentorId, setSelectedMentorId] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const [mentorForm, setMentorForm] = useState({
     mentorId: '',
     firstName: '',
@@ -245,7 +247,9 @@ const MentorsContent = () => {
         { headers: { 'Content-Type': 'application/json' } }
       );
 
-      toast.success('Mentor added and Email sent to the mentor successfully!');
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 4000); // Show popup for 3 seconds
+
     } catch (error) {
       console.error('Error adding mentor or sending email:', error.response ? error.response.data : error.message);
       toast.error('Failed to add mentor or send email. Please try again.');
@@ -349,6 +353,7 @@ const MentorsContent = () => {
             startIcon={<Add />}
             variant="contained"
             sx={{ color: 'black', backgroundColor: 'lightgray' }} // Black text color
+            title='Add Mentor'
           >
             Add
           </Button>
@@ -637,6 +642,14 @@ const MentorsContent = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {/* Success Popup */}
+      {showSuccess && (
+        <div className={styles.successPopup}>
+          {/* <FaCheckCircle className={styles.successIcon} /> */}
+          <p>Mentor added and Email sent to the mentor successfully!</p>
+        </div>
+      )}
+
     </div>
   );
 };
