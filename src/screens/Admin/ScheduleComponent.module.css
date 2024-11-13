@@ -215,3 +215,25 @@
   align-items: center;
   justify-content: space-between;
 }
+/* Style for the select dropdown */
+.formField {
+  font-size: 14px;
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Style for the options inside the select dropdown */
+.moduleOption {
+  color: black; /* Black color for module code */
+  background-color: #fff;
+  padding: 10px;
+  font-size: 14px;
+}
+
+/* Style for the default 'Select Module' option */
+.defaultOption {
+  color: gray;
+  font-style: italic;
+}
