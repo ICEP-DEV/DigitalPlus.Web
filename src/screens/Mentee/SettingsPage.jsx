@@ -160,7 +160,7 @@ const resetPassword = () => {
   axios.post('https://localhost:7163/api/DigitalPlusUser/resetPassword', data)
       .then(response => {
           if (response.data.success) {
-             console.log(response.data);
+            setSuccessMessage('Password Changed Successfully!!!');
               
               
               // Redirect to login after a brief delay to allow the user to see the message
