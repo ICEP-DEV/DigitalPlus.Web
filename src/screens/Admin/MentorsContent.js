@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
 import { Add, Save, Update, ManageAccounts, Delete, AssignmentInd, Cancel, Book } from '@mui/icons-material';
-import { Icon, Typography } from '@mui/material';
+import { Icon, Typography, IconButton } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
 import { SiCodementor } from "react-icons/si";
-
+import { MdInfoOutline } from 'react-icons/md';
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
@@ -18,7 +18,10 @@ const MentorsContent = () => {
   const [moduleDialogOpen, setModuleDialogOpen] = useState(false);
   const [selectedModules, setSelectedModules] = useState([]);
   const [selectedMentorId, setSelectedMentorId] = useState(null);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [popupType, setPopupType] = useState('success');
+  const [assignedModules, setAssignedModules] = useState([]);
 
   const [mentorForm, setMentorForm] = useState({
     mentorId: '',
@@ -67,19 +70,73 @@ const MentorsContent = () => {
     const fetchModules = async () => {
       try {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
-        setModules(response.data); // Assuming response data is a list of module codes
+        setModules(response.data);
+        console.log('Modules : ',response.data);
+
       } catch (error) {
         console.error('Error fetching modules:', error);
+        setModules([]); // Set an empty array if there's an error
       }
     };
-
-    fetchModules(); // Call fetchModules inside the useEffect body
+  
+    fetchModules();
   }, []);
-
-  const openModuleDialog = (mentorId) => {
-    setModuleDialogOpen(true);
-    // Optionally track mentor ID if needed for saving later
+  const PopupMessage = ({ message, type, onClose }) => {
+    console.log("PopupMessage rendered with message:", message); // Debug
+    return (
+      <div className={`${styles.popupMessage} ${type === 'error' ? styles.error : styles.success}`}>
+        <MdInfoOutline className={styles.icon} /> {/* Information Icon */}
+        <p>{message}</p>
+        <button onClick={onClose} className={styles.closeButton}>×</button>
+      </div>
+    );
   };
+  
+{/* Function to handle removal of assigned modules */}
+const handleRemoveModule = async (assignModId) => {
+  try {
+    await axios.delete(`https://localhost:7163/api/AssignMod/delete/${assignModId}`);
+    // Update assignedModules state by filtering out the deleted module
+    setAssignedModules((prevAssignedModules) =>
+      prevAssignedModules.filter((module) => module.assignModId !== assignModId)
+    );
+    showPopupMessage('Module removed successfully.');
+  } catch (error) {
+    console.error("Error removing module:", error);
+    showPopupMessage('Failed to remove module. Please try again.', 'error');
+  }
+};
+
+const showPopupMessage = (message, type = 'success') => {
+  console.log("showPopupMessage called with:", message, type); // Debug
+  setPopupMessage(message);
+  setPopupType(type);
+  setShowPopup(true);
+
+  setTimeout(() => setShowPopup(false), 7000);
+};
+
+  const openModuleDialog = async (mentorId) => {
+    setSelectedMentorId(mentorId);
+    setModuleDialogOpen(true);
+    setSelectedModules([]); // Reset selected modules
+    setAssignedModules([]); // Clear assigned modules initially to avoid showing stale data
+  
+    try {
+      console.log(`Fetching modules for mentor ID: ${mentorId}`);
+      const response = await axios.get(`https://localhost:7163/api/AssignMod/getmodulesBy_MentorId/${mentorId}`);
+      
+      if (response.data && response.data.length > 0) {
+        setAssignedModules(response.data);
+      } else {
+        setAssignedModules([]); // Clear assigned modules if none are found
+      }
+    } catch (error) {
+      console.error('Error fetching assigned modules:', error);
+    }
+  };
+  
+  
 
   const handleModuleSelection = (event) => {
     setSelectedModules(event.target.value); // Assume multiple selection allowed
@@ -87,27 +144,41 @@ const MentorsContent = () => {
 
   const handleSaveModules = async () => {
     if (!selectedMentorId || selectedModules.length === 0) {
-      toast.error("Please select a mentor and at least one module.");
       return;
     }
 
-    const moduleAssignments = selectedModules.map((moduleId) => ({
-      assignModId: 0, // Placeholder as instructed
-      mentorId: selectedMentorId,
-      moduleId: moduleId,
-    }));
-
     try {
-      await axios.post('https://localhost:7163/api/AssignMod/AssignModule', moduleAssignments);
-      toast.success('Modules assigned successfully!');
+      // Use Promise.all to send all assignments in parallel
+      const moduleAssignments = selectedModules.map((moduleId) => ({
+        assignModId: 0,
+        mentorId: selectedMentorId,
+        moduleId,
+      }));
+      
+      await Promise.all(
+        moduleAssignments.map((assignment) =>
+          axios.post('https://localhost:7163/api/AssignMod/AssignModule', assignment)
+        )
+      );
+      showPopupMessage('Modules assigned successfully!');
       setModuleDialogOpen(false);
       setSelectedModules([]);
+
+      // Fetch the updated list of assigned modules
+      const response = await axios.get(`https://localhost:7163/api/AssignMod/getmodulesBy_MentorId/${selectedMentorId}`);
+      if (response.data && response.data.length > 0) {
+        setAssignedModules(response.data);
+        showPopupMessage('Modules assigned successfully!');
+      } else {
+        setAssignedModules([]); // Set an empty array if no modules are assigned
+      }
+
     } catch (error) {
       console.error('Error assigning modules:', error);
-      toast.error('Failed to assign modules. Please try again.');
+      showPopupMessage('Failed to assign modules. Please try again.', 'error');
     }
   };
-
+  
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
   };
@@ -129,12 +200,12 @@ const MentorsContent = () => {
       try {
         await axios.delete(`https://localhost:7163/api/DigitalPlusUser/DeleteMentor/${mentorToDelete.mentorId}`);
         setMentors(mentors.filter(mentor => mentor.mentorId !== mentorToDelete.mentorId));
-        toast.success('Mentor deleted successfully!');
+        showPopupMessage('Mentor deleted successfully!');
         setDeleteDialogOpen(false); // Close the dialog after deletion
         setMentorToDelete(null); // Clear the mentor to delete
       } catch (error) {
         console.error('Error deleting mentor:', error);
-        toast.error('Failed to delete mentor. Please try again.');
+        showPopupMessage('Failed to delete mentor. Please try again.', 'error');
       }
     }
   };
@@ -247,19 +318,18 @@ const MentorsContent = () => {
         { headers: { 'Content-Type': 'application/json' } }
       );
 
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 4000); // Show popup for 3 seconds
-
+      showPopupMessage('Mentor added and email sent successfully!');
+      
     } catch (error) {
       console.error('Error adding mentor or sending email:', error.response ? error.response.data : error.message);
-      toast.error('Failed to add mentor or send email. Please try again.');
+      showPopupMessage('Failed to add mentor. Please try again.', 'error');
     }
   };
 
 
   const handleEditMentor = async () => {
     if (!mentorForm.mentorId) {
-      toast.error('Mentor ID is missing');
+      showPopupMessage('Mentor ID is missing', 'error');
       return;
     }
 
@@ -288,10 +358,10 @@ const MentorsContent = () => {
       setMentors(updatedMentors);
       resetForm();
       setIsDialogOpen(false);
-      toast.success('Mentor updated successfully!');
+      showPopupMessage('Mentor updated successfully!');
     } catch (error) {
       console.error('Error updating mentor:', error.response ? error.response.data : error.message);
-      toast.error('Failed to update mentor. Please try again.');
+      showPopupMessage('Failed to update mentor. Please try again.', 'error');
     }
   };
 
@@ -610,44 +680,105 @@ const MentorsContent = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {/* Module Assignment Dialog */}
-      <Dialog open={moduleDialogOpen} onClose={() => setModuleDialogOpen(false)}>
-        <DialogTitle style={{ backgroundColor: '#3f51b5', color: 'white', display: 'flex', alignItems: 'center' }}>
+{/* Module Assignment Dialog */}
+<Dialog open={moduleDialogOpen} onClose={() => setModuleDialogOpen(false)}>
+  <DialogTitle>Assign Modules</DialogTitle>
+  <DialogContent>
+    <Typography variant="subtitle1" gutterBottom>
+      Assigned Modules:
+    </Typography>
+    
+    {/* Display assigned modules with remove icons */}
+    {assignedModules.length > 0 ? (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+        {assignedModules.map((module) => (
+          <div key={module.moduleId} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Button
+              variant="outlined"
+              size="small"
+              style={{ textTransform: 'none' }}
+            >
+              {module.moduleCode}
+            </Button>
+            <IconButton
+              aria-label="remove"
+              color="secondary"
+              onClick={() => handleRemoveModule(module.assignModId)}
+            >
+              <Delete />
+            </IconButton>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <Typography color="textSecondary" style={{ marginBottom: '16px' }}>No modules assigned.</Typography>
+    )}
+    
+    {/* Select dropdown with filtered options and placeholder */}
+    <Select
+      multiple
+      displayEmpty
+      value={selectedModules}
+      onChange={handleModuleSelection}
+      fullWidth
+      renderValue={(selected) =>
+        selected.length === 0 ? (
+          <em>Select Modules</em>
+        ) : (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {selected.map((id) => {
+              const module = modules.find((module) => module.module_Id === id);
+              return (
+                <Button
+                  key={id}
+                  variant="contained"
+                  size="small"
+                  style={{ textTransform: 'none' }}
+                >
+                  {module?.module_Code}
+                </Button>
+              );
+            })}
+          </div>
+        )
+      }
+      MenuProps={{
+        PaperProps: {
+          style: {
+            maxHeight: 200,
+          },
+        },
+      }}
+    >
+      <MenuItem disabled value="">
+        <em>Select Modules</em>
+      </MenuItem>
+      {modules
+        .filter(
+          (module) =>
+            !assignedModules.some((assigned) => assigned.moduleId === module.module_Id) &&
+            !selectedModules.includes(module.module_Id)
+        )
+        .map((module) => (
+          <MenuItem key={module.module_Id} value={module.module_Id}>
+            {module.module_Code}
+          </MenuItem>
+        ))}
+    </Select>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => setModuleDialogOpen(false)} color="secondary" startIcon={<Cancel />}>
+      Cancel
+    </Button>
+    <Button onClick={handleSaveModules} color="primary" variant="contained" startIcon={<Save />}>
+      Save
+    </Button>
+  </DialogActions>
+</Dialog>
 
-          <Typography variant="h6" display="inline">Assign Modules</Typography>
-        </DialogTitle>
-        <DialogContent dividers style={{ backgroundColor: '#f5f5f5' }}>
-          <Select
-            multiple
-            value={selectedModules}
-            onChange={handleModuleSelection}
-            fullWidth
-            renderValue={(selected) => selected.map((id) => modules.find((m) => m.module_Id === id)?.module_Code).join(', ')}
-            style={{ backgroundColor: 'white', borderRadius: 4 }}
-          >
-            {modules.map((module) => (
-              <MenuItem key={module.module_Id} value={module.module_Id} style={{ display: 'flex', alignItems: 'center' }}>
-
-                <Typography>{module.module_Code}</Typography>
-              </MenuItem>
-            ))}
-          </Select>
-        </DialogContent>
-        <DialogActions style={{ backgroundColor: '#e8eaf6' }}>
-          <Button onClick={() => setModuleDialogOpen(false)} color="secondary" startIcon={<Cancel />} style={{ color: '#f44336' }}>
-            Cancel
-          </Button>
-          <Button onClick={handleSaveModules} color="primary" variant="contained" startIcon={<Save />} style={{ backgroundColor: '#4caf50', color: 'white' }}>
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* Success Popup */}
-      {showSuccess && (
-        <div className={styles.successPopup}>
-          {/* <FaCheckCircle className={styles.successIcon} /> */}
-          <p>Mentor added and Email sent to the mentor successfully!</p>
-        </div>
+      {/*  Popup */}
+      {showPopup && (
+        <PopupMessage message={popupMessage} type={popupType} onClose={() => setShowPopup(false)} />
       )}
 
     </div>
