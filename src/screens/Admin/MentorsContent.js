@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
 import { SiCodementor } from "react-icons/si";
+import { MdInfoOutline } from 'react-icons/md';
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
@@ -84,6 +85,7 @@ const MentorsContent = () => {
     console.log("PopupMessage rendered with message:", message); // Debug
     return (
       <div className={`${styles.popupMessage} ${type === 'error' ? styles.error : styles.success}`}>
+        <MdInfoOutline className={styles.icon} /> {/* Information Icon */}
         <p>{message}</p>
         <button onClick={onClose} className={styles.closeButton}>×</button>
       </div>

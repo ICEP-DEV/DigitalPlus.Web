@@ -287,7 +287,9 @@ select:focus {
 }
 
 .icon {
-  color: #ffcc00; /* Yellow color for warning icon */
+  color: #007bff; /* Blue color for info icon */
+  font-size: 20px;
+  margin-right: 10px;
 }
 
 .closeButton {
