@@ -7,7 +7,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
 import { SiCodementor } from "react-icons/si";
-import PopupMessage from './PopupMessage';
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
@@ -81,6 +80,15 @@ const MentorsContent = () => {
   
     fetchModules();
   }, []);
+  const PopupMessage = ({ message, type, onClose }) => {
+    console.log("PopupMessage rendered with message:", message); // Debug
+    return (
+      <div className={`${styles.popupMessage} ${type === 'error' ? styles.error : styles.success}`}>
+        <p>{message}</p>
+        <button onClick={onClose} className={styles.closeButton}>×</button>
+      </div>
+    );
+  };
   
 {/* Function to handle removal of assigned modules */}
 const handleRemoveModule = async (assignModId) => {
@@ -96,12 +104,16 @@ const handleRemoveModule = async (assignModId) => {
     showPopupMessage('Failed to remove module. Please try again.', 'error');
   }
 };
+
 const showPopupMessage = (message, type = 'success') => {
+  console.log("showPopupMessage called with:", message, type); // Debug
   setPopupMessage(message);
   setPopupType(type);
   setShowPopup(true);
-  setTimeout(() => setShowPopup(false), 4000); // Auto-hide after 4 seconds
+
+  setTimeout(() => setShowPopup(false), 7000);
 };
+
   const openModuleDialog = async (mentorId) => {
     setSelectedMentorId(mentorId);
     setModuleDialogOpen(true);
@@ -130,7 +142,6 @@ const showPopupMessage = (message, type = 'success') => {
 
   const handleSaveModules = async () => {
     if (!selectedMentorId || selectedModules.length === 0) {
-      toast.error("Please select a mentor and at least one module.");
       return;
     }
 
@@ -147,8 +158,7 @@ const showPopupMessage = (message, type = 'success') => {
           axios.post('https://localhost:7163/api/AssignMod/AssignModule', assignment)
         )
       );
-
-      toast.success('Modules assigned successfully!');
+      showPopupMessage('Modules assigned successfully!');
       setModuleDialogOpen(false);
       setSelectedModules([]);
 
@@ -188,12 +198,12 @@ const showPopupMessage = (message, type = 'success') => {
       try {
         await axios.delete(`https://localhost:7163/api/DigitalPlusUser/DeleteMentor/${mentorToDelete.mentorId}`);
         setMentors(mentors.filter(mentor => mentor.mentorId !== mentorToDelete.mentorId));
-        toast.success('Mentor deleted successfully!');
+        showPopupMessage('Mentor deleted successfully!');
         setDeleteDialogOpen(false); // Close the dialog after deletion
         setMentorToDelete(null); // Clear the mentor to delete
       } catch (error) {
         console.error('Error deleting mentor:', error);
-        toast.error('Failed to delete mentor. Please try again.');
+        showPopupMessage('Failed to delete mentor. Please try again.', 'error');
       }
     }
   };
@@ -317,7 +327,7 @@ const showPopupMessage = (message, type = 'success') => {
 
   const handleEditMentor = async () => {
     if (!mentorForm.mentorId) {
-      toast.error('Mentor ID is missing');
+      showPopupMessage('Mentor ID is missing', 'error');
       return;
     }
 
