@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 // import HeaderAnnouncementPage from '../Mentor/Headers/HeaderAnnouncementPage';
 // import SideBar from './Navigation/SideBar';
 import { Nav } from 'react-bootstrap';
+import axios from 'axios'; // Make sure to import axios
 import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const rosterData = [
@@ -66,6 +67,29 @@ const rosterData = [
 
 function RosterPage() {
     const navigate = useNavigate(); // Initialize navigate function
+    const [sheduledata, setSheduleData] = useState([]);
+    
+    // Retrieving data from the local storage
+    useEffect(() => {
+        const fetchSheduleData = async () => {
+            try {
+                const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllSchedules');
+                console.log(response.data); // Check if response.data is an array
+                if (Array.isArray(response.data)) {
+                    setSheduleData(response.data);
+                } else {
+                    console.warn('Expected an array but received:', response.data);
+                    setSheduleData([]); // Set to an empty array as a fallback
+                }
+            } catch (error) {
+                console.error('Error fetching schedule data:', error);
+                setSheduleData([]); // Handle errors gracefully by setting an empty array
+            }
+        };
+        fetchSheduleData();
+    }, []);
+
+
 
     return (
         <SideBarNavBar>
@@ -86,7 +110,7 @@ function RosterPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {rosterData.map((row, index) => (
+                            {sheduledata.map((row, index) => (
                                 <tr key={index} style={styles.tableRow}>
                                     <td style={styles.tableCell}>{row.time}</td>
                                     <td style={styles.tableCell}>{row.Monday}</td>
