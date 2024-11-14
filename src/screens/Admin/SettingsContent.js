@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./SettingsContent.module.css";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import { CiEdit } from "react-icons/ci";
-import { ImProfile } from "react-icons/im";
-import { FaCog } from "react-icons/fa";
+import { FaUserCog } from "react-icons/fa";
 import {
   Dialog,
   DialogTitle,
@@ -12,62 +10,72 @@ import {
   DialogActions,
   Button,
   TextField,
+  IconButton,
+  InputAdornment,
+  Tabs,
+  Tab,
 } from "@mui/material";
-import { Save, Update } from "@mui/icons-material";
+import {
+  Visibility,
+  VisibilityOff,
+  Save,
+  Edit,
+  Person,
+  Email,
+  Phone,
+} from "@mui/icons-material";
 
 const Settings = () => {
-  const [activeSection, setActiveSection] = useState("account");
-  const [user, setUser] = useState(null);
-  const [adminForm, setEditForm] = useState({
+  const [userData, setUserData] = useState(null);
+  const [profileForm, setProfileForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
     contactNo: "",
     password: "",
-    departmentId: "",
+    confirmPassword: "",
     adminId: "",
   });
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [showPasswordField, setShowPasswordField] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
-  // Fetch user data from localStorage on component mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const storedUserData = localStorage.getItem("user");
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData));
     }
   }, []);
 
-  const handleFormChange = (field, value) => {
-    setEditForm((prevForm) => ({
+  const handleInputChange = (field, value) => {
+    setProfileForm((prevForm) => ({
       ...prevForm,
       [field]: value,
     }));
   };
 
-  const handleEditAdmin = async () => {
-    if (!adminForm.adminId) {
-      console.error("Admin Id is null or undefined");
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!profileForm.adminId) {
+      console.error("Admin ID is null or undefined");
       return;
     }
 
     try {
-      const updatedAdmin = {
-        adminId: adminForm.adminId,
-        firstName: adminForm.firstName,
-        lastName: adminForm.lastName,
-        email: adminForm.email,
-        contactNo: adminForm.contactNo,
-        password: adminForm.password,
-        departmentId: adminForm.departmentId,
+      const updatedProfile = {
+        adminId: profileForm.adminId,
+        firstName: profileForm.firstName,
+        lastName: profileForm.lastName,
+        email: profileForm.email,
+        contactNo: profileForm.contactNo,
       };
 
-      console.log("Sending updatedAdmin to API:", updatedAdmin);
-
       await axios.put(
-        `https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${adminForm.adminId}`,
-        updatedAdmin,
+        `https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${profileForm.adminId}`,
+        updatedProfile,
         {
           headers: {
             "Content-Type": "application/json",
@@ -75,178 +83,215 @@ const Settings = () => {
         }
       );
 
-      // Update the user in local state
-      setUser((prevUser) => ({
-        ...prevUser,
-        ...updatedAdmin,
-      }));
-      localStorage.setItem("user", JSON.stringify({ ...user, ...updatedAdmin }));
-      setIsDialogOpen(false);
-      toast.success("Admin updated successfully!");
+      const updatedUserData = { ...userData, ...updatedProfile };
+      setUserData(updatedUserData);
+      localStorage.setItem("user", JSON.stringify(updatedUserData));
+      setOpenEditDialog(false);
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error(
-        "Error updating Admin:",
+        "Error updating profile:",
         error.response ? error.response.data : error.message
       );
-      toast.error("Failed to update Admin. Please try again.");
+      toast.error("Failed to update profile. Please try again.");
     }
   };
 
-  const openEditAdminDialog = () => {
-    setEditForm({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      contactNo: user.contactNo,
-      password: user.password,
-      departmentId: user.departmentId,
-      adminId: user.adminId,
+  const openEditProfileDialog = () => {
+    setProfileForm({
+      firstName: userData.firstName || "",
+      lastName: userData.lastName || "",
+      email: userData.email || "",
+      contactNo: userData.contactNo || "",
+      password: "",
+      confirmPassword: "",
+      adminId: userData.adminId || "",
     });
-    setIsEditing(true);
-    setIsDialogOpen(true);
+    setOpenEditDialog(true);
   };
 
-  const closeDialog = () => {
-    setIsDialogOpen(false);
+  const closeEditDialog = () => {
+    setOpenEditDialog(false);
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const togglePasswordFieldVisibility = () => {
+    setShowPasswordField(!showPasswordField);
   };
 
-  if (!user) {
+  if (!userData) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className={styles.settingsContainer}>
       <ToastContainer />
-      <div className={styles.content}>
-        <h2>
-          {" "}
-          <FaCog /> SETTINGS
+      <div className={styles.settingsContent}>
+        <h2 className={styles.pageTitle}>
+          <FaUserCog /> Settings
         </h2>
-        {activeSection === "account" && (
-          <div className={styles.accountSection}>
-            <h2>
-              {" "}
-              <ImProfile /> Profile
-            </h2>
-            <div className={styles.profileInfo}>
-              <div className={styles.inputGroup}>
-                <span>First Name:</span>
-                <input
-                  type="text"
-                  value={user.firstName}
-                  disabled={true} // You can enable/disable the fields as needed
-                />
-              </div>
 
-              <div className={styles.inputGroup}>
-                <span>Last Name:</span>
-                <input type="text" value={user.lastName} disabled={true} />
+        <div className={styles.profileSection}>
+          <h3 className={styles.profileTitle}>Profile Information</h3>
+          <div className={styles.profileDetails}>
+            <div className={styles.detailRow}>
+              <div className={styles.iconAndLabel}>
+                <Person className={styles.icon} />
+                <span className={styles.detailLabel}>First Name:</span>
               </div>
+              <span className={styles.detailValue}>{userData.firstName}</span>
+            </div>
+            <div className={styles.separator}></div>
 
-              <div className={styles.inputGroup}>
-                <span>Email Address:</span>
-                <input type="email" value={user.email} disabled={true} />
+            <div className={styles.detailRow}>
+              <div className={styles.iconAndLabel}>
+                <Person className={styles.icon} />
+                <span className={styles.detailLabel}>Last Name:</span>
               </div>
+              <span className={styles.detailValue}>{userData.lastName}</span>
+            </div>
+            <div className={styles.separator}></div>
 
-              <div className={styles.inputGroup}>
-                <span>Contact:</span>
-                <input type="text" value={user.contactNo} disabled={true} />
+            <div className={styles.detailRow}>
+              <div className={styles.iconAndLabel}>
+                <Email className={styles.icon} />
+                <span className={styles.detailLabel}>Email Address:</span>
               </div>
+              <span className={styles.detailValue}>{userData.email}</span>
+            </div>
+            <div className={styles.separator}></div>
 
-              <div className={styles.inputGroup}>
-                <span>Department:</span>
-                <input type="text" value={user.departmentId} disabled={true} />
+            <div className={styles.detailRow}>
+              <div className={styles.iconAndLabel}>
+                <Phone className={styles.icon} />
+                <span className={styles.detailLabel}>Contact Number:</span>
               </div>
-
-              <button
-                className={styles.save}
-                onClick={openEditAdminDialog}
-              >
-                <CiEdit /> Edit
-              </button>
+              <span className={styles.detailValue}>{userData.contactNo}</span>
             </div>
           </div>
-        )}
+          <div className={styles.buttonContainer}>
+            <IconButton
+              color="primary"
+              onClick={openEditProfileDialog}
+              aria-label="edit profile"
+            >
+              <Edit />
+            </IconButton>
+          </div>
+        </div>
       </div>
 
-      {/* Dialog for Editing Admin */}
+      {/* Edit Profile Dialog positioned near Profile Section */}
       <Dialog
-        open={isDialogOpen}
-        onClose={(event, reason) => {
-          if (reason !== "backdropClick") {
-            closeDialog();
-          }
+        open={openEditDialog}
+        onClose={closeEditDialog}
+        aria-labelledby="edit-profile-dialog"
+        fullWidth
+        maxWidth="sm"
+        PaperProps={{
+          style: {
+            position: "absolute",
+            top: "20%", // Adjust this value to control vertical positioning
+            left: "55%", // Align it to the right of the Profile Information section
+            transform: "translate(-50%, 0)",
+          },
         }}
-        disableEscapeKeyDown
       >
-        <DialogTitle>{isEditing ? "Edit Admin" : "Add Mentor"}</DialogTitle>
+        <DialogTitle id="edit-profile-dialog">Edit Profile</DialogTitle>
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          className={styles.tabsContainer}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="fullWidth"
+        >
+          <Tab label="Contact Information" />
+          <Tab label="Change Password" />
+        </Tabs>
         <DialogContent>
-          <TextField
-            label="First Name"
-            value={adminForm.firstName}
-            onChange={(e) => handleFormChange("firstName", e.target.value)}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Last Name"
-            value={adminForm.lastName}
-            onChange={(e) => handleFormChange("lastName", e.target.value)}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Personal Email"
-            value={adminForm.email}
-            onChange={(e) => handleFormChange("email", e.target.value)}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Contact No"
-            value={adminForm.contactNo}
-            onChange={(e) => handleFormChange("contactNo", e.target.value)}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Department"
-            value={adminForm.departmentId}
-            onChange={(e) => handleFormChange("departmentId", e.target.value)}
-            fullWidth
-            margin="normal"
-            required
-          />
-          <TextField
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            value={adminForm.password}
-            onChange={(e) => handleFormChange("password", e.target.value)}
-            onClick={togglePasswordVisibility}
-            fullWidth
-            margin="normal"
-            required
-          />
+          {activeTab === 0 && (
+            <div>
+              <TextField
+                label="Email Address"
+                value={profileForm.email}
+                onChange={(e) => handleInputChange("email", e.target.value)}
+                fullWidth
+                margin="normal"
+                required
+                type="email"
+              />
+              <TextField
+                label="Contact Number"
+                value={profileForm.contactNo}
+                onChange={(e) =>
+                  handleInputChange("contactNo", e.target.value)
+                }
+                fullWidth
+                margin="normal"
+                required
+                type="tel"
+              />
+            </div>
+          )}
+          {activeTab === 1 && (
+            <div>
+              <TextField
+                label="Current Password"
+                type="password"
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="New Password"
+                type={showPasswordField ? "text" : "password"}
+                value={profileForm.password}
+                onChange={(e) =>
+                  handleInputChange("password", e.target.value)
+                }
+                fullWidth
+                margin="normal"
+                required
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={togglePasswordFieldVisibility}
+                        edge="end"
+                      >
+                        {showPasswordField ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                label="Confirm Password"
+                type="password"
+                value={profileForm.confirmPassword}
+                onChange={(e) =>
+                  handleInputChange("confirmPassword", e.target.value)
+                }
+                fullWidth
+                margin="normal"
+                required
+              />
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog} color="secondary" sx={{ color: "black" }}>
+          <Button onClick={closeEditDialog} color="secondary">
             Cancel
           </Button>
           <Button
-            onClick={handleEditAdmin}
-            startIcon={isEditing ? <Update /> : <Save />}
+            onClick={handleUpdateProfile}
             color="primary"
-            sx={{ color: "black" }}
+            startIcon={<Save />}
           >
-            {isEditing ? "Update Admin" : "Save"}
+            Save Changes
           </Button>
         </DialogActions>
       </Dialog>

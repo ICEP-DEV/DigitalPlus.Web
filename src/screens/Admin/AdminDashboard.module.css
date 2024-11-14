@@ -26,16 +26,41 @@
 }
 
 .adminIcon {
-    font-size: 28px;
+    width: 50px;
+    height: 50px;
     margin-right: 15px;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: #fff; /* Background color if image fails to load */
+    cursor: pointer; /* Make it look clickable */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.adminImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.imagePlaceholder {
+    color: #888;
+    font-size: 12px;
+    text-align: center;
+    padding: 5px;
+}
+
+.adminIcon:hover {
+    opacity: 0.8; /* Optional: Visual feedback on hover */
 }
 
 /* Logout button styling */
 .logoutButton {
     background-color: transparent;
-    color: white;
+    color: red; /* Set the icon color to red */
     border: none;
-    font-size: 16px;
+    font-size: 24px; /* Adjust the icon size if necessary */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -44,11 +69,11 @@
 }
 
 .logoutButton:hover {
-    color: #ff3b30;
+    color: darkred; /* Optional: Darken the icon color on hover */
 }
 
 .logoutButton svg {
-    margin-right: 8px;
+    margin-right: 0; /* Remove margin since there's no text */
 }
 
 /* Sidebar styles */

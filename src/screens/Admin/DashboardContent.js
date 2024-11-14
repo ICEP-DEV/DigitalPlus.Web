@@ -103,31 +103,26 @@ const DashboardContent = () => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (user && user.admin_Id) {
-        const fetchDashboardData = async () => {
-            try {
-                const response = await fetch(
-                    `https://localhost:7163/api/admin-dashboard/Dashboard/${user.admin_Id}`
-                );
-                const data = await response.json();
-                setDashboardData({
-                    totalMentees: data.TotalMentees,
-                    activatedMentees: data.ActivatedMentees,
-                    deactivatedMentees: data.DeactivatedMentees,
-                    totalMentors: data.TotalMentors,
-                    activatedMentors: data.ActivatedMentors,
-                    deactivatedMentors: data.DeactivatedMentors,
-                });
-            } catch (error) {
-                console.error('Error fetching dashboard data:', error);
-            }
-        };
+      const fetchDashboardData = async () => {
+        try {
+          const response = await fetch(
+            `https://localhost:7163/api/admin-dashboard/Dashboard/${user.admin_Id}`
+          );
+          const data = await response.json();
+          setDashboardData(data);
+        } catch (error) {
+          console.error('Error fetching dashboard data:', error);
+        }
+      };
 
-        fetchDashboardData();
+      fetchDashboardData();
+
+      // Fetch announcements here if you have an API
+      // fetchAnnouncements();
     } else {
-        console.error('No admin_Id found in local storage.');
+      console.error('No admin_Id found in local storage.');
     }
-}, []);
-
+  }, []);
 
   const pieData = [
     { name: 'Contact', value: 60 },
@@ -200,62 +195,61 @@ const DashboardContent = () => {
 
       {/* Dashboard Stats */}
       <div className={styles.header}>
-    <div className={`${styles.statItem} ${styles.activatedMenteesUnique}`}>
-        <div className={styles.statItemIcon}>
+        <div className={`${styles.statItem} ${styles.activatedMenteesUnique}`}>
+          <div className={styles.statItemIcon}>
             <BsPersonCheckFill size={40} color="#000" />
-        </div>
-        <div className={styles.stat}>
+          </div>
+          <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Activated Mentees</h3>
             <p>{dashboardData.activatedMentees}</p>
+          </div>
         </div>
-    </div>
-    <div className={`${styles.statItem} ${styles.deactivatedMenteesUnique}`}>
-        <div className={styles.statItemIcon}>
+        <div className={`${styles.statItem} ${styles.deactivatedMenteesUnique}`}>
+          <div className={styles.statItemIcon}>
             <BsPersonXFill size={40} color="#000" />
-        </div>
-        <div className={styles.stat}>
+          </div>
+          <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Deactivated Mentees</h3>
             <p>{dashboardData.deactivatedMentees}</p>
+          </div>
         </div>
-    </div>
-    <div className={`${styles.statItem} ${styles.totalMenteesUnique}`}>
-        <div className={styles.statItemIcon}>
+        <div className={`${styles.statItem} ${styles.totalMenteesUnique}`}>
+          <div className={styles.statItemIcon}>
             <BsPeopleFill size={40} color="#000" />
-        </div>
-        <div className={styles.stat}>
+          </div>
+          <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Total Mentees</h3>
             <p>{dashboardData.totalMentees}</p>
+          </div>
         </div>
-    </div>
-    <div className={`${styles.statItem} ${styles.activatedMentorsUnique}`}>
-        <div className={styles.statItemIcon}>
+        <div className={`${styles.statItem} ${styles.activatedMentorsUnique}`}>
+          <div className={styles.statItemIcon}>
             <BsPersonCheckFill size={40} color="#000" />
-        </div>
-        <div className={styles.stat}>
+          </div>
+          <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Activated Mentors</h3>
             <p>{dashboardData.activatedMentors}</p>
+          </div>
         </div>
-    </div>
-    <div className={`${styles.statItem} ${styles.deactivatedMentorsUnique}`}>
-        <div className={styles.statItemIcon}>
+        <div className={`${styles.statItem} ${styles.deactivatedMentorsUnique}`}>
+          <div className={styles.statItemIcon}>
             <BsPersonXFill size={40} color="#000" />
-        </div>
-        <div className={styles.stat}>
+          </div>
+          <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Deactivated Mentors</h3>
             <p>{dashboardData.deactivatedMentors}</p>
+          </div>
         </div>
-    </div>
-    <div className={styles.statItem}>
-        <div className={styles.statItemIcon}>
+        <div className={styles.statItem}>
+          <div className={styles.statItemIcon}>
             <BsPeopleFill size={40} color="#000" />
-        </div>
-        <div className={styles.stat}>
+          </div>
+          <div className={styles.stat}>
             <h3 className={styles.statItemTitle}>Total Mentors</h3>
             <p>{dashboardData.totalMentors}</p>
+          </div>
         </div>
-    </div>
-</div>
-
+      </div>
 
       {/* Charts */}
       <div className={styles.chartGrid}>
