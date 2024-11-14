@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as signalR from '@microsoft/signalr';
 import { useParams } from 'react-router-dom';
 import styles from './MentorDMComponent.module.css';
 import {
@@ -15,234 +16,211 @@ import {
 } from 'react-icons/fa';
 
 const MentorDMComponent = () => {
-  const [mentorMessages, setMentorMessages] = useState({}); // Messages with mentees
+  const [connection, setConnection] = useState(null);
+  const [mentorMessages, setMentorMessages] = useState({});
   const [newMessage, setNewMessage] = useState('');
   const [file, setFile] = useState(null);
   const [replyTo, setReplyTo] = useState(null);
-  const [editingMessage, setEditingMessage] = useState(null);
-  const [mentees, setMentees] = useState([]); // List of mentees
-  const [searchTerm, setSearchTerm] = useState(''); // Search term for mentee search
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Sidebar collapse state
-  const [selectedMentee, setSelectedMentee] = useState(null); // Store selected mentee
+  const [mentees, setMentees] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [selectedMentee, setSelectedMentee] = useState(null);
   const { moduleId } = useParams();
-  const currentUser = { id: 'currentMentorId', name: 'Mentor John', role: 'mentor' };
+
+  const currentUser = { id: 'mentor1', name: 'Mentor John', role: 'mentor' };
 
   useEffect(() => {
-    // Mock data for mentees (this should come from an API or backend)
     setMentees([
-      { id: 1, name: 'Mentee Jane', online: true },
-      { id: 2, name: 'Mentee Sarah', online: false },
-      { id: 3, name: 'Mentee Alex', online: true },
-      { id: 4, name: 'Mentee Emma', online: false },
+      { id: 'mentee1', name: 'Mentee Jane', online: true },
+      { id: 'mentee2', name: 'Mentee Sarah', online: false },
+      { id: 'mentee3', name: 'Mentee Alex', online: true },
+      { id: 'mentee4', name: 'Mentee Emma', online: false },
     ]);
 
-    // Initial setup for mentor messages with mentees
     setMentorMessages({
-      'Mentee Jane': [
-        {
-          sender: 'Mentee Jane',
-          senderId: '1',
-          role: 'mentee',
-          text: 'Hello Mentor!',
-          id: 1,
-          timestamp: '9:00 AM',
-        },
-        {
-          sender: 'Mentor John',
-          senderId: 'currentMentorId',
-          role: 'mentor',
-          text: 'Good morning, how can I assist you today?',
-          id: 2,
-          timestamp: '9:05 AM',
-        }
-      ],
-      'Mentee Sarah': [
-        {
-          sender: 'Mentee Sarah',
-          senderId: '2',
-          role: 'mentee',
-          text: 'I need help with my assignment.',
-          id: 3,
-          timestamp: '9:30 AM',
-        }
+      'mentee1': [
+        { id: 1, sender: 'Mentee Jane', senderId: 'mentee1', role: 'mentee', text: 'Hello Mentor!', timestamp: '9:00 AM' },
+        { id: 2, sender: 'Mentor John', senderId: 'mentor123', role: 'mentor', text: 'Good morning, how can I assist you today?', timestamp: '9:05 AM' }
       ],
     });
-  }, []);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() || file) {
-      const newMsg = {
-        sender: currentUser.name,
-        senderId: currentUser.id,
-        role: currentUser.role,
-        text: newMessage,
-        fileURL: file ? URL.createObjectURL(file) : '',
-        fileName: file ? file.name : '',
-        type: file ? file.type.split('/')[0] : null,
-        id: editingMessage ? editingMessage.id : Date.now(),
-        timestamp: new Date().toLocaleTimeString(),
-        replyTo: replyTo,
-      };
+    const newConnection = new signalR.HubConnectionBuilder()
+      .withUrl(`https://localhost:7163/communicationHub?userId=${currentUser.id}`, {
+        transport: signalR.HttpTransportType.WebSockets
+      })
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
 
-      const updatedMessages = { ...mentorMessages };
-      if (editingMessage) {
-        // Update existing message if editing
-        updatedMessages[selectedMentee] = updatedMessages[selectedMentee].map((msg) =>
-          msg.id === editingMessage.id ? newMsg : msg
-        );
-        setEditingMessage(null);
-      } else {
-        // Add new message to the selected mentee's chat
-        updatedMessages[selectedMentee] = [...(updatedMessages[selectedMentee] || []), newMsg];
+    newConnection.start()
+      .then(() => {
+        console.log('Connected to SignalR hub as Mentor');
+
+        newConnection.on('ReceiveDirectMessage', (senderUserId, senderName, message, timestamp) => {
+          if (selectedMentee) {
+            setMentorMessages(prevMessages => ({
+              ...prevMessages,
+              [selectedMentee.id]: [
+                ...(prevMessages[selectedMentee.id] || []),
+                { id: Date.now(), sender: senderName, text: message, timestamp, senderId: senderUserId, role: 'mentee' }
+              ]
+            }));
+          }
+        });
+
+        newConnection.on('ReceiveFileMessage', (senderUserId, senderName, base64File, fileType, timestamp, fileName) => {
+          if (selectedMentee) {
+            setMentorMessages(prevMessages => ({
+              ...prevMessages,
+              [selectedMentee.id]: [
+                ...(prevMessages[selectedMentee.id] || []),
+                { id: Date.now(), sender: senderName, text: '[File Received]', base64File, fileType, timestamp, isFile: true, senderId: senderUserId, role: 'mentee', fileName }
+              ]
+            }));
+          }
+        });
+
+        setConnection(newConnection);
+      })
+      .catch(err => console.error('Connection failed:', err));
+
+    return () => {
+      if (newConnection) newConnection.stop();
+    };
+  }, [selectedMentee]);
+
+  const handleSendMessage = async () => {
+    if ((newMessage.trim() || file) && connection && connection.state === signalR.HubConnectionState.Connected && selectedMentee) {
+      const timestamp = new Date().toLocaleTimeString();
+      try {
+        if (file) {
+          const reader = new FileReader();
+          reader.onloadend = async () => {
+            const base64String = reader.result.split(',')[1];
+            await connection.invoke('SendFileMessage', selectedMentee.id, currentUser.id, currentUser.name, base64String, file.type, timestamp, file.name);
+            setFile(null);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          await connection.invoke('SendDirectMessage', selectedMentee.id, currentUser.id, currentUser.name, newMessage, timestamp);
+        }
+
+        setMentorMessages(prevMessages => ({
+          ...prevMessages,
+          [selectedMentee.id]: [
+            ...(prevMessages[selectedMentee.id] || []),
+            { id: Date.now(), sender: currentUser.name, senderId: currentUser.id, role: currentUser.role, text: newMessage, timestamp, isFile: !!file, fileType: file ? file.type : null, fileName: file ? file.name : null }
+          ]
+        }));
+
+        setNewMessage('');
+        setReplyTo(null);
+      } catch (error) {
+        console.error('Error sending message:', error);
       }
-
-      setMentorMessages(updatedMessages);
-      setNewMessage('');
-      setFile(null);
-      setReplyTo(null);
     }
   };
 
   const handleFileUpload = (event) => {
     const uploadedFile = event.target.files[0];
-    if (uploadedFile && uploadedFile.size < 5 * 1024 * 1024) {
-      // Allow files less than 5MB
-      setFile(uploadedFile);
-    } else {
-      alert('File size must be less than 5MB');
-      setFile(null);
-    }
+    if (uploadedFile) setFile(uploadedFile);
   };
 
-  const handleReply = (message) => {
-    setReplyTo(message);
-  };
+  const handleReply = (message) => setReplyTo(message);
+  const handleCancelReply = () => setReplyTo(null);
+  const handleCancelFile = () => setFile(null);
+  const handleSidebarToggle = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
-  const handleCancelReply = () => {
+  const handleMenteeClick = (mentee) => {
+    setSelectedMentee(mentee); // Store the full mentee object
+    setNewMessage('');
     setReplyTo(null);
   };
 
-  const handleCancelFile = () => {
-    setFile(null);
-  };
+  const downloadFile = (base64Data, fileName, fileType) => {
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = Array.from(byteCharacters, char => char.charCodeAt(0));
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: fileType });
+    const url = URL.createObjectURL(blob);
 
-  const handleEditMessage = (message) => {
-    setNewMessage(message.text);
-    setEditingMessage(message);
-    setFile(message.fileName ? { name: message.fileName } : null);
-  };
-
-  const handleDeleteMessage = (msgId) => {
-    const updatedMessages = { ...mentorMessages };
-    updatedMessages[selectedMentee] = updatedMessages[selectedMentee].filter((msg) => msg.id !== msgId);
-    setMentorMessages(updatedMessages);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const getFileIcon = (fileName) => {
     const fileExtension = fileName.split('.').pop().toLowerCase();
-    return fileExtension === 'pdf' ? <FaFilePdf className={styles.mentorDMComponentFileIcon} /> : <FaFileAlt className={styles.mentorDMComponentFileIcon} />;
+    if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+      return <img src={`data:image/${fileExtension};base64,${fileName}`} alt="Preview" className={styles.filePreview} />;
+    } else if (fileExtension === 'pdf') {
+      return <FaFilePdf className={styles.dmFileIcon} />;
+    } else {
+      return <FaFileAlt className={styles.dmFileIcon} />;
+    }
   };
 
-  // Filter mentees based on the search term
-  const filteredMentees = mentees.filter((mentee) =>
-    mentee.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleSidebarDoubleClick = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
-
-  // Handle mentee selection
-  const handleMenteeClick = (menteeName) => {
-    setSelectedMentee(menteeName); // Set selected mentee for the header and chat
-    setNewMessage(''); // Reset new message input
-  };
+  const filteredMentees = mentees.filter((mentee) => mentee.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div className={styles.mentorDMComponentPage}>
-      {/* Sidebar for mentees */}
-      <div
-        className={`${styles.mentorDMComponentSidebar} ${isSidebarCollapsed ? styles.mentorDMComponentSidebarCollapsed : ''}`}
-        onDoubleClick={handleSidebarDoubleClick}
-      >
+      <div className={`${styles.mentorDMComponentSidebar} ${isSidebarCollapsed ? styles.mentorDMComponentSidebarCollapsed : ''}`} onDoubleClick={handleSidebarToggle}>
         <div className={styles.mentorDMComponentSidebarHeader}>
           <h3>Mentees</h3>
           <div className={styles.mentorDMComponentSearchContainer}>
             <FaSearch className={styles.mentorDMComponentSearchIcon} />
-            <input
-              type="text"
-              placeholder="Search for a mentee"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className={styles.mentorDMComponentSearchInput}
-            />
+            <input type="text" placeholder="Search for a mentee" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className={styles.mentorDMComponentSearchInput} />
           </div>
         </div>
         <ul className={styles.mentorDMComponentMenteeList}>
           {filteredMentees.map((mentee) => (
-            <li key={mentee.id} className={styles.mentorDMComponentMenteeItem} onClick={() => handleMenteeClick(mentee.name)}>
-              <span className={mentee.online ? styles.mentorDMComponentOnline : styles.mentorDMComponentOffline}>
-                {mentee.name}
-              </span>
+            <li key={mentee.id} className={styles.mentorDMComponentMenteeItem} onClick={() => handleMenteeClick(mentee)}>
+              <span className={mentee.online ? styles.mentorDMComponentOnline : styles.mentorDMComponentOffline}>{mentee.name}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Main chat area */}
       <div className={styles.mentorDMComponentMain}>
         <div className={styles.mentorDMComponentHeader}>
-          <h2>{selectedMentee ? selectedMentee : 'Select a Mentee'}</h2> {/* Update header with mentee name */}
+          <h2>{selectedMentee ? selectedMentee.name : 'Select a Mentee'}</h2>
         </div>
         <div className={styles.mentorDMComponentMessages}>
-          {selectedMentee &&
-            (mentorMessages[selectedMentee] || []).map((message) => (
-              <div
-                key={message.id}
-                className={`${styles.mentorDMComponentMessageItem} ${message.senderId === currentUser.id ? styles.mentorDMComponentSent : styles.mentorDMComponentReceived}`}
-              >
-                <div className={styles.mentorDMComponentSenderInfo}>
-                  <span className={styles.mentorDMComponentSenderName}>
-                    {message.sender} ({message.role})
-                  </span>
-                  <span className={styles.mentorDMComponentTimestamp}>{message.timestamp}</span>
+          {selectedMentee && (mentorMessages[selectedMentee.id] || []).map((message) => (
+            <div key={message.id} className={`${styles.mentorDMComponentMessageItem} ${message.senderId === currentUser.id ? styles.mentorDMComponentSent : styles.mentorDMComponentReceived}`}>
+              <div className={styles.mentorDMComponentSenderInfo}>
+                <span className={styles.mentorDMComponentSenderName}>{message.sender} ({message.role})</span>
+                <span className={styles.mentorDMComponentTimestamp}>{message.timestamp}</span>
+              </div>
+              {message.replyTo && (
+                <div className={styles.mentorDMComponentReplyTo}>
+                  <span className={styles.mentorDMComponentReplySender}>{message.replyTo.sender}:</span> {message.replyTo.text || 'Attachment'}
                 </div>
-                {message.replyTo && (
-                  <div className={styles.mentorDMComponentReplyTo}>
-                    <span className={styles.mentorDMComponentReplySender}>{message.replyTo.sender}:</span>{' '}
-                    {message.replyTo.text || 'Attachment'}
+              )}
+              <div className={styles.mentorDMComponentMessageText}>
+                <p>{message.text}</p>
+                {message.isFile && (
+                  <div className={styles.mentorDMComponentFileAttachment}>
+                    {getFileIcon(message.fileName || 'file')}
+                    <span className={styles.mentorDMComponentFileName}>{message.fileName || 'Attachment'}</span>
+                    <button onClick={() => downloadFile(message.base64File, message.fileName, message.fileType)} className={styles.mentorDMComponentDownloadButton}>
+                      <FaDownload /> Download
+                    </button>
                   </div>
                 )}
-                <div className={styles.mentorDMComponentMessageText}>
-                  <p>{message.text}</p>
-                  {message.fileURL && (
-                    <div className={styles.mentorDMComponentFileAttachment}>
-                      {getFileIcon(message.fileName)}
-                      <span className={styles.mentorDMComponentFileName}>{message.fileName}</span>
-                      <a href={message.fileURL} download={message.fileName} className={styles.mentorDMComponentDownloadButton}>
-                        <FaDownload /> Download
-                      </a>
-                    </div>
-                  )}
-                  <div className={styles.mentorDMComponentMessageActions}>
-                    <FaReply className={styles.mentorDMComponentReplyIcon} onClick={() => handleReply(message)} />
-                    {message.senderId === currentUser.id && (
-                      <>
-                        <FaEdit className={styles.mentorDMComponentEditIcon} onClick={() => handleEditMessage(message)} />
-                        <FaTrash className={styles.mentorDMComponentDeleteIcon} onClick={() => handleDeleteMessage(message.id)} />
-                      </>
-                    )}
-                  </div>
-                </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
+
         <div className={styles.mentorDMComponentInputArea}>
           {replyTo && (
             <div className={styles.mentorDMComponentReplyBox}>
-              <span>
-                Replying to: {replyTo.sender} - {replyTo.text || 'Attachment'}
-              </span>
+              <span>Replying to: {replyTo.sender} - {replyTo.text || 'Attachment'}</span>
               <FaTimes className={styles.mentorDMComponentCancelReplyIcon} onClick={handleCancelReply} />
             </div>
           )}
@@ -256,21 +234,9 @@ const MentorDMComponent = () => {
             </div>
           )}
           <div className={styles.mentorDMComponentInputRow}>
-            <textarea
-              className={styles.mentorDMComponentTextArea}
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type a message..."
-            />
-            <label htmlFor="file-upload" className={styles.mentorDMComponentFileUploadIcon}>
-              <FaPaperclip />
-            </label>
-            <input
-              type="file"
-              id="file-upload"
-              style={{ display: 'none' }}
-              onChange={handleFileUpload}
-            />
+            <textarea className={styles.mentorDMComponentTextArea} value={newMessage} onChange={(e) => setNewMessage(e.target.value)} placeholder="Type a message..." />
+            <label htmlFor="file-upload" className={styles.mentorDMComponentFileUploadIcon}><FaPaperclip /></label>
+            <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileUpload} />
             <button className={styles.mentorDMComponentButton} onClick={handleSendMessage} disabled={!newMessage.trim() && !file}>
               <FaPaperPlane />
             </button>
