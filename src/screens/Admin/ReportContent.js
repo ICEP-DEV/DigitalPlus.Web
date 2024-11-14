@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import html2pdf from 'html2pdf.js';
 import styles from './ReportContent.module.css';
 import { BsFillPersonCheckFill, BsFileEarmarkTextFill } from 'react-icons/bs';
 import { RiShareFill, RiDownload2Fill } from 'react-icons/ri';
@@ -20,6 +21,7 @@ const ReportContent = () => {
   const [tabView, setTabView] = useState('register');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
+  const reportRef = useRef(null);
 
   const handleSearch = (e) => {
     const searchValue = e.target.value;
@@ -52,6 +54,46 @@ const ReportContent = () => {
 
   const goBack = () => {
     setViewType('main');
+  };
+
+  const handleDownload = () => {
+    html2pdf(reportRef.current, {
+      margin: 1,
+      filename: `${selectedReport}_Report.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    });
+  };
+
+  const handleShare = async () => {
+    const element = reportRef.current;
+    const options = {
+      margin: 1,
+      filename: `${selectedReport}_Report.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    // Generate the PDF as a Blob to share
+    try {
+      const pdfBlob = await html2pdf().from(element).set(options).output('blob');
+      const file = new File([pdfBlob], `${selectedReport}_Report.pdf`, { type: 'application/pdf' });
+
+      // Check if the Web Share API supports sharing files
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Mentor Report',
+          text: `Here is the mentor report for student ${selectedReport}.`,
+        });
+      } else {
+        alert("Web Share API is not supported in your browser.");
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
   };
 
   return (
@@ -113,7 +155,7 @@ const ReportContent = () => {
       )}
 
       {viewType === 'details' && (
-        <div className={styles.detailsView}>
+        <div ref={reportRef} className={styles.detailsView}>
           <div className={styles.tabSwitcher}>
             <button
               className={`${styles.tabBtn} ${tabView === 'register' ? styles.activeTab : ''}`}
@@ -136,6 +178,18 @@ const ReportContent = () => {
           {tabView === 'mentorReport' && (
             <MentorReportComponent studentNumber={selectedReport} goBack={goBack} />
           )}
+
+          <div className={styles.actionButtons}>
+            <button className={styles.shareBtn} onClick={handleShare} title="Share">
+              <RiShareFill />
+            </button>
+            <button className={styles.downloadBtn} onClick={handleDownload} title="Download">
+              <RiDownload2Fill />
+            </button>
+            <button className={styles.backBtn} onClick={goBack} title="Back">
+              <FaArrowLeft />
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -175,17 +229,6 @@ const RegisterComponent = ({ studentNumber, goBack }) => {
           ))}
         </tbody>
       </table>
-      <div className={styles.actionButtons}>
-        <button className={styles.shareBtn} title="Share">
-          <RiShareFill />
-        </button>
-        <button className={styles.downloadBtn} title="Download">
-          <RiDownload2Fill />
-        </button>
-        <button className={styles.backBtn} onClick={goBack} title="Back">
-          <FaArrowLeft />
-        </button>
-      </div>
     </div>
   );
 };
@@ -218,18 +261,6 @@ const MentorReportComponent = ({ studentNumber, goBack }) => {
         <p>Discussion about basic time management skills.</p>
         <h3>Personal Notes</h3>
         <p>Lessons went well, but the attendance was a bit low.</p>
-      </div>
-
-      <div className={styles.actionButtons}>
-        <button className={styles.shareMentorBtn} title="Share">
-          <RiShareFill />
-        </button>
-        <button className={styles.downloadMentorBtn} title="Download">
-          <RiDownload2Fill />
-        </button>
-        <button className={styles.backBtn} onClick={goBack} title="Back">
-          <FaArrowLeft />
-        </button>
       </div>
     </div>
   );
