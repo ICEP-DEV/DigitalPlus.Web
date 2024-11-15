@@ -5,10 +5,10 @@ import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
 
 const modules = [
-  { id: 'PPA 216D', image: 'https://picsum.photos/seed/PPA/300/200', description: 'Programming Fundamentals' },
-  { id: 'PPB 216D', image: 'https://picsum.photos/seed/PPB/300/200', description: 'Programming ' },
-  { id: 'OOP 216D', image: 'https://picsum.photos/seed/OOP/300/200', description: 'Object-Oriented Programming' },
-  { id: 'AOP 216D', image: 'https://picsum.photos/seed/AOP/300/200', description: 'Advanced Programming Concepts' },
+  { id: 'PPAF05D', image: 'https://picsum.photos/seed/PPA/300/200', description: 'Principles of Programming A' },
+  { id: 'COHF05D', image: 'https://picsum.photos/seed/PPB/300/200', description: 'Computational Mathematics' },
+  { id: 'CFAF05D', image: 'https://picsum.photos/seed/OOP/300/200', description: 'Computing Fundamentals A' },
+  { id: 'CAPF05X', image: 'https://picsum.photos/seed/AOP/300/200', description: 'Communication For Acardemic Purspose' },
 ];
 
 export default function ModulePage() {
