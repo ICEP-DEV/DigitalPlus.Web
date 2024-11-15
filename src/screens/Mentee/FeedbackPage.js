@@ -170,11 +170,12 @@ const handleSubmit = async (e) => {
                     onChange={handleChange}
                     placeholder="Enter mentor email"
                     className={styles.inputField}
+                    readOnly
                     required
                   />
                 </div>
               </div>
-                  <div className={styles.inputContainer}>
+              <div className={styles.inputContainer}>
           <label htmlFor="moduleName">MODULE NAME:</label>
           <select
             id="moduleName"
