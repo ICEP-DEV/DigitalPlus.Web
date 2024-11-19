@@ -10,34 +10,38 @@ export const useFetchBookings = () => {
     const fetchModules = async () => {
       try {
         const response = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
-        const moduleData = await response.json();
-        if (moduleData.success) {
-          const moduleMap = moduleData.result.reduce((acc, module) => {
-            acc[module.module_Id] = module.module_Name; // Assuming module_Id and module_Name are the correct fields
-            return acc;
-          }, {});
-          setModules(moduleMap);
-        } else {
-          setError(moduleData.message || 'Failed to fetch modules.');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const moduleData = await response.json();
+  
+        // Map the modules into a key-value pair (module_Id -> module_Name)
+        const moduleMap = moduleData.reduce((acc, module) => {
+          acc[module.module_Id] = module.module_Name;
+          return acc;
+        }, {});
+        
+        setModules(moduleMap); // Update state with the fetched modules
       } catch (error) {
         setError('Error fetching modules: ' + error.message);
       }
     };
 
     const fetchBookings = async () => {
+      const user = JSON.parse(localStorage.getItem('user'));
       try {
-        const response = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllAppointments');
+        const response = await fetch('https://localhost:7163/api/Booking/GetBookingsByMentorId/222870097');
         const data = await response.json();
+        //console.log(data);
 
         if (data.success) {
           const formattedBookings = data.result.map((event) => ({
-            id: event.appointmentId,
-            name: event.fullNames.split(' ')[0],
+            id: event.id,
+            name: event.name.split(' ')[0],
             surname: event.fullNames.split(' ')[1] || '',
             date: moment(event.dateTime).format('YYYY-MM-DD'),
             time: moment(event.dateTime).format('hh:mm A'),
-            sessionType: event.lessonType,
+            sessionType: event.sessionType,
             module: modules[event.moduleId] || 'Unknown Module', // Use event.moduleId instead of event.module_Id
             start: new Date(event.dateTime),
             end: new Date(moment(event.dateTime).add(1, 'hours').format()),
