@@ -1,80 +1,132 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Make sure to import axios
+import axios from "axios";
 import SideBarNavBar from "./Navigation/SideBarNavBar";
+import ScheduleData from "./ScheduleData";
+import { FaClock, FaCalendarAlt, FaUser } from "react-icons/fa"; // Icons
 
 function RosterPage() {
-  const [rosterData, setRosterData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [scheduleData, setScheduleData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [selectedDay, setSelectedDay] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
 
   useEffect(() => {
-      const fetchScheduleData = async () => {
-          try {
-              const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllSchedules');
-              console.log(response.data); // Check if response.data is an array
-              if (response.data && Array.isArray(response.data)) {
-                  setRosterData(response.data);
-              } else {
-                  console.warn('Expected an array but received:', response.data);
-                  setRosterData([]); // Set to an empty array as a fallback
-              }
-          } catch (error) {
-              console.error('Error fetching schedule data:', error);
-              setRosterData([]); // Handle errors gracefully by setting an empty array
-          } finally {
-              setLoading(false);
-          }
-      };
-      fetchScheduleData();
+    const fetchScheduleData = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7163/api/DigitalPlusCrud/GetAllSchedules"
+        );
+        if (response.data && Array.isArray(response.data.result)) {
+          const sortedData = response.data.result.sort((a, b) =>
+            compareTime(a.timeSlot, b.timeSlot)
+          );
+          setScheduleData(sortedData);
+          setFilteredData(sortedData);
+        } else {
+          setScheduleData([]);
+          setFilteredData([]);
+        }
+      } catch (error) {
+        console.error("Error fetching schedule data:", error);
+        setScheduleData([]);
+        setFilteredData([]);
+      }
+    };
+    fetchScheduleData();
   }, []);
 
+  // Helper function to compare times
+  const compareTime = (time1, time2) => {
+    const formatTime = (time) =>
+      new Date(`1970-01-01T${time.replace(/(AM|PM)/, "")} ${time.includes("PM") ? "PM" : "AM"}`).getTime();
+    return formatTime(time1) - formatTime(time2);
+  };
 
-  const times = [
-    "08:00 - 09:00",
-    "09:00 - 10:00",
-    "10:00 - 11:00",
-    "11:00 - 12:00",
-    "12:00 - 13:00",
-    "13:00 - 14:00",
-    "14:00 - 15:00",
-    "15:00 - 16:00",
-  ];
+  // Filter data based on user selection
+  useEffect(() => {
+    const filter = () => {
+      let data = scheduleData;
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+      if (selectedDay) {
+        data = data.filter((item) =>
+          item.daysOfTheWeek.toLowerCase().includes(selectedDay.toLowerCase())
+        );
+      }
+
+      if (selectedTime) {
+        data = data.filter((item) => {
+          const slotTime = item.timeSlot;
+          return compareTime(slotTime, selectedTime) === 0;
+        });
+      }
+
+      setFilteredData(data);
+    };
+    filter();
+  }, [selectedDay, selectedTime, scheduleData]);
 
   return (
     <SideBarNavBar>
       <div style={styles.container}>
         <div style={styles.content}>
           <h1 style={styles.header}>Mentor's Lab 10-252</h1>
+
+          {/* Filters */}
+          <div style={styles.filterContainer}>
+            <div style={styles.filterItem}>
+              <FaCalendarAlt style={styles.icon} />
+              <select
+                value={selectedDay}
+                onChange={(e) => setSelectedDay(e.target.value)}
+                style={styles.filterDropdown}
+              >
+                <option value="">Filter by Day</option>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+              </select>
+            </div>
+
+            <div style={styles.filterItem}>
+              <FaClock style={styles.icon} />
+              <select
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                style={styles.filterDropdown}
+              >
+                <option value="">Filter by Time</option>
+                <option value="08:00 AM">08:00 AM</option>
+                <option value="09:00 AM">09:00 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+              </select>
+            </div>
+          </div>
+
           <div style={styles.rosterTable}>
             <table style={styles.table}>
               <thead>
                 <tr>
-                  <th style={styles.tableHeader}>Time</th>
-                  <th style={styles.tableHeader}>Monday</th>
-                  <th style={styles.tableHeader}>Tuesday</th>
-                  <th style={styles.tableHeader}>Wednesday</th>
-                  <th style={styles.tableHeader}>Thursday</th>
-                  <th style={styles.tableHeader}>Friday</th>
+                  <th style={styles.tableHeader}>
+                    <FaClock style={styles.icon} /> Time Slot
+                  </th>
+                  <th style={styles.tableHeader}>
+                    <FaCalendarAlt style={styles.icon} /> Days of the Week
+                  </th>
+                  <th style={styles.tableHeader}>
+                    <FaUser style={styles.icon} /> Mentor ID
+                  </th>
+                  <th style={styles.tableHeader}>Module List</th>
                 </tr>
               </thead>
               <tbody>
-                {times.map((time, index) => (
-                  <tr key={index}>
-                    <td>{time}</td>
-                    <td>{rosterData[index]?.Monday || "No data"}</td>
-                    <td>{rosterData[index]?.Tuesday || "No data"}</td>
-                    <td>{rosterData[index]?.Wednesday || "No data"}</td>
-                    <td>{rosterData[index]?.Thursday || "No data"}</td>
-                    <td>{rosterData[index]?.Friday || "No data"}</td>
-                  </tr>
-                ))}
+                <ScheduleData scheduleData={filteredData} />
               </tbody>
             </table>
           </div>
-          <div style={styles.sidebarContainer}></div>
         </div>
       </div>
     </SideBarNavBar>
@@ -82,79 +134,79 @@ function RosterPage() {
 }
 
 const styles = {
-  container: {
-    fontFamily: "Arial, sans-serif",
-    width: "100%",
-    height: "100vh",
-    backgroundColor: "#D9D9D9",
-    overflow: "hidden",
-    display: "flex",
-    flexDirection: "column",
-  },
-  content: {
-    flex: 1,
-    overflow: "hidden",
-    marginLeft: "200px",
-    padding: "20px",
-  },
-  header: {
-    fontSize: "24px",
-    textAlign: "center",
-    marginBottom: "20px",
-  },
-  buttonContainer: {
-    position: "absolute",
-    bottom: "100px",
-    right: "20px",
-    display: "flex",
-    justifyContent: "flex-end",
-    width: "calc(100% - 250px)", // Adjust for the sidebar width
-    padding: "0 20px",
-  },
-  backButton: {
-    position: "absolute",
-    backgroundColor: "#000C24",
-    display: "flex",
-    color: "#fff",
-    border: "none",
-    padding: "10px 30px",
-    fontSize: "16px",
-    cursor: "pointer",
-    borderRadius: "4px",
-    bottom: "100px",
-    right: "20px",
-    fontSize: "20px",
-    width: "fit-content",
-  },
+    container: {
+      fontFamily: "Arial, sans-serif",
+      width: "100%",
+      height: "86vh",
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+    },
+    content: {
+      flex: 1,
+      marginLeft: "200px",
+      padding: "20px",
+    },
+    header: {
+      fontSize: "28px",
+      textAlign: "center",
+      marginBottom: "20px",
+      color: "#2D3748",
+    },
+    filterContainer: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "20px",
+      gap: "20px",
+    },
+    filterItem: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+    },
+    filterDropdown: {
+      padding: "10px",
+      fontSize: "16px",
+      borderRadius: "5px",
+      border: "1px solid #ccc",
+    },
+    icon: {
+      fontSize: "20px",
+      color: "#2D3748",
+    },
+    rosterTable: {
+      display: "flex",
+      justifyContent: "center",
+      maxHeight: "300px", // Adjust this height based on your preference
+      overflowY: "auto", // Enable vertical scroll for tbody
+    },
+    table: {
+      width: "100%",
+      borderCollapse: "collapse",
+      marginTop: "20px",
+      backgroundColor: "#fff",
+      borderRadius: "8px",
+      overflow: "hidden",
+    },
+    tableHeader: {
+      borderBottom: "2px solid #000",
+      padding: "10px",
+      textAlign: "center",
+      backgroundColor: "#4A5568",
+      color: "#fff",
+      fontWeight: "bold",
+      position: "sticky", // Make the header sticky
+      top: 0,             // Stick the header to the top of the table
+      zIndex: 1,          // Ensure it stays on top of the table content when scrolling
+    },
+    tableHead: {
+      position: "sticky", // Make the header row sticky
+      top: 0,             // Keep the header at the top
+      backgroundColor: "#4A5568", // Ensure the header has a background color
+      zIndex: 10,         // Ensure header stays on top of table rows
+    },
+  };
 
-  rosterTable: {
-    display: "flex",
-    justifyContent: "center",
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    marginTop: "20px",
-  },
-  tableHeader: {
-    borderBottom: "2px solid #000",
-    padding: "10px",
-    textAlign: "left",
-    backgroundColor: "#000C24",
-    color: "#fff",
-  },
-  tableRow: {
-    borderBottom: "1px solid #ccc",
-  },
-  tableCell: {
-    padding: "10px",
-    textAlign: "left",
-    whiteSpace: "pre-line",
-    border: "1px solid #ccc",
-  },
-  sidebarContainer: {
-    zIndex: "1",
-  },
-};
 
-export default RosterPage;
+  export default RosterPage;
+  

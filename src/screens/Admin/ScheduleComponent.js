@@ -135,13 +135,13 @@ const Schedule = () => {
     }
   };
 
-  const handleDeleteClick = async (day, time, index, ) => {
+  const handleDeleteClick = async (day, time, index) => {
     if (window.confirm("Are you sure you want to delete this mentor?")) {
       try {
         const entryToDelete = schedule[`${day}-${time}`][index];
         console.log('Entry to delete:', entryToDelete);
   
-        const scheduleId = entryToDelete.result.scheduleId || entryToDelete.mentor;
+        const scheduleId = entryToDelete.data.result.scheduleId || entryToDelete.mentor;
   
         if (!scheduleId) {
           console.error('Invalid entry or missing scheduleId:', entryToDelete);
@@ -188,6 +188,8 @@ const Schedule = () => {
   };
   
   
+  
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -226,7 +228,8 @@ const Schedule = () => {
       moduleId:formData.module_Id,
       moduleName:formData.module_Name,
       timeSlot:formData.time,
-      daysOfTheWeek:selectedSlot.day
+      daysOfTheWeek:selectedSlot.day,
+      moduleList: formData.module_Code
     };
 
     try {
