@@ -275,23 +275,73 @@ const Schedule = () => {
     }
   };
 
-  const handleEditMentor = () => {
+  const handleEditMentor = async () => {
     if (window.confirm("Are you sure you want to save these edits?")) {
-      setSchedule((prev) => {
-        const updatedEntries = prev[`${selectedSlot.day}-${formData.time}`].map(
-          (entry, i) => (i === formData.index ? { ...formData } : entry)
-        );
-        return {
-          ...prev,
-          [`${selectedSlot.day}-${formData.time}`]: updatedEntries,
+      try {
+        // Fetch the existing data from the database for the given scheduleId
+        const scheduleId = formData.scheduleId; // Ensure formData has the scheduleId field
+        const response = await fetch(`https://localhost:7163/api/DigitalPlusCrud/GetSchedule/${scheduleId}`,{ method: "GET" });
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch existing schedule data.");
+        }
+  
+        const existingData = await response.json();
+  
+        // Check if we successfully fetched the existing schedule
+        if (!existingData) {
+          throw new Error("No existing schedule found for the given ID.");
+        }
+  
+        // Merge the updated data with the existing data
+        const updatedSchedule = {
+          ...existingData,
+          mentorId: formData.mentor || existingData.mentorId, // Preserve previous data if not updated
+          moduleCode: formData.module_Code || existingData.moduleCode,
+          moduleDescription: formData.moduleDescription || existingData.moduleDescription,
+          adminId: formData.adminId || existingData.adminId,
+          moduleId: formData.module_Id || existingData.moduleId,
+          moduleName: formData.module_Name || existingData.moduleName,
+          timeSlot: formData.time || existingData.timeSlot,
+          daysOfTheWeek: selectedSlot.day || existingData.daysOfTheWeek,
         };
-      });
-      setFormData({ time: "", mentor: "", selectedModules: [] });
-      setEditPopupVisible(false);
-      setSuccessMessage("Edited successfully");
-      setTimeout(() => setSuccessMessage(""), 3000);
+  
+        // Send the updated data back to the server
+        const updateResponse = await fetch(`https://localhost:7163/api/DigitalPlusCrud/UpdateSchedule/${scheduleId}`,
+          {
+            method: "PUT",
+            headers: {"Content-Type": "application/json",},
+            body: JSON.stringify(updatedSchedule),
+          }
+        );
+  
+        if (!updateResponse.ok) {
+          throw new Error("Failed to update the schedule.");
+        }
+  
+        // Update the schedule in the local state
+        setSchedule((prev) => {
+          const updatedEntries = prev[`${selectedSlot.day}-${formData.time}`].map(
+            (entry, i) => (i === formData.index ? updatedSchedule : entry)
+          );
+          return {
+            ...prev,
+            [`${selectedSlot.day}-${formData.time}`]: updatedEntries,
+          };
+        });
+  
+        // Reset form and hide the edit popup
+        setFormData({ time: "", mentor: "", selectedModules: [] });
+        setEditPopupVisible(false);
+        setSuccessMessage("Edited successfully");
+        setTimeout(() => setSuccessMessage(""), 3000);
+      } catch (error) {
+        console.error("Error during edit operation:", error);
+        toast.error("There was an error saving the changes. Please try again.");
+      }
     }
   };
+  
 
   const handleCancelEdit = () => {
     setEditPopupVisible(false);
@@ -490,13 +540,13 @@ const Schedule = () => {
               <label className={styles.formLabel}>Mentor:</label>
               <select
                 name="mentor"
-                value={formData.mentor}
+                value={mentorname}
                 onChange={handleChange}
                 className={styles.formField}
               >
                 <option>Select Mentor</option>
                 {mentorsdetailsb.map((mentor) => (
-                  <option key={mentor} value={mentor}>
+                  <option key={mentor.mentorId} value={mentor.mentorId}>
                     {`${mentor.firstName} ${mentor.lastName}`}
                   </option>
                 ))}
@@ -506,24 +556,32 @@ const Schedule = () => {
             {/* Form field for Modules */}
             <div className={styles.formRow}>
               <label className={styles.formLabel}>Modules:</label>
-              <div className={styles.formField}>
-                {modulesb[formData.mentor]?.map((module) => (
-                  <div key={module} className={styles.moduleOption}>
-                    <span>{module}</span> {/* Module name first */}
+              <div className={styles.checkboxContainer}>
+                {modulesb.map((module) => (
+                  <div key={module.moduleCode} className={styles.moduleOption}>
                     <input
-                      type=""
-                      value={module.Module_Code}
-                      checked={formData.selectedModules.includes(module)}
+                      type="checkbox"
+                      id={`module-${module.module_Id}`}
+                      value={module.moduleCode}
+                      checked={
+                        Array.isArray(formData.selectedModules) &&
+                        formData.selectedModules.includes(module.moduleCode)
+                      } // Check if selectedModules is an array before using includes
                       onChange={handleChange}
-                      S
                       name="module"
                       className={styles.checkbox}
                     />
+                    <label
+                      htmlFor={`module-${module.module_Id}`}
+                      className={styles.checkboxLabel}
+                    >
+                      {module.moduleCode}
+                    </label>
                   </div>
-                )) || <p>No modules available</p>}
+                ))}
               </div>
             </div>
-
+            
             <div className={styles.popupActions}>
               <button
                 onClick={handleEditMentor}
