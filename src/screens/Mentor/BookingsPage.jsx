@@ -8,70 +8,85 @@ import styles from './BookingsPage.module.css';
 const MentorBookingsPage = () => {
   const [bookings, setBookings] = useState([]);
   const [modules, setModules] = useState({});
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
   const [modalInfo, setModalInfo] = useState({ show: false, action: '', bookingId: null });
   const [reason, setReason] = useState('');
+
 
   useEffect(() => {
     const fetchModules = async () => {
       try {
         const response = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
         if (!response.ok) throw new Error('Failed to fetch modules');
+        
         const moduleData = await response.json();
+        console.log(moduleData);
         const moduleMap = moduleData.reduce((acc, module) => {
           acc[module.module_Id] = module.module_Name;
           return acc;
         }, {});
+        console.log(moduleMap);
+        console.log("UP");
         setModules(moduleMap);
       } catch (error) {
         //setError(error.message);
       }
     };
 
+    
+
     const fetchBookings = async () => {
       try {
-        // Fetch bookings by mentorId
-        const response = await fetch('https://localhost:7163/api/Booking/GetBookingsByMentorId/222870097');
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        // Fetch bookings by mentorId dynamically
+        console.log(storedUser.mentorId);
+        const response = await fetch(`https://localhost:7163/api/Booking/GetBookingsByMentorId/${storedUser.mentorId}`);
+        console.log(storedUser.mentorId);
         if (!response.ok) throw new Error('Failed to fetch bookings');
         const data = await response.json();
+        //console.log(data);
+  
     
-        console.log("line 38 and below: is fine");
         // Ensure the response is an array
         if (Array.isArray(data)) {
           const formattedBookings = await Promise.all(data.map(async (event) => {
-            console.log("line 42 and below: is fine");
-            // Fetch the mentee details (name, surname)
-            const menteeResponse = await fetch('https://localhost:7163/api/DigitalPlusUser/GetMentee/222870098');
-            console.log("line 45 and below: is fine");
+
+            // Dynamically fetch the mentee details using the studentNumber from the booking event
+            const menteeId = event.menteeId; // Assuming 'studentNumber' is part of the event data
+            if (!menteeId) {
+              throw new Error('Mentee ID (studentNumber) not found in the booking data');
+            }
+            console.log(`Heres the mentee ID ${menteeId}`);
+            const menteeResponse = await fetch(`https://localhost:7163/api/DigitalPlusUser/GetMentee/${menteeId}`);
             if (!menteeResponse.ok) throw new Error('Failed to fetch mentee details');
-            const menteeData = await menteeResponse.json();
-            
-            console.log("line 49 and below: is fine");
+            const menteeData = await menteeResponse.json(); 
+            console.log(menteeData);
             // Map the booking data with mentee name and other fields
             return {
               id: event.bookingId,
-              name: 'Aviwe' || 'Unknown Name', // Ensure name is not undefined
-              surname: 'Baleni' || '', // Ensure surname is not undefined
+              name: menteeData.firstName || 'Unknown Name', // Ensure name is not undefined
+              surname: menteeData.lastName || 'Unknown Name', // Ensure surname is not undefined
               date: new Date(event.bookingDateTime).toLocaleDateString(),
               time: new Date(event.bookingDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
               sessionType: event.sessionType,
-              module: modules[event.moduleId] || 'Unknown Module',
+              module: modules[event.moduleId] || 'Internet programming', // Ensure the module name is available
               start: new Date(event.bookingDateTime),
               end: new Date(new Date(event.bookingDateTime).getTime() + 60 * 60 * 1000), // Assuming 1-hour duration
-            }
+            };
           }));
+          
+          // Set the formatted bookings to state
           setBookings(formattedBookings);
         } else {
-          //setError('Response data is not an array.');
-          console.log("Its not an Array!!");
+          console.log("Response data is not an array!");
         }
       } catch (error) {
-        //setError(error.message);
-        console.log("Problem in the try-catch");
+        console.log("Problem in the try-catch", error.message);
       } finally {
-        setLoading(false);
+        //setLoading(false);
       }
     };
+    
     
     
 
@@ -110,8 +125,8 @@ const MentorBookingsPage = () => {
         case 'Cancel':
           // Show confirmation dialog for cancellation
           if (window.confirm('Are you sure you want to cancel this booking?')) {
-            const cancelResponse = await fetch(`https://localhost:7163/api/Booking/DeleteBooking/1`, {
-              method: 'POST',
+            const cancelResponse = await fetch(`https://localhost:7163/api/Booking/DeleteBooking/${bookingId}`, {
+              method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json',
               },
@@ -119,31 +134,36 @@ const MentorBookingsPage = () => {
             });
   
             if (!cancelResponse.ok) throw new Error('Failed to cancel booking');
-            toast.info(`Booking with ID ${bookingId} has been canceled.`);
+            toast.info(`Booking with ID ${bookingId} has been declined.`);
           }
           break;
   
-        case 'Reschedule':
-          // API call to reschedule the booking
-          if (reasonToSend === null) {
-            toast.error('Please provide a reason for rescheduling.');
-            return;
-          }
-  
-          const rescheduleResponse = await fetch(`https://localhost:7163/api/Booking/UpdateBooking/${bookingId}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ reason: reasonToSend }), // Optional reason
-          });
-  
-          if (!rescheduleResponse.ok) throw new Error('Failed to reschedule booking');
-          toast.warning(`Rescheduling booking with ID ${bookingId} for the reason: ${reasonToSend}.`);
-          break;
-  
-        default:
-          break;
+          case 'Reschedule':
+            // Prepare the URL with the bookingId as a query parameter
+            const url = new URL('https://localhost:7163/api/Booking/MentorRescheduleRequest');
+            url.searchParams.append('bookingId', bookingId);
+          
+            // Prepare the body if a reason is provided
+            const body = reasonToSend ? JSON.stringify({ reason: reasonToSend }) : null;
+          
+            // Make the fetch request
+            const rescheduleResponse = await fetch(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: body, // Include body only if reason is provided
+            });
+          
+            if (!rescheduleResponse.ok) throw new Error('Failed to reschedule booking');
+            
+            toast.warning(`Rescheduling booking with ID ${bookingId} for the reason: ${reasonToSend || 'No specific reason provided'}.`);
+            console.log(rescheduleResponse);
+            break;
+          
+          default:
+            break;
+          
       }
     } catch (error) {
       toast.error(`Error: ${error.message}`);
@@ -154,7 +174,7 @@ const MentorBookingsPage = () => {
   
   
 
-  if (loading) return <p>Loading...</p>;
+  //if (loading) return <p>Loading...</p>;
 
   return (
     <div className={styles.pageContainer}>
@@ -197,7 +217,7 @@ const MentorBookingsPage = () => {
                         Reschedule
                       </button>
                       <button className={styles.cancelButton} onClick={() => openModal('Cancel', booking.id)}>
-                        Cancel
+                        Decline
                       </button>
                     </td>
                   </tr>

@@ -33,7 +33,6 @@ const Booking = () => {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentors');
         if (response.data) {
           setAllMentors(response.data);
-          console.log(response.data);
         }
       } catch (error) {
         console.log(error);
@@ -47,6 +46,7 @@ const Booking = () => {
     try {
       const response = await axios.get(`https://localhost:7163/api/AssignMod/getmodulesBy_MentorId/${mentorId}`);
       console.log(response.data);
+      
       if (response.data && response.data) {
         setMentorModules(response.data);
       }
@@ -68,17 +68,34 @@ const Booking = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
+  
 
+    const bookingData = {
+      bookingId: 0, 
+      menteeId: formData.studentNumber, 
+      mentorId: formData.mentorId, 
+      moduleId: mentorModules.moduleId, 
+      bookingDateTime: formData.dateTime, 
+      sessionType: formData.lessonType, 
+      status: "Scheduled" 
+    };
+  
     try {
-      const response = await axios.post('https://localhost:7163/api/DigitalPlusCrud/AddAppointment', formData); 
-      console.log(response.data);
-
+      const response = await axios.post('https://localhost:7163/api/Booking/AddBooking', bookingData, {
+        headers: {
+          'Content-Type': 'application/json' // Ensure we're sending JSON
+        }
+      });
+  
+      console.log(response.data); // Handle the API response
+  
       setShowSuccess(true);
-
+  
       setTimeout(() => {
         setShowSuccess(false);
       }, 3000);
-
+  
+      // Clear the form data after successful submission
       setFormData(prev => ({
         ...prev,
         mentorId: '',
@@ -86,7 +103,7 @@ const Booking = () => {
         lessonType: '',
         dateTime: ''
       }));
-      setMentorModules([]);
+      setMentorModules([]); // Clear the modules list if necessary
     } catch (error) {
       console.error('Error creating booking:', error);
     }
