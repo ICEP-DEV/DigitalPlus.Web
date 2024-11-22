@@ -5,7 +5,6 @@ import NavBar from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styles from './CalendarPage.module.css'; // Import the CSS module
-import { useFetchBookings } from './useFetchBookings'; // Reuse the same hook
 import Modal from 'react-modal';
 
 const localizer = momentLocalizer(moment);
