@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ScheduleComponent.module.css";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { GrSchedules } from "react-icons/gr";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -31,13 +31,13 @@ const mentorModules = {
   "Mentor C": ["Module 1", "Module 3"],
 };
 
-const mentors = Object.keys(mentorModules);
-
+//Starting of the Function
 const Schedule = () => {
   const [formData, setFormData] = useState({
     time: "",
     mentor: "",
     selectedModules: [],
+    scheduleId: ""
   });
 
   const [selectedSlot, setSelectedSlot] = useState({
@@ -45,13 +45,25 @@ const Schedule = () => {
     time: "",
   });
 
+  const getSavedSchedule = () => {
+    const savedSchedule = localStorage.getItem("scheduleData");
+    return savedSchedule ? JSON.parse(savedSchedule) : {};
+  };
+
   const [mentorsdetailsb, setMentorsDetailsB] = useState([]);
   const [modulesb, setModulesB] = useState([]); // State to store modules based on mentorsId
   const [addPopupVisible, setAddPopupVisible] = useState(false);
   const [editPopupVisible, setEditPopupVisible] = useState(false);
-  const [schedule, setSchedule] = useState({});
+  const [schedule, setSchedule] = useState(getSavedSchedule());
   const [successMessage, setSuccessMessage] = useState(""); // State for success messages
-  const[mentorname, setMentorName] = useState("");
+  const [mentorname, setMentorName] = useState("");
+  const [scheduleToDelete, setScheduleToDelete] = useState(null); // Track which mentee to delete
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  useEffect(() => {
+    // Save the schedule data to localStorage whenever it changes
+    localStorage.setItem("scheduleData", JSON.stringify(schedule));
+  }, [schedule]);
 
   // Retrieving data from the database
   useEffect(() => {
@@ -70,19 +82,18 @@ const Schedule = () => {
     };
 
     const fetchMentorName = async (mentorId) => {
-       try{
-        const response = await axios.get(`https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`);
-        if(response.data){
-          setMentorName(response.data.firstName)
-          console.log(response.data.firstName)
+      try {
+        const response = await axios.get(
+          `https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`
+        );
+        if (response.data) {
+          setMentorName(response.data.firstName);
+          console.log(response.data.firstName);
         }
-
-       }catch(error){
+      } catch (error) {
         console.log(error);
-
-       }
-
-    }
+      }
+    };
     fetchMentorName();
     fetchMentordetailsB();
   }, []);
@@ -120,6 +131,7 @@ const Schedule = () => {
         });
         return updatedSchedule;
       });
+
       setSuccessMessage(`All entries for ${day} cleared successfully.`);
       setTimeout(() => setSuccessMessage(""), 3000);
     }
@@ -136,67 +148,67 @@ const Schedule = () => {
   };
 
   const handleDeleteClick = async (day, time, index) => {
+    // Confirm deletion
     if (window.confirm("Are you sure you want to delete this mentor?")) {
       try {
-        const entryToDelete = schedule[`${day}-${time}`][index];
-        console.log('Entry to delete:', entryToDelete);
-  
-        const scheduleId = entryToDelete.data.result.scheduleId || entryToDelete.mentor;
-  
-        if (!scheduleId) {
-          console.error('Invalid entry or missing scheduleId:', entryToDelete);
-          alert('Failed to find the schedule ID for deletion.');
+        // Check if we have a schedule entry (from day-time index)
+        const entryToDelete = schedule[`${day}-${time}`]?.[index];
+        const scheduleId = entryToDelete?.data?.result?.scheduleId || entryToDelete?.mentor?.scheduleId;
+    
+        // If scheduleToDelete is available (from dialog or other source)
+        const scheduleIdFromDialog = scheduleToDelete?.scheduleId;
+    
+        // Use the scheduleId from the entry or the one from the dialog
+        const finalScheduleId = scheduleId || scheduleIdFromDialog;
+    
+        if (!finalScheduleId) {
+          console.error("Invalid entry or missing scheduleId:", entryToDelete);
+          alert("Failed to find the schedule ID for deletion. Please make sure the schedule ID exists.");
           return;
         }
-  
-        const response = await fetch(
-          `https://localhost:7163/api/DigitalPlusCrud/DeleteSchedule/${scheduleId}`,
-          {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-  
-        if (!response.ok) {
-          const errorBody = await response.text();
-          console.error('Error response body:', errorBody);
-          throw new Error(`Failed to delete mentor from the database: ${errorBody}`);
-        }
-  
+    
+        // Perform the deletion with axios
+        await axios.delete(`https://localhost:7163/api/DigitalPlusCrud/DeleteSchedule/${finalScheduleId}`);
+    
+        // Update the schedule state to remove the deleted entry
         setSchedule((prev) => {
-          const updatedEntries = prev[`${day}-${time}`].filter(
-            (_, i) => i !== index
-          );
-          return {
-            ...prev,
-            [`${day}-${time}`]: updatedEntries.length
-              ? updatedEntries
-              : undefined,
-          };
+          const updatedSchedule = { ...prev };
+          if (scheduleId) {
+            // Delete by day-time index
+            const updatedEntries = updatedSchedule[`${day}-${time}`].filter((_, i) => i !== index);
+            updatedSchedule[`${day}-${time}`] = updatedEntries.length ? updatedEntries : undefined;
+          } else if (scheduleIdFromDialog) {
+            // If using the scheduleId from the dialog (e.g., for batch deletions)
+            updatedSchedule[`${day}-${time}`] = updatedSchedule[`${day}-${time}`]?.filter(
+              schedule => schedule.scheduleId !== scheduleIdFromDialog
+            );
+          }
+    
+          return updatedSchedule;
         });
-  
-        setSuccessMessage("Deleted successfully");
-        setTimeout(() => setSuccessMessage(""), 3000);
-  
+    
+        // Show success message
+        toast.success("Schedule deleted successfully!");
+    
+        // Reset states if applicable
+        setDeleteDialogOpen(false); // Close dialog after deletion if applicable
+        setScheduleToDelete(null); // Clear the selected schedule to delete (from dialog)
+        
       } catch (error) {
-        console.error('Error during deletion:', error);
-        alert(`An error occurred while deleting the mentor: ${error.message}`);
+        console.error("Error deleting schedule:", error);
+        toast.error("Failed to delete schedule. Please try again.");
       }
     }
   };
   
   
-  
-  
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
 
     if (name === "mentor") {
-      const selectedModules = fetchModulesByMentorsId([value]) || [];
-      setFormData({ ...formData, mentor: value, selectedModules });
+      setFormData({ ...formData, mentor: value, selectedModules: [] });
+      await fetchModulesByMentorsId(value); // Fetch modules only when mentor changes
     } else if (name === "module") {
       setFormData((prev) => {
         const selectedModules = Array.isArray(prev.selectedModules)
@@ -218,83 +230,118 @@ const Schedule = () => {
   const handleAddMentor = async (e) => {
     e.preventDefault();
 
-    // Prepare the payload according to the structure expected by the backend
     const payload = {
       scheduleId: formData.scheduleId,
-      mentorId: formData.mentor, // Ensure that this field exists in your state
-      moduleCode:formData.module_Code,
-      moduleDescription:formData.moduleDescription,
+      mentorId: formData.mentor,
+      moduleCode: formData.module_Code,
+      moduleDescription: formData.moduleDescription,
       adminId: formData.adminId,
-      moduleId:formData.module_Id,
-      moduleName:formData.module_Name,
-      timeSlot:formData.time,
-      daysOfTheWeek:selectedSlot.day,
-      moduleList: formData.module_Code
+      moduleId: formData.module_Id,
+      moduleName: formData.module_Name,
+      timeSlot: formData.time,
+      daysOfTheWeek: selectedSlot.day,
+      moduleList: formData.module_Code,
     };
 
     try {
-      // Log the payload before sending to verify its structure
-      console.log('Payload being sent:', payload);
-
       const response = await fetch(
-        'https://localhost:7163/api/DigitalPlusCrud/AddSchedule',
+        "https://localhost:7163/api/DigitalPlusCrud/AddSchedule",
         {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
       );
 
-      if (!response.ok) {
-        throw new Error('Failed to add mentor to the database');
-      }
+      if (!response.ok) throw new Error("Failed to add mentor to the database");
 
-      console.log('Schedule sent', await response.json());
+      console.log("Schedule sent", await response.json());
 
+      // Update the schedule in the table
+      const existingData =
+        schedule[`${selectedSlot.day}-${formData.time}`] || [];
+      setSchedule((prev) => ({
+        ...prev,
+        [`${selectedSlot.day}-${formData.time}`]: [
+          ...existingData,
+          { ...formData },
+        ],
+      }));
+
+      setAddPopupVisible(false);
     } catch (error) {
-      console.error('Error during form submission:', error);
+      console.error("Error during form submission:", error);
+      toast.error("There was an error adding the mentor. Please try again.");
+    }
+  };
 
-      // Log backend error response if available
-      if (error.response) {
-        console.error('Backend response error:', error.response.data);
-      } else {
-        console.error('Error message:', error.message);
+  const handleEditMentor = async () => {
+    if (window.confirm("Are you sure you want to save these edits?")) {
+      try {
+        // Fetch the existing data from the database for the given scheduleId
+        const scheduleId = formData.scheduleId; // Ensure formData has the scheduleId field
+        const response = await fetch(`https://localhost:7163/api/DigitalPlusCrud/GetSchedule/${scheduleId}`,{ method: "GET" });
+  
+        if (!response.ok) {
+          throw new Error("Failed to fetch existing schedule data.");
+        }
+  
+        const existingData = await response.json();
+  
+        // Check if we successfully fetched the existing schedule
+        if (!existingData) {
+          throw new Error("No existing schedule found for the given ID.");
+        }
+  
+        // Merge the updated data with the existing data
+        const updatedSchedule = {
+          ...existingData,
+          mentorId: formData.mentor || existingData.mentorId, // Preserve previous data if not updated
+          moduleCode: formData.module_Code || existingData.moduleCode,
+          moduleDescription: formData.moduleDescription || existingData.moduleDescription,
+          adminId: formData.adminId || existingData.adminId,
+          moduleId: formData.module_Id || existingData.moduleId,
+          moduleName: formData.module_Name || existingData.moduleName,
+          timeSlot: formData.time || existingData.timeSlot,
+          daysOfTheWeek: selectedSlot.day || existingData.daysOfTheWeek,
+        };
+  
+        // Send the updated data back to the server
+        const updateResponse = await fetch(`https://localhost:7163/api/DigitalPlusCrud/UpdateSchedule/${scheduleId}`,
+          {
+            method: "PUT",
+            headers: {"Content-Type": "application/json",},
+            body: JSON.stringify(updatedSchedule),
+          }
+        );
+  
+        if (!updateResponse.ok) {
+          throw new Error("Failed to update the schedule.");
+        }
+  
+        // Update the schedule in the local state
+        setSchedule((prev) => {
+          const updatedEntries = prev[`${selectedSlot.day}-${formData.time}`].map(
+            (entry, i) => (i === formData.index ? updatedSchedule : entry)
+          );
+          return {
+            ...prev,
+            [`${selectedSlot.day}-${formData.time}`]: updatedEntries,
+          };
+        });
+  
+        // Reset form and hide the edit popup
+        setFormData({ time: "", mentor: "", selectedModules: [] });
+        setEditPopupVisible(false);
+        setSuccessMessage("Edited successfully");
+        setTimeout(() => setSuccessMessage(""), 3000);
+      } catch (error) {
+        console.error("Error during edit operation:", error);
+        toast.error("There was an error saving the changes. Please try again.");
       }
     }
-
-    const existingData = schedule[`${selectedSlot.day}-${formData.time}`] || [];
-    setSchedule((prev) => ({
-      ...prev,
-      [`${selectedSlot.day}-${formData.time}`]: [
-        ...existingData,
-        { ...formData },
-      ],
-    }));
-
-    setFormData({ time: '', mentor: '', selectedModules: [] });
-    setAddPopupVisible(false);
   };
-
-
-  const handleEditMentor = () => {
-    if (window.confirm("Are you sure you want to save these edits?")) {
-      setSchedule((prev) => {
-        const updatedEntries = prev[`${selectedSlot.day}-${formData.time}`].map(
-          (entry, i) => (i === formData.index ? { ...formData } : entry)
-        );
-        return {
-          ...prev,
-          [`${selectedSlot.day}-${formData.time}`]: updatedEntries,
-        };
-      });
-      setFormData({ time: "", mentor: "", selectedModules: [] });
-      setEditPopupVisible(false);
-      setSuccessMessage("Edited successfully");
-      setTimeout(() => setSuccessMessage(""), 3000);
-    }
-  };
+  
 
   const handleCancelEdit = () => {
     setEditPopupVisible(false);
@@ -457,26 +504,6 @@ const Schedule = () => {
               </div>
             </div>
 
-            {/* Form field for Modules */}
-            {/* <div className={styles.formRow}>
-              <label className={styles.formLabel}>Modules:</label>
-              <div className={styles.formField}>
-                {modulesb[formData.mentor]?.map((module) => (
-                  <div key={module.module_Id} className={styles.moduleOption}>
-                    <span>{module}</span> 
-                    <input
-                      type="checkbox"
-                      value={module.module_Id}
-                      checked={formData.selectedModules.includes(module)}
-                      onChange={handleChange}
-                      name="module"
-                      className={styles.checkbox}
-                    />
-                  </div>
-                )) || <p>No modules available</p>}
-              </div>
-            </div> */}
-
             <div className={styles.popupActions}>
               <button onClick={handleAddMentor}>Add Mentor</button>
               <button onClick={() => setAddPopupVisible(false)}>Close</button>
@@ -513,13 +540,13 @@ const Schedule = () => {
               <label className={styles.formLabel}>Mentor:</label>
               <select
                 name="mentor"
-                value={formData.mentor}
+                value={mentorname}
                 onChange={handleChange}
                 className={styles.formField}
               >
                 <option>Select Mentor</option>
                 {mentorsdetailsb.map((mentor) => (
-                  <option key={mentor} value={mentor}>
+                  <option key={mentor.mentorId} value={mentor.mentorId}>
                     {`${mentor.firstName} ${mentor.lastName}`}
                   </option>
                 ))}
@@ -529,24 +556,32 @@ const Schedule = () => {
             {/* Form field for Modules */}
             <div className={styles.formRow}>
               <label className={styles.formLabel}>Modules:</label>
-              <div className={styles.formField}>
-                {mentorModules[formData.mentor]?.map((module) => (
-                  <div key={module} className={styles.moduleOption}>
-                    <span>{module}</span> {/* Module name first */}
+              <div className={styles.checkboxContainer}>
+                {modulesb.map((module) => (
+                  <div key={module.moduleCode} className={styles.moduleOption}>
                     <input
-                      type=""
-                      value={module.Module_Code}
-                      checked={formData.selectedModules.includes(module)}
+                      type="checkbox"
+                      id={`module-${module.module_Id}`}
+                      value={module.moduleCode}
+                      checked={
+                        Array.isArray(formData.selectedModules) &&
+                        formData.selectedModules.includes(module.moduleCode)
+                      } // Check if selectedModules is an array before using includes
                       onChange={handleChange}
-                      S
                       name="module"
                       className={styles.checkbox}
                     />
+                    <label
+                      htmlFor={`module-${module.module_Id}`}
+                      className={styles.checkboxLabel}
+                    >
+                      {module.moduleCode}
+                    </label>
                   </div>
-                )) || <p>No modules available</p>}
+                ))}
               </div>
             </div>
-
+            
             <div className={styles.popupActions}>
               <button
                 onClick={handleEditMentor}

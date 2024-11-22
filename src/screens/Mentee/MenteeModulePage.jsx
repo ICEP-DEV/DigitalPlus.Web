@@ -1,56 +1,97 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
-import styles from './MenteeModule.module.css'; // Import the CSS module
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import styles from './MenteeModule.module.css';
 import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
 
-const modules = [
-  { id: 'PPAF05D', image: 'https://picsum.photos/seed/PPA/300/200', description: 'Principles of Programming A' },
-  { id: 'COHF05D', image: 'https://picsum.photos/seed/PPB/300/200', description: 'Computational Mathematics' },
-  { id: 'CFAF05D', image: 'https://picsum.photos/seed/OOP/300/200', description: 'Computing Fundamentals A' },
-  { id: 'CAPF05X', image: 'https://picsum.photos/seed/AOP/300/200', description: 'Communication For Acardemic Purspose' },
-];
+export default function MenteeModulePage() {
+  const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-export default function ModulePage() {
-  const navigate = useNavigate();  // Create navigate function to handle navigation
+  // Retrieve mentee ID from local storage
+  const user = JSON.parse(localStorage.getItem('user'));
+  const menteeId = user?.mentee_Id;
 
-  const handleNavigation = (moduleId) => {
-    navigate(`/mentee-dashboard/modules/${moduleId}`, { state: { moduleId } });  // Pass moduleId as state
+  console.log('Mentee ID:', menteeId);
+
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        if (!menteeId) {
+          throw new Error('Mentee ID not found in local storage.');
+        }
+
+        // Fetch the modules assigned to the mentee
+        const assignedModulesResponse = await axios.get(`https://localhost:7163/api/AssignMod/getmodulesBy_MenteeId/${menteeId}`);
+        const assignedModules = assignedModulesResponse.data;
+
+        // Fetch detailed information for each module
+        const moduleDetails = await Promise.all(
+          assignedModules.map(async (module) => {
+            const moduleDetailsResponse = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetModule/${module.moduleId}`);
+            return moduleDetailsResponse.data.result; // Match the mentor's structure
+          })
+        );
+
+        setModules(moduleDetails);
+        console.log('Module Details:', moduleDetails);
+      } catch (err) {
+        console.error('Error fetching modules:', err.message);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModules();
+  }, [menteeId]);
+
+  const handleNavigation = (moduleCode) => {
+    navigate(`/mentee-dashboard/modules/${moduleCode}`, { state: { moduleCode } });
   };
+
+  if (loading) return <p>Loading modules...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
-    <NavBar />
-    <SideBar />
- 
+      <NavBar />
+      <SideBar />
       <div className={styles['course-modules']}>
-        <h1>Modules</h1>
-        <div className={styles['module-grid']}>
-          {modules.slice(0, 2).map((module) => (  // Display first two modules
-            <div key={module.id} className={styles['module-card']}>
-              <img src={module.image} alt={module.description} />
-              <div className={styles['module-content']}>
-                <h2>{module.id}</h2>
-                <p>{module.description}</p>
-                <button onClick={() => handleNavigation(module.id)}>{module.id}</button> {/* Navigate on click */}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className={styles['module-grid']}>
-          {modules.slice(2, 4).map((module) => (  // Display remaining two modules
-            <div key={module.id} className={styles['module-card']}>
-              <img src={module.image} alt={module.description} />
-              <div className={styles['module-content']}>
-                <h2>{module.id}</h2>
-                <p>{module.description}</p>
-                <button onClick={() => handleNavigation(module.id)}>{module.id}</button> {/* Navigate on click */}
-              </div>
-            </div>
-          ))}
-        </div>
+        <h1>Assigned Modules</h1>
+        {modules.length > 0 ? (
+          <div className={styles['module-grid']}>
+            {modules.map((module) =>
+              module && module.module_Code ? (
+                <div key={module.module_Id} className={styles['module-card']}>
+                  <img
+                    className={styles['module-image']}
+                    src={`https://picsum.photos/seed/${module.module_Code}/300/200`} // Dynamic image URL
+                    alt={module.description || 'Module Image'}
+                  />
+                  <div className={styles['module-content']}>
+                    <h2>{module.module_Name}</h2>
+                    <p>{module.description || 'No description available.'}</p>
+                    <button
+                      className={styles['module-button']}
+                      onClick={() => handleNavigation(module.module_Code)}
+                    >
+                      {module.module_Code}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p>Module data is missing or incomplete</p>
+              )
+            )}
+          </div>
+        ) : (
+          <p>No modules assigned to this mentee yet.</p>
+        )}
       </div>
-      </div>
-    
+    </div>
   );
 }
