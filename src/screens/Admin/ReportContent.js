@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import html2pdf from 'html2pdf.js';
 import styles from './ReportContent.module.css';
 import { BsFillPersonCheckFill, BsFileEarmarkTextFill } from 'react-icons/bs';
@@ -7,21 +8,27 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { GoReport } from "react-icons/go";
 import { IoFilter } from "react-icons/io5";
 
-const reportsData = [
-  { studentNumber: '22145553', mentor: 'Sfiso Vinjwa', course: 'Computer Science', month: 'May' },
-  { studentNumber: '222870097', mentor: 'Karabo Nechicvhangani', course: 'Informatics', month: 'April' },
-  { studentNumber: '22456793', mentor: 'Excellent Nambane', course: 'Information Technology', month: 'May' },
-  { studentNumber: '221418812', mentor: 'Bathabile Mkhabela', course: 'Multimedia Computing', month: 'June' },
-];
-
 const ReportContent = () => {
-  const [filteredReports, setFilteredReports] = useState(reportsData);
+  const [reportsData, setReportsData] = useState([]);
+  const [filteredReports, setFilteredReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
   const [viewType, setViewType] = useState('main');
   const [tabView, setTabView] = useState('register');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedMonth, setSelectedMonth] = useState('');
   const reportRef = useRef(null);
+
+  // Fetch data from the backend
+  useEffect(() => {
+    axios.get('/api/reports')
+      .then(response => {
+        setReportsData(response.data);
+        setFilteredReports(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   const handleSearch = (e) => {
     const searchValue = e.target.value;
@@ -76,12 +83,10 @@ const ReportContent = () => {
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
-    // Generate the PDF as a Blob to share
     try {
       const pdfBlob = await html2pdf().from(element).set(options).output('blob');
       const file = new File([pdfBlob], `${selectedReport}_Report.pdf`, { type: 'application/pdf' });
 
-      // Check if the Web Share API supports sharing files
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
@@ -196,74 +201,34 @@ const ReportContent = () => {
   );
 };
 
-const RegisterComponent = ({ studentNumber, goBack }) => {
-  const registerData = [
-    { studentNumber: '213568452', name: 'Msiza LK', module: 'PPA05D', comments: 'Good session', rating: 8 },
-    { studentNumber: '224356789', name: 'Khumal KB', module: 'PPA05D', comments: 'The session was fine', rating: 7 },
-    { studentNumber: '222345678', name: 'Stohle FP', module: 'PPA05D', comments: 'Excellent session', rating: 10 },
-    { studentNumber: '212345687', name: 'Phala NH', module: 'PPA05D', comments: 'Bad session', rating: 3 },
-  ];
+const RegisterComponent = ({ studentNumber, goBack }) => (
+  <div>
+    <h2>Register for Student: {studentNumber}</h2>
+    <button onClick={goBack}>Back</button>
+  </div>
+);
 
-  return (
-    <div className={styles.registerView}>
-      <h2>Register Table for Student: {studentNumber}</h2>
-      <table className={styles.registerTable}>
-        <thead>
-          <tr>
-            <th>Student Number</th>
-            <th>Surname & Initials</th>
-            <th>Module Code</th>
-            <th>Comments</th>
-            <th>Ratings</th>
-          </tr>
-        </thead>
-        <tbody>
-          {registerData.map((entry) => (
-            <tr key={entry.studentNumber}>
-              <td>{entry.studentNumber}</td>
-              <td>{entry.name}</td>
-              <td>{entry.module}</td>
-              <td>{entry.comments}</td>
-              <td>{entry.rating}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-const MentorReportComponent = ({ studentNumber, goBack }) => {
-  return (
-    <div className={styles.mentorReportView}>
-      <h2>Mentor Report for Student: {studentNumber}</h2>
-      <table className={styles.mentorReportTable}>
-        <thead>
-          <tr>
-            <th>Date of Session</th>
-            <th>Students Present / Total Risk Students</th>
-            <th>Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>02/05/2024</td>
-            <td>10</td>
-            <td>Mentees are attending more lessons.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div className={styles.extraReport}>
-        <h3>Challenges / Recommendations</h3>
-        <p>Mentees hesitate to answer questions during sessions.</p>
-        <h3>Social Engagement Report</h3>
-        <p>Discussion about basic time management skills.</p>
-        <h3>Personal Notes</h3>
-        <p>Lessons went well, but the attendance was a bit low.</p>
-      </div>
-    </div>
-  );
-};
+const MentorReportComponent = ({ studentNumber, goBack }) => (
+  <div className={styles.mentorReportView}>
+    <h2>Mentor Report for Student: {studentNumber}</h2>
+    <table className={styles.mentorReportTable}>
+      <thead>
+        <tr>
+          <th>Date of Session</th>
+          <th>Students Present / Total Risk Students</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>02/05/2024</td>
+          <td>10</td>
+          <td>Mentees are attending more lessons.</td>
+        </tr>
+      </tbody>
+    </table>
+    <button onClick={goBack}>Back</button>
+  </div>
+);
 
 export default ReportContent;
