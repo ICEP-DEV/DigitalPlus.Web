@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom'; // Import useParams for dynamic moduleId retrieval
+import * as signalR from '@microsoft/signalr';
 import styles from './MentorChatBoard.module.css';
 import {
   FaPaperPlane,
@@ -7,89 +8,100 @@ import {
   FaReply,
   FaTimes,
   FaFilePdf,
-  FaDownload,
   FaFileAlt,
-  FaEdit,
-  FaTrash
 } from 'react-icons/fa';
 
 const MentorChatBoard = () => {
+  const { moduleId } = useParams(); // Dynamically retrieve moduleId from URL
+
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [file, setFile] = useState(null);
-  const [isTyping, setIsTyping] = useState(false);
   const [replyTo, setReplyTo] = useState(null);
-  const [editingMessage, setEditingMessage] = useState(null);
-  const { moduleId } = useParams();
-  const currentUser = { id: 'mentorUserId', name: 'Mentor Mike', role: 'mentor' };
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  const mentorId = user?.mentorId;
+  const mentorName = user?.firstName;
+
+  const currentUser = { id: mentorId, name: mentorName, role: 'mentor' };
+
+  const [connection, setConnection] = useState(null);
 
   useEffect(() => {
-    setMessages([
-      {
-        sender: 'Mentee Jane',
-        senderId: '1',
-        role: 'mentee',
-        text: 'I need help with my project.',
-        id: 1,
-        timestamp: '9:00 AM',
-      },
-      {
-        sender: currentUser.name,
-        senderId: currentUser.id,
-        role: 'mentor',
-        text: 'Sure, how can I assist you?',
-        id: 2,
-        timestamp: '9:05 AM',
-      },
-      {
-        sender: 'Mentee Alex',
-        senderId: '2',
-        role: 'mentee',
-        text: 'I am facing the same issue!',
-        id: 3,
-        timestamp: '9:10 AM',
-      },
-    ]);
-  }, []);
+    const newConnection = new signalR.HubConnectionBuilder()
+      .withUrl(`https://localhost:7163/chatBoardHub`)
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== '' || file) {
-      const newMsg = {
-        sender: currentUser.name,
-        senderId: currentUser.id,
-        role: currentUser.role,
-        text: newMessage,
-        fileURL: file ? URL.createObjectURL(file) : '',
-        fileName: file ? file.name : '',
-        type: file ? file.type.split('/')[0] : null,
-        id: editingMessage ? editingMessage.id : Date.now(),
-        timestamp: new Date().toLocaleTimeString(),
-        replyTo: replyTo,
-      };
+    const startConnection = async () => {
+      try {
+        await newConnection.start();
+        console.log(`Connected to ChatBoardHub for module: ${moduleId}`);
 
-      if (editingMessage) {
-        setMessages(
-          messages.map((msg) => (msg.id === editingMessage.id ? newMsg : msg))
+        // Listen for incoming messages
+        newConnection.on(
+          'ReceiveMessage',
+          (module, user, text, fileName, fileUrl, timestamp) => {
+            if (module === moduleId) {
+              setMessages((prevMessages) => [
+                ...prevMessages,
+                { sender: user, text, fileName, fileURL: fileUrl, timestamp },
+              ]);
+            }
+          }
         );
-        setEditingMessage(null);
-      } else {
-        setMessages([...messages, newMsg]);
+      } catch (error) {
+        console.error('Connection failed:', error);
       }
+    };
 
-      setNewMessage('');
-      setFile(null);
-      setReplyTo(null);
-      setIsTyping(false);
+    startConnection();
+    setConnection(newConnection);
+
+    return () => {
+      newConnection.stop();
+    };
+  }, [moduleId]);
+
+  const handleSendMessage = async () => {
+    if ((newMessage.trim() || file) && connection?.state === signalR.HubConnectionState.Connected) {
+      const timestamp = new Date().toLocaleTimeString();
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const fileUrl = e.target.result;
+          const fileName = file.name;
+          try {
+            await connection.invoke(
+              'SendFileToModule',
+              moduleId,
+              currentUser.name,
+              fileName,
+              fileUrl
+            );
+            setFile(null); // Clear the file input after sending
+          } catch (err) {
+            console.error('Failed to send file:', err);
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        try {
+          await connection.invoke('SendMessageToModule', moduleId, currentUser.name, newMessage);
+          setNewMessage(''); // Clear the input after sending
+        } catch (err) {
+          console.error('Failed to send message:', err);
+        }
+      }
     }
   };
 
   const handleFileUpload = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  const handleTyping = (e) => {
-    setNewMessage(e.target.value);
-    setIsTyping(e.target.value.trim() !== '');
+    const uploadedFile = event.target.files[0];
+    if (uploadedFile) {
+      setFile(uploadedFile);
+    }
   };
 
   const handleReply = (message) => {
@@ -102,16 +114,6 @@ const MentorChatBoard = () => {
 
   const handleCancelFile = () => {
     setFile(null);
-  };
-
-  const handleEditMessage = (message) => {
-    setNewMessage(message.text);
-    setEditingMessage(message);
-    setFile(message.fileName ? { name: message.fileName } : null);
-  };
-
-  const handleDeleteMessage = (msgId) => {
-    setMessages(messages.filter((msg) => msg.id !== msgId));
   };
 
   const getFileIcon = (fileName) => {
@@ -127,77 +129,39 @@ const MentorChatBoard = () => {
     <div className={styles.mentorChatBoard}>
       <div className={styles.mentorChatBoardMain}>
         <div className={styles.mentorChatBoardHeader}>
-          <h2>{moduleId ? moduleId.replace(/[^a-zA-Z ]/g, " ").trim() : "Mentor Chat Board"}</h2>
+          <h2>{moduleId}</h2>
         </div>
         <div className={styles.mentorChatBoardMessages}>
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <div
-              key={message.id}
+              key={index}
               className={`${styles.mentorChatBoardMessageItem} ${
-                message.senderId === currentUser.id
+                message.sender === currentUser.name
                   ? styles.mentorChatBoardSent
                   : styles.mentorChatBoardReceived
               }`}
             >
               <div className={styles.mentorChatBoardSenderInfo}>
                 <span className={styles.mentorChatBoardSenderName}>
-                  {message.sender} ({message.role})
+                  {message.sender} ({currentUser.role})
                 </span>
                 <span className={styles.mentorChatBoardTimestamp}>
                   {message.timestamp}
                 </span>
               </div>
-              {message.replyTo && (
-                <div className={styles.mentorChatBoardReplyTo}>
-                  <span className={styles.mentorChatBoardReplySender}>
-                    {message.replyTo.sender}:
-                  </span>{' '}
-                  {message.replyTo.text || 'Attachment'}
+              {message.text && (
+                <p className={styles.mentorChatBoardMessageText}>{message.text}</p>
+              )}
+              {message.fileURL && (
+                <div className={styles.mentorChatBoardFileAttachment}>
+                  <a href={message.fileURL} target="_blank" rel="noopener noreferrer">
+                    {getFileIcon(message.fileName)}
+                    <span className={styles.mentorChatBoardFileName}>{message.fileName}</span>
+                  </a>
                 </div>
               )}
-              <div className={styles.mentorChatBoardMessageText}>
-                <p>{message.text}</p>
-                {message.fileURL && (
-                  <div className={styles.mentorChatBoardFileAttachment}>
-                    {getFileIcon(message.fileName)}
-                    <span className={styles.mentorChatBoardFileName}>
-                      {message.fileName}
-                    </span>
-                    <a
-                      href={message.fileURL}
-                      download={message.fileName}
-                      className={styles.mentorChatBoardDownloadButton}
-                    >
-                      <FaDownload /> Download
-                    </a>
-                  </div>
-                )}
-                <div className={styles.mentorChatBoardMessageActions}>
-                  <FaReply
-                    className={styles.mentorChatBoardReplyIcon}
-                    onClick={() => handleReply(message)}
-                  />
-                  {message.senderId === currentUser.id && (
-                    <>
-                      <FaEdit
-                        className={styles.mentorChatBoardEditIcon}
-                        onClick={() => handleEditMessage(message)}
-                      />
-                      <FaTrash
-                        className={styles.mentorChatBoardDeleteIcon}
-                        onClick={() => handleDeleteMessage(message.id)}
-                      />
-                    </>
-                  )}
-                </div>
-              </div>
             </div>
           ))}
-          {isTyping && (
-            <div className={styles.mentorChatBoardTypingIndicator}>
-              Someone is typing...
-            </div>
-          )}
         </div>
         <div className={styles.mentorChatBoardInputArea}>
           {replyTo && (
@@ -205,10 +169,7 @@ const MentorChatBoard = () => {
               <span>
                 Replying to: {replyTo.sender} - {replyTo.text || 'Attachment'}
               </span>
-              <FaTimes
-                className={styles.mentorChatBoardCancelReplyIcon}
-                onClick={handleCancelReply}
-              />
+              <FaTimes className={styles.mentorChatBoardCancelReplyIcon} onClick={handleCancelReply} />
             </div>
           )}
           {file && (
@@ -217,35 +178,21 @@ const MentorChatBoard = () => {
                 <span>File ready to send: </span>
                 <p>{file.name}</p>
               </div>
-              <FaTimes
-                className={styles.mentorChatBoardCancelFileIcon}
-                onClick={handleCancelFile}
-              />
+              <FaTimes className={styles.mentorChatBoardCancelFileIcon} onClick={handleCancelFile} />
             </div>
           )}
           <div className={styles.mentorChatBoardInputRow}>
             <textarea
               className={styles.mentorChatBoardTextArea}
               value={newMessage}
-              onChange={handleTyping}
+              onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type a message..."
             />
-            <label
-              htmlFor="file-upload"
-              className={styles.mentorChatBoardFileUploadIcon}
-            >
+            <label htmlFor="file-upload" className={styles.mentorChatBoardFileUploadIcon}>
               <FaPaperclip />
             </label>
-            <input
-              type="file"
-              id="file-upload"
-              style={{ display: 'none' }}
-              onChange={handleFileUpload}
-            />
-            <button
-              className={styles.mentorChatBoardButton}
-              onClick={handleSendMessage}
-            >
+            <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileUpload} />
+            <button className={styles.mentorChatBoardButton} onClick={handleSendMessage}>
               <FaPaperPlane />
             </button>
           </div>
