@@ -7,15 +7,120 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styles from './CalendarPage.module.css'; // Import the CSS module
 import Modal from 'react-modal';
 
-const localizer = momentLocalizer(moment);
-
 // Required for accessibility when using React Modal
 Modal.setAppElement('#root');
+
+const localizer = momentLocalizer(moment);
+
+// Custom Toolbar Component with View Filters
+const CustomToolbar = (props) => {
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '10px 0' }}>
+      {/* Navigation Buttons */}
+      <div>
+        <button 
+          onClick={() => props.onNavigate('PREV')} 
+          style={{
+            color: 'Black',
+            padding: '8px 12px',
+            margin: '0 5px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: '#f8f9fa',
+            cursor: 'pointer',
+          }}
+        >
+          Prev
+        </button>
+        <button 
+          onClick={() => props.onNavigate('TODAY')} 
+          style={{
+            color: 'Black',
+            padding: '8px 12px',
+            margin: '0 5px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            cursor: 'pointer',
+          }}
+        >
+          Today
+        </button>
+        <button 
+          onClick={() => props.onNavigate('NEXT')} 
+          style={{
+            color: 'Black',
+            padding: '8px 12px',
+            margin: '0 5px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: '#f8f9fa',
+            cursor: 'pointer',
+          }}
+        >
+          Next
+        </button>
+      </div>
+
+      {/* View Label */}
+      <div>
+        <strong>{props.label}</strong>
+      </div>
+
+      {/* View Filter Buttons */}
+      <div>
+        <button 
+          onClick={() => props.onView('month')} 
+          style={{
+            padding: '8px 12px',
+            margin: '0 5px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: props.view === 'month' ? '#007bff' : '#f8f9fa',
+            color: props.view === 'month' ? '#fff' : '#000',
+            cursor: 'pointer',
+          }}
+        >
+          Month
+        </button>
+        <button 
+          onClick={() => props.onView('week')} 
+          style={{
+            padding: '8px 12px',
+            margin: '0 5px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: props.view === 'week' ? '#007bff' : '#f8f9fa',
+            color: props.view === 'week' ? '#fff' : '#000',
+            cursor: 'pointer',
+          }}
+        >
+          Week
+        </button>
+        <button 
+          onClick={() => props.onView('day')} 
+          style={{
+            padding: '8px 12px',
+            margin: '0 5px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            backgroundColor: props.view === 'day' ? '#007bff' : '#f8f9fa',
+            color: props.view === 'day' ? '#fff' : '#000',
+            cursor: 'pointer',
+          }}
+        >
+          Day
+        </button>
+      </div>
+    </div>
+  );
+};
+
 
 const CalendarPage = () => {
   const [bookings, setBookings] = useState([]); // State to store bookings
   const [selectedEvent, setSelectedEvent] = useState(null); // Track the selected event for the modal
-  //const [loading, setLoading] = useState(true); // Loading state for the API call
   const [error, setError] = useState(null); // Error state for the API call
 
   // Fetch bookings from the API
@@ -27,67 +132,54 @@ const CalendarPage = () => {
         if (!response.ok) throw new Error('Failed to fetch bookings');
         
         const data = await response.json();
-        console.log('API response:', data);
         
-        // Ensure 'result' is an array and contains at least one booking
         if (!Array.isArray(data.result) || data.result.length === 0) {
           throw new Error('No bookings found');
         }
         
-        // Fetch the modules
         const moduleResponse = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
         if (!moduleResponse.ok) throw new Error('Failed to fetch modules');
         const moduleData = await moduleResponse.json();
         
-        // Create a mapping from moduleId to moduleName
         const moduleMapping = moduleData.reduce((acc, module) => {
           acc[module.module_Id] = module.module_Name;
           return acc;
         }, {});
         
-        // Format the bookings and dynamically fetch mentee details for each appointment
         const formattedBookings = await Promise.all(data.result.map(async (event) => {
-          // Fetch the mentee details using the studentNumber (menteeId) for each appointment
           const menteeResponse = await fetch(`https://localhost:7163/api/DigitalPlusUser/GetMentee/${event.studentNumber}`);
           if (!menteeResponse.ok) throw new Error('Failed to fetch mentee details');
           const menteeData = await menteeResponse.json();
           
-          // Format each booking with its own mentee details
           return {
             id: event.appointmentId,
-            name: menteeData.firstName || 'Unknown Name', // Use mentee firstName
-            surname: menteeData.lastName || 'Unknown Name', // Use mentee lastName
-            module: moduleMapping[event.moduleId] || 'Internet programming', // Get module name
+            name: menteeData.firstName || 'Unknown Name',
+            surname: menteeData.lastName || 'Unknown Name',
+            module: moduleMapping[event.moduleId] || 'Internet programming',
             sessionType: event.lessonType,
             dateTime: event.dateTime,
-            start: new Date(event.dateTime), // Convert dateTime to Date object for start
-            end: new Date(new Date(event.dateTime).getTime() + 60 * 60 * 1000), // Assuming 1-hour duration for each appointment
+            start: new Date(event.dateTime),
+            end: new Date(new Date(event.dateTime).getTime() + 60 * 60 * 1000),
           };
         }));
         
-        // Set the formatted bookings state
         setBookings(formattedBookings);
       } catch (error) {
-        //setError(error.message);
-      } finally {
-        //setLoading(false);
+        setError(error.message);
       }
     };
     
     fetchBookings();
   }, []);
 
-  // Handle event click (open the modal with event details)
   const handleEventClick = (event) => {
     setSelectedEvent(event);
   };
 
-  // Close the modal
   const closeModal = () => {
     setSelectedEvent(null);
   };
 
-  //if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -102,7 +194,7 @@ const CalendarPage = () => {
             isOpen={!!selectedEvent}
             onRequestClose={closeModal}
             contentLabel="Event Details"
-            className={styles.modal} // Add any styling to the modal
+            className={styles.modal}
           >
             <h2>Event Details</h2>
             <p><strong>Mentee:</strong> {selectedEvent.name} {selectedEvent.surname}</p>
@@ -125,10 +217,13 @@ const CalendarPage = () => {
             }))}
             startAccessor="start"
             endAccessor="end"
-            onSelectEvent={handleEventClick} // Event handler for when an event is clicked
-            toolbar={false}
+            onSelectEvent={handleEventClick}
+            components={{
+              toolbar: CustomToolbar, // Use the custom toolbar
+            }}
             style={{ height: '70vh' }}
           />
+
         </div>
       </div>
     </>
