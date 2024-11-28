@@ -12,7 +12,6 @@ export default function ModulePage() {
 
   // Hardcoded mentorId
   const user = JSON.parse(localStorage.getItem('user'));
-
   const mentorId = user.mentorId;
 
   useEffect(() => {
@@ -42,6 +41,20 @@ export default function ModulePage() {
   }, [mentorId]);
 
   const handleNavigation = (moduleCode) => {
+    // Find the selected module details
+    const selectedModule = modules.find((m) => m.module_Code === moduleCode);
+
+    if (selectedModule) {
+      // Save the selected module details in localStorage
+      localStorage.setItem(
+        'selectedModule',
+        JSON.stringify({
+          moduleCode: selectedModule.module_Code,
+          moduleId: selectedModule.module_Id,
+        })
+      );
+    }
+
     navigate(`/mentor-dashboard/module/${moduleCode}`);
   };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams for dynamic moduleId
+import { useParams } from 'react-router-dom'; // Removed useLocation as we're relying on localStorage
 import * as signalR from '@microsoft/signalr';
 import styles from './ChatBoard.module.css';
 import {
@@ -12,8 +12,8 @@ import {
 } from 'react-icons/fa';
 
 const ChatBoard = () => {
-  const { moduleId } = useParams(); // Get the moduleId from the URL
-
+  const { moduleId: moduleCode } = useParams(); // `moduleCode` from the URL
+  const [moduleId, setModuleId] = useState(null); // State for moduleId
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [file, setFile] = useState(null);
@@ -24,10 +24,25 @@ const ChatBoard = () => {
   const menteeName = user?.firstName;
 
   const currentUser = { id: menteeId, name: menteeName, role: 'mentee' };
-
   const [connection, setConnection] = useState(null);
 
   useEffect(() => {
+    // Retrieve module details from localStorage
+    const selectedModule = JSON.parse(localStorage.getItem('selectedModule'));
+    if (selectedModule && selectedModule.moduleCode === moduleCode) {
+      setModuleId(selectedModule.moduleId);
+      console.log('Retrieved moduleId from localStorage:', selectedModule.moduleId);
+    } else {
+      console.error('Failed to retrieve module details from localStorage.');
+    }
+  }, [moduleCode]);
+
+  useEffect(() => {
+    if (!moduleId) {
+      console.error("Module ID is missing. Unable to establish SignalR connection.");
+      return;
+    }
+
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(`https://localhost:7163/chatBoardHub`)
       .withAutomaticReconnect()
@@ -37,7 +52,7 @@ const ChatBoard = () => {
     const startConnection = async () => {
       try {
         await newConnection.start();
-        console.log(`Connected to ChatBoardHub for module: ${moduleId}`);
+        console.log(`Connected to ChatBoardHub for moduleId: ${moduleId}`);
 
         // Listen for incoming messages
         newConnection.on("ReceiveMessage", (module, user, text, fileName, fileUrl, timestamp) => {
@@ -49,7 +64,7 @@ const ChatBoard = () => {
           }
         });
       } catch (error) {
-        console.error("Connection failed:", error);
+        console.error("SignalR connection failed:", error);
       }
     };
 
@@ -57,7 +72,7 @@ const ChatBoard = () => {
     setConnection(newConnection);
 
     return () => {
-      newConnection.stop();
+      if (newConnection) newConnection.stop();
     };
   }, [moduleId]);
 
@@ -129,7 +144,7 @@ const ChatBoard = () => {
     <div className={styles.chatBoard}>
       <div className={styles.chatBoardMain}>
         <div className={styles.chatBoardHeader}>
-          <h2>{moduleId}</h2>
+          <h2>{moduleCode}</h2> {/* Display module_Code in the header */}
         </div>
         <div className={styles.chatBoardMessages}>
           {messages.map((message, index) => (

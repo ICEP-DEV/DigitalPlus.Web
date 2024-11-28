@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams for dynamic moduleId retrieval
+import { useParams } from 'react-router-dom';
 import * as signalR from '@microsoft/signalr';
 import styles from './MentorChatBoard.module.css';
 import {
@@ -12,8 +12,8 @@ import {
 } from 'react-icons/fa';
 
 const MentorChatBoard = () => {
-  const { moduleId } = useParams(); // Dynamically retrieve moduleId from URL
-
+  const { moduleId: moduleCode } = useParams(); // `moduleCode` from the URL
+  const [moduleId, setModuleId] = useState(null); // State for moduleId
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [file, setFile] = useState(null);
@@ -24,10 +24,25 @@ const MentorChatBoard = () => {
   const mentorName = user?.firstName;
 
   const currentUser = { id: mentorId, name: mentorName, role: 'mentor' };
-
   const [connection, setConnection] = useState(null);
 
   useEffect(() => {
+    // Retrieve module details from localStorage
+    const selectedModule = JSON.parse(localStorage.getItem('selectedModule'));
+    if (selectedModule && selectedModule.moduleCode === moduleCode) {
+      setModuleId(selectedModule.moduleId);
+      console.log('Retrieved moduleId from localStorage:', selectedModule.moduleId);
+    } else {
+      console.error('Failed to retrieve module details from localStorage.');
+    }
+  }, [moduleCode]);
+
+  useEffect(() => {
+    if (!moduleId) {
+      console.error("Module ID is missing. Unable to establish SignalR connection.");
+      return;
+    }
+
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(`https://localhost:7163/chatBoardHub`)
       .withAutomaticReconnect()
@@ -37,22 +52,19 @@ const MentorChatBoard = () => {
     const startConnection = async () => {
       try {
         await newConnection.start();
-        console.log(`Connected to ChatBoardHub for module: ${moduleId}`);
+        console.log(`Connected to ChatBoardHub for moduleId: ${moduleId}`);
 
         // Listen for incoming messages
-        newConnection.on(
-          'ReceiveMessage',
-          (module, user, text, fileName, fileUrl, timestamp) => {
-            if (module === moduleId) {
-              setMessages((prevMessages) => [
-                ...prevMessages,
-                { sender: user, text, fileName, fileURL: fileUrl, timestamp },
-              ]);
-            }
+        newConnection.on("ReceiveMessage", (module, user, text, fileName, fileUrl, timestamp) => {
+          if (module === moduleId) {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              { sender: user, text, fileName, fileURL: fileUrl, timestamp },
+            ]);
           }
-        );
+        });
       } catch (error) {
-        console.error('Connection failed:', error);
+        console.error("SignalR connection failed:", error);
       }
     };
 
@@ -60,7 +72,7 @@ const MentorChatBoard = () => {
     setConnection(newConnection);
 
     return () => {
-      newConnection.stop();
+      if (newConnection) newConnection.stop();
     };
   }, [moduleId]);
 
@@ -73,25 +85,32 @@ const MentorChatBoard = () => {
           const fileUrl = e.target.result;
           const fileName = file.name;
           try {
-            await connection.invoke(
-              'SendFileToModule',
-              moduleId,
-              currentUser.name,
-              fileName,
-              fileUrl
-            );
+            await connection.invoke("SendFileToModule", moduleId, currentUser.name, fileName, fileUrl);
+            setMessages([
+              ...messages,
+              {
+                sender: currentUser.name,
+                fileName,
+                fileURL: fileUrl,
+                timestamp,
+              },
+            ]);
             setFile(null); // Clear the file input after sending
           } catch (err) {
-            console.error('Failed to send file:', err);
+            console.error("Failed to send file:", err);
           }
         };
         reader.readAsDataURL(file);
       } else {
         try {
-          await connection.invoke('SendMessageToModule', moduleId, currentUser.name, newMessage);
-          setNewMessage(''); // Clear the input after sending
+          await connection.invoke("SendMessageToModule", moduleId, currentUser.name, newMessage);
+          setMessages([
+            ...messages,
+            { sender: currentUser.name, text: newMessage, timestamp },
+          ]);
+          setNewMessage('');
         } catch (err) {
-          console.error('Failed to send message:', err);
+          console.error("Failed to send message:", err);
         }
       }
     }
@@ -118,18 +137,14 @@ const MentorChatBoard = () => {
 
   const getFileIcon = (fileName) => {
     const fileExtension = fileName.split('.').pop().toLowerCase();
-    return fileExtension === 'pdf' ? (
-      <FaFilePdf className={styles.mentorChatBoardFileIcon} />
-    ) : (
-      <FaFileAlt className={styles.mentorChatBoardFileIcon} />
-    );
+    return fileExtension === 'pdf' ? <FaFilePdf className={styles.mentorChatBoardFileIcon} /> : <FaFileAlt className={styles.mentorChatBoardFileIcon} />;
   };
 
   return (
     <div className={styles.mentorChatBoard}>
       <div className={styles.mentorChatBoardMain}>
         <div className={styles.mentorChatBoardHeader}>
-          <h2>{moduleId}</h2>
+          <h2>{moduleCode}</h2> {/* Display module_Code in the header */}
         </div>
         <div className={styles.mentorChatBoardMessages}>
           {messages.map((message, index) => (
