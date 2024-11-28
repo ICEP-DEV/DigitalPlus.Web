@@ -29,11 +29,13 @@ const Settings = () => {
         confirmPassword: ''
     });
 
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
     useEffect(() => {
         // Fetch the logged-in mentor's details
         const fetchMentorDetails = async () => {
             try {
-                const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetMentor/1'); // Adjust endpoint as needed
+                const response = await axios.get(`https://localhost:7163/api/DigitalPlusUser/GetMentor/${storedUser.mentorId}`); // Adjust endpoint as needed
                 const mentorData = response.data;
                 
                 // Populate the form with the mentor data
@@ -85,7 +87,7 @@ const Settings = () => {
             };
 
             const response = await axios.put(
-                'https://localhost:7163/api/DigitalPlusUser/UpdateMentor/1',
+                `https://localhost:7163/api/DigitalPlusUser/UpdateMentor/${storedUser.mentorId}`,
                 updatedMentorData
             );
 

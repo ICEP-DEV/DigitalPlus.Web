@@ -1,186 +1,109 @@
-/* SettingsContent.module.css */
-
 /* General Styling */
 .settingsContainer {
   display: flex;
-  height: 100vh;
-  font-family: 'Arial', sans-serif;
-  background-color: #d3d3d3;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 20%;
-  background-color: #d3d3d3;
-  display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  font-family: 'Arial', sans-serif;
+  background-color: #f2f4f7;
+  min-height: 100vh;
   padding: 20px;
-  border-right: 1px solid black;
+  align-items: center;
 }
 
-.sidebar button {
-  background-color: #5d5d5d;
-  color: white;
-  border: none;
-  padding: 15px 20px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  font-size: 16px;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.settingsContent {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-.sidebar button:hover {
-  background-color: #3e3e3e;
-}
-
-.sidebar button.active {
-  background-color: #192a43;
-  color: white;
-}
-
-/* Content Section */
-.content {
-  width: 80%;
-  padding: 40px;
-  background-color: #f5f5f5;
-  overflow-y: auto;
-}
-
-/* Account Section */
-.accountSection {
-  background-color: white;
-  border-radius: 10px;
-  padding: 30px;
-}
-
-.profileInfo div {
+.pageTitle {
+  font-size: 36px;
+  color: #2d3436;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-.profileInfo span {
-  width: 100px;
-  font-weight: bold;
-  font-size: 18px;
-  margin-right: 20px;
-}
-
-.profileInfo input {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  width: 50%;
-  font-size: 16px;
-}
-
-.inputGroup{
-  padding-bottom: 10px;
-  border-bottom: 1px solid black;
-  width: 500px;
-  justify-content: space-between;
-  margin-left: 100px;
-}
-
-.profileInfo input[disabled] {
-  background-color: #e0e0e0;
-}
-
-.profileInfo button {
-  background-color: #5d5d5d;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.profileInfo button:hover {
-  background-color: #3e3e3e;
-}
-
-.save {
-  margin-top: 20px;
-  background-color: #01182e;
-  padding: 15px 25px;
-  border-radius: 10px;
-  font-size: 18px;
-  color: white;
-  border: none;
-  cursor: pointer;
-  display: block;
-  width: 100px;
-  margin-left: auto;
-}
-
-
-.save:hover {
-  background-color: #01182e;
-}
-
-.editBtn {
-  background-color: #01182e;
-  padding: 15px 25px;
-  width: 100px;
-  color: white;
-}
-
-/* Analytics Section */
-.analyticsSection {
-  background-color: white;
-  border-radius: 10px;
-  padding: 30px;
-}
-
-.analyticsSection h2 {
-  font-size: 28px;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
-/* Inline Layout for Analytics Cards */
-.analyticsGrid {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.reportCard {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  flex: 1;
-}
-
-.reportCard h3 {
-  font-size: 20px;
-  margin-bottom: 15px;
-}
-
-.reportCard img {
+/* Profile Section */
+.profileSection {
+  position: relative; /* Enable absolute positioning within */
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   width: 100%;
-  height: auto;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.profileTitle {
+  font-size: 24px;
+  color: #2d3436;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.profileDetails {
+  width: 100%;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
   margin-bottom: 15px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 15px auto;
 }
 
-.reportCard button {
-  background-color: #283342;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+.iconAndLabel {
+  display: flex;
+  align-items: center;
+  width: 50%; /* Left half of the row */
+}
+
+.icon {
+  color: #b0b0b0; /* Light gray color for icons */
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.detailLabel {
+  font-weight: bold;
+  color: #636e72;
   font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-.reportCard button:hover {
-  background-color: #264268;
+.detailValue {
+  color: #2d3436;
+  font-size: 16px;
+  text-align: left;
+  width: 50%; /* Right half of the row */
 }
 
+.separator {
+  width: 100%;
+  max-width: 600px;
+  height: 1px;
+  background-color: #dfe6e9;
+  margin: 10px auto;
+}
+
+.buttonContainer {
+  position: absolute; /* Position the container absolutely within the form */
+  bottom: 20px;       /* Distance from the bottom of the form */
+  right: 20px;        /* Distance from the right edge of the form */
+}
+
+.editButton {
+  /* Additional styles for the edit button if needed */
+}
+
+/* Tabs Styling */
+.tabsContainer {
+  margin-bottom: 10px;
+}
