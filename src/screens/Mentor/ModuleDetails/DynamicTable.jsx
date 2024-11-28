@@ -5,7 +5,7 @@ import styles from './DynamicTable.module.css'; // Import the CSS module
 const DynamicTable = ({ setActivePage, submittedData }) => {  // Remove duplicate submittedData
   const [rows, setRows] = useState([]);
 
-  // Ensure that submittedData is always an array
+  
   useEffect(() => {
     setRows(Array.isArray(submittedData) ? submittedData : []);
   }, [submittedData]);
@@ -30,8 +30,8 @@ const DynamicTable = ({ setActivePage, submittedData }) => {  // Remove duplicat
   };
 
   const handleBackClick = () => {
-    alert("Hello"); // Show the alert when the back button is clicked
-    setActivePage('quizz'); // Change the page to 'quizz'
+    alert("Hello");
+    setActivePage('quizz');
   };
 
   return (

@@ -135,8 +135,9 @@
 }
 
 .historyTable th {
-  background-color: #f0f0f0;
-  color: #004080;
+  background-color: #f0f0f0 !important; /* Ensure the background is set */
+  color: black !important; /* Force the text color to black */
+  font-weight: bold !important; /* Ensure text is bold */
 }
 
 .historyTable tr:nth-child(odd) {
