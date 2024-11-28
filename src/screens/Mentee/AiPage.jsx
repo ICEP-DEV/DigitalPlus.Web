@@ -116,7 +116,7 @@ const AiPage = () => {
     setLoading(true);
     try {
       const genAI = new GoogleGenerativeAI(
-        "AIzaSyCROORHopfeC_FSbAF_HSAJsFqgXiiaRgA"
+        "AIzaSyCtB69xLTHyHXoJs53SDYIAJpwoRZ8blDE"
       );
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -127,7 +127,7 @@ const AiPage = () => {
           parts: [{ text: msg.text }],
         })),
         generationConfig: {
-          maxOutputTokens: 10000,
+          maxOutputTokens: 8192, // Updated to meet API constraints
         },
       });
 
