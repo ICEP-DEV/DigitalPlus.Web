@@ -28,10 +28,14 @@ const ReportContent = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentors');
+        const response = await axios.get(
+          "https://localhost:7163/api/DigitalPlusUser/GetAllMentors"
+        );
         const data = response.data.map((mentor) => ({
           ...mentor,
+          courses: mentor.courses || "No course assigned", // Fallback value
         }));
+        console.log("Mentor Data with Courses:", data);
         setMentors(data);
         setFilteredReports(data);
       } catch (error) {
@@ -50,7 +54,8 @@ const ReportContent = () => {
         ); // Replace with your actual API endpoint
         const data =  response.data.map((courses) => ({
           ...courses,
-        }));;
+        }));
+        console.log("Courses Data:", data);
         setCourses(data); // Assuming the API returns an array of course objects
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -138,6 +143,8 @@ const ReportContent = () => {
     }
   };
 
+  
+
   return (
     <div className={styles.reportsContainer}>
       {viewType === "main" && (
@@ -211,8 +218,8 @@ const ReportContent = () => {
               {filteredReports.map((mentor, index) => (
                 <tr key={index}>
                   <td>{mentor.mentorId}</td>
-                  <td>{mentor.firstName}</td>
-                  <td>{mentor.courses}</td>
+                  <td>{`${mentor.firstName} ${mentor.lastName}`}</td>
+                  <td>{mentor.courses || "No course assigned"}</td>
                   <td className={styles.actionCell}>
                     <button
                       className={styles.registerIconBtn}
