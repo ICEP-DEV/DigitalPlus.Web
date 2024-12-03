@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Removed useLocation as we're relying on localStorage
+import { useParams } from 'react-router-dom';
 import * as signalR from '@microsoft/signalr';
 import styles from './ChatBoard.module.css';
 import {
@@ -12,8 +12,8 @@ import {
 } from 'react-icons/fa';
 
 const ChatBoard = () => {
-  const { moduleId: moduleCode } = useParams(); // `moduleCode` from the URL
-  const [moduleId, setModuleId] = useState(null); // State for moduleId
+  const { moduleId: moduleCode } = useParams();
+  const [moduleId, setModuleId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [file, setFile] = useState(null);
@@ -27,21 +27,16 @@ const ChatBoard = () => {
   const [connection, setConnection] = useState(null);
 
   useEffect(() => {
-    // Retrieve module details from localStorage
     const selectedModule = JSON.parse(localStorage.getItem('selectedModule'));
     if (selectedModule && selectedModule.moduleCode === moduleCode) {
       setModuleId(selectedModule.moduleId);
-      console.log('Retrieved moduleId from localStorage:', selectedModule.moduleId);
     } else {
       console.error('Failed to retrieve module details from localStorage.');
     }
   }, [moduleCode]);
 
   useEffect(() => {
-    if (!moduleId) {
-      console.error("Module ID is missing. Unable to establish SignalR connection.");
-      return;
-    }
+    if (!moduleId) return;
 
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(`https://localhost:7163/chatBoardHub`)
@@ -54,12 +49,11 @@ const ChatBoard = () => {
         await newConnection.start();
         console.log(`Connected to ChatBoardHub for moduleId: ${moduleId}`);
 
-        // Listen for incoming messages
-        newConnection.on("ReceiveMessage", (module, user, text, fileName, fileUrl, timestamp) => {
+        newConnection.on("ReceiveMessage", (module, sender, text, fileName, fileUrl, timestamp, role) => {
           if (module === moduleId) {
             setMessages((prevMessages) => [
               ...prevMessages,
-              { sender: user, text, fileName, fileURL: fileUrl, timestamp },
+              { sender, text, fileName, fileURL: fileUrl, timestamp, role },
             ]);
           }
         });
@@ -85,7 +79,7 @@ const ChatBoard = () => {
           const fileUrl = e.target.result;
           const fileName = file.name;
           try {
-            await connection.invoke("SendFileToModule", moduleId, currentUser.name, fileName, fileUrl);
+            await connection.invoke("SendFileToModule", moduleId, currentUser.name, fileName, fileUrl, currentUser.role);
             setMessages([
               ...messages,
               {
@@ -93,9 +87,10 @@ const ChatBoard = () => {
                 fileName,
                 fileURL: fileUrl,
                 timestamp,
+                role: currentUser.role,
               },
             ]);
-            setFile(null); // Clear the file input after sending
+            setFile(null);
           } catch (err) {
             console.error("Failed to send file:", err);
           }
@@ -103,10 +98,10 @@ const ChatBoard = () => {
         reader.readAsDataURL(file);
       } else {
         try {
-          await connection.invoke("SendMessageToModule", moduleId, currentUser.name, newMessage);
+          await connection.invoke("SendMessageToModule", moduleId, currentUser.name, newMessage, currentUser.role);
           setMessages([
             ...messages,
-            { sender: currentUser.name, text: newMessage, timestamp },
+            { sender: currentUser.name, text: newMessage, timestamp, role: currentUser.role },
           ]);
           setNewMessage('');
         } catch (err) {
@@ -144,20 +139,22 @@ const ChatBoard = () => {
     <div className={styles.chatBoard}>
       <div className={styles.chatBoardMain}>
         <div className={styles.chatBoardHeader}>
-          <h2>{moduleCode}</h2> {/* Display module_Code in the header */}
+          <h2>{moduleCode}</h2>
         </div>
         <div className={styles.chatBoardMessages}>
           {messages.map((message, index) => (
             <div
               key={index}
               className={`${styles.chatBoardMessageItem} ${
-                message.sender === currentUser.name
+                message.role === 'mentee'
                   ? styles.chatBoardSent
                   : styles.chatBoardReceived
               }`}
             >
               <div className={styles.chatBoardSenderInfo}>
-                <span className={styles.chatBoardSenderName}>{message.sender}</span>
+                <span className={styles.chatBoardSenderName}>
+                  {message.sender} ({message.role})
+                </span>
                 <span className={styles.chatBoardTimestamp}>{message.timestamp}</span>
               </div>
               {message.text && <p className={styles.chatBoardMessageText}>{message.text}</p>}

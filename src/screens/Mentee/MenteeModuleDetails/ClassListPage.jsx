@@ -1,52 +1,74 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ClassListPage.module.css'; // Import the CSS module
 
-const students = [
-    { studentNumber: '22145553', name: 'Sifiso Vinjwa', course: 'Computer Science' },
-    { studentNumber: '222870097', name: 'Karabo Magagane', course: 'Informatics' },
-    { studentNumber: '22456793', name: 'Excellent Nambane', course: 'Information Technology' },
-    { studentNumber: '221418812', name: 'Bathabile Mohabela', course: 'Multimedia Computing' },
-];
-
 const ClassListPage = () => {
-    const handleMessageClick = (studentName) => {
-        alert(`Message sent to ${studentName}`);
+    const [mentors, setMentors] = useState([]);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        // Retrieve the module details from localStorage
+        const storedModule = localStorage.getItem('selectedModule');
+        if (storedModule) {
+            const { moduleId } = JSON.parse(storedModule);
+            if (moduleId) {
+                fetch(`https://localhost:7163/api/AssignMod/getmentorsBy_ModuleId/${moduleId}`)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch mentors');
+                        }
+                        return response.json();
+                    })
+                    .then((data) => setMentors(data))
+                    .catch((err) => setError(err.message));
+            } else {
+                setError('Module ID not found in local storage.');
+            }
+        } else {
+            setError('No module selected. Please navigate from the modules page.');
+        }
+    }, []);
+
+    const handleMessageClick = (mentorName) => {
+        alert(`Message sent to ${mentorName}`);
         // Logic for messaging
     };
 
     return (
-        
         <div className={styles.container}>
-            <h1>List of Student enrolled for PPAF 216D</h1>
-            <div className={styles.tableContainer}>
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th>STUDENT NUMBER</th>
-                            <th>MENTEE NAME & SURNAME</th>
-                            <th>COURSE</th>
-                            <th>DM STUDENT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student, index) => (
-                            <tr key={index}>
-                                <td>{student.studentNumber}</td>
-                                <td>{student.name}</td>
-                                <td>{student.course}</td>
-                                <td>
-                                    <button
-                                        className={styles.messageBtn}
-                                        onClick={() => handleMessageClick(student.name)}
-                                    >
-                                        MESSAGE
-                                    </button>
-                                </td>
+            <h1>Mentors for Selected Module</h1>
+            {error ? (
+                <p className={styles.error}>{error}</p>
+            ) : (
+                <div className={styles.tableContainer}>
+                    <table className={styles.table}>
+                        <thead>
+                            <tr>
+                                <th>STUDENT NUMBER</th>
+                                <th>MENTOR NAME & SURNAME</th>
+                                <th>EMAIL</th>
+                                <th>DM MENTOR</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {mentors.map((mentor) => (
+                                <tr key={mentor.mentorId}>
+                                    <td>{mentor.mentorId}</td>
+                                    <td>{`${mentor.firstName} ${mentor.lastName}`}</td>
+                                    <td>{mentor.studentEmail}</td>
+                                    <td>
+                                        <button
+                                            className={styles.messageBtn}
+                                            onClick={() => handleMessageClick(`${mentor.firstName} ${mentor.lastName}`)}
+                                        >
+                                            MESSAGE
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 };
