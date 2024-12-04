@@ -28,20 +28,19 @@ const DMComponent = () => {
   const [selectedMentor, setSelectedMentor] = useState(null);
   const { moduleId } = useParams();
 
-  const currentUser = { id: 'mentee1', name: 'Mentee Jane', role: 'mentee' };
+  const currentUser = { id: 'mentee1', name: 'Karabo Nechivhangani', role: 'mentee' };
 
   useEffect(() => {
     setMentors([
-      { id: 'mentor1', name: 'Mentor John', online: true },
-      { id: 'mentor2', name: 'Mentor Sarah', online: false },
-      { id: 'mentor3', name: 'Mentor Alex', online: true },
-      { id: 'mentor4', name: 'Mentor Emma', online: false },
+      { id: 'mentor1', name: 'Sifiso Vinjwa', online: true },
+      { id: 'mentor2', name: 'Ntsako Sithole', online: false },
+      { id: 'mentor3', name: 'Matete Sekgotodi', online: true },
+      { id: 'mentor4', name: 'Bathabile Mohabela', online: false },
     ]);
 
     setMentorMessages({
       'mentor1': [
-        { id: 1, sender: 'Jane Doe', senderId: '1', role: 'mentee', text: 'Hello everyone!', timestamp: '9:00 AM' },
-        { id: 2, sender: 'Mentor John', senderId: 'mentor1', role: 'mentor', text: 'Good morning! How can I help you today?', timestamp: '9:05 AM' }
+        
       ],
     });
 

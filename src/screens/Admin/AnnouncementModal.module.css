@@ -1,5 +1,3 @@
-/* AnnouncementModal.module.css */
-
 /* Modal overlay that dims the background */
 .modalOverlay {
   position: fixed;
@@ -14,14 +12,14 @@
   z-index: 1000;
 }
 
-/* Modal content */
+/* Modal content - increased size */
 .modalContent {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
-  max-width: 90%;
-  width: 800px;
-  max-height: 90%;
+  max-width: 98%; /* Increased maximum width */
+  width: 1200px; /* Adjust width to accommodate table */
+  max-height: 95%; /* Adjusted max height for better screen utilization */
   overflow-y: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   position: relative;
@@ -44,21 +42,38 @@
   margin-bottom: 20px;
 }
 
+/* Dropdown container */
+.dropdownContainer {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.dropdown {
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 /* Table container */
 .tableContainer {
-  overflow-x: auto;
+  overflow-x: auto; /* Allow horizontal scrolling */
+  margin: 0 auto; /* Center the table horizontally */
+  max-width: 100%; /* Ensure the table container doesn't exceed modal width */
 }
 
 /* Announcement table styles */
 .announcementTable {
   width: 100%;
   border-collapse: collapse;
+  font-size: 15px; /* Slightly larger font for readability */
 }
 
 .announcementTable th,
 .announcementTable td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 8px; /* Adjust padding for better spacing */
+  text-align: center;
 }
 
 .announcementTable th {
@@ -91,4 +106,65 @@
 
 .actionIcon:hover {
   opacity: 0.7;
+}
+
+/* Image Thumbnail */
+.imageThumbnail {
+  width: 60px; /* Increased thumbnail size for better visibility */
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+
+.imageThumbnail:hover {
+  transform: scale(1.1);
+}
+
+/* Image Modal Overlay */
+.imageModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+/* Image Modal */
+.imageModal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  max-width: 90%; /* Increased modal width for images */
+  max-height: 95%; /* Allow more space for larger images */
+  overflow: hidden;
+}
+
+.imageModal img {
+  max-width: 100%;
+  max-height: 85vh; /* Adjust height for larger images */
+  border-radius: 10px;
+}
+
+.closeImageModal {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.closeImageModal:hover {
+  background-color: #0056b3;
 }

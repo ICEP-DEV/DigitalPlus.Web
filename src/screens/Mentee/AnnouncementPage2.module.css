@@ -11,7 +11,6 @@
     overflow: hidden;
     padding: 20px;
     position: relative;
-    
 }
 
 .header {
@@ -29,6 +28,7 @@
     align-items: flex-start;
     height: calc(100% - 120px);
     width: 70%;
+    overflow-y: auto; /* Add scroll bar */
 }
 
 .timeline {
@@ -66,7 +66,7 @@
     position: absolute;
     right: 20%;
     bottom: 0;
-    top:0;
+    top: 0;
 }
 
 .circle {
@@ -128,31 +128,67 @@
 }
 
 .currentDateTime {
-    position: relative;
-    right: 30px;
-    top: 0;
     text-align: right;
-    margin-top:20px;
     font-size: 18px;
     position: absolute;
     top: -70px;
     right: -280px;
-    
 }
 
 .time {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.date {
     font-size: 16px;
-    color: #000000;
+    margin-left: 100px;
+    right: 20px;
 }
 
 .currentDateTime .time {
     font-size: 20px;
     font-weight: bold;
-    
-  }
+}
 
-  .currentDateTime .date {
+.currentDateTime .date {
     font-size: 16px;
     margin-left: 100px;
-    right: 20px; 
-  }
+    right: 20px;
+}
+
+/* New styles for the download icon functionality */
+.imageWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between the icon and any other content */
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.downloadIcon {
+    font-size: 24px;
+    color: #000;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.downloadIcon:hover {
+    color: #007bff;
+}
+
+/* Detail row for displaying announcement details */
+.detailRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.detailRow strong {
+    margin-right: 5px;
+    color: #333;
+}

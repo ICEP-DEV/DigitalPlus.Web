@@ -14,18 +14,15 @@ function KeyPageAlert({ showModal, onClose }) {
         { date: '09:45 2024/08/30', name: 'Sifiso Vinjwa', contact: '0762345678', location: 'lab 10 G144' },
     ]);
 
-    // Auto-fill form fields when switching to the 'form' view state
     useEffect(() => {
-        if (viewState === 'form') {
-            const storedFirstName = localStorage.getItem('firstName') || '';
-            const storedLastName = localStorage.getItem('lastName') || '';
-            const storedContact = localStorage.getItem('contact') || '';
-            
-            setFirstName(storedFirstName);
-            setLastName(storedLastName);
-            setContact(storedContact);
-        }
-    }, [viewState]);
+        const storedFirstName = localStorage.getItem('firstName') || '';
+        const storedLastName = localStorage.getItem('lastName') || '';
+        const storedContact = localStorage.getItem('contact') || '';
+
+        setFirstName(storedFirstName);
+        setLastName(storedLastName);
+        setContact(storedContact);
+    }, []);
 
     const handleReportClick = () => {
         setViewState('form');
@@ -43,9 +40,7 @@ function KeyPageAlert({ showModal, onClose }) {
             location: 'lab 10 G42',
         };
 
-        setKeyNotifications(prevNotifications => [newNotification, ...prevNotifications]);
-
-        // Clear the form and switch view
+        setKeyNotifications(prevNotifications => [...prevNotifications, newNotification]);
         setFirstName('');
         setLastName('');
         setContact('');
@@ -71,72 +66,75 @@ function KeyPageAlert({ showModal, onClose }) {
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modal}>
-                <span className={styles.closeButton} onClick={onClose}>
-                    <FaWindowClose />
-                </span>
-                <div className={styles.iconContainer}>
-                    <FaKey className={styles.modalKeyIcon} />
+                <div className={styles.modalContent}>
+                    <span className={styles.closeButton} onClick={onClose}>
+                        <FaWindowClose />
+                    </span>
+                    <div className={styles.iconContainer}>
+                        <FaKey className={styles.modalKeyIcon} />
+                    </div>
+                    <p className={styles.infoText}>Information About the Key</p>
+
+                    {viewState === 'info' && (
+                        <div className={styles.notificationsContainer}>
+                            <h3>KEY NOTIFICATION(S)</h3>
+                            <ul className={styles.notificationsList}>
+                                {keyNotifications.map((notification, index) => (
+                                    <li key={index} className={styles.notificationItem}>
+                                        <div>{notification.date}</div>
+                                        <div>
+                                            <strong>{notification.name}</strong> ({notification.contact}) has the key to {notification.location}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                            <button className={styles.backButton} onClick={handleBackClick}>BACK</button>
+                        </div>
+                    )}
+
+                    {viewState === 'form' && (
+                        <div className={styles.formContainer}>
+                            <h2>IF YOU HAVE THE KEY PUT YOUR INFORMATION AND UPDATE TO NOTIFY OTHER MENTORS</h2>
+                            <label>
+                                FIRSTNAME:
+                                <input 
+                                    type="text" 
+                                    value={firstName} 
+                                    onChange={(e) => setFirstName(e.target.value)} 
+                                />
+                            </label>
+                            <label>
+                                LASTNAME:
+                                <input 
+                                    type="text" 
+                                    value={lastName} 
+                                    onChange={(e) => setLastName(e.target.value)} 
+                                />
+                            </label>
+                            <label>
+                                CONTACT:
+                                <input 
+                                    type="text" 
+                                    value={contact} 
+                                    onChange={(e) => setContact(e.target.value)} 
+                                />
+                            </label>
+                            <button className={styles.sendButton} onClick={handleSendClick}>SEND</button>
+                            <button className={styles.cancelButton} onClick={handleCancelClick}>CANCEL</button>
+                        </div>
+                    )}
+
+                    {viewState === 'initial' && (
+                        <div className={styles.buttonContainer}>
+                            <button className={styles.reportButton} onClick={handleReportClick}>REPORT</button>
+                            <button className={styles.viewButton} onClick={handleViewInfoClick}>VIEW THE INFO</button>
+                        </div>
+                    )}
                 </div>
-                <p className={styles.infoText}>Information About the Key</p>
-
-                {viewState === 'info' && (
-                    <div className={styles.notificationsContainer}>
-                        <h3>KEY NOTIFICATION(S)</h3>
-                        <ul className={styles.notificationsList}>
-                            {keyNotifications.map((notification, index) => (
-                                <li key={index} className={styles.notificationItem}>
-                                    <div>{notification.date}</div>
-                                    <div>
-                                        <strong>{notification.name}</strong> ({notification.contact}) has the key to {notification.location}
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                        <button className={styles.backButton} onClick={handleBackClick}>BACK</button>
-                    </div>
-                )}
-
-                {viewState === 'form' && (
-                    <div className={styles.formContainer}>
-                        <h2>IF YOU HAVE THE KEY PUT YOUR INFORMATION AND UPDATE TO NOTIFY OTHER MENTORS</h2>
-                        <label>
-                            FIRSTNAME:
-                            <input 
-                                type="text" 
-                                value={firstName} 
-                                onChange={(e) => setFirstName(e.target.value)} 
-                            />
-                        </label>
-                        <label>
-                            LASTNAME:
-                            <input 
-                                type="text" 
-                                value={lastName} 
-                                onChange={(e) => setLastName(e.target.value)} 
-                            />
-                        </label>
-                        <label>
-                            CONTACT:
-                            <input 
-                                type="text" 
-                                value={contact} 
-                                onChange={(e) => setContact(e.target.value)} 
-                            />
-                        </label>
-                        <button className={styles.sendButton} onClick={handleSendClick}>SEND</button>
-                        <button className={styles.cancelButton} onClick={handleCancelClick}>CANCEL</button>
-                    </div>
-                )}
-
-                {viewState === 'initial' && (
-                    <div className={styles.buttonContainer}>
-                        <button className={styles.reportButton} onClick={handleReportClick}>REPORT</button>
-                        <button className={styles.viewButton} onClick={handleViewInfoClick}>VIEW THE INFO</button>
-                    </div>
-                )}
             </div>
         </div>
     );
 }
 
 export default KeyPageAlert;
+ 

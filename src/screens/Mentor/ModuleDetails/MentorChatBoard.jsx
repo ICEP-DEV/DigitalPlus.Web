@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams for dynamic moduleId retrieval
+import { useParams } from 'react-router-dom';
 import * as signalR from '@microsoft/signalr';
 import styles from './MentorChatBoard.module.css';
 import {
@@ -12,8 +12,8 @@ import {
 } from 'react-icons/fa';
 
 const MentorChatBoard = () => {
-  const { moduleId } = useParams(); // Dynamically retrieve moduleId from URL
-
+  const { moduleId: moduleCode } = useParams();
+  const [moduleId, setModuleId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [file, setFile] = useState(null);
@@ -24,10 +24,20 @@ const MentorChatBoard = () => {
   const mentorName = user?.firstName;
 
   const currentUser = { id: mentorId, name: mentorName, role: 'mentor' };
-
   const [connection, setConnection] = useState(null);
 
   useEffect(() => {
+    const selectedModule = JSON.parse(localStorage.getItem('selectedModule'));
+    if (selectedModule && selectedModule.moduleCode === moduleCode) {
+      setModuleId(selectedModule.moduleId);
+    } else {
+      console.error('Failed to retrieve module details from localStorage.');
+    }
+  }, [moduleCode]);
+
+  useEffect(() => {
+    if (!moduleId) return;
+
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(`https://localhost:7163/chatBoardHub`)
       .withAutomaticReconnect()
@@ -37,22 +47,18 @@ const MentorChatBoard = () => {
     const startConnection = async () => {
       try {
         await newConnection.start();
-        console.log(`Connected to ChatBoardHub for module: ${moduleId}`);
+        console.log(`Connected to ChatBoardHub for moduleId: ${moduleId}`);
 
-        // Listen for incoming messages
-        newConnection.on(
-          'ReceiveMessage',
-          (module, user, text, fileName, fileUrl, timestamp) => {
-            if (module === moduleId) {
-              setMessages((prevMessages) => [
-                ...prevMessages,
-                { sender: user, text, fileName, fileURL: fileUrl, timestamp },
-              ]);
-            }
+        newConnection.on("ReceiveMessage", (module, sender, text, fileName, fileUrl, timestamp, role) => {
+          if (module === moduleId) {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              { sender, text, fileName, fileURL: fileUrl, timestamp, role },
+            ]);
           }
-        );
+        });
       } catch (error) {
-        console.error('Connection failed:', error);
+        console.error("SignalR connection failed:", error);
       }
     };
 
@@ -60,7 +66,7 @@ const MentorChatBoard = () => {
     setConnection(newConnection);
 
     return () => {
-      newConnection.stop();
+      if (newConnection) newConnection.stop();
     };
   }, [moduleId]);
 
@@ -73,25 +79,33 @@ const MentorChatBoard = () => {
           const fileUrl = e.target.result;
           const fileName = file.name;
           try {
-            await connection.invoke(
-              'SendFileToModule',
-              moduleId,
-              currentUser.name,
-              fileName,
-              fileUrl
-            );
-            setFile(null); // Clear the file input after sending
+            await connection.invoke("SendFileToModule", moduleId, currentUser.name, fileName, fileUrl, currentUser.role);
+            setMessages([
+              ...messages,
+              {
+                sender: currentUser.name,
+                fileName,
+                fileURL: fileUrl,
+                timestamp,
+                role: currentUser.role,
+              },
+            ]);
+            setFile(null);
           } catch (err) {
-            console.error('Failed to send file:', err);
+            console.error("Failed to send file:", err);
           }
         };
         reader.readAsDataURL(file);
       } else {
         try {
-          await connection.invoke('SendMessageToModule', moduleId, currentUser.name, newMessage);
-          setNewMessage(''); // Clear the input after sending
+          await connection.invoke("SendMessageToModule", moduleId, currentUser.name, newMessage, currentUser.role);
+          setMessages([
+            ...messages,
+            { sender: currentUser.name, text: newMessage, timestamp, role: currentUser.role },
+          ]);
+          setNewMessage('');
         } catch (err) {
-          console.error('Failed to send message:', err);
+          console.error("Failed to send message:", err);
         }
       }
     }
@@ -118,18 +132,14 @@ const MentorChatBoard = () => {
 
   const getFileIcon = (fileName) => {
     const fileExtension = fileName.split('.').pop().toLowerCase();
-    return fileExtension === 'pdf' ? (
-      <FaFilePdf className={styles.mentorChatBoardFileIcon} />
-    ) : (
-      <FaFileAlt className={styles.mentorChatBoardFileIcon} />
-    );
+    return fileExtension === 'pdf' ? <FaFilePdf className={styles.mentorChatBoardFileIcon} /> : <FaFileAlt className={styles.mentorChatBoardFileIcon} />;
   };
 
   return (
     <div className={styles.mentorChatBoard}>
       <div className={styles.mentorChatBoardMain}>
         <div className={styles.mentorChatBoardHeader}>
-          <h2>{moduleId}</h2>
+          <h2>{moduleCode}</h2>
         </div>
         <div className={styles.mentorChatBoardMessages}>
           {messages.map((message, index) => (
@@ -137,13 +147,13 @@ const MentorChatBoard = () => {
               key={index}
               className={`${styles.mentorChatBoardMessageItem} ${
                 message.sender === currentUser.name
-                  ? styles.mentorChatBoardSent
-                  : styles.mentorChatBoardReceived
+                  ? styles.mentorChatBoardSent // Sent messages on the right
+                  : styles.mentorChatBoardReceived // Received messages on the left
               }`}
             >
               <div className={styles.mentorChatBoardSenderInfo}>
                 <span className={styles.mentorChatBoardSenderName}>
-                  {message.sender} ({currentUser.role})
+                  {message.sender} ({message.role})
                 </span>
                 <span className={styles.mentorChatBoardTimestamp}>
                   {message.timestamp}

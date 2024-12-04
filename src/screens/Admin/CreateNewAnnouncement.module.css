@@ -1,176 +1,194 @@
-/* Modal overlay that dims the background */
 .modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-/* Modal content */
 .modalContent {
-  background-color: rgb(220, 238, 245);
+  background-color: #fff;
   padding: 20px;
-  border-radius: 10px;
-  max-width: 800px;
-  width: 100%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  position: relative; /* For absolute positioning of close button */
-  z-index: 1001;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Close Button Styles */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .closeButton {
   position: absolute;
   top: 10px;
   right: 10px;
   cursor: pointer;
-}
-
-/* Title of the modal */
-.title {
-  text-align: center;
-  color: black;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-/* Main content area */
-.mainContent {
-  width: 100%;
-  border-top: 4px solid black;
-  border-radius: 8px;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-/* Flex container for form sections */
-.flexContainer {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  padding: 0;
 }
 
-/* Left and right sections of the form */
-.leftSection,
-.rightSection {
-  width: 48%;
-  box-sizing: border-box;
-}
-
-/* Label styles */
-.label {
-  display: block;
-  margin-bottom: 10px;
-  color: black;
+.title {
+  font-size: 1.8rem;
   font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Input, select, and textarea styles */
+.title svg {
+  margin-right: 8px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
 .input,
 .select,
-.fileInput,
-.textarea {
+.textarea,
+.fileInput {
   width: 100%;
   padding: 10px;
+  font-size: 1rem;
   margin-top: 5px;
-  border-radius: 5px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
-  color: black;
-  box-sizing: border-box;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 .textarea {
-  height: 120px;
   resize: vertical;
 }
 
-/* Announcement type radio buttons container */
-.announcementTypeContainer {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+.fileInput {
+  border: none;
 }
 
-.announcementTypeBox {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  margin-right: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.announcementTypeContainer input {
-  margin-right: 5px;
-}
-
-/* Icon next to the "Send To" select */
-.icon {
-  margin-left: 10px;
-}
-
-/* Button container */
 .buttonContainer {
   display: flex;
   justify-content: center;
-  align-items: center;
+  gap: 15px;
   margin-top: 20px;
-  gap: 20px; /* Space between buttons */
 }
 
-/* General icon button styles */
 .iconButton {
-  background-color: #4caf50; /* Default Green */
-  color: white;
   border: none;
-  padding: 10px;
-  border-radius: 50%;
+  background-color: transparent;
   cursor: pointer;
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 50px; /* Fixed size */
-  height: 50px; /* Fixed size */
-  transition: background-color 0.3s;
+  justify-content: center;
+  font-size: 1rem;
+  padding: 8px 12px;
+  transition: transform 0.2s;
 }
 
 .iconButton:hover {
-  opacity: 0.8;
+  transform: scale(1.1);
 }
 
-/* Specific button colors */
 .createButton {
-  background-color: #4caf50; /* Green */
+  background-color: #28a745;
+  color: white;
+  border-radius: 4px;
+}
+
+.createButton:hover {
+  background-color: #218838;
 }
 
 .cancelButton {
-  background-color: #008cba; /* Blue */
+  background-color: #dc3545;
+  color: white;
+  border-radius: 4px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .flexContainer {
-    flex-direction: column;
-  }
+.cancelButton:hover {
+  background-color: #c82333;
+}
 
-  .leftSection,
-  .rightSection {
-    width: 100%;
-  }
+.successMessage,
+.errorMessage {
+  text-align: center;
+  font-size: 1rem;
+  margin-top: 10px;
+}
 
-  .buttonContainer {
-    flex-direction: column;
-    gap: 10px;
-  }
+.successMessage {
+  color: #28a745;
+}
 
-  .iconButton {
-    width: 40px;
-    height: 40px;
-  }
+.errorMessage {
+  color: #dc3545;
+}
+
+.typeModal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1100;
+}
+
+.typeModal h3 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.typeModal button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.typeModal button:hover {
+  background-color: #0056b3;
 }
