@@ -13,7 +13,7 @@ const QuizLandingPage = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get('https://localhost:7050/api/Questions');
+        const response = await axios.get('https://localhost:7163/api/Quiz');
         setQuizzes(response.data);
         setFilteredQuizzes(response.data); // Initially display all quizzes
       } catch (error) {

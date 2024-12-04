@@ -23,7 +23,7 @@ const SetQuiz = () => {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get("https://localhost:7050/api/Questions");
+        const response = await axios.get("https://localhost:7163/api/Quiz");
         setQuizzes(response.data);
       } catch (err) {
         setError("Failed to fetch quizzes. Please ensure the backend is running.");
@@ -58,7 +58,7 @@ const SetQuiz = () => {
     };
 
     try {
-      const response = await axios.post("https://localhost:7050/api/Questions", quizData, {
+      const response = await axios.post("https://localhost:7163/api/Quiz", quizData, {
         headers: { "Content-Type": "application/json" },
       });
 
@@ -83,7 +83,7 @@ const SetQuiz = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this quiz?")) {
       try {
-        await axios.delete(`https://localhost:7050/api/Questions/${id}`);
+        await axios.delete(`https://localhost:7163/api/Quiz/${id}`);
         setQuizzes(quizzes.filter((quiz) => quiz.id !== id));
         alert("Quiz deleted successfully.");
       } catch (err) {
@@ -102,7 +102,7 @@ const SetQuiz = () => {
     if (!editData) return;
 
     try {
-      await axios.put(`https://localhost:7050/api/Questions/${editData.id}`, editData, {
+      await axios.put(`https://localhost:7163/api/Quiz/${editData.id}`, editData, {
         headers: { "Content-Type": "application/json" },
       });
 
