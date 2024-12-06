@@ -35,6 +35,37 @@ const MentorChatBoard = () => {
     }
   }, [moduleCode]);
 
+  // Fetch message history when the component loads
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(`https://localhost:7163/api/chat/module/${moduleId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setMessages(
+            data.map((msg) => ({
+              sender: msg.sender,
+              text: msg.message,
+              fileName: msg.fileName,
+              fileURL: msg.fileUrl,
+              timestamp: new Date(msg.timestamp).toLocaleTimeString(),
+              role: msg.role,
+            }))
+          );
+        } else {
+          console.error('Failed to fetch messages:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    if (moduleId) {
+      fetchMessages();
+    }
+  }, [moduleId]);
+
+  // Connect to SignalR hub
   useEffect(() => {
     if (!moduleId) return;
 
@@ -147,8 +178,8 @@ const MentorChatBoard = () => {
               key={index}
               className={`${styles.mentorChatBoardMessageItem} ${
                 message.sender === currentUser.name
-                  ? styles.mentorChatBoardSent // Sent messages on the right
-                  : styles.mentorChatBoardReceived // Received messages on the left
+                  ? styles.mentorChatBoardSent
+                  : styles.mentorChatBoardReceived
               }`}
             >
               <div className={styles.mentorChatBoardSenderInfo}>

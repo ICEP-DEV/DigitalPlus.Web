@@ -26,6 +26,7 @@ const ChatBoard = () => {
   const currentUser = { id: menteeId, name: menteeName, role: 'mentee' };
   const [connection, setConnection] = useState(null);
 
+  // Set module ID from local storage
   useEffect(() => {
     const selectedModule = JSON.parse(localStorage.getItem('selectedModule'));
     if (selectedModule && selectedModule.moduleCode === moduleCode) {
@@ -35,6 +36,37 @@ const ChatBoard = () => {
     }
   }, [moduleCode]);
 
+  // Fetch message history when component loads
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(`https://localhost:7163/api/chat/module/${moduleId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setMessages(
+            data.map((msg) => ({
+              sender: msg.sender,
+              text: msg.message,
+              fileName: msg.fileName,
+              fileURL: msg.fileUrl,
+              timestamp: new Date(msg.timestamp).toLocaleTimeString(),
+              role: msg.role,
+            }))
+          );
+        } else {
+          console.error('Failed to fetch messages:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    if (moduleId) {
+      fetchMessages();
+    }
+  }, [moduleId]);
+
+  // Connect to SignalR hub for real-time updates
   useEffect(() => {
     if (!moduleId) return;
 
@@ -70,6 +102,7 @@ const ChatBoard = () => {
     };
   }, [moduleId]);
 
+  // Send a message or file
   const handleSendMessage = async () => {
     if ((newMessage.trim() || file) && connection?.state === signalR.HubConnectionState.Connected) {
       const timestamp = new Date().toLocaleTimeString();
@@ -146,7 +179,7 @@ const ChatBoard = () => {
             <div
               key={index}
               className={`${styles.chatBoardMessageItem} ${
-                message.role === 'mentee'
+                message.sender === currentUser.name
                   ? styles.chatBoardSent
                   : styles.chatBoardReceived
               }`}
@@ -155,7 +188,9 @@ const ChatBoard = () => {
                 <span className={styles.chatBoardSenderName}>
                   {message.sender} ({message.role})
                 </span>
-                <span className={styles.chatBoardTimestamp}>{message.timestamp}</span>
+                <span className={styles.chatBoardTimestamp}>
+                  {message.timestamp}
+                </span>
               </div>
               {message.text && <p className={styles.chatBoardMessageText}>{message.text}</p>}
               {message.fileURL && (
