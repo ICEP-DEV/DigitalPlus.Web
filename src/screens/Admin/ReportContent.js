@@ -18,11 +18,8 @@ const ReportContent = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const reportRef = useRef(null);
 
-  
-
   const [courses, setCourses] = useState([]);
   const [mentors, setMentors] = useState([]);
-
 
   // Fetch data from the backend
   useEffect(() => {
@@ -50,15 +47,19 @@ const ReportContent = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          'https://localhost:7163/api/DigitalPlusCrud/GetAllCourses'
-        ); // Replace with your actual API endpoint
-        const data =  response.data.map((courses) => ({
-          ...courses,
-        }));
-        console.log("Courses Data:", data);
-        setCourses(data); // Assuming the API returns an array of course objects
+          "https://localhost:7163/api/DigitalPlusCrud/GetAllCourses"
+        );
+        console.log("Full API Response:", response);
+    
+        if (response.data && response.data.success && Array.isArray(response.data.result)) {
+          setCourses(response.data.result);
+        } else {
+          console.error("Expected an array in response.data.result but received:", response.data);
+          setCourses([]); // Fallback to an empty array if data is not in the expected format
+        }
       } catch (error) {
         console.error("Error fetching courses:", error);
+        setCourses([]); // Fallback to an empty array on error
       }
     };
 
@@ -143,8 +144,6 @@ const ReportContent = () => {
     }
   };
 
-  
-
   return (
     <div className={styles.reportsContainer}>
       {viewType === "main" && (
@@ -166,9 +165,9 @@ const ReportContent = () => {
             >
               <option value="">Select Course</option>
               {courses.length > 0 ? (
-                courses.map((courses) => (
-                  <option key={courses.course_Id} value={courses.course_name}>
-                    {courses.course_name}
+                courses.map((course) => (
+                  <option key={course.course_Id} value={course.course_name}>
+                    {course.course_Name}
                   </option>
                 ))
               ) : (
@@ -269,10 +268,7 @@ const ReportContent = () => {
           )}
 
           {tabView === "mentorReport" && (
-            <MentorReportComponent
-              mentorId={selectedReport}
-              goBack={goBack}
-            />
+            <MentorReportComponent mentorId={selectedReport} goBack={goBack} />
           )}
 
           <div className={styles.actionButtons}>
@@ -300,44 +296,150 @@ const ReportContent = () => {
   );
 };
 
-const RegisterComponent = ({ mentorId, goBack }) => (
-  <div>
-    <h2>Register for Student: {`${mentorId}`}</h2>
-    <button onClick={goBack}>Back</button>
-  </div>
-);
+const RegisterComponent = ({ mentorId, goBack }) => {
+  const [registerData, setRegisterData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRegisterData = async () => {
+      try {
+        const response = await axios.get(
+          `https://localhost:7163/api/MenteeAndMentorRegister`
+        );
+        console.log("Register Response:", response.data); // Log response data
+        setRegisterData(response.data);
+      } catch (err) {
+        console.error("Error fetching register data:", err.response || err); // Log error details
+        setError(
+          err.response?.data?.message || "Failed to load register data."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRegisterData();
+  }, [mentorId]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <div>
+      <h2>Register for Student: {`${mentorId}`}</h2>
+      <table className={styles.mentorReportTable}>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Mentee Name </th>
+            <th>Mentor Name</th>
+            <th>Module Name</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          {registerData.length > 0 ? (
+            registerData.map((menteeregister, index) => (
+              <tr key={index}>
+                <td>{new Date(menteeregister.date).toLocaleDateString()}</td>
+                <td>{menteeregister.menteeId}</td>
+                <td>{menteeregister.mentorName}</td>
+                <td>{menteeregister.moduleCode}</td>
+                <td>{menteeregister.comment}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3">No register data available for this mentor.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <button onClick={goBack}>Back</button>
+    </div>
+  );
+};
 
 RegisterComponent.propTypes = {
   mentorId: PropTypes.string.isRequired,
   goBack: PropTypes.func.isRequired,
 };
 
-const MentorReportComponent = ({ mentorId, goBack }) => (
-  <div className={styles.mentorReportView}>
-    <h2>Mentor Report for Student: {`${mentorId}`}</h2>
-    <table className={styles.mentorReportTable}>
-      <thead>
-        <tr>
-          <th>Date of Session</th>
-          <th>Students Present / Total Risk Students</th>
-          <th>Remarks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>02/05/2024</td>
-          <td>10</td>
-          <td>Mentees are attending more lessons.</td>
-        </tr>
-      </tbody>
-    </table>
-    <button onClick={goBack}>Back</button>
-  </div>
-);
+const MentorReportComponent = ({ mentorId, goBack }) => {
+  const [reports, setReportData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchReportData = async () => {
+      try {
+        const response = await axios.get(
+          `https://localhost:7163/api/MentorReport/add_Report/reports/${mentorId}`
+        );
+        console.log("Report Response:", response.data);
+
+        if (response.data && Array.isArray(response.data.reports)) {
+          setReportData(response.data.reports);
+        } else {
+          setReportData([]);
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching report data:", err);
+        setError("Failed to load mentor report data.");
+        setLoading(false);
+      }
+    };
+
+    fetchReportData();
+  }, [mentorId]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <div className={styles.mentorReportView}>
+      <h2>Mentor Report for Student: {`${mentorId}`}</h2>
+      <table className={styles.mentorReportTable}>
+        <thead>
+          <tr>
+            <th>Mentor ID </th>
+            <th>Date of Session</th>
+            <th>Students Present</th>
+            <th>Challenges</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reports.length > 0 ? (
+            reports.map((mentorreports, index) => (
+              <tr key={index}>
+                <td>{mentorreports.mentorId}</td>
+                <td>{new Date(mentorreports.date).toLocaleDateString()}</td>
+                <td>{mentorreports.noOfStudents}</td>
+                <td>{mentorreports.challenges}</td>
+                <td>{mentorreports.remarks}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3">No mentor reports available for this student.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+      <button onClick={goBack}>Back</button>
+    </div>
+  );
+};
 
 MentorReportComponent.propTypes = {
-  mentor_Id: PropTypes.string.isRequired,
+  mentorId: PropTypes.string.isRequired,
   goBack: PropTypes.func.isRequired,
 };
+
+export { RegisterComponent, MentorReportComponent };
 
 export default ReportContent;
