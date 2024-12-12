@@ -20,27 +20,7 @@ const ReportContent = () => {
 
   const [courses, setCourses] = useState([]);
   const [mentors, setMentors] = useState([]);
-
-  // Fetch data from the backend
-  useEffect(() => {
-    const fetchMentors = async () => {
-      try {
-        const response = await axios.get(
-          "https://localhost:7163/api/DigitalPlusUser/GetAllMentors"
-        );
-        const data = response.data.map((mentor) => ({
-          ...mentor,
-          courses: mentor.courses || "No course assigned", // Fallback value
-        }));
-        console.log("Mentor Data with Courses:", data);
-        setMentors(data);
-        setFilteredReports(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchMentors();
-  }, []);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     // Fetch courses from the backend
@@ -50,11 +30,18 @@ const ReportContent = () => {
           "https://localhost:7163/api/DigitalPlusCrud/GetAllCourses"
         );
         console.log("Full API Response:", response);
-    
-        if (response.data && response.data.success && Array.isArray(response.data.result)) {
+
+        if (
+          response.data &&
+          response.data.success &&
+          Array.isArray(response.data.result)
+        ) {
           setCourses(response.data.result);
         } else {
-          console.error("Expected an array in response.data.result but received:", response.data);
+          console.error(
+            "Expected an array in response.data.result but received:",
+            response.data
+          );
           setCourses([]); // Fallback to an empty array if data is not in the expected format
         }
       } catch (error) {
@@ -66,25 +53,93 @@ const ReportContent = () => {
     fetchCourses();
   }, []);
 
-  const handleSearch = (e) => {
-    const searchValue = e.target.value;
-    const filtered = mentors.filter((mentor) =>
-      mentor.mentorId.includes(searchValue)
-    );
-    setFilteredReports(filtered);
-  };
+  useEffect(() => {
+    const fetchMentorsWithModules = async () => {
+      try {
+        // Fetch mentors list
+        const mentorResponse = await axios.get(
+          `https://localhost:7163/api/DigitalPlusUser/GetAllMentors`
+        );
+
+        if (mentorResponse.data && Array.isArray(mentorResponse.data)) {
+          const mentorsWithModules = await Promise.all(
+            mentorResponse.data.map(async (mentor) => {
+              try {
+                // Fetch modules assigned to each mentor
+                const moduleResponse = await axios.get(
+                  `https://localhost:7163/api/AssignMod/getmodulesBy_MentorId/${mentor.mentorId}`
+                );
+
+                return {
+                  ...mentor,
+                  modules: moduleResponse.data || [], // Add modules data to mentor
+                };
+              } catch (moduleError) {
+                console.error(
+                  `Error fetching modules for mentor ${mentor.mentorId}:`,
+                  moduleError
+                );
+                return {
+                  ...mentor,
+                  modules: [], // Fallback to empty array if error occurs
+                };
+              }
+            })
+          );
+
+          setMentors(mentorsWithModules);
+          setFilteredReports(mentorsWithModules);
+        } else {
+          console.error(
+            "Unexpected mentor response structure:",
+            mentorResponse.data
+          );
+          setMentors([]);
+          setFilteredReports([]);
+        }
+      } catch (error) {
+        console.error("Error fetching mentors:", error);
+        setMentors([]);
+        setFilteredReports([]);
+      }
+    };
+
+    fetchMentorsWithModules();
+  }, []);
 
   const handleFilter = () => {
     const filtered = mentors.filter((mentor) => {
       const matchCourse = selectedCourse
-        ? mentor.Courses === selectedCourse
+        ? mentor.modules.some((module) => module.courseName === selectedCourse)
         : true;
       const matchMonth = selectedMonth ? mentor.month === selectedMonth : true;
       return matchCourse && matchMonth;
     });
+
     setFilteredReports(filtered);
   };
 
+  //Handling the search bar when searching for mentor using the name or mento ID
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+  
+    const filtered = mentors.filter((mentor) =>
+      String(mentor.mentorId).toLowerCase().includes(searchValue) ||
+      mentor.firstName.toLowerCase().includes(searchValue) ||
+      mentor.lastName.toLowerCase().includes(searchValue) ||
+      `${mentor.firstName} ${mentor.lastName}`.toLowerCase().includes(searchValue)
+    );
+  
+    if (filtered.length === 0) {
+      setErrorMessage("No results found");
+    } else {
+      setErrorMessage("");
+    }
+  
+    setFilteredReports(filtered);
+  };
+
+//Handling the register and report of the mentor
   const viewRegister = (mentorId) => {
     setSelectedReport(`${mentorId}`);
     setViewType("details");
@@ -101,6 +156,7 @@ const ReportContent = () => {
     setViewType("main");
   };
 
+  //For when you want to download Both the register and the report
   const handleDownload = () => {
     html2pdf(reportRef.current, {
       margin: 1,
@@ -214,29 +270,41 @@ const ReportContent = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredReports.map((mentor, index) => (
-                <tr key={index}>
-                  <td>{mentor.mentorId}</td>
-                  <td>{`${mentor.firstName} ${mentor.lastName}`}</td>
-                  <td>{mentor.courses || "No course assigned"}</td>
-                  <td className={styles.actionCell}>
-                    <button
-                      className={styles.registerIconBtn}
-                      onClick={() => viewRegister(mentor.mentorId)}
-                      title="Register"
-                    >
-                      <BsFillPersonCheckFill />
-                    </button>
-                    <button
-                      className={styles.reportIconBtn}
-                      onClick={() => viewMentorReport(mentor.mentorId)}
-                      title="Mentor Report"
-                    >
-                      <BsFileEarmarkTextFill />
-                    </button>
+              {errorMessage ? (
+                <tr>
+                  <td colSpan="4" className={styles.noResultMessage}>
+                    {errorMessage}
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredReports.map((mentor, index) => (
+                  <tr key={index}>
+                    <td>{mentor.mentorId}</td>
+                    <td>{`${mentor.firstName} ${mentor.lastName}`}</td>
+                    <td>
+                      {mentor.modules.length > 0
+                        ? mentor.modules.map((mod) => mod.moduleName).join(", ")
+                        : "No module assigned"}
+                    </td>
+                    <td className={styles.actionCell}>
+                      <button
+                        className={styles.registerIconBtn}
+                        onClick={() => viewRegister(mentor.mentorId)}
+                        title="Register"
+                      >
+                        <BsFillPersonCheckFill />
+                      </button>
+                      <button
+                        className={styles.reportIconBtn}
+                        onClick={() => viewMentorReport(mentor.mentorId)}
+                        title="Mentor Report"
+                      >
+                        <BsFileEarmarkTextFill />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

@@ -59,6 +59,13 @@
   gap: 10px;
 }
 
+.noResultMessage {
+  text-align: center;
+  color: #d9534f; /* A red color for error messages */
+  font-weight: bold;
+  padding: 1rem;
+}
+
 .reportTable, .registerTable, .mentorReportTable {
   width: 100%;
   border-collapse: collapse;
