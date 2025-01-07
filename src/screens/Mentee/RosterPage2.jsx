@@ -117,7 +117,7 @@ function RosterPage() {
                     <FaCalendarAlt style={styles.icon} /> Days of the Week
                   </th>
                   <th style={styles.tableHeader}>
-                    <FaUser style={styles.icon} /> Mentor ID
+                    <FaUser style={styles.icon} /> Mentor Name
                   </th>
                   <th style={styles.tableHeader}>Module List</th>
                 </tr>
