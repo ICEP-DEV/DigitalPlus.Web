@@ -31,7 +31,7 @@ const Schedule = () => {
     time: "",
     mentor: "",
     mentorId: "",
-    adminId: "",
+    adminId: "1",
     selectedModules: [],
     scheduleId: "",
   });
@@ -288,17 +288,13 @@ const Schedule = () => {
   const handleAddMentor = async (e) => {
     e.preventDefault();
 
-    const adminId = JSON.parse(localStorage.getItem('adminId')); 
-    if (!adminId) {
-      console.error("Admin ID is not found. Please log in again.");
-      return;
-    }
+    
 
     const payload = {
       scheduleId: formData.scheduleId,
       mentorId: formData.mentor,
       mentorName: formData.mentorName,
-      adminId,
+      adminId: formData.adminId,
       timeSlot: formData.time,
       daysOfTheWeek: selectedSlot.day,
       moduleList: formData.selectedModules,
