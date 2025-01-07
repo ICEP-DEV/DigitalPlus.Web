@@ -4,13 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GrSchedules } from "react-icons/gr";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faCheck,
-  faTimes,
-  faEdit,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import {faPlus,faCheck,faTimes,faEdit,faTrash,} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios"; // Make sure to import axios
 
 const timeslots = [
@@ -221,29 +215,6 @@ const Schedule = () => {
     }
   };
 
-  // const handleChange = async (e) => {
-  //   const { name, value } = e.target;
-
-  //   if (name === "mentor") {
-  //     setFormData({ ...formData, mentor: value, selectedModules: [] });
-  //     await fetchModulesByMentorsId(value); // Fetch modules only when mentor changes
-  //   } else if (name === "module") {
-  //     setFormData((prev) => {
-  //       const selectedModules = Array.isArray(prev.selectedModules)
-  //         ? prev.selectedModules
-  //         : [];
-  //       const isModuleSelected = selectedModules.includes(value);
-
-  //       const updatedModules = isModuleSelected
-  //         ? selectedModules.filter((module) => module !== value)
-  //         : [...selectedModules, value];
-
-  //       return { ...prev, selectedModules: updatedModules };
-  //     });
-  //   } else {
-  //     setFormData((prev) => ({ ...prev, [name]: value }));
-  //   }
-  // };
   const handleChange = async (e) => {
     const { name, value } = e.target;
 
@@ -287,8 +258,6 @@ const Schedule = () => {
 
   const handleAddMentor = async (e) => {
     e.preventDefault();
-
-    
 
     const payload = {
       scheduleId: formData.scheduleId,
