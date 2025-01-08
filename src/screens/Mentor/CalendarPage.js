@@ -174,23 +174,24 @@ const CalendarPage = () => {
     fetchBookings();
   }, []);
 
-  const scheduleReminders = (appointments) => {
+  const scheduleReminders = (appointments, mentorEmail) => {
     appointments.forEach((appointment) => {
       const currentTime = new Date().getTime();
       const appointmentTime = new Date(appointment.dateTime).getTime();
   
       const reminderIntervals = [
-        { label: '15 minutes', delta: 15 * 60 * 1000 },
-        { label: '1 hour', delta: 60 * 60 * 1000 },
-        { label: '1 day', delta: 24 * 60 * 60 * 1000 },
+        { label: 'You have an appointment in 2 minutes', delta: 2 * 60 * 1000 },
+        { label: 'You have an appointment in 15 minutes', delta: 15 * 60 * 1000 },
+        { label: 'You have an appointment in 1 hour', delta: 60 * 60 * 1000 },
+        { label: 'You have an appointment in 1 day', delta: 24 * 60 * 60 * 1000 },
       ];
   
       reminderIntervals.forEach(({ label, delta }) => {
         const reminderTime = appointmentTime - delta;
         if (reminderTime > currentTime) {
           setTimeout(async () => {
-            alert(`Reminder: You have an appointment in ${label} with ${appointment.name} ${appointment.surname}`);
-            
+            alert(`Reminder: ${label} with ${appointment.name} ${appointment.surname}`);
+  
             // Send email reminder to the backend
             await fetch('https://localhost:7163/api/Email/send', {
               method: 'POST',
@@ -198,10 +199,9 @@ const CalendarPage = () => {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                email: `${storedUser.mentorId}@tut4life.ac.za`,
-                name: `${appointment.name} ${appointment.surname}`,
-                time: moment(appointment.start).format('YYYY-MM-DD HH:mm:ss'),
-                reminderLabel: label,
+                email: `${storedUser.mentorId}@tut4life.ac.za`, // Mentor's email
+                subject: `Appointment Reminder: ${label}`,
+                message: `Hi, this is a reminder for your appointment with ${appointment.name} ${appointment.surname} scheduled at ${new Date(appointment.dateTime).toLocaleString()}. Reminder: ${label}`,
               }),
             });
           }, reminderTime - currentTime);
@@ -209,6 +209,7 @@ const CalendarPage = () => {
       });
     });
   };
+  
   
 
   const handleEventClick = (event) => {
