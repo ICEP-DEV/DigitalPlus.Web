@@ -19,13 +19,15 @@ const timeslots = [
 ];
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
+const user = JSON.parse(localStorage.getItem('user'));
+ const adminId = user?.admin_Id;
 //Starting of the Function
 const Schedule = () => {
   const [formData, setFormData] = useState({
     time: "",
     mentor: "",
-    mentorId: "",
-    adminId: "1",
+    //mentorId: "",
+    adminId: adminId,
     selectedModules: [],
     scheduleId: "",
   });
@@ -260,31 +262,33 @@ const Schedule = () => {
     e.preventDefault();
 
     const payload = {
-      scheduleId: formData.scheduleId,
-      mentorId: formData.mentor,
-      mentorName: formData.mentorName,
-      adminId: formData.adminId,
-      timeSlot: formData.time,
-      daysOfTheWeek: selectedSlot.day,
-      moduleList: formData.selectedModules,
+      ScheduleId: formData.scheduleId,
+      MentorId: formData.mentor,
+      MentorName: formData.mentorName,
+      AdminId: adminId,
+      TimeSlot: formData.time,
+      DayOfTheWeek: selectedSlot.day,
+      ModuleList: formData.selectedModules,
     };
-
+//scheduleId: 0,
+//daysOfTheWeek: selectedSlot.day,
     console.log("Payload:", payload); // Debugging line
 
     try {
-      const response = await fetch(
-        "https://localhost:7163/api/DigitalPlusCrud/CreateSchedule",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch("https://localhost:7163/api/DigitalPlusCrud/CreateSchedule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
       if (!response.ok) {
-        const errorText = await response.text(); // Get error details
-        console.error("Server response:", errorText); // Log server response
-        throw new Error("Failed to add mentor to the database");
+        const errorText = await response.text();
+        console.error("Error Details:", {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText,
+        });
+        throw new Error(`Failed to add mentor. Status: ${response.status}`);
       }
 
       const responseData = await response.json();
@@ -436,7 +440,7 @@ const Schedule = () => {
                         {schedule[`${day}-${time}`].map((data, index) => (
                           <div key={index} className={styles.mentorInfo}>
                             <strong className={styles.mentorName}>
-                              {data.mentor}
+                              {data.mentorName}
                             </strong>
                             <p className={styles.mentorModules}>
                               {data.selectedModules.join(", ")}
