@@ -198,7 +198,7 @@ const CalendarPage = () => {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                email: appointment.email, // Pass mentee's email
+                email: `${storedUser.mentorId}@tut4life.ac.za`,
                 name: `${appointment.name} ${appointment.surname}`,
                 time: moment(appointment.start).format('YYYY-MM-DD HH:mm:ss'),
                 reminderLabel: label,
