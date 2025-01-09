@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SideBarNavBar from "./Navigation/SideBarNavBar";
-import { FaClock, FaCalendarAlt } from "react-icons/fa";
+import { FaClock, FaCalendarAlt, FaDownload } from "react-icons/fa";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 function RosterPage() {
   const [scheduleData, setScheduleData] = useState([]);
@@ -40,12 +42,12 @@ function RosterPage() {
         );
         row[day] = entry
           ? `${entry.mentorName}\n${entry.moduleList.join(", ")}`
-          : "";
+          : "N/A";
       });
       return row;
     });
 
-    return { days, timeSlots, tableData };
+    return { days, tableData };
   };
 
   const handleFilterChange = (event) => {
@@ -60,6 +62,29 @@ function RosterPage() {
       );
       setFilteredData(filtered);
     }
+  };
+
+  const downloadPDF = () => {
+    const { days, tableData } = organizeData(filteredData);
+
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Mentor's Lab 10-252 Roster", 14, 15);
+
+    const tableBody = tableData.map((row) => [
+      row.time,
+      ...days.map((day) => row[day]?.replace(/\n/g, " | ") || "N/A"),
+    ]);
+
+    doc.autoTable({
+      head: [["Time", ...days]],
+      body: tableBody,
+      startY: 25,
+      styles: { fontSize: 10, cellPadding: 4 },
+      headStyles: { fillColor: [26, 31, 54], textColor: [230, 233, 239] },
+    });
+
+    doc.save("Mentors_Lab_Roster.pdf");
   };
 
   const { days, tableData } = organizeData(filteredData);
@@ -115,6 +140,11 @@ function RosterPage() {
             </tbody>
           </table>
         </div>
+
+        <button onClick={downloadPDF} style={styles.downloadButton}>
+          <FaDownload style={styles.icon} />
+          Download PDF
+        </button>
       </div>
     </SideBarNavBar>
   );
@@ -152,6 +182,23 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "4px",
     width: "250px",
+  },
+  downloadButton: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#1A1F36",
+    color: "#e6e9ef",
+    border: "none",
+    borderRadius: "8px",
+    padding: "12px 24px",
+    fontSize: "16px",
+    cursor: "pointer",
+    marginTop: "20px",
+    transition: "transform 0.2s, background-color 0.3s",
+  },
+  icon: {
+    marginRight: "8px",
   },
   tableContainer: {
     display: "flex",
