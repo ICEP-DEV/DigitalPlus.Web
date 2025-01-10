@@ -28,11 +28,11 @@ const CreateNewAnnouncement = ({
   useEffect(() => {
     if (editingAnnouncement) {
       setFormData({
-        announcementTitle: editingAnnouncement.name || '',
-        userRole: editingAnnouncement.recipient || 'Mentee',
+        announcementTitle: editingAnnouncement.announcementTitle || '',
+        userRole: editingAnnouncement.userRole || 'Mentee',
         type: editingAnnouncement.type || 'OneTime',
-        announcementDate: editingAnnouncement.sendDate || '',
-        announcementContent: editingAnnouncement.content || '',
+        announcementDate: editingAnnouncement.announcementDate || '',
+        announcementContent: editingAnnouncement.announcementContent || '',
         announcementImageFile: null,
         isImageUpload: false,
         frequency: editingAnnouncement.frequency || 'TwoWeeks',
@@ -77,13 +77,22 @@ const CreateNewAnnouncement = ({
         }
       });
 
-      const response = await fetch('https://localhost:7163/api/Announcement', {
-        method: 'POST',
+      const apiUrl = editingAnnouncement
+        ? `https://localhost:7163/api/Announcement/${editingAnnouncement.announcementId}`
+        : 'https://localhost:7163/api/Announcement';
+      const method = editingAnnouncement ? 'PUT' : 'POST';
+
+      const response = await fetch(apiUrl, {
+        method,
         body: formDataToSend,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create announcement');
+        throw new Error(
+          editingAnnouncement
+            ? 'Failed to update announcement'
+            : 'Failed to create announcement'
+        );
       }
 
       setSuccess(true);
@@ -166,22 +175,34 @@ const CreateNewAnnouncement = ({
             >
               <option value="OneTime">One Time</option>
               <option value="Recurring">Recurring</option>
-              <option value="Drip">Drip</option>
             </select>
           </label>
 
           {formData.type === 'OneTime' && (
-            <label className={styles.label}>
-              Announcement Date:
-              <input
-                type="datetime-local"
-                name="announcementDate"
-                value={formData.announcementDate}
-                onChange={handleInputChange}
-                required
-                className={styles.input}
-              />
-            </label>
+            <>
+              <label className={styles.label}>
+                Announcement Date:
+                <input
+                  type="datetime-local"
+                  name="announcementDate"
+                  value={formData.announcementDate}
+                  onChange={handleInputChange}
+                  required
+                  className={styles.input}
+                />
+              </label>
+              <label className={styles.label}>
+                End Date:
+                <input
+                  type="datetime-local"
+                  name="endDate"
+                  value={formData.endDate}
+                  onChange={handleInputChange}
+                  required
+                  className={styles.input}
+                />
+              </label>
+            </>
           )}
 
           {formData.type === 'Recurring' && (
@@ -200,7 +221,6 @@ const CreateNewAnnouncement = ({
                   <option value="Quarterly">Quarterly</option>
                 </select>
               </label>
-
               <label className={styles.label}>
                 Total Occurrences:
                 <input
@@ -213,36 +233,6 @@ const CreateNewAnnouncement = ({
                   className={styles.input}
                 />
               </label>
-            </>
-          )}
-
-          {formData.type === 'Drip' && (
-            <>
-              <label className={styles.label}>
-                Announcement Start Date:
-                <input
-                  type="datetime-local"
-                  name="announcementDate"
-                  value={formData.announcementDate}
-                  onChange={handleInputChange}
-                  required
-                  className={styles.input}
-                />
-              </label>
-
-              <label className={styles.label}>
-                Total Occurrences:
-                <input
-                  type="number"
-                  name="totalOccurrences"
-                  value={formData.totalOccurrences}
-                  onChange={handleInputChange}
-                  min="1"
-                  required
-                  className={styles.input}
-                />
-              </label>
-
               <label className={styles.label}>
                 End Date:
                 <input
@@ -282,7 +272,11 @@ const CreateNewAnnouncement = ({
 
           <div className={styles.buttonContainer}>
             <button type="submit" disabled={loading} className={styles.createButton}>
-              {loading ? 'Creating...' : 'Create Announcement'}
+              {loading
+                ? 'Submitting...'
+                : editingAnnouncement
+                ? 'Update Announcement'
+                : 'Create Announcement'}
             </button>
             <button
               type="button"
@@ -293,7 +287,13 @@ const CreateNewAnnouncement = ({
             </button>
           </div>
 
-          {success && <p className={styles.successMessage}>Announcement created successfully!</p>}
+          {success && (
+            <p className={styles.successMessage}>
+              {editingAnnouncement
+                ? 'Announcement updated successfully!'
+                : 'Announcement created successfully!'}
+            </p>
+          )}
           {error && <p className={styles.errorMessage}>Error: {error}</p>}
         </form>
       </div>
