@@ -18,15 +18,14 @@ const timeslots = [
   "15:00-16:00",
 ];
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-
 const user = JSON.parse(localStorage.getItem('user'));
- const adminId = user?.admin_Id;
+const adminId = user?.admin_Id;
+
 //Starting of the Function
 const Schedule = () => {
   const [formData, setFormData] = useState({
     time: "",
     mentor: "",
-    //mentorId: "",
     adminId: adminId,
     selectedModules: [],
     scheduleId: "",
@@ -48,9 +47,8 @@ const Schedule = () => {
   const [editPopupVisible, setEditPopupVisible] = useState(false);
   const [schedule, setSchedule] = useState(getSavedSchedule());
   const [successMessage, setSuccessMessage] = useState(""); // State for success messages
-  const [mentorname, setMentorName] = useState("");
   const [scheduleToDelete, setScheduleToDelete] = useState(null); // Track which mentee to delete
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+ 
 
   useEffect(() => {
     // Save the schedule data to localStorage whenever it changes
@@ -73,33 +71,6 @@ const Schedule = () => {
       }
     };
 
-    const fetchMentorName = async (mentorId) => {
-      if (!mentorId) {
-        console.error("mentorId is not defined");
-        return;
-      }
-
-      try {
-        const response = await axios.get(
-          `https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`
-        );
-
-        if (response.data && response.data.firstName) {
-          setMentorName(response.data.firstName);
-          console.log(response.data.firstName);
-        } else {
-          console.error(
-            "Mentor data is not in the expected format",
-            response.data
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching mentor name:", error);
-      }
-    };
-
-
-    fetchMentorName();
     fetchMentordetailsB();
   }, []);
 
@@ -146,7 +117,7 @@ const Schedule = () => {
     const existingData = schedule[`${day}-${time}`] || [];
     if (existingData[index]) {
       const { mentor, selectedModules } = existingData[index];
-      setFormData({ time, mentor, selectedModules, index });
+      setFormData({ time, mentor, selectedModules, index, ScheduleId: existingData[index].scheduleId });
       setSelectedSlot({ day, time });
       setEditPopupVisible(true);
     }
@@ -208,7 +179,7 @@ const Schedule = () => {
         toast.success("Schedule deleted successfully!");
 
         // Reset states if applicable
-        setDeleteDialogOpen(false); // Close dialog after deletion if applicable
+     
         setScheduleToDelete(null); // Clear the selected schedule to delete (from dialog)
       } catch (error) {
         console.error("Error deleting schedule:", error);
@@ -270,8 +241,7 @@ const Schedule = () => {
       DayOfTheWeek: selectedSlot.day,
       ModuleList: formData.selectedModules,
     };
-//scheduleId: 0,
-//daysOfTheWeek: selectedSlot.day,
+
     console.log("Payload:", payload); // Debugging line
 
     try {
@@ -315,41 +285,42 @@ const Schedule = () => {
   const handleEditMentor = async () => {
     if (window.confirm("Are you sure you want to save these edits?")) {
       try {
-        // Fetch the existing data from the database for the given scheduleId
-        const scheduleId = formData.scheduleId; // Ensure formData has the scheduleId field
+        // Ensure scheduleId is present
+        const scheduleId = formData.scheduleId;
+        if (!scheduleId) {
+          throw new Error("Schedule ID is missing. Please check your input.");
+        }
+  
+        // Fetch the existing schedule data
         const response = await fetch(
           `https://localhost:7163/api/DigitalPlusCrud/GetSchedule/${scheduleId}`,
           { method: "GET" }
         );
-
+  
         if (!response.ok) {
           throw new Error("Failed to fetch existing schedule data.");
         }
-
+  
         const existingData = await response.json();
-
-        // Check if we successfully fetched the existing schedule
+  
+        // Validate existing data
         if (!existingData) {
           throw new Error("No existing schedule found for the given ID.");
         }
-
-        // Merge the updated data with the existing data
+  
+        // Merge updated data with existing data
         const updatedSchedule = {
           ...existingData,
-          scheduleId: formData.scheduleId || existingData.scheduleId,
-          mentorId: formData.mentor || existingData.mentorId, // Preserve previous data if not updated
-          mentorName: formData.mentorName || existingData.mentorName,
-          adminId: formData.adminId || existingData.adminId,
-          timeSlot: formData.time || existingData.timeSlot,
-          daysOfTheWeek: selectedSlot.day || existingData.daysOfTheWeek,
-          moduleList: formData.selectedModules || existingData.moduleList,
-          // moduleCode: formData.module_Code || existingData.moduleCode,
-          //moduleDescription: formData.moduleDescription || existingData.moduleDescription,
-          // moduleId: formData.module_Id || existingData.moduleId,
-          // moduleName: formData.module_Name || existingData.moduleName,
+          ScheduleId: scheduleId,
+          MentorId: formData.mentor || existingData.mentorId,
+          MentorName: formData.mentorName || existingData.mentorName,
+          AdminId: formData.adminId || existingData.adminId,
+          TimeSlot: formData.time || existingData.timeSlot,
+          DayOfTheWeek: selectedSlot.day || existingData.dayOfTheWeek, // Match API field
+          ModuleList: formData.selectedModules || existingData.moduleList,
         };
-
-        // Send the updated data back to the server
+  
+        // Update the schedule on the server
         const updateResponse = await fetch(
           `https://localhost:7163/api/DigitalPlusCrud/UpdateSchedule/${scheduleId}`,
           {
@@ -358,33 +329,34 @@ const Schedule = () => {
             body: JSON.stringify(updatedSchedule),
           }
         );
-
+  
         if (!updateResponse.ok) {
           throw new Error("Failed to update the schedule.");
         }
-
-        // Update the schedule in the local state
+  
+        // Update local state with the new data
         setSchedule((prev) => {
-          const updatedEntries = prev[
-            `${selectedSlot.day}-${formData.time}`
-          ].map((entry, i) => (i === formData.index ? updatedSchedule : entry));
+          const updatedEntries = prev[`${selectedSlot.day}-${formData.time}`].map(
+            (entry, i) => (i === formData.index ? updatedSchedule : entry)
+          );
           return {
             ...prev,
             [`${selectedSlot.day}-${formData.time}`]: updatedEntries,
           };
         });
-
-        // Reset form and hide the edit popup
+  
+        // Reset form, close popup, and show success message
         setFormData({ time: "", mentor: "", selectedModules: [] });
         setEditPopupVisible(false);
         setSuccessMessage("Edited successfully");
         setTimeout(() => setSuccessMessage(""), 3000);
       } catch (error) {
-        console.error("Error during edit operation:", error);
-        toast.error("There was an error saving the changes. Please try again.");
+        console.error("Error during edit operation:", error.message);
+        toast.error(error.message || "There was an error saving the changes. Please try again.");
       }
     }
   };
+  
 
   const handleCancelEdit = () => {
     setEditPopupVisible(false);
