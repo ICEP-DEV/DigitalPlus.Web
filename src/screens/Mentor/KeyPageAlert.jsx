@@ -3,7 +3,7 @@ import styles from './KeyPageAlert.module.css';
 import { FaKey, FaWindowClose } from 'react-icons/fa';
 
 function KeyPageAlert({ showModal, onClose }) {
-    const [viewState, setViewState] = useState('initial'); 
+    const [viewState, setViewState] = useState('initial');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [contact, setContact] = useState('');
@@ -40,7 +40,10 @@ function KeyPageAlert({ showModal, onClose }) {
             location: 'lab 10 G42',
         };
 
-        setKeyNotifications(prevNotifications => [...prevNotifications, newNotification]);
+        // Add the new notification at the beginning of the array
+        setKeyNotifications(prevNotifications => [newNotification, ...prevNotifications]);
+
+        // Clear input fields and switch back to the "info" state
         setFirstName('');
         setLastName('');
         setContact('');
@@ -67,7 +70,8 @@ function KeyPageAlert({ showModal, onClose }) {
         <div className={styles.modalOverlay}>
             <div className={styles.modal}>
                 <div className={styles.modalContent}>
-                    <span className={styles.closeButton} onClick={onClose}>
+                    {/* Close button at the top right */}
+                    <span className={styles.closeButton} onClick={handleClose}>
                         <FaWindowClose />
                     </span>
                     <div className={styles.iconContainer}>
@@ -137,4 +141,3 @@ function KeyPageAlert({ showModal, onClose }) {
 }
 
 export default KeyPageAlert;
- 
