@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import styles from "./AnnouncementModal.module.css";
-import { BsXCircleFill, BsPencilSquare, BsTrash } from "react-icons/bs";
+import { BsXCircleFill, BsPencilSquare, BsTrash, BsEye } from "react-icons/bs";
 
 const AnnouncementModal = ({
   isOpen,
   onClose,
-  editAnnouncement, // Function to handle editing
+  editAnnouncement,
   deleteAnnouncement,
 }) => {
   const [announcements, setAnnouncements] = useState([]);
   const [selectedRole, setSelectedRole] = useState(2); // Default to 'Both'
-  const [selectedImage, setSelectedImage] = useState(null); // For displaying the image
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const API_BASE_URL = "https://localhost:7163/api/Announcement";
 
-  // Fetch announcements when modal is open or role changes
   useEffect(() => {
     if (isOpen) {
       fetchAnnouncementsByRole(selectedRole);
@@ -47,20 +47,24 @@ const AnnouncementModal = ({
   };
 
   const handleRoleChange = (event) => {
-    setSelectedRole(parseInt(event.target.value, 10)); // Update role based on dropdown selection
+    setSelectedRole(parseInt(event.target.value, 10));
   };
 
   const handleImageClick = (imageUrl) => {
-    setSelectedImage(imageUrl); // Set the clicked image for display
+    setSelectedImage(imageUrl);
   };
 
   const closeImageModal = () => {
-    setSelectedImage(null); // Close the image modal
+    setSelectedImage(null);
   };
 
   const handleEditClick = (announcement) => {
-    editAnnouncement(announcement); // Pass selected announcement for editing
-    onClose(); // Close this modal and open the editing modal
+    editAnnouncement(announcement);
+    onClose();
+  };
+
+  const handleViewClick = (announcement) => {
+    setSelectedAnnouncement(announcement); // Open the details modal
   };
 
   if (!isOpen) return null;
@@ -68,7 +72,6 @@ const AnnouncementModal = ({
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
-        {/* Close Icon */}
         <div
           className={styles.closeButton}
           onClick={onClose}
@@ -80,7 +83,6 @@ const AnnouncementModal = ({
 
         <h2 className={styles.title}>Announcements</h2>
 
-        {/* User Role Dropdown */}
         <div className={styles.dropdownContainer}>
           <label htmlFor="userRoleDropdown">Select User Role: </label>
           <select
@@ -95,15 +97,12 @@ const AnnouncementModal = ({
           </select>
         </div>
 
-        {/* Announcements Table */}
         <div className={styles.tableContainer}>
           <table className={styles.announcementTable}>
             <thead>
               <tr>
-                <th>Announcement ID</th>
                 <th>Title</th>
                 <th>User Role</th>
-                <th>Type</th>
                 <th>Date</th>
                 <th>Content</th>
                 <th>Image</th>
@@ -116,7 +115,6 @@ const AnnouncementModal = ({
             <tbody>
               {announcements.map((announcement) => (
                 <tr key={announcement.announcementId}>
-                  <td>{announcement.announcementId}</td>
                   <td>{announcement.announcementTitle}</td>
                   <td>
                     {announcement.userRole === 0
@@ -125,7 +123,6 @@ const AnnouncementModal = ({
                       ? "Mentor"
                       : "Both"}
                   </td>
-                  <td>{announcement.type}</td>
                   <td>
                     {new Date(announcement.announcementDate).toLocaleDateString()}
                   </td>
@@ -136,7 +133,7 @@ const AnnouncementModal = ({
                         announcement.announcementImage &&
                         announcement.announcementImage.trim() !== ""
                           ? announcement.announcementImage
-                          : "https://via.placeholder.com/150" // Fallback image URL
+                          : "https://via.placeholder.com/150"
                       }
                       alt="Announcement"
                       className={styles.imageThumbnail}
@@ -158,11 +155,18 @@ const AnnouncementModal = ({
                       : "N/A"}
                   </td>
                   <td className={styles.actions}>
+                    <BsEye
+                      size={20}
+                      color="green"
+                      className={styles.actionIcon}
+                      onClick={() => handleViewClick(announcement)}
+                      title="View Details"
+                    />
                     <BsPencilSquare
                       size={20}
                       color="blue"
                       className={styles.actionIcon}
-                      onClick={() => handleEditClick(announcement)} // Trigger edit
+                      onClick={() => handleEditClick(announcement)}
                       title="Edit"
                     />
                     <BsTrash
@@ -181,7 +185,6 @@ const AnnouncementModal = ({
           </table>
         </div>
 
-        {/* Image Modal */}
         {selectedImage && (
           <div className={styles.imageModalOverlay}>
             <div className={styles.imageModal}>
@@ -193,6 +196,56 @@ const AnnouncementModal = ({
                 Close
               </button>
             </div>
+          </div>
+        )}
+
+        {selectedAnnouncement && (
+          <div className={styles.announcementDetailsModal}>
+            <h3>Announcement Details</h3>
+            <p>
+              <strong>Title:</strong> {selectedAnnouncement.announcementTitle}
+            </p>
+            <p>
+              <strong>Role:</strong>{" "}
+              {selectedAnnouncement.userRole === 0
+                ? "Mentee"
+                : selectedAnnouncement.userRole === 1
+                ? "Mentor"
+                : "Both"}
+            </p>
+            <p>
+              <strong>Date:</strong>{" "}
+              {new Date(selectedAnnouncement.announcementDate).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Content:</strong> {selectedAnnouncement.announcementContent}
+            </p>
+            {selectedAnnouncement.announcementImage && (
+              <img
+                src={selectedAnnouncement.announcementImage}
+                alt="Announcement"
+                className={styles.imageThumbnail}
+              />
+            )}
+            <p>
+              <strong>Frequency:</strong> {selectedAnnouncement.frequency}
+            </p>
+            <p>
+              <strong>Total Occurrences:</strong>{" "}
+              {selectedAnnouncement.totalOccurrences}
+            </p>
+            <p>
+              <strong>End Date:</strong>{" "}
+              {selectedAnnouncement.endDate
+                ? new Date(selectedAnnouncement.endDate).toLocaleDateString()
+                : "N/A"}
+            </p>
+            <button
+              onClick={() => setSelectedAnnouncement(null)}
+              className={styles.closeAnnouncementDetails}
+            >
+              Close
+            </button>
           </div>
         )}
       </div>

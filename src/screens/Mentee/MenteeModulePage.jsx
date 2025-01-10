@@ -72,7 +72,6 @@ export default function MenteeModulePage() {
   
 
   if (loading) return <p>Loading modules...</p>;
-  if (error) return <p>Error: {error}</p>;
 
   return (
     <div>

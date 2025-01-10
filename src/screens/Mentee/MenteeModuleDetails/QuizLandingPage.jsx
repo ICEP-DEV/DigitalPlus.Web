@@ -1,41 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './QuizLandingPage.module.css'; // Import the CSS module
 import QuizPage from './QuizPage'; // Import the QuizPage component
+import axios from 'axios';
 
 const QuizLandingPage = () => {
-  const [showQuizz, setShowQuizz] = useState(false); // State to manage quiz visibility
+  const [quizzes, setQuizzes] = useState([]);
+  const [selectedQuizId, setSelectedQuizId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredQuizzes, setFilteredQuizzes] = useState([]);
 
-  // Mock data for the quiz details
-  const moduleName = "Introduction to Data Structures";
-  const setDate = "2024-10-22"; // Example set date
-  const dueDate = "2024-10-29"; // Example due date
-  const timeAllocation = "30 minutes";
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      try {
+        const response = await axios.get('https://localhost:7163/api/Quiz');
+        setQuizzes(response.data);
+        setFilteredQuizzes(response.data);
+      } catch (error) {
+        console.error('Failed to fetch quizzes:', error);
+      }
+    };
+    fetchQuizzes();
+  }, []);
 
-  const handleStartQuiz = () => {
-    setShowQuizz(true); // Set the state to show the QuizPage
+  useEffect(() => {
+    const filtered = quizzes.filter((quiz) =>
+      quiz.id.toString().includes(searchTerm)
+    );
+    setFilteredQuizzes(filtered);
+  }, [searchTerm, quizzes]);
+
+  const handleStartQuiz = (quizId) => {
+    setSelectedQuizId(quizId); // Pass the quiz ID to QuizPage
   };
 
   return (
     <div className={styles.quizzLanding_container}>
-      {showQuizz ? (
-        // Render the QuizPage when showQuizz is true
-        <QuizPage moduleId={moduleName} />
+      {selectedQuizId ? (
+        <QuizPage quizId={selectedQuizId} /> // Pass quizId to QuizPage
       ) : (
-        // Render the landing page details when showQuizz is false
         <>
-          <h1 className={styles.title}>{moduleName}</h1>
-          <div className={styles.details}>
-            <p><strong>Set Date:</strong> {setDate}</p>
-            <p><strong>Due Date:</strong> {dueDate}</p>
-            <p><strong>Time Allocation:</strong> {timeAllocation}</p>
+          <div className={styles.quizzLanding_searchContainer}>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by Quiz ID..."
+              className={styles.quizzLanding_searchInput}
+            />
           </div>
-          <button 
-            type="button" 
-            onClick={handleStartQuiz} 
-            className={styles.startButton}
-          >
-            Start Quiz
-          </button>
+          <div className={styles.quizzLanding_cardContainer}>
+            {filteredQuizzes.length > 0 ? (
+              filteredQuizzes.map((quiz) => (
+                <div key={quiz.id} className={styles.quizzLanding_card}>
+                  <h2 className={styles.quizzLanding_cardTitle}>{quiz.title}</h2>
+                  <div className={styles.quizzLanding_cardDetails}>
+                    <p>
+                      <strong>Quiz ID:</strong> {quiz.id}
+                    </p>
+                    <p>
+                      <strong>Description:</strong> {quiz.description}
+                    </p>
+                    <p>
+                      <strong>Set Date:</strong> {quiz.startDate}
+                    </p>
+                    <p>
+                      <strong>Due Date:</strong> {quiz.endDate}
+                    </p>
+                    <p>
+                      <strong>Time Allocation:</strong>{' '}
+                      {quiz.timeAllocation || 'N/A'}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleStartQuiz(quiz.id)} // Pass quiz ID
+                    className={styles.quizzLanding_startButton}
+                  >
+                    Start Quiz
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className={styles.quizzLanding_noQuizzesMessage}>
+                No quizzes match your search.
+              </p>
+            )}
+          </div>
         </>
       )}
     </div>

@@ -3,7 +3,7 @@ import NavBar from './MenteeModuleDetails/NavBar';
 import SideBar from './MenteeModuleDetails/SideBar';
 import styles from './MenteeModuleDetails.module.css'; 
 import MenteeModulePage from './MenteeModulePage';
-import MentorsPage from './MenteeModuleDetails/MentorsPage';
+import ClassListPage from './MenteeModuleDetails/ClassListPage';
 import DMComponent from './MenteeModuleDetails/DMComponent';
 import QuizPage from  './MenteeModuleDetails/QuizPage';
 import ChatBoard from './MenteeModuleDetails/ChatBoard';
@@ -24,7 +24,7 @@ function App() {
           {/* Default page is QuizPage, and other pages will load based on activePage */}
           {activePage === 'moduleInfo'&& <ModuleInfo/>}
           {activePage === 'quizzLanding'&& <QuizLandingPage />}
-          {activePage === 'mentorslist' && <MentorsPage />}
+          {activePage === 'mentorslist' && <ClassListPage />}
           {activePage === 'chatboard' && <ChatBoard />}
           {activePage === 'mentordm' && <DMComponent />}
           {activePage === 'back' && <MenteeModulePage />}

@@ -123,18 +123,19 @@ const CalendarPage = () => {
   const [selectedEvent, setSelectedEvent] = useState(null); // Track the selected event for the modal
   const [error, setError] = useState(null); // Error state for the API call
 
+  const storedUser = JSON.parse(localStorage.getItem('user'));
   // Fetch bookings from the API
   useEffect(() => {
     const fetchBookings = async () => {
       try {
         // Fetch all appointments
-        const response = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllAppointments');
+        const response = await fetch(`https://localhost:7163/api/DigitalPlusCrud/GetAppointmentsByMentorId/${storedUser.mentorId}`);
         if (!response.ok) throw new Error('Failed to fetch bookings');
         
         const data = await response.json();
         
         if (!Array.isArray(data.result) || data.result.length === 0) {
-          throw new Error('No bookings found');
+          throw new Error('No Appointments found');
         }
         
         const moduleResponse = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
@@ -164,6 +165,7 @@ const CalendarPage = () => {
         }));
         
         setBookings(formattedBookings);
+        scheduleReminders(formattedBookings);
       } catch (error) {
         setError(error.message);
       }
@@ -171,6 +173,44 @@ const CalendarPage = () => {
     
     fetchBookings();
   }, []);
+
+  const scheduleReminders = (appointments, mentorEmail) => {
+    appointments.forEach((appointment) => {
+      const currentTime = new Date().getTime();
+      const appointmentTime = new Date(appointment.dateTime).getTime();
+  
+      const reminderIntervals = [
+        { label: 'You have an appointment in 2 minutes', delta: 2 * 60 * 1000 },
+        { label: 'You have an appointment in 15 minutes', delta: 15 * 60 * 1000 },
+        { label: 'You have an appointment in 1 hour', delta: 60 * 60 * 1000 },
+        { label: 'You have an appointment in 1 day', delta: 24 * 60 * 60 * 1000 },
+      ];
+  
+      reminderIntervals.forEach(({ label, delta }) => {
+        const reminderTime = appointmentTime - delta;
+        if (reminderTime > currentTime) {
+          setTimeout(async () => {
+            alert(`Reminder: ${label} with ${appointment.name} ${appointment.surname}`);
+  
+            // Send email reminder to the backend
+            await fetch('https://localhost:7163/api/Email/send', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: `${storedUser.mentorId}@tut4life.ac.za`, // Mentor's email
+                subject: `Appointment Reminder: ${label}`,
+                message: `Hi, this is a reminder for your appointment with ${appointment.name} ${appointment.surname} scheduled at ${new Date(appointment.dateTime).toLocaleString()}. Reminder: ${label}`,
+              }),
+            });
+          }, reminderTime - currentTime);
+        }
+      });
+    });
+  };
+  
+  
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);

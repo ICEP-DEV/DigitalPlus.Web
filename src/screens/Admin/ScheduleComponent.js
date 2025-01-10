@@ -4,13 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GrSchedules } from "react-icons/gr";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlus,
-  faCheck,
-  faTimes,
-  faEdit,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import {faPlus,faCheck,faTimes,faEdit,faTrash,} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios"; // Make sure to import axios
 
 const timeslots = [
@@ -24,20 +18,17 @@ const timeslots = [
   "15:00-16:00",
 ];
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-
-const mentorModules = {
-  "Mentor A": ["Module 1", "Module 2"],
-  "Mentor B": ["Module 2", "Module 3"],
-  "Mentor C": ["Module 1", "Module 3"],
-};
+const user = JSON.parse(localStorage.getItem('user'));
+const adminId = user?.admin_Id;
 
 //Starting of the Function
 const Schedule = () => {
   const [formData, setFormData] = useState({
     time: "",
     mentor: "",
+    adminId: adminId,
     selectedModules: [],
-    scheduleId: ""
+    scheduleId: "",
   });
 
   const [selectedSlot, setSelectedSlot] = useState({
@@ -56,9 +47,8 @@ const Schedule = () => {
   const [editPopupVisible, setEditPopupVisible] = useState(false);
   const [schedule, setSchedule] = useState(getSavedSchedule());
   const [successMessage, setSuccessMessage] = useState(""); // State for success messages
-  const [mentorname, setMentorName] = useState("");
   const [scheduleToDelete, setScheduleToDelete] = useState(null); // Track which mentee to delete
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+ 
 
   useEffect(() => {
     // Save the schedule data to localStorage whenever it changes
@@ -81,20 +71,6 @@ const Schedule = () => {
       }
     };
 
-    const fetchMentorName = async (mentorId) => {
-      try {
-        const response = await axios.get(
-          `https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`
-        );
-        if (response.data) {
-          setMentorName(response.data.firstName);
-          console.log(response.data.firstName);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchMentorName();
     fetchMentordetailsB();
   }, []);
 
@@ -141,7 +117,7 @@ const Schedule = () => {
     const existingData = schedule[`${day}-${time}`] || [];
     if (existingData[index]) {
       const { mentor, selectedModules } = existingData[index];
-      setFormData({ time, mentor, selectedModules, index });
+      setFormData({ time, mentor, selectedModules, index, ScheduleId: existingData[index].scheduleId });
       setSelectedSlot({ day, time });
       setEditPopupVisible(true);
     }
@@ -153,63 +129,88 @@ const Schedule = () => {
       try {
         // Check if we have a schedule entry (from day-time index)
         const entryToDelete = schedule[`${day}-${time}`]?.[index];
-        const scheduleId = entryToDelete?.data?.result?.scheduleId || entryToDelete?.mentor?.scheduleId;
-    
+        const scheduleId =
+          entryToDelete?.data?.result?.scheduleId ||
+          entryToDelete?.mentor?.scheduleId;
+
         // If scheduleToDelete is available (from dialog or other source)
         const scheduleIdFromDialog = scheduleToDelete?.scheduleId;
-    
+
         // Use the scheduleId from the entry or the one from the dialog
         const finalScheduleId = scheduleId || scheduleIdFromDialog;
-    
+
         if (!finalScheduleId) {
           console.error("Invalid entry or missing scheduleId:", entryToDelete);
-          alert("Failed to find the schedule ID for deletion. Please make sure the schedule ID exists.");
+          alert(
+            "Failed to find the schedule ID for deletion. Please make sure the schedule ID exists."
+          );
           return;
         }
-    
+
         // Perform the deletion with axios
-        await axios.delete(`https://localhost:7163/api/DigitalPlusCrud/DeleteSchedule/${finalScheduleId}`);
-    
+        await axios.delete(
+          `https://localhost:7163/api/DigitalPlusCrud/DeleteSchedule/${finalScheduleId}`
+        );
+
         // Update the schedule state to remove the deleted entry
         setSchedule((prev) => {
           const updatedSchedule = { ...prev };
           if (scheduleId) {
             // Delete by day-time index
-            const updatedEntries = updatedSchedule[`${day}-${time}`].filter((_, i) => i !== index);
-            updatedSchedule[`${day}-${time}`] = updatedEntries.length ? updatedEntries : undefined;
+            const updatedEntries = updatedSchedule[`${day}-${time}`].filter(
+              (_, i) => i !== index
+            );
+            updatedSchedule[`${day}-${time}`] = updatedEntries.length
+              ? updatedEntries
+              : undefined;
           } else if (scheduleIdFromDialog) {
             // If using the scheduleId from the dialog (e.g., for batch deletions)
-            updatedSchedule[`${day}-${time}`] = updatedSchedule[`${day}-${time}`]?.filter(
-              schedule => schedule.scheduleId !== scheduleIdFromDialog
+            updatedSchedule[`${day}-${time}`] = updatedSchedule[
+              `${day}-${time}`
+            ]?.filter(
+              (schedule) => schedule.scheduleId !== scheduleIdFromDialog
             );
           }
-    
+
           return updatedSchedule;
         });
-    
+
         // Show success message
         toast.success("Schedule deleted successfully!");
-    
+
         // Reset states if applicable
-        setDeleteDialogOpen(false); // Close dialog after deletion if applicable
+     
         setScheduleToDelete(null); // Clear the selected schedule to delete (from dialog)
-        
       } catch (error) {
         console.error("Error deleting schedule:", error);
         toast.error("Failed to delete schedule. Please try again.");
       }
     }
   };
-  
-  
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
 
     if (name === "mentor") {
-      setFormData({ ...formData, mentor: value, selectedModules: [] });
-      await fetchModulesByMentorsId(value); // Fetch modules only when mentor changes
+      // Find the selected mentor's full name
+      const selectedMentor = mentorsdetailsb.find(
+        (mentor) => mentor.mentorId.toString() === value
+      );
+
+      // Update the formData with mentor details and reset selectedModules
+      setFormData({
+        ...formData,
+        mentor: value,
+        mentorName: selectedMentor
+          ? `${selectedMentor.firstName} ${selectedMentor.lastName}`
+          : "", // Fallback if mentor not found
+        selectedModules: [], // Reset modules when the mentor changes
+      });
+
+      // Fetch modules for the selected mentor
+      await fetchModulesByMentorsId(value);
     } else if (name === "module") {
+      // Handle adding/removing modules
       setFormData((prev) => {
         const selectedModules = Array.isArray(prev.selectedModules)
           ? prev.selectedModules
@@ -217,12 +218,13 @@ const Schedule = () => {
         const isModuleSelected = selectedModules.includes(value);
 
         const updatedModules = isModuleSelected
-          ? selectedModules.filter((module) => module !== value)
-          : [...selectedModules, value];
+          ? selectedModules.filter((module) => module !== value) // Remove module
+          : [...selectedModules, value]; // Add module
 
         return { ...prev, selectedModules: updatedModules };
       });
     } else {
+      // Handle other fields
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
@@ -231,31 +233,36 @@ const Schedule = () => {
     e.preventDefault();
 
     const payload = {
-      scheduleId: formData.scheduleId,
-      mentorId: formData.mentor,
-      moduleCode: formData.module_Code,
-      moduleDescription: formData.moduleDescription,
-      adminId: formData.adminId,
-      moduleId: formData.module_Id,
-      moduleName: formData.module_Name,
-      timeSlot: formData.time,
-      daysOfTheWeek: selectedSlot.day,
-      moduleList: formData.module_Code,
+      ScheduleId: formData.scheduleId,
+      MentorId: formData.mentor,
+      MentorName: formData.mentorName,
+      AdminId: adminId,
+      TimeSlot: formData.time,
+      DayOfTheWeek: selectedSlot.day,
+      ModuleList: formData.selectedModules,
     };
 
+    console.log("Payload:", payload); // Debugging line
+
     try {
-      const response = await fetch(
-        "https://localhost:7163/api/DigitalPlusCrud/AddSchedule",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch("https://localhost:7163/api/DigitalPlusCrud/CreateSchedule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-      if (!response.ok) throw new Error("Failed to add mentor to the database");
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error Details:", {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText,
+        });
+        throw new Error(`Failed to add mentor. Status: ${response.status}`);
+      }
 
-      console.log("Schedule sent", await response.json());
+      const responseData = await response.json();
+      console.log("Schedule sent", responseData);
 
       // Update the schedule in the table
       const existingData =
@@ -278,9 +285,17 @@ const Schedule = () => {
   const handleEditMentor = async () => {
     if (window.confirm("Are you sure you want to save these edits?")) {
       try {
-        // Fetch the existing data from the database for the given scheduleId
-        const scheduleId = formData.scheduleId; // Ensure formData has the scheduleId field
-        const response = await fetch(`https://localhost:7163/api/DigitalPlusCrud/GetSchedule/${scheduleId}`,{ method: "GET" });
+        // Ensure scheduleId is present
+        const scheduleId = formData.scheduleId;
+        if (!scheduleId) {
+          throw new Error("Schedule ID is missing. Please check your input.");
+        }
+  
+        // Fetch the existing schedule data
+        const response = await fetch(
+          `https://localhost:7163/api/DigitalPlusCrud/GetSchedule/${scheduleId}`,
+          { method: "GET" }
+        );
   
         if (!response.ok) {
           throw new Error("Failed to fetch existing schedule data.");
@@ -288,29 +303,29 @@ const Schedule = () => {
   
         const existingData = await response.json();
   
-        // Check if we successfully fetched the existing schedule
+        // Validate existing data
         if (!existingData) {
           throw new Error("No existing schedule found for the given ID.");
         }
   
-        // Merge the updated data with the existing data
+        // Merge updated data with existing data
         const updatedSchedule = {
           ...existingData,
-          mentorId: formData.mentor || existingData.mentorId, // Preserve previous data if not updated
-          moduleCode: formData.module_Code || existingData.moduleCode,
-          moduleDescription: formData.moduleDescription || existingData.moduleDescription,
-          adminId: formData.adminId || existingData.adminId,
-          moduleId: formData.module_Id || existingData.moduleId,
-          moduleName: formData.module_Name || existingData.moduleName,
-          timeSlot: formData.time || existingData.timeSlot,
-          daysOfTheWeek: selectedSlot.day || existingData.daysOfTheWeek,
+          ScheduleId: scheduleId,
+          MentorId: formData.mentor || existingData.mentorId,
+          MentorName: formData.mentorName || existingData.mentorName,
+          AdminId: formData.adminId || existingData.adminId,
+          TimeSlot: formData.time || existingData.timeSlot,
+          DayOfTheWeek: selectedSlot.day || existingData.dayOfTheWeek, // Match API field
+          ModuleList: formData.selectedModules || existingData.moduleList,
         };
   
-        // Send the updated data back to the server
-        const updateResponse = await fetch(`https://localhost:7163/api/DigitalPlusCrud/UpdateSchedule/${scheduleId}`,
+        // Update the schedule on the server
+        const updateResponse = await fetch(
+          `https://localhost:7163/api/DigitalPlusCrud/UpdateSchedule/${scheduleId}`,
           {
             method: "PUT",
-            headers: {"Content-Type": "application/json",},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedSchedule),
           }
         );
@@ -319,7 +334,7 @@ const Schedule = () => {
           throw new Error("Failed to update the schedule.");
         }
   
-        // Update the schedule in the local state
+        // Update local state with the new data
         setSchedule((prev) => {
           const updatedEntries = prev[`${selectedSlot.day}-${formData.time}`].map(
             (entry, i) => (i === formData.index ? updatedSchedule : entry)
@@ -330,14 +345,14 @@ const Schedule = () => {
           };
         });
   
-        // Reset form and hide the edit popup
+        // Reset form, close popup, and show success message
         setFormData({ time: "", mentor: "", selectedModules: [] });
         setEditPopupVisible(false);
         setSuccessMessage("Edited successfully");
         setTimeout(() => setSuccessMessage(""), 3000);
       } catch (error) {
-        console.error("Error during edit operation:", error);
-        toast.error("There was an error saving the changes. Please try again.");
+        console.error("Error during edit operation:", error.message);
+        toast.error(error.message || "There was an error saving the changes. Please try again.");
       }
     }
   };
@@ -397,7 +412,7 @@ const Schedule = () => {
                         {schedule[`${day}-${time}`].map((data, index) => (
                           <div key={index} className={styles.mentorInfo}>
                             <strong className={styles.mentorName}>
-                              {data.mentor}
+                              {data.mentorName}
                             </strong>
                             <p className={styles.mentorModules}>
                               {data.selectedModules.join(", ")}
@@ -463,7 +478,7 @@ const Schedule = () => {
               <label className={styles.formLabel}>Mentor:</label>
               <select
                 name="mentor"
-                value={mentorname}
+                value={formData.mentor}
                 onChange={handleChange}
                 className={styles.formField}
               >
@@ -475,6 +490,39 @@ const Schedule = () => {
                 ))}
               </select>
             </div>
+
+            {/* Form field for Mentor Name */}
+            <div className={styles.formRow}>
+              <label className={styles.formLabel}>Mentor Name:</label>
+              <input
+                type="text"
+                name="mentorName"
+                value={formData.mentorName}
+                onChange={handleChange}
+                className={styles.formField}
+              />
+            </div>
+
+            {/* Form field for Day of the Week */}
+            <div className={styles.formRow}>
+              <label className={styles.formLabel}>Day of the Week:</label>
+              <select
+                name="day"
+                value={selectedSlot.day}
+                onChange={(e) =>
+                  setSelectedSlot({ ...selectedSlot, day: e.target.value })
+                }
+                className={styles.formField}
+              >
+                <option value="">Select Day</option>
+                {days.map((day) => (
+                  <option key={day} value={day}>
+                    {day}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Form field for Module */}
             <div className={styles.formRow}>
               <label className={styles.formLabel}>Modules:</label>
@@ -535,19 +583,51 @@ const Schedule = () => {
               </select>
             </div>
 
-            {/* Form field for Mentor */}
+            {/* Mentor Dropdown */}
             <div className={styles.formRow}>
               <label className={styles.formLabel}>Mentor:</label>
               <select
                 name="mentor"
-                value={mentorname}
+                value={formData.mentor}
                 onChange={handleChange}
                 className={styles.formField}
               >
-                <option>Select Mentor</option>
+                <option value="">Select Mentor</option>
                 {mentorsdetailsb.map((mentor) => (
                   <option key={mentor.mentorId} value={mentor.mentorId}>
                     {`${mentor.firstName} ${mentor.lastName}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Mentor's Name Field */}
+            <div className={styles.formRow}>
+              <label className={styles.formLabel}>Mentor's Name:</label>
+              <input
+                type="text"
+                name="mentorName"
+                value={formData.mentorName}
+                readOnly
+                className={styles.formField}
+              />
+            </div>
+
+            {/* Form field for Day of the Week */}
+            <div className={styles.formRow}>
+              <label className={styles.formLabel}>Day of the Week:</label>
+              <select
+                name="day"
+                value={selectedSlot.day}
+                onChange={(e) =>
+                  setSelectedSlot({ ...selectedSlot, day: e.target.value })
+                }
+                className={styles.formField}
+              >
+                <option value="">Select Day</option>
+                {days.map((day) => (
+                  <option key={day} value={day}>
+                    {day}
                   </option>
                 ))}
               </select>
@@ -581,7 +661,7 @@ const Schedule = () => {
                 ))}
               </div>
             </div>
-            
+
             <div className={styles.popupActions}>
               <button
                 onClick={handleEditMentor}
