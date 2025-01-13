@@ -4,7 +4,13 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GrSchedules } from "react-icons/gr";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faPlus,faCheck,faTimes,faEdit,faTrash,} from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faCheck,
+  faTimes,
+  faEdit,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios"; // Make sure to import axios
 
 const timeslots = [
@@ -18,7 +24,7 @@ const timeslots = [
   "15:00-16:00",
 ];
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-const user = JSON.parse(localStorage.getItem('user'));
+const user = JSON.parse(localStorage.getItem("user"));
 const adminId = user?.admin_Id;
 
 //Starting of the Function
@@ -48,7 +54,6 @@ const Schedule = () => {
   const [schedule, setSchedule] = useState(getSavedSchedule());
   const [successMessage, setSuccessMessage] = useState(""); // State for success messages
   const [scheduleToDelete, setScheduleToDelete] = useState(null); // Track which mentee to delete
- 
 
   useEffect(() => {
     // Save the schedule data to localStorage whenever it changes
@@ -117,7 +122,13 @@ const Schedule = () => {
     const existingData = schedule[`${day}-${time}`] || [];
     if (existingData[index]) {
       const { mentor, selectedModules } = existingData[index];
-      setFormData({ time, mentor, selectedModules, index, ScheduleId: existingData[index].scheduleId });
+      setFormData({
+        time,
+        mentor,
+        selectedModules,
+        index,
+        ScheduleId: existingData[index].scheduleId,
+      });
       setSelectedSlot({ day, time });
       setEditPopupVisible(true);
     }
@@ -179,7 +190,7 @@ const Schedule = () => {
         toast.success("Schedule deleted successfully!");
 
         // Reset states if applicable
-     
+
         setScheduleToDelete(null); // Clear the selected schedule to delete (from dialog)
       } catch (error) {
         console.error("Error deleting schedule:", error);
@@ -245,11 +256,14 @@ const Schedule = () => {
     console.log("Payload:", payload); // Debugging line
 
     try {
-      const response = await fetch("https://localhost:7163/api/DigitalPlusCrud/CreateSchedule", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "https://localhost:7163/api/DigitalPlusCrud/CreateSchedule",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -290,24 +304,24 @@ const Schedule = () => {
         if (!scheduleId) {
           throw new Error("Schedule ID is missing. Please check your input.");
         }
-  
+
         // Fetch the existing schedule data
         const response = await fetch(
           `https://localhost:7163/api/DigitalPlusCrud/GetSchedule/${scheduleId}`,
           { method: "GET" }
         );
-  
+
         if (!response.ok) {
           throw new Error("Failed to fetch existing schedule data.");
         }
-  
+
         const existingData = await response.json();
-  
+
         // Validate existing data
         if (!existingData) {
           throw new Error("No existing schedule found for the given ID.");
         }
-  
+
         // Merge updated data with existing data
         const updatedSchedule = {
           ...existingData,
@@ -319,7 +333,7 @@ const Schedule = () => {
           DayOfTheWeek: selectedSlot.day || existingData.dayOfTheWeek, // Match API field
           ModuleList: formData.selectedModules || existingData.moduleList,
         };
-  
+
         // Update the schedule on the server
         const updateResponse = await fetch(
           `https://localhost:7163/api/DigitalPlusCrud/UpdateSchedule/${scheduleId}`,
@@ -329,34 +343,41 @@ const Schedule = () => {
             body: JSON.stringify(updatedSchedule),
           }
         );
-  
+
         if (!updateResponse.ok) {
           throw new Error("Failed to update the schedule.");
         }
-  
+
         // Update local state with the new data
         setSchedule((prev) => {
-          const updatedEntries = prev[`${selectedSlot.day}-${formData.time}`].map(
-            (entry, i) => (i === formData.index ? updatedSchedule : entry)
-          );
+          const updatedEntries = prev[
+            `${selectedSlot.day}-${formData.time}`
+          ].map((entry, i) => (i === formData.index ? updatedSchedule : entry));
           return {
             ...prev,
             [`${selectedSlot.day}-${formData.time}`]: updatedEntries,
           };
         });
-  
+
         // Reset form, close popup, and show success message
-        setFormData({ time: "", mentor: "", selectedModules: [] });
+        setFormData({
+          time: "",
+          mentor: "",
+          selectedModules: [],
+          scheduleId: "",
+        });
         setEditPopupVisible(false);
         setSuccessMessage("Edited successfully");
         setTimeout(() => setSuccessMessage(""), 3000);
       } catch (error) {
         console.error("Error during edit operation:", error.message);
-        toast.error(error.message || "There was an error saving the changes. Please try again.");
+        toast.error(
+          error.message ||
+            "There was an error saving the changes. Please try again."
+        );
       }
     }
   };
-  
 
   const handleCancelEdit = () => {
     setEditPopupVisible(false);
@@ -565,6 +586,23 @@ const Schedule = () => {
         <div className={styles.popup}>
           <div className={styles.popupContent}>
             <h3 className={styles.dialogTitle}>Edit Schedule Info</h3>
+
+            {/*Field for Schedule ID */}
+            {/* <div className={styles.formRow}>
+              <label className={styles.formLabel}>Schedule ID:</label>
+              <input
+                type="text"
+                name="scheduleId"
+                value={formData.scheduleId || ""}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    scheduleId: e.target.value,
+                  }))
+                }
+                className={styles.formField}
+              />
+            </div> */}
 
             {/* Form field for Time */}
             <div className={styles.formRow}>
