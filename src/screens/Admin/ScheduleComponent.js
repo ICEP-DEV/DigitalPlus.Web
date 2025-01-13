@@ -76,6 +76,7 @@ const Schedule = () => {
       }
     };
 
+    
     fetchMentordetailsB();
   }, []);
 
@@ -119,69 +120,69 @@ const Schedule = () => {
   };
 
   const handleEditClick = (day, time, index) => {
-    const existingData = schedule[`${day}-${time}`] || [];
-    if (existingData[index]) {
-      const { mentor, selectedModules } = existingData[index];
+    try {
+      // Retrieve schedule data for the selected day and time
+      const existingData = schedule[`${day}-${time}`] || [];
+      if (!existingData[index]) {
+        throw new Error("No data found for the selected schedule.");
+      }
+  
+      // Extract relevant fields from the existing data
+      const { mentorId, moduleList, scheduleId, mentorName } = existingData[index];
+  
+      // Update formData with the existing schedule details
       setFormData({
         time,
-        mentor,
-        selectedModules,
+        mentor: mentorId,
+        mentorName: mentorName || "", // Fallback to empty if mentorName is undefined
+        selectedModules: moduleList || [], // Fallback to empty array
         index,
-        ScheduleId: existingData[index].scheduleId,
+        scheduleId: scheduleId || "", // Ensure scheduleId is available
       });
+  
+      // Store selected slot information
       setSelectedSlot({ day, time });
+  
+      // Show the edit popup
       setEditPopupVisible(true);
+    } catch (error) {
+      console.error("Error during edit operation:", error.message);
+      toast.error(error.message || "An error occurred while opening the edit form.");
     }
   };
-
+  
   const handleDeleteClick = async (day, time, index) => {
     // Confirm deletion
     if (window.confirm("Are you sure you want to delete this mentor?")) {
       try {
-        // Check if we have a schedule entry (from day-time index)
+        // Get the entry to delete using day-time index
         const entryToDelete = schedule[`${day}-${time}`]?.[index];
-        const scheduleId =
-          entryToDelete?.data?.result?.scheduleId ||
-          entryToDelete?.mentor?.scheduleId;
+        const mentorId = entryToDelete?.mentor;
 
-        // If scheduleToDelete is available (from dialog or other source)
-        const scheduleIdFromDialog = scheduleToDelete?.scheduleId;
-
-        // Use the scheduleId from the entry or the one from the dialog
-        const finalScheduleId = scheduleId || scheduleIdFromDialog;
-
-        if (!finalScheduleId) {
-          console.error("Invalid entry or missing scheduleId:", entryToDelete);
+        if (!mentorId) {
+          console.error("Invalid entry or missing mentor ID:", entryToDelete);
           alert(
-            "Failed to find the schedule ID for deletion. Please make sure the schedule ID exists."
+            "Failed to find the mentor ID for deletion. Please make sure the mentor ID exists."
           );
           return;
         }
 
-        // Perform the deletion with axios
+        // Perform the deletion using mentor ID
         await axios.delete(
-          `https://localhost:7163/api/DigitalPlusCrud/DeleteSchedule/${finalScheduleId}`
+          `https://localhost:7163/api/DigitalPlusCrud/DeleteSchedulesByMentorId/mentor/${mentorId}`
         );
 
         // Update the schedule state to remove the deleted entry
         setSchedule((prev) => {
           const updatedSchedule = { ...prev };
-          if (scheduleId) {
-            // Delete by day-time index
-            const updatedEntries = updatedSchedule[`${day}-${time}`].filter(
-              (_, i) => i !== index
-            );
-            updatedSchedule[`${day}-${time}`] = updatedEntries.length
-              ? updatedEntries
-              : undefined;
-          } else if (scheduleIdFromDialog) {
-            // If using the scheduleId from the dialog (e.g., for batch deletions)
-            updatedSchedule[`${day}-${time}`] = updatedSchedule[
-              `${day}-${time}`
-            ]?.filter(
-              (schedule) => schedule.scheduleId !== scheduleIdFromDialog
-            );
-          }
+          // Remove the deleted mentor entry by index
+          const updatedEntries = updatedSchedule[`${day}-${time}`].filter(
+            (_, i) => i !== index
+          );
+
+          updatedSchedule[`${day}-${time}`] = updatedEntries.length
+            ? updatedEntries
+            : undefined;
 
           return updatedSchedule;
         });
@@ -190,8 +191,7 @@ const Schedule = () => {
         toast.success("Schedule deleted successfully!");
 
         // Reset states if applicable
-
-        setScheduleToDelete(null); // Clear the selected schedule to delete (from dialog)
+        setScheduleToDelete(null); // Clear the selected schedule to delete (if using a dialog)
       } catch (error) {
         console.error("Error deleting schedule:", error);
         toast.error("Failed to delete schedule. Please try again.");
@@ -299,15 +299,15 @@ const Schedule = () => {
   const handleEditMentor = async () => {
     if (window.confirm("Are you sure you want to save these edits?")) {
       try {
-        // Ensure scheduleId is present
-        const scheduleId = formData.scheduleId;
-        if (!scheduleId) {
-          throw new Error("Schedule ID is missing. Please check your input.");
+        // Ensure mentorId is present
+        const mentorId = formData.mentor || selectedSlot?.mentorId;
+        if (!mentorId) {
+          throw new Error("Mentor ID is missing. Please check your input.");
         }
 
         // Fetch the existing schedule data
         const response = await fetch(
-          `https://localhost:7163/api/DigitalPlusCrud/GetSchedule/${scheduleId}`,
+          `https://localhost:7163/api/DigitalPlusCrud/GetScheduleByMentorId/${mentorId}`,
           { method: "GET" }
         );
 
@@ -319,14 +319,16 @@ const Schedule = () => {
 
         // Validate existing data
         if (!existingData) {
-          throw new Error("No existing schedule found for the given ID.");
+          throw new Error(
+            "No existing schedule found for the given Mentor ID."
+          );
         }
 
         // Merge updated data with existing data
         const updatedSchedule = {
           ...existingData,
-          ScheduleId: scheduleId,
-          MentorId: formData.mentor || existingData.mentorId,
+          ScheduleId: formData.scheduleId || existingData.scheduleId,
+          MentorId: mentorId || existingData.mentor,
           MentorName: formData.mentorName || existingData.mentorName,
           AdminId: formData.adminId || existingData.adminId,
           TimeSlot: formData.time || existingData.timeSlot,
@@ -336,7 +338,7 @@ const Schedule = () => {
 
         // Update the schedule on the server
         const updateResponse = await fetch(
-          `https://localhost:7163/api/DigitalPlusCrud/UpdateSchedule/${scheduleId}`,
+          `https://localhost:7163/api/DigitalPlusCrud/UpdateSchedulesByMentorId/mentor/${mentorId}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -593,7 +595,7 @@ const Schedule = () => {
               <input
                 type="text"
                 name="scheduleId"
-                value={formData.scheduleId || ""}
+                value={formData.scheduleId || ""} // The scheduleId is fetched from the database
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
@@ -601,6 +603,7 @@ const Schedule = () => {
                   }))
                 }
                 className={styles.formField}
+                readOnly // Make the field read-only so users cannot change it
               />
             </div> */}
 
