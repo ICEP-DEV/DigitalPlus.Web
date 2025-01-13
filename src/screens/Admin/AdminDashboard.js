@@ -20,6 +20,7 @@ import { FaBars, FaCog, FaBook, FaHome, FaPowerOff } from 'react-icons/fa';
 import { SiCodementor } from 'react-icons/si';
 import { GoReport } from 'react-icons/go';
 import { GrSchedules, GrCompliance } from 'react-icons/gr';
+import { Edit, Close,Save } from '@mui/icons-material';
 
 const AdminDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,15 +38,118 @@ const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const handleCropComplete = (_, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   };
+
+  
   const handleSaveCroppedImage = async () => {
     try {
+      // Get the cropped image as a Blob
       const croppedImage = await getCroppedImg(selectedImage, croppedAreaPixels);
-      setProfileImage(croppedImage);
-      setIsModalOpen(false);
+      console.log('Cropped Image:', croppedImage); // Log to inspect the image format
+  
+      let base64Image;
+  
+      // Convert Blob to base64 string if croppedImage is a Blob
+      if (croppedImage instanceof Blob) {
+        base64Image = await convertBlobToBase64(croppedImage);  // Convert the Blob to base64
+      } else if (typeof croppedImage === 'string') {
+        base64Image = croppedImage;  // If it's already a base64 string, use it directly
+      } else {
+        throw new Error('Cropped image is not in a valid format');
+      }
+  
+      // Log the base64 image to verify the conversion
+      console.log('Base64 Image:', base64Image);
+  
+      // Convert base64 string to byte[] (binary data)
+      const byteArray = base64ToByteArray(base64Image);
+  
+      // Get the user data from localStorage
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        console.error('User data not found in localStorage');
+        return;
+      }
+  
+      // Construct the request body
+      const requestBody = {
+        admin: {
+          admin_Id: user.admin_Id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          emailAddress: user.emailAddress,
+          contactNo: user.contactNo,
+          departmentId: user.departmentId,
+          password: user.password,
+        },
+        imageData: byteArray,  // Send the byte[] image data
+        image: base64Image,    // Send the base64 image as the image field
+      };
+  
+      console.log('Request Body:', requestBody);
+  
+      // Send the PUT request to update the profile
+      const response = await fetch(`https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${requestBody.admin.admin_Id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+  
+      if (response.ok) {
+        console.log('Profile updated successfully');
+        setProfileImage(croppedImage);
+        setIsModalOpen(false);
+      } else {
+        const errorResponse = await response.json();
+        console.error('Failed to update profile:', errorResponse);
+        alert(`Failed to update profile: ${JSON.stringify(errorResponse.errors)}`);
+      }
     } catch (error) {
-      console.error('Error cropping the image:', error);
+      console.error('Error cropping the image or updating profile:', error);
     }
   };
+  
+ // Helper function to convert Blob to base64
+function convertBlobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // Ensure base64 string is extracted correctly
+      const base64String = reader.result.split(',')[1];  // Remove "data:image/png;base64," part if it exists
+      resolve(base64String);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);  // Read the Blob as a Data URL
+  });
+}
+
+// Helper function to convert a base64 string to a byte array
+function base64ToByteArray(base64) {
+  // Check if the string contains the base64 prefix and remove it
+  const base64String = base64.includes('base64,') ? base64.split('base64,')[1] : base64;
+
+  // Validate that the string is properly base64-encoded
+  if (!/^[A-Za-z0-9+/=]+$/.test(base64String)) {
+    throw new Error('Invalid base64 string');
+  }
+
+  // Decode the base64 string to binary
+  const binaryString = atob(base64String); 
+  const byteArray = new Uint8Array(binaryString.length);
+
+  // Convert the binary string to a byte array
+  for (let i = 0; i < binaryString.length; i++) {
+    byteArray[i] = binaryString.charCodeAt(i);
+  }
+
+  return byteArray;
+}
+
+
+  
+  
+  
  useEffect(() => {
     const storedImage = localStorage.getItem('profileImage');
     if (storedImage) setProfileImage(storedImage);
@@ -140,6 +244,7 @@ const closeCropModal = () => setIsCropModalOpen(false);
         src={profileImage}
         alt="Admin"
         className={styles.adminImage}
+        title="View Profile"
       />
     ) : (
       <div className={styles.imagePlaceholder}>Upload Image</div>
@@ -151,6 +256,7 @@ const closeCropModal = () => setIsCropModalOpen(false);
     accept="image/*"
     onChange={handleImageUpload}
     style={{ display: 'none' }}
+    title="View Profile"
   />
   <div className={styles.adminText}>
     <span>Admin</span>
@@ -265,6 +371,7 @@ const closeCropModal = () => setIsCropModalOpen(false);
       backgroundColor: '#f8f9fa',
       maxWidth: '600px',
       textAlign: 'center',
+      border:'5px solid #1871a5'
     },
   }}
 >
@@ -279,6 +386,7 @@ const closeCropModal = () => setIsCropModalOpen(false);
           borderRadius: '50%',
           marginBottom: '20px',
           objectFit: 'cover',
+          border:'3px solid #ffffff'
         }}
       />
     ) : (
@@ -304,27 +412,45 @@ const closeCropModal = () => setIsCropModalOpen(false);
     />
   </DialogContent>
   <DialogActions>
-    <Button
+  <Button
+  title="Change Profile"
       onClick={() => document.getElementById('profileImageInput').click()}
       style={{
-        backgroundColor: '#007bff',
+        backgroundColor: '#2196F3',
         color: '#fff',
         padding: '10px 20px',
         marginRight: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '50%',
+        width: '40px',
+        height: '40px',
+        minWidth: 'unset',
       }}
     >
-      Change Profile
+      <Edit style={{ fontSize: '20px', color: '#fff' }} />
+      
     </Button>
     <Button
-      onClick={closeProfileModal}
-      style={{
-        backgroundColor: '#6c757d',
+    title="Close"
+  onClick={closeProfileModal}
+  style={{
+     backgroundColor: '#FF0000',
         color: '#fff',
         padding: '10px 20px',
-      }}
-    >
-      Close
-    </Button>
+        marginRight: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '50%',
+        width: '40px',
+        height: '40px',
+        minWidth: 'unset',
+  }}
+>
+  <Close />
+</Button>
   </DialogActions>
 </Dialog>
 
@@ -358,23 +484,38 @@ const closeCropModal = () => setIsCropModalOpen(false);
     <Button
       onClick={closeCropModal}
       style={{
-        backgroundColor: '#6c757d',
-        color: '#fff',
-        padding: '10px 20px',
-        marginRight: '10px',
-      }}
-    >
-      Cancel
+        backgroundColor: '#FF0000',
+           color: '#fff',
+           padding: '10px 20px',
+           marginRight: '10px',
+           display: 'flex',
+           alignItems: 'center',
+           justifyContent: 'center',
+           borderRadius: '50%',
+           width: '40px',
+           height: '40px',
+           minWidth: 'unset',
+     }}
+   >
+     <Close />
     </Button>
     <Button
       onClick={handleSaveCroppedImage}
       style={{
-        backgroundColor: '#007bff',
-        color: '#fff',
-        padding: '10px 20px',
-      }}
+        backgroundColor: '#4CAF50',
+           color: '#fff',
+           padding: '10px 20px',
+           marginRight: '10px',
+           display: 'flex',
+           alignItems: 'center',
+           justifyContent: 'center',
+           borderRadius: '50%',
+           width: '40px',
+           height: '40px',
+           minWidth: 'unset',
+     }}
     >
-      Save
+      <Save/>
     </Button>
   </DialogActions>
 </Dialog>
