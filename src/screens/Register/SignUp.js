@@ -34,6 +34,8 @@ const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
+
+
     // Function to clear messages after 10 seconds
     useEffect(() => {
         if (successMessage || errorMessage) {
@@ -43,6 +45,8 @@ const SignUp = () => {
             }, 1000); // 10 seconds
 
             return () => clearTimeout(timer);
+
+
         }
     }, [successMessage, errorMessage]);
 
@@ -131,11 +135,36 @@ const SignUp = () => {
                 Semester: ''
             });
             setErrorMessage('');
+
+
+            //EMAIL MESSAGE
+            const emailMessage = `
+            <p>Hi ${mentee.FirstName.charAt(0)} ${mentee.LastName},</p>
+            <p>Your account has been created Successfully. Please use your student email <strong>${mentee.StudentEmail}</strong> and password to log in. You can access the platform using the following link:</p>
+            <p><a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a></p>
+            <p>You are reminded to change your password by clicking on the 'Forgotten Password' link on the login page.</p>
+            <p>Regards,<br>Administrator</p>
+        `;
+
+        await axios.post(
+            'https://localhost:7163/api/Email/Send',
+            {
+              email: mentee.StudentEmail,
+              subject: 'Your Mentee Account Created Successfully',
+              message: emailMessage
+            },
+            { headers: { 'Content-Type': 'application/json' } }
+          );
+            
         } catch (error) {
-            console.error('There was an error registering the mentee!', error);
+            console.error('There was an error registering the mentee! and Sending an email', error);
             setErrorMessage('An error occurred while registering. Please try again.');
         }
+    
     };
+
+    
+     
 
     // Toggle password visibility
     const togglePasswordVisibility = () => {
