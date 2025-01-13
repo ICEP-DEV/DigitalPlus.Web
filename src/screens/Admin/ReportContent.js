@@ -231,7 +231,7 @@ const ReportContent = () => {
               )}
             </select>
 
-            <select
+            {/* <select
               className={styles.dropdown}
               onChange={(e) => setSelectedMonth(e.target.value)}
             >
@@ -254,7 +254,7 @@ const ReportContent = () => {
                   {month}
                 </option>
               ))}
-            </select>
+            </select> */}
             <button className={styles.filterBtn} onClick={handleFilter}>
               <IoFilter /> Filter
             </button>
@@ -265,7 +265,7 @@ const ReportContent = () => {
               <tr>
                 <th>Student Number</th>
                 <th>Mentor Name & Surname</th>
-                <th>Course</th>
+                <th>Modules</th>
                 <th className={styles.actionCol}>Action</th>
               </tr>
             </thead>
@@ -364,43 +364,60 @@ const ReportContent = () => {
   );
 };
 
+
+
+
 const RegisterComponent = ({ mentorId, goBack }) => {
   const [registerData, setRegisterData] = useState([]);
+  const [mentorData, setMentor] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchRegisterData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `https://localhost:7163/api/MenteeAndMentorRegister`
-        );
-        console.log("Register Response:", response.data); // Log response data
-        setRegisterData(response.data);
+        setLoading(true);
+
+        const [registerResponse, mentorResponse] = await Promise.all([
+          axios.get(
+            `https://localhost:7163/api/MenteeAndMentorRegister/GetMentorRegister/ByMentorId/${mentorId}`
+          ),
+          axios.get(
+            `https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`
+          ),
+        ]);
+
+        console.log("Register Response:", registerResponse.data);
+        console.log("Mentor Response:", mentorResponse.data);
+
+        setRegisterData(registerResponse.data);
+        setMentor(mentorResponse.data);
+
+        setError(null); // Clear previous errors
       } catch (err) {
-        console.error("Error fetching register data:", err.response || err); // Log error details
+        console.error("Error fetching data:", err.response || err);
         setError(
-          err.response?.data?.message || "Failed to load register data."
+          err.response?.data?.message || "Failed to load data. Please try again."
         );
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRegisterData();
+    fetchData();
   }, [mentorId]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className={styles.loading}>Loading...</div>;
+  if (error) return <div className={styles.error}>{error}</div>;
 
   return (
     <div>
-      <h2>Register for Student: {`${mentorId}`}</h2>
+      <h2>Register for Student: {mentorData?.mentorName || mentorId}</h2>
       <table className={styles.mentorReportTable}>
         <thead>
           <tr>
             <th>Date</th>
-            <th>Mentee Name </th>
+            <th>Mentee Name</th>
             <th>Mentor Name</th>
             <th>Module Name</th>
             <th>Comment</th>
@@ -412,19 +429,21 @@ const RegisterComponent = ({ mentorId, goBack }) => {
               <tr key={index}>
                 <td>{new Date(menteeregister.date).toLocaleDateString()}</td>
                 <td>{menteeregister.menteeId}</td>
-                <td>{menteeregister.mentorName}</td>
-                <td>{menteeregister.moduleCode}</td>
-                <td>{menteeregister.comment}</td>
+                <td>{menteeregister.mentorData?.mentorName || mentorId}</td>
+                <td>{menteeregister.moduleCode || "Unknown Module"}</td>
+                <td>{menteeregister.comment || "No Comment"}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="3">No register data available for this mentor.</td>
+              <td colSpan="5">No register data available for this mentor.</td>
             </tr>
           )}
         </tbody>
       </table>
-      <button onClick={goBack}>Back</button>
+      <button onClick={goBack} className={styles.backButton}>
+        Back
+      </button>
     </div>
   );
 };
@@ -434,10 +453,11 @@ RegisterComponent.propTypes = {
   goBack: PropTypes.func.isRequired,
 };
 
+
 const MentorReportComponent = ({ mentorId, goBack }) => {
   const [reports, setReportData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  //const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchReportData = async () => {
@@ -456,7 +476,7 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching report data:", err);
-        setError("Failed to load mentor report data.");
+        //setError("Failed to load mentor report data.");
         setLoading(false);
       }
     };
@@ -465,7 +485,7 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
   }, [mentorId]);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  //if (error) return <div>{error}</div>;
 
   return (
     <div className={styles.mentorReportView}>
