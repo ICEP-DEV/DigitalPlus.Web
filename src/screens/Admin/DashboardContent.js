@@ -165,16 +165,22 @@ const DashboardContent = () => {
     <div className={styles.dashboardContainer}>
       {/* Announcement Section */}
       <div className={styles.announcementContainer}>
-        <h3 className={styles.announcementLabel}>Announcements</h3>
-        <div className={styles.buttonGroup}>
-          <button className={styles.iconButton} onClick={handleAddAnnouncement}>
-            <BsPlusCircle size={20} color="#000" />
-          </button>
-          <button className={styles.iconButton} onClick={openAnnouncementModal}>
-            <BsEyeFill size={20} color="#000" />
-          </button>
-        </div>
-      </div>
+  <h3 className={styles.announcementLabel}>Announcements</h3>
+  <div className={styles.buttonGroup}>
+    <div className={styles.buttonGroupItem}>
+      <span className={styles.buttonTitle}>Add Announcement</span>
+      <button className={styles.iconButton} onClick={handleAddAnnouncement}>
+        <BsPlusCircle size={20} color="#000" />
+      </button>
+    </div>
+    <div className={styles.buttonGroupItem}>
+      <span className={styles.buttonTitle}>View Announcements</span>
+      <button className={styles.iconButton} onClick={openAnnouncementModal}>
+        <BsEyeFill size={20} color="#000" />
+      </button>
+    </div>
+  </div>
+</div>
 
       {/* Create Announcement Modal */}
       <CreateNewAnnouncement
