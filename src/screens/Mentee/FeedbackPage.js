@@ -187,7 +187,7 @@ const handleSubmit = async (e) => {
           >
             <option value="">Select a module</option>
             {allmodules.map((module) => (
-              <option key={module.module_Id} value={module.module_Id}>
+              <option key={module.module_Code} value={module.module_Code}>
                 {module.module_Code}
               </option>
             ))}
