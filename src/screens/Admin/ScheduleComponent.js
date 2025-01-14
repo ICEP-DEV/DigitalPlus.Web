@@ -91,7 +91,11 @@ const Schedule = () => {
         const formattedSchedule = data.reduce((acc, item) => {
           const key = `${item.dayOfTheWeek}-${item.timeSlot}`;
           if (!acc[key]) acc[key] = [];
-          acc[key].push(item);
+          acc[key].push({
+            mentorName: item.mentorName,
+            selectedModules: item.moduleList,
+
+          });
           return acc;
         }, {});
         setSchedule(formattedSchedule);
