@@ -1,19 +1,36 @@
 import React, { useEffect, useState } from 'react';  
 import axios from 'axios';
+import {   Button, Select, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import styles from './MenteeModule.module.css';
 import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
+import Modal from 'react-modal'; // Use react-modal for the dialog
+
+Modal.setAppElement('#root'); // Accessibility requirement for React Modal
+
 
 export default function MenteeModulePage() {
+
   const [modules, setModules] = useState([]); // Store all modules globally
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState('');
+  const [courseModules,setCourseModules] = useState([]);
+  const [allCourses,setAllCourses] = useState([]);
+  const [checkedModules, setCheckedModules] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  
+    
   const navigate = useNavigate();
 
   // Retrieve mentee ID from local storage
   const user = JSON.parse(localStorage.getItem('user'));
   const menteeId = user?.mentee_Id;
+  const departmentId=user?.departmentId;
 
   console.log('Mentee ID:', menteeId);
 
@@ -51,8 +68,54 @@ export default function MenteeModulePage() {
       }
     };
 
+    const fetchDepartment = async () =>{
+
+      if(!departmentId) throw new Error('Department ID not in the local storage');
+
+      const menteeDept = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetDepartment/${departmentId}`)
+      if (menteeDept.data) {
+        setSelectedDepartment(menteeDept.data.result.department_Name); 
+     }
+    };
+
+    const fetchCourses = async () =>{
+      if(!departmentId) throw new Error('Department ID not in the local storage');
+
+      const depAllCourses= await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetCoursesByDepartment/department/${departmentId}`);
+      if(depAllCourses.data){
+        setAllCourses(depAllCourses.data);
+      }
+    };
+
+    const fetchCourseModules = async () =>{
+      try {
+        if (!selectedCourse) {
+          setError('Please select a course to view its modules.');
+          setCourseModules([]);
+          return;
+        }
+
+        const allCourseModules = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetModulesByCourseId/course/${selectedCourse}`);
+        console.log(allCourseModules);
+        if (allCourseModules.data.length === 0) {
+          setError('No modules found for the selected course.');
+          setCourseModules([]);
+        } else {
+          setCourseModules(allCourseModules.data);
+         
+        }
+      } catch (err) {
+        console.error('Error fetching course modules:', err.message);
+        setError('Error fetching modules for the selected course.');
+      }
+
+    };
+
+    fetchCourseModules();
+    fetchDepartment();
+    fetchCourses();
     fetchModules();
-  }, [menteeId]);
+  }, [menteeId,departmentId,selectedCourse]);
 
   const handleNavigation = (moduleCode) => {
     const selectedModule = modules.find((m) => m.module_Code === moduleCode);
@@ -70,6 +133,74 @@ export default function MenteeModulePage() {
     }
   };
   
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedDepartment('');
+    setSelectedCourse('');
+    setCheckedModules([]);
+  };
+
+  const handleCourseSelection = (courseId) => {
+    setSelectedCourse(courseId);
+   
+  };
+
+  const handleModuleSelection = (event) =>{
+    setCheckedModules(event.target.value);
+  }
+
+  // const handleModuleCheck = (moduleId) => {
+
+  //   console.log(moduleId);
+    
+  //   setCheckedModules((prev) => {
+  //     if (prev.includes(moduleId)) {
+  //       return prev.filter((id) => id !== moduleId);
+  //     }
+  //     return [...prev, moduleId];
+  //   });
+    
+  // };
+
+  const handleAddModules = async () => {
+    try{
+
+      
+      const modulesToadd= checkedModules.map((moduleId) => ({
+        menteeId,
+        moduleId
+      }));
+
+      await Promise.all(
+        modulesToadd.map((assignment) => 
+          axios.post('https://localhost:7163/api/AssignMod/MenteeAssignMod',assignment)
+        )
+      );
+      
+      setCheckedModules([]);
+      closeModal();
+    
+      
+    }catch(err){
+      console.error('Error adding modules:', err);
+      setError('Failed to add selected modules.');
+    }
+   
+  };
+
+  
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  
+
+  const filteredModules = courseModules.filter((module) =>
+    module.module_Code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    module.module_Name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading) return <p>Loading modules...</p>;
 
@@ -79,6 +210,7 @@ export default function MenteeModulePage() {
       <SideBar modules={modules} /> {/* Pass the module list to Sidebar */}
       <div className={styles['course-modules']}>
         <h1>Assigned Modules</h1>
+        
         {modules.length > 0 ? (
           <div className={styles['module-grid']}>
             {modules.map((module) =>
@@ -106,9 +238,134 @@ export default function MenteeModulePage() {
             )}
           </div>
         ) : (
-          <p>No modules assigned to this mentee yet.</p>
+          < >
+            <p>No modules assigned to this mentee yet.</p>
+            <button className={styles['add-module-button']} onClick={openModal}>
+              ADD MODULE
+            </button>
+          </>
         )}
       </div>
+      {/* Modal for Adding Modules */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Add Module"
+        className={styles.modal}
+        overlayClassName={styles.overlay}
+      >
+        <h2>Add Module</h2>
+        <form>
+          <label>
+            Department:
+            <input type="text" value={selectedDepartment} placeholder={selectedDepartment} readOnly />
+          </label>
+          <label>
+            Course:
+            <select
+              value={selectedCourse}
+              onChange={(e) => handleCourseSelection(e.target.value)}
+            >
+              <option value="">Select Course</option>
+              {allCourses.map((course) =>(
+                <option key={course.course_Id} value={course.course_Id}>
+                  {course.course_Name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Search Modules:
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearch}
+              placeholder="Search for modules..."
+            />
+          </label>
+          {/* {filteredModules.length > 0 ? (
+          <div className={styles['module-checkboxes']}>
+           {courseModules.map((module) =>(
+            <div key={module.module_Id}>
+              
+              <input
+                type="checkbox"
+                id={module.module_Id}
+                value={module.module_Id}
+                checked={
+                  Array.isArray(checkedModules)&& checkedModules.includes(module.module_Id)}
+                onChange={() => handleModuleCheck(module.module_Id)}
+              />
+              <label htmlFor={module.module_Id}>{module.module_Name}{module.module_Id}</label>
+            </div>
+            
+           ) 
+           )}
+          </div>
+            ) : (
+              <p>No modules found.</p>
+          )} */}
+
+<Select
+      multiple
+      displayEmpty
+      value={checkedModules}
+      onChange={handleModuleSelection}
+      fullWidth
+      renderValue={(selected) =>
+        selected.length === 0 ? (
+          <em>Select Modules</em>
+        ) : (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {selected.map((id) => {
+              const module = modules.find((module) => module.module_Id === id);
+              return (
+                <Button
+                  key={id}
+                  variant="contained"
+                  size="small"
+                  style={{ textTransform: 'none' }}
+                >
+                  {module?.module_Code}
+                </Button>
+              );
+            })}
+          </div>
+        )
+      }
+      MenuProps={{
+        PaperProps: {
+          style: {
+            maxHeight: 200,
+          },
+        },
+      }}
+    >
+      <MenuItem disabled value="">
+        <em>Select Modules</em>
+      </MenuItem>
+      {filteredModules
+        .filter(
+          (module) =>
+            !modules.some((assigned) => assigned.moduleId === module.module_Id) &&
+            !checkedModules.includes(module.module_Id)
+        )
+        .map((module) => (
+          <MenuItem key={module.module_Id} value={module.module_Id}>
+            {module.module_Code}
+          </MenuItem>
+        ))}
+    </Select>
+          <div className={styles['modal-buttons']}>
+            <button type="button" onClick={handleAddModules}>
+              Add Selected Modules
+            </button>
+            <button type="button" onClick={closeModal}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
