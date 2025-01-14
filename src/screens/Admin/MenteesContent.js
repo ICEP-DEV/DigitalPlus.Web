@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
 import { Add, Save, Update, ManageAccounts, Delete } from '@mui/icons-material'; // Material UI icons
 import { ToastContainer, toast } from 'react-toastify';
+import { Icon, Typography, IconButton,CircularProgress } from '@mui/material';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MenteesContent.module.css';
 import { SiCodementor } from "react-icons/si";
@@ -11,6 +12,7 @@ import { SiCodementor } from "react-icons/si";
 const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [menteeForm, setMenteeForm] = useState({
     mentee_Id: '',
     firstName: '',
@@ -39,16 +41,21 @@ const MenteesContent = () => {
 
   useEffect(() => {
     const fetchMentees = async () => {
+      setIsLoading(true); 
       try {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusUser/GetAllMentees');
+        setTimeout(() =>{
         const data = response.data.map(mentee => ({
           ...mentee,
           activated: !!mentee.activated,
           mentee_Id: mentee.mentee_Id,
         }));
         setMentees(data);
+        setIsLoading(false); // Stop loading after 2 seconds
+        }, 200);
       } catch (error) {
         console.error('Error fetching mentees:', error);
+        setIsLoading(false); // Stop loading on error
       }
     };
     fetchMentees();
@@ -275,97 +282,104 @@ const MenteesContent = () => {
 
 
   return (
-    <div className={styles.menteesContainer}>
-      <h2> <SiCodementor /> MENTEES</h2>
-      <ToastContainer />
-      <div className={styles.header}>
-        <div className={styles.searchBarContainer}>
-          <input
-            type="search"
-            placeholder="Search by Student Email"
-            className={styles.searchBar}
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </div>
-        <div className={styles.buttonGroup}>
-          <Button
-            onClick={openAddMenteeDialog}
-            startIcon={<Add />}
-            variant="contained"
-            sx={{ color: 'black', backgroundColor: 'lightgray' }} // Setting text color to black
-          >
-            Add
-          </Button>
-        </div>
+<div className={styles.menteesContainer}>
+  <h2><SiCodementor /> MENTEES</h2>
+  <ToastContainer />
+  
+  <div className={styles.header}>
+    <div className={styles.searchBarContainer}>
+      <input
+        type="search"
+        placeholder="Search by Student Email"
+        className={styles.searchBar}
+        value={searchTerm}
+        onChange={handleSearchChange}
+      />
+    </div>
+    <div className={styles.buttonGroup}>
+      <Button
+        onClick={openAddMenteeDialog}
+        startIcon={<Add />}
+        variant="contained"
+        sx={{ color: 'black', backgroundColor: 'lightgray' }}
+      >
+        Add
+      </Button>
+    </div>
+  </div>
+
+  <div className={styles.tableWrapper}>
+    {isLoading ? (
+      <div className={styles.loadingContainer}>
+        <CircularProgress />
+        <Typography variant="h6">Loading Mentees...</Typography>
       </div>
-
-      <div className={styles.tableWrapper}>
-        <table className={styles.menteesTable}>
-          <thead>
-            <tr>
-              <th>Mentee ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Student Email</th>
-              <th>Contact No</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredMentees.length > 0 ? (
-              filteredMentees.map((mentee, index) => (
-                <tr key={index}>
-                  <td>{mentee.mentee_Id}</td>
-                  <td>{mentee.firstName}</td>
-                  <td>{mentee.lastName}</td>
-                  <td>{mentee.studentEmail}</td>
-                  <td>{mentee.contactNo}</td>
-                  <td>
+    ) : (
+      <table className={styles.menteesTable}>
+        <thead>
+          <tr>
+            <th>Mentee ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Student Email</th>
+            <th>Contact No</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredMentees.length > 0 ? (
+            filteredMentees.map((mentee, index) => (
+              <tr key={index}>
+                <td>{mentee.mentee_Id}</td>
+                <td>{mentee.firstName}</td>
+                <td>{mentee.lastName}</td>
+                <td>{mentee.studentEmail}</td>
+                <td>{mentee.contactNo}</td>
+                <td>
+                  <Button
+                    startIcon={mentee.activated ? <Save /> : <Update />}
+                    variant="outlined"
+                    sx={{ color: 'black' }}
+                    className={`${styles.statusToggleButton} ${mentee.activated ? styles.activate : styles.deactivate}`}
+                  >
+                    {mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'}
+                  </Button>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Button
-                      startIcon={mentee.activated ? <Save /> : <Update />}
+                      startIcon={<ManageAccounts />}
                       variant="outlined"
-                      sx={{ color: 'black' }} // Black text color
-                      className={`${styles.statusToggleButton} ${mentee.activated ? styles.activate : styles.deactivate}`}
+                      sx={{ color: 'black' }}
+                      className={styles.manageButton}
+                      onClick={() => openEditMenteeDialog(mentee)}
                     >
-                      {mentee.activated ? 'ACTIVATED' : 'DEACTIVATED'}
                     </Button>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Button
-                        startIcon={<ManageAccounts />}
-                        variant="outlined"
-                        sx={{ color: 'black' }} // Black text color
-                        className={styles.manageButton}
-                        onClick={() => openEditMenteeDialog(mentee)}
-                      >
-                      </Button>
 
-                      <Button
-                        startIcon={<Delete />}
-                        variant="outlined"
-                        sx={{ color: 'red' }} // Red text for delete
-                        className={styles.deleteButton}
-                        onClick={() => openDeleteDialog(mentee)} // Open delete dialog
-                      >
-                      </Button>
-                    </div>
-
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className={styles.noMenteesMessage}>
-                  No mentees found.
+                    <Button
+                      startIcon={<Delete />}
+                      variant="outlined"
+                      sx={{ color: 'red' }}
+                      className={styles.deleteButton}
+                      onClick={() => openDeleteDialog(mentee)}
+                    >
+                    </Button>
+                  </div>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7" className={styles.noMenteesMessage}>
+                No mentees found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    )}
+  </div>
 
       {/* Dialog for Adding/Editing Mentee */}
       <Dialog

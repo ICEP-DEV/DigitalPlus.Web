@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
 import { Add, Save, Update, ManageAccounts, Delete, AssignmentInd, Cancel, Book } from '@mui/icons-material';
-import { Icon, Typography, IconButton } from '@mui/material';
+import { Icon, Typography, IconButton,CircularProgress } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MentorsContent.module.css';
@@ -12,6 +12,7 @@ import { MdInfoOutline } from 'react-icons/md';
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); // Control the delete confirmation dialog
   const [mentorToDelete, setMentorToDelete] = useState(null); // Track the mentor to be deleted
   const [modules, setModules] = useState([]); // List of all available modules
@@ -58,9 +59,13 @@ const MentorsContent = () => {
           activated: !!mentor.activated,
           mentorId: mentor.mentorId
         }));
-        setMentors(data);
+        setTimeout(() => {
+          setMentors(data);
+          setLoading(false); // Stop loading after data is set
+        }, 200);
       } catch (error) {
         console.error('Error fetching mentors:', error);
+        setLoading(false); 
       }
     };
     fetchMentors();
@@ -431,84 +436,96 @@ const showPopupMessage = (message, type = 'success') => {
       </div>
 
       <div className={styles.tableWrapper}>
-        <table className={styles.mentorsTable}>
-          <thead>
-            <tr>
-              <th>Mentor ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Student Email</th>
-              <th>Personal Email</th>
-              <th>Contact No</th>
-              <th>Status</th>
-              <th>Actions</th>
+  {isLoading ? (
+    // Show loading spinner while fetching data
+    <div className={styles.loadingContainer}>
+      <CircularProgress />
+      <Typography variant="h6">Loading Mentors...</Typography>
+    </div>
+  ) : (
+    <table className={styles.mentorsTable}>
+      <thead>
+        <tr>
+          <th>Mentor ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Student Email</th>
+          <th>Personal Email</th>
+          <th>Contact No</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {filteredMentors.length > 0 ? (
+          filteredMentors.map((mentor, index) => (
+            <tr key={index}>
+              <td>{mentor.mentorId}</td>
+              <td>{mentor.firstName}</td>
+              <td>{mentor.lastName}</td>
+              <td>{mentor.studentEmail}</td>
+              <td>{mentor.personalEmail}</td>
+              <td>{mentor.contactNo}</td>
+              <td>
+                <Button
+                  startIcon={mentor.activated ? <Save /> : <Update />}
+                  variant="outlined"
+                  sx={{ color: 'black' }}
+                  className={`${styles.statusToggleButton} ${mentor.activated ? styles.activate : styles.deactivate}`}
+                >
+                  {mentor.activated ? 'ACTIVATED' : 'DEACTIVATED'}
+                </Button>
+              </td>
+              <td>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Button
+                    startIcon={<ManageAccounts />}
+                    variant="outlined"
+                    sx={{ color: 'black' }}
+                    className={styles.manageButton}
+                    onClick={() => openEditMentorDialog(mentor)}
+                    title="Manage Mentor Account"
+                  >
+                    Manage
+                  </Button>
+
+                  <Button
+                    startIcon={<Delete />}
+                    variant="outlined"
+                    sx={{ color: 'red' }}
+                    className={styles.deleteButton}
+                    onClick={() => openDeleteDialog(mentor)}
+                    title="Delete Mentor"
+                  >
+                    Delete
+                  </Button>
+
+                  <Button
+                    startIcon={<AssignmentInd />}
+                    variant="outlined"
+                    sx={{ color: 'black' }}
+                    onClick={() => openModuleDialog(mentor.mentorId)}
+                    title="Assign Modules"
+                  >
+                    Assign Modules
+                  </Button>
+                </div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {filteredMentors.length > 0 ? (
-              filteredMentors.map((mentor, index) => (
-                <tr key={index}>
-                  <td>{mentor.mentorId}</td>
-                  <td>{mentor.firstName}</td>
-                  <td>{mentor.lastName}</td>
-                  <td>{mentor.studentEmail}</td>
-                  <td>{mentor.personalEmail}</td>
-                  <td>{mentor.contactNo}</td>
-                  <td>
-                    <Button
-                      startIcon={mentor.activated ? <Save /> : <Update />}
-                      variant="outlined"
-                      sx={{ color: 'black' }} // Black text color
-                      className={`${styles.statusToggleButton} ${mentor.activated ? styles.activate : styles.deactivate}`}
-                    >
-                      {mentor.activated ? 'ACTIVATED' : 'DEACTIVATED'}
-                    </Button>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Button
-                        startIcon={<ManageAccounts />}
-                        variant="outlined"
-                        sx={{ color: 'black' }} // Black text color
-                        className={styles.manageButton}
-                        onClick={() => openEditMentorDialog(mentor)}
-                        title="Manage Mentor Account"
-                      >
-                      </Button>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="8" className={styles.noMentorsMessage}>
+              No mentors found.
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  )}
+</div>
 
-                      <Button
-                        startIcon={<Delete />}
-                        variant="outlined"
-                        sx={{ color: 'red' }} // Red text for delete
-                        className={styles.deleteButton}
-                        onClick={() => openDeleteDialog(mentor)} // Open delete dialog
-                        title="Delete Mentor"
-                      >
-                      </Button>
-                      <Button
-                        startIcon={<AssignmentInd />}
-                        onClick={() => openModuleDialog(mentor.mentorId)}
-                        variant="outlined"
-                        sx={{ color: 'black' }}
-                        title="Assign Modules"
-                      >
-                      </Button>
-                    </div>
-                  </td>
-
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="8" className={styles.noMentorsMessage}>
-                  No mentors found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
+          
       {/* Dialog for Adding/Editing Mentor */}
       <Dialog
         open={isDialogOpen}
