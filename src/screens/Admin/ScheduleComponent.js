@@ -53,7 +53,6 @@ const Schedule = () => {
   const [editPopupVisible, setEditPopupVisible] = useState(false);
   const [schedule, setSchedule] = useState(getSavedSchedule());
   const [successMessage, setSuccessMessage] = useState(""); // State for success messages
-  const [scheduleToDelete, setScheduleToDelete] = useState(null); // Track which mentee to delete
 
   useEffect(() => {
     // Save the schedule data to localStorage whenever it changes
@@ -76,7 +75,33 @@ const Schedule = () => {
       }
     };
 
-    
+    const fetchSchedules = async () => {
+      try {
+        const response = await fetch(
+          "https://localhost:7163/api/DigitalPlusCrud/GetAllSchedules",
+          {
+            method: "GET",
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch schedules.");
+        }
+        const data = await response.json();
+        // Process the data into a suitable format for the schedule
+        const formattedSchedule = data.reduce((acc, item) => {
+          const key = `${item.dayOfTheWeek}-${item.timeSlot}`;
+          if (!acc[key]) acc[key] = [];
+          acc[key].push(item);
+          return acc;
+        }, {});
+        setSchedule(formattedSchedule);
+      } catch (error) {
+        console.error("Error fetching schedules:", error);
+      }
+    };
+
+    fetchSchedules();
+
     fetchMentordetailsB();
   }, []);
 
@@ -126,10 +151,11 @@ const Schedule = () => {
       if (!existingData[index]) {
         throw new Error("No data found for the selected schedule.");
       }
-  
+
       // Extract relevant fields from the existing data
-      const { mentorId, moduleList, scheduleId, mentorName } = existingData[index];
-  
+      const { mentorId, moduleList, scheduleId, mentorName } =
+        existingData[index];
+
       // Update formData with the existing schedule details
       setFormData({
         time,
@@ -139,18 +165,20 @@ const Schedule = () => {
         index,
         scheduleId: scheduleId || "", // Ensure scheduleId is available
       });
-  
+
       // Store selected slot information
       setSelectedSlot({ day, time });
-  
+
       // Show the edit popup
       setEditPopupVisible(true);
     } catch (error) {
       console.error("Error during edit operation:", error.message);
-      toast.error(error.message || "An error occurred while opening the edit form.");
+      toast.error(
+        error.message || "An error occurred while opening the edit form."
+      );
     }
   };
-  
+
   const handleDeleteClick = async (day, time, index) => {
     // Confirm deletion
     if (window.confirm("Are you sure you want to delete this mentor?")) {
@@ -189,9 +217,6 @@ const Schedule = () => {
 
         // Show success message
         toast.success("Schedule deleted successfully!");
-
-        // Reset states if applicable
-        setScheduleToDelete(null); // Clear the selected schedule to delete (if using a dialog)
       } catch (error) {
         console.error("Error deleting schedule:", error);
         toast.error("Failed to delete schedule. Please try again.");
@@ -438,7 +463,7 @@ const Schedule = () => {
                               {data.mentorName}
                             </strong>
                             <p className={styles.mentorModules}>
-                              {data.selectedModules.join(", ")}
+                              {(data.selectedModules || []).join(", ")}
                             </p>
                             <div className={styles.icons}>
                               <FontAwesomeIcon
