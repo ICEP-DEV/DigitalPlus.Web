@@ -284,6 +284,13 @@ const MenteesContent = () => {
   return (
 <div className={styles.menteesContainer}>
   <h2><SiCodementor /> MENTEES</h2>
+  <div className={styles.dividerContainer}>
+  <div className={styles.dividerLine}></div>
+  <div className={`${styles.dividerTab} ${styles.left}`}></div>
+  <div className={`${styles.dividerTab} ${styles.right}`}></div>
+</div>
+
+
   <ToastContainer />
   
   <div className={styles.header}>
@@ -307,7 +314,7 @@ const MenteesContent = () => {
       </Button>
     </div>
   </div>
-
+  
   <div className={styles.tableWrapper}>
     {isLoading ? (
       <div className={styles.loadingContainer}>

@@ -407,6 +407,11 @@ const showPopupMessage = (message, type = 'success') => {
   return (
     <div className={styles.mentorsContainer}>
       <h2> <SiCodementor /> MENTORS</h2>
+      <div className={styles.dividerContainer}>
+  <div className={styles.dividerLine}></div>
+  <div className={styles.dividerTab}></div>
+</div>
+
       <ToastContainer />
       <div className={styles.header}>
         <div className={styles.searchBarContainer}>
@@ -486,7 +491,6 @@ const showPopupMessage = (message, type = 'success') => {
                     onClick={() => openEditMentorDialog(mentor)}
                     title="Manage Mentor Account"
                   >
-                    Manage
                   </Button>
 
                   <Button
@@ -497,7 +501,6 @@ const showPopupMessage = (message, type = 'success') => {
                     onClick={() => openDeleteDialog(mentor)}
                     title="Delete Mentor"
                   >
-                    Delete
                   </Button>
 
                   <Button
@@ -507,7 +510,6 @@ const showPopupMessage = (message, type = 'success') => {
                     onClick={() => openModuleDialog(mentor.mentorId)}
                     title="Assign Modules"
                   >
-                    Assign Modules
                   </Button>
                 </div>
               </td>
