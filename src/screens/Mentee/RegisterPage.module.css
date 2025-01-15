@@ -18,6 +18,12 @@
     margin-top: 70px;
     font-size: 30px;
   }
+
+  .inactivePage {
+    opacity: 0.6;
+    pointer-events: none; /* Disable all interactions */
+  }
+  
   
   .mainContent {
     background-color: #D9D9D9; /* Ensure consistency in background color */

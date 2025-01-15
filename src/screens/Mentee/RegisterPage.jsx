@@ -8,6 +8,7 @@ const RegisterPage = () => {
   const [rating, setRating] = useState(0); // State to manage the slider value
   const [menteeID, setMenteeID] = useState(''); // State to store mentee ID
   const [fetchedMenteeID, setFetchedMenteeID] = useState(''); // New state for displaying mentor ID
+  const [isInactive, setIsInactive] = useState(true); // State to control page activity
 
   // Fetch Mentee ID from localStorage on component mount
   useEffect(() => {
@@ -40,8 +41,8 @@ const RegisterPage = () => {
 
   return (
     <SideBarNavBar>
-      <div className={styles.pageContainer}>
-        <h1 className={styles.registerTitle}>REGISTER TO BE SIGNED AFTER THE SESSION</h1> 
+      <div className={`${styles.pageContainer} ${isInactive ? styles.inactivePage : ''}`}>
+        <h1 className={styles.registerTitle}>REGISTER TO BE SIGNED AFTER THE SESSION</h1>
         <div className={styles.registerPageContainer}>
           <div className={styles.mainContent}>
             <div className={styles.formWrapper}>
@@ -49,19 +50,22 @@ const RegisterPage = () => {
                 <form>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Student Number:</label>
-                    {/* Display Mentee ID in the input field */}
-                    <input 
-                      
-                      value={fetchedMenteeID} 
-                      className={styles.input} 
+                    <input
+                      value={fetchedMenteeID}
+                      className={styles.input}
                       readOnly
-                      disabled 
+                      disabled={isInactive} // Disable input if inactive
                     />
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Module Code:</label>
-                    <select value={selectedModule} onChange={handleModuleChange} className={styles.input}>
+                    <select
+                      value={selectedModule}
+                      onChange={handleModuleChange}
+                      className={styles.input}
+                      disabled={isInactive} // Disable select if inactive
+                    >
                       <option value="" disabled>Module Code</option>
                       <option value="PPA F05D">PPA F05D</option>
                       {/* Add more modules as needed */}
@@ -70,7 +74,7 @@ const RegisterPage = () => {
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Mentor's Name:</label>
-                    <select className={styles.input}>
+                    <select className={styles.input} disabled={isInactive}>
                       <option value="" disabled>Select mentor</option>
                       {mentors.map((mentor, index) => (
                         <option key={index} value={mentor}>{mentor}</option>
@@ -88,24 +92,26 @@ const RegisterPage = () => {
                       value={rating} // Bind the value to the state
                       onChange={handleRatingChange} // Handle the slider value change
                       className={styles.rangeSlider}
+                      disabled={isInactive} // Disable slider if inactive
                     />
-                    <div className={styles.sliderLabels}>
-                      {[...Array(11).keys()].map((num) => (
-                        <span key={num}>{num}</span>
-                      ))}
-                    </div>
                   </div>
 
                   <div className={styles.buttonContainer}>
-                    <button type="submit" className={styles.submitButton}>Submit</button>
+                    <button type="submit" className={styles.submitButton} disabled={isInactive}>
+                      Submit
+                    </button>
                   </div>
                 </form>
               </div>
               <div className={styles.commentContainer}>
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>Comment:</label>
-                  <textarea placeholder="Write your comment" className={styles.textarea} />
-                  <i className={`fas fa-upload ${styles.uploadIcon}`}></i>
+                  <textarea
+                    placeholder="Write your comment"
+                    className={styles.textarea}
+                    disabled={isInactive} // Disable textarea if inactive
+                  />
+                  <i className={`fas fa-upload ${styles.uploadIcon}`} />
                 </div>
               </div>
             </div>
