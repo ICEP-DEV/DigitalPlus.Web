@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';  
 import axios from 'axios';
-import {   Button, Select, MenuItem } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Select, MenuItem } from '@mui/material';
+import { Add, Save, Update, ManageAccounts, Delete, AssignmentInd, Cancel, Book } from '@mui/icons-material';
+import { Icon, Typography, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import styles from './MenteeModule.module.css';
 import NavBar from './Navigation/NavBar.jsx';
@@ -23,7 +25,7 @@ export default function MenteeModulePage() {
   const [allCourses,setAllCourses] = useState([]);
   const [checkedModules, setCheckedModules] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  
+  const [assignedModules,setAssignedModules]= useState([]);
     
   const navigate = useNavigate();
 
@@ -52,6 +54,12 @@ export default function MenteeModulePage() {
         const assignedModulesResponse = await axios.get(`https://localhost:7163/api/AssignMod/getmodulesBy_MenteeId/${menteeId}`);
         const assignedModules = assignedModulesResponse.data;
 
+        if(assignedModulesResponse.data && assignedModulesResponse.data.length > 0){
+          setAssignedModules(assignedModules);
+        }else{
+          setAssignedModules([]);
+        }
+       
         // Map the assigned modules with detailed data
         const assignedModuleDetails = assignedModules.map((module) => {
           const detailedModule = allModules.find((m) => m.module_Id === module.moduleId);
@@ -97,7 +105,7 @@ export default function MenteeModulePage() {
 
         const allCourseModules = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetModulesByCourseId/course/${selectedCourse}`);
         console.log(allCourseModules);
-        if (allCourseModules.data.length === 0) {
+        if (allCourseModules.data.length < 0) {
           setError('No modules found for the selected course.');
           setCourseModules([]);
         } else {
@@ -149,6 +157,21 @@ export default function MenteeModulePage() {
   const handleModuleSelection = (event) =>{
     setCheckedModules(event.target.value);
   }
+
+  const handleRemoveModule = async (assignModId) => {
+    console.log(assignModId)
+    try {
+      await axios.delete(`https://localhost:7163/api/AssignMod/deleteMentee/${assignModId}`);
+      // Update assignedModules state by filtering out the deleted module
+      setModules((prevAssignedModules) =>
+        prevAssignedModules.filter((module) => module.assignModId !== assignModId)
+      );
+      console.log('Module removed successfully.');
+    } catch (error) {
+      console.error("Error removing module:", error);
+      console.log('Failed to remove module. Please try again.', 'error');
+    }
+  };
 
   // const handleModuleCheck = (moduleId) => {
 
@@ -209,7 +232,11 @@ export default function MenteeModulePage() {
       <NavBar />
       <SideBar modules={modules} /> {/* Pass the module list to Sidebar */}
       <div className={styles['course-modules']}>
+      <button className={styles['add-module-button']} onClick={openModal}>
+              ADD MODULE
+            </button>
         <h1>Assigned Modules</h1>
+         
         
         {modules.length > 0 ? (
           <div className={styles['module-grid']}>
@@ -240,9 +267,9 @@ export default function MenteeModulePage() {
         ) : (
           < >
             <p>No modules assigned to this mentee yet.</p>
-            <button className={styles['add-module-button']} onClick={openModal}>
+            {/* <button className={styles['add-module-button']} onClick={openModal}>
               ADD MODULE
-            </button>
+            </button> */}
           </>
         )}
       </div>
@@ -274,7 +301,33 @@ export default function MenteeModulePage() {
               ))}
             </select>
           </label>
-          <label>
+          {/* Display assigned modules with remove icons */}
+    {assignedModules.length > 0 ? (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+        {assignedModules.map((module) => (
+          <div key={module.moduleId} value={module.assignModId} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Button
+              variant="outlined"
+              // size="small"
+              length="20px"
+              style={{ textTransform: 'none' }}
+            >
+              {module.moduleCode}
+            </Button>
+            <IconButton
+              aria-label="remove"
+              color="secondary"
+              onClick={() => handleRemoveModule(module.assignModId)}
+            >
+              <Delete />
+            </IconButton>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <Typography color="textSecondary" style={{ marginBottom: '16px' }}>No modules assigned.</Typography>
+    )}
+          {/* <label>
             Search Modules:
             <input
               type="text"
@@ -282,7 +335,7 @@ export default function MenteeModulePage() {
               onChange={handleSearch}
               placeholder="Search for modules..."
             />
-          </label>
+          </label> */}
           {/* {filteredModules.length > 0 ? (
           <div className={styles['module-checkboxes']}>
            {courseModules.map((module) =>(
@@ -347,7 +400,7 @@ export default function MenteeModulePage() {
       {filteredModules
         .filter(
           (module) =>
-            !modules.some((assigned) => assigned.moduleId === module.module_Id) &&
+            !assignedModules.some((assigned) => assigned.moduleId === module.module_Id) &&
             !checkedModules.includes(module.module_Id)
         )
         .map((module) => (
