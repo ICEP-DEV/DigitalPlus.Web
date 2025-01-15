@@ -9,6 +9,7 @@ import MentorDMComponent from './ModuleDetails/MentorDMComponent';
 import SetQuiz from './ModuleDetails/SetQuiz';  // Correct capitalization
 import RattingPage from './ModuleDetails/DynamicTable';  // Correct capitalization
 import MentorChatBoard from './ModuleDetails/MentorChatBoard';
+import ModuleLandingPage from './ModuleDetails/ModuleLandingPage';
 
 function App() {
   const [activePage, setActivePage] = useState('chat');  // Default page is ChatPage (LIVE CHAT)
@@ -20,6 +21,7 @@ function App() {
         <SideBar setActivePage={setActivePage} />
         <div className={styles.mainContent}>
         
+        {activePage === 'moduleLanding' && <ModuleLandingPage setActivePage={setActivePage} />}
           {activePage === 'quizz' && <SetQuiz setActivePage={setActivePage} />}
           {activePage === 'classlist' && <ClassListPage />}
           {activePage === 'chatboard' && <MentorChatBoard setActivePage={setActivePage}  />}  

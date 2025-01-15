@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IoHome, IoArrowBackSharp } from 'react-icons/io5'; // Home and Back icons
 import { HiOutlineChatAlt2 } from 'react-icons/hi';  // Live chat icon
 import { MdMenuBook } from 'react-icons/md';  // Mentors icon
@@ -8,37 +8,55 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';  // Import the CSS module
 
 function SideBar({ setActivePage }) {
+  const [isSidebarOpen, setSidebarOpen] = useState(true); // State to toggle sidebar
   const navigate = useNavigate(); 
   const { moduleId } = useParams(); 
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen); // Toggle the sidebar state
+  };
+
   return (
-    <div className={styles.sideBar}>
+    <div className={`${styles.sideBar} ${isSidebarOpen ? styles.sideBarOpen : styles.sideBarClosed}`}>
+      <div className={styles.toggleButton} onClick={toggleSidebar}>
+        <span className={styles.hamburgerIcon}></span>
+      </div>
+
       <nav className={styles.navLinks}>
-        <div className={styles.navItem}>
+        <div className={styles.navItem} onClick={() => setActivePage('moduleLanding')}>
           {moduleId}
         </div>
 
-        {/* Removed href and handled onClick using React */}
+        
+
         <div className={styles.navItem} onClick={() => setActivePage('quizz')}>
-          QUIZ <RiContactsBook3Fill className={styles.icon} />
+        {isSidebarOpen && 'QUIZ'}
+          <RiContactsBook3Fill className={styles.icon} />
+         
         </div>
 
-        {/* Dynamically pass moduleId */}
-        <div className={styles.navItem} onClick={() => setActivePage(`classlist`)}>
-          MENTEE LIST <MdMenuBook className={styles.icon} />
+        <div className={styles.navItem} onClick={() => setActivePage('classlist')}>
+        {isSidebarOpen && 'MENTEE LIST'}
+          <MdMenuBook className={styles.icon} />
+          
         </div>
 
         <div className={styles.navItem} onClick={() => setActivePage('chatboard')}>
-          CHAT BOARD <HiOutlineChatAlt2 className={styles.icon} />
+        {isSidebarOpen && 'CHAT BOARD'}
+          <HiOutlineChatAlt2 className={styles.icon} />
+         
         </div>
 
         <div className={styles.navItem} onClick={() => setActivePage('mentordm')}>
-          DM <HiOutlineChatAlt2 className={styles.icon} /> {/* DM icon */}
+        {isSidebarOpen && 'DM'}
+          <HiOutlineChatAlt2 className={styles.icon} />
+         
         </div>
 
-        {/* Navigating back using navigate */}
         <div className={styles.navItem} onClick={() => navigate('/mentor-dashboard/module')}>
-          BACK <IoArrowBackSharp className={styles.icon} />
+        {isSidebarOpen && 'BACK'}
+          <IoArrowBackSharp className={styles.icon} />
+         
         </div>
       </nav>
     </div>
