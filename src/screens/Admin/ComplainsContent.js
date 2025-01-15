@@ -93,7 +93,7 @@ const ComplainsContent = () => {
                 <td>{complaint.dateLogged}</td>
                 <td>{complaint.menteeEmail}</td>
                 <td>{complaint.mentorEmail}</td>
-                <td>{complaint.moduleId}</td>
+                <td>{complaint.moduleName}</td>
                 <td>{complaint.complaintDescription}</td>
                 {/* Status now showing in words */}
                 <td style={{ color: complaint.action === 1 ? 'green' : 'red' }}>
