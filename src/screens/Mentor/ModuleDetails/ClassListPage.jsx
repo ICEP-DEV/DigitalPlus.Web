@@ -4,35 +4,68 @@ import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const ClassListPage = () => {
     const [students, setStudents] = useState([]); // State for mentees
+    const [modules, setModules] = useState([]);
+    const [mentees, setMentees] = useState([]);
     const [loading, setLoading] = useState(true); // State for loading
     const [error, setError] = useState(null); // State for error handling
     const { moduleId } = useParams(); // Get moduleId from URL parameters
     const navigate = useNavigate(); // Hook for navigation
 
-    // Fetch mentees when the component mounts
-    useEffect(() => {
-        const fetchMentees = async () => {
-            try {
-                const response = await fetch('/api/DigitalPlusUser/GetAllMentees'); // API endpoint
-    
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`); // Throw error for non-OK status
-                }
-                
-                const data = await response.json(); // Parse JSON response
-                setStudents(data); // Set mentees data to state
+    const storedUser = JSON.parse(localStorage.getItem('user'));
 
-                console.log("Fetched Mentees Data:", data); // Log the fetched data
+    useEffect(() => {
+        const fetchModulesAndMentees = async () => {
+            try {
+                // Fetch modules assigned to the mentor
+                const modulesResponse = await fetch(`https://localhost:7163/api/AssignMod/getmodulesBy_MentorId/${storedUser.mentorId}`);
+    
+                if (!modulesResponse.ok) {
+                    throw new Error(`Modules API Error: ${modulesResponse.status}`);
+                }
+                const modulesData = await modulesResponse.json();
                 
+               
+
+                setModules(modulesData); // Store fetched modules
+
+                // Iterate through modules and fetch mentees
+                const menteesPromises = modulesData.map(async (module) => {
+                    const { moduleCode, module_Id } = module;
+
+                    // Match moduleCode with moduleId (example logic; adjust as necessary)
+                    if (String(moduleCode) === String(moduleId)) {
+                        console.log(`Matched moduleCode (${moduleCode}) with moduleId (${moduleId}).`);
+
+                        // Fetch mentees for the matched moduleId
+                        const menteesResponse = await fetch(`https://localhost:7163/api/AssignMod/getmenteesBy_ModuleId/1`);
+                        if (!menteesResponse.ok) {
+                            throw new Error(`Mentees API Error for moduleId ${moduleId}: ${menteesResponse.status}`);
+                        }
+
+                        const menteesData = await menteesResponse.json();
+                        console.log(`Mentees for Module ${moduleId}:`, menteesData);
+
+                        return menteesData;
+                    }
+
+                    return [];
+                });
+
+                // Resolve all mentees fetch promises
+                const menteesResults = await Promise.all(menteesPromises);
+
+                // Flatten the menteesResults array
+                const allMentees = menteesResults.flat();
+                setMentees(allMentees);
             } catch (err) {
-                console.error("Fetch Error:", err.message); // Log fetch errors
-                setError(err.message); // Set error state
+                console.error("Error:", err.message);
+                setError(err.message);
             } finally {
-                setLoading(false); // Stop loading spinner
+                setLoading(false);
             }
         };
-    
-        fetchMentees(); // Call the fetch function on component mount
+
+        fetchModulesAndMentees();
     }, []);
     
      
@@ -65,15 +98,15 @@ const ClassListPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {students.map((student) => (
-                                <tr key={student.mentee_Id}>
-                                    <td>{student.mentee_Id}</td>
-                                    <td>{`${student.firstName} ${student.lastName}`}</td>
-                                    <td>{student.studentEmail}</td>
+                            {mentees.map((mentee) => (
+                                <tr key={mentee.mentee_Id}>
+                                    <td>{mentee.mentee_Id}</td>
+                                    <td>{`${mentee.firstName} ${mentee.lastName}`}</td>
+                                    <td>{mentee.studentEmail}</td>
                                     <td>
                                         <button
                                             className={styles.messageBtn}
-                                            onClick={() => handleMessageClick(student.mentee_Id)}
+                                            onClick={() => handleMessageClick(mentee.mentee_Id)}
                                         >
                                             MESSAGE
                                         </button>
@@ -81,6 +114,7 @@ const ClassListPage = () => {
                                 </tr>
                             ))}
                         </tbody>
+
                     </table>
                 </div>
             </div>
