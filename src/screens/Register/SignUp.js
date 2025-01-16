@@ -19,6 +19,7 @@ const SignUp = () => {
     });
 
     
+    
     const [departments,setDepartments]=useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -67,9 +68,14 @@ const SignUp = () => {
       FetchDepartments()
     },[]);
 
+   
+
     // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if(name === 'Mentee_Id'){
+            mentee.StudentEmail= `${value}@tut4life.ac.za`;
+        }
         setMentee({ ...mentee, [name]: value });
 
         if (name === 'Password') {
@@ -205,7 +211,7 @@ const SignUp = () => {
                             <input type="text" name="LastName" value={mentee.LastName} onChange={handleChange} required />
                         
                               <label >Email:</label>  
-                              <input type="email" name="StudentEmail" value={mentee.StudentEmail} onChange={handleChange}  required />  
+                              <input type="email" name="StudentEmail" value={mentee.StudentEmail} onChange={handleChange}  placeholder={`${mentee.StudentEmail}@tut4life.ac.za`} readOnly required />  
                     
                             <label>Contact No:</label>
                             <input type="text" name="ContactNo" value={mentee.ContactNo} onChange={handleChange} required />
