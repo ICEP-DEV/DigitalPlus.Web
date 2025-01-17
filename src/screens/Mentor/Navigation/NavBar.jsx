@@ -1,14 +1,24 @@
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import { useEffect, useState } from 'react'; // Import useEffect and useState hooks
-import styles from "./NavBar.module.css";
-import tutLogo_removebg_preview from "../Assets/tutLogo_removebg_preview.png";
-import { BsPersonFill } from "react-icons/bs";
+import styles from './NavBar.module.css'; // Import the CSS module
+import tutLogo_removebg_preview from '../Assets/tutLogo_removebg_preview.png'; // Logo
+import { BsPersonFill } from 'react-icons/bs'; // Profile icon
+import { BsKey } from 'react-icons/bs'; // Key icon
+import KeyPageAlert from '../KeyPageAlert'; // Import KeyPageAlert component
 
-function NavBar() {
+function NavBar({ onKeyIconClick }) {
   const navigate = useNavigate(); // Initialize the useNavigate hook
-  const [displayName, setDisplayName] = useState('PROFILE'); // Initialize the state for the display name
+  const [displayName, setDisplayName] = useState('PROFILE'); // State for the display name
 
-  // UseEffect to get firstName and lastName from localStorage
+  // State for modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Function to handle modal closing
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  // UseEffect to retrieve firstName and lastName from localStorage
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user')); // Get the user object from localStorage
     if (storedUser && storedUser.firstName && storedUser.lastName) {
@@ -23,21 +33,29 @@ function NavBar() {
     }
   }, []);
 
-  // Function to handle profile click
-  // const handleProfileClick = () => {
-  //   navigate('/settings'); // Navigate to the profile page
-  // };
+  // Function to handle the key icon click
+  const handleKeyIconClick = () => {
+    if (onKeyIconClick) onKeyIconClick(); // Open the modal when key icon is clicked
+  };
 
   return (
     <div className={styles.navBar}>
       <br />
       <img src={tutLogo_removebg_preview} alt="Logo" className={styles.appLogo} />
 
-      Profile Icon with description
-      <div className={styles.profileContainer} >
-        <BsPersonFill className={styles.profileIcon} />
-        <span className={styles.profileText}>{displayName}</span>
+      {/* Group Key and Profile Icons */}
+      <div className={styles.iconGroup}>
+        <div className={styles.notificationContainer}>
+          <BsKey className={styles.notificationIcon} onClick={handleKeyIconClick} />
+        </div>
+        <div className={styles.profileContainer}>
+          <BsPersonFill className={styles.profileIcon} />
+          <span className={styles.profileText}>{displayName}</span>
+        </div>
       </div>
+
+      {/* KeyPageAlert Modal */}
+      {isModalOpen && <KeyPageAlert showModal={isModalOpen} onClose={handleCloseModal} />}
     </div>
   );
 }

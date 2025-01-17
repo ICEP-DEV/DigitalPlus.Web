@@ -1,42 +1,43 @@
+/* Container for the whole page */
 .container {
     width: 100%;
     height: 100vh;
     background-color: #D9D9D9;
     display: flex;
     flex-direction: column;
+    position: relative; 
+    padding-top: 120px; 
 }
 
+/* Content area where announcements are displayed */
 .content {
     flex: 1;
     overflow: hidden;
     padding: 20px;
     position: relative;
+    z-index: 1; 
 }
 
-.header {
-    font-size: 28px;
-    text-align: center;
-    margin-bottom: 20px;
-    color: #000000;
-}
-
+/* Wrapper for the timeline */
 .timelineWrapper {
     position: relative;
     margin: 0 auto;
     padding: 10px 0;
     display: flex;
     align-items: flex-start;
-    height: calc(100% - 120px);
-    width: 70%;
-    overflow-y: auto; /* Add scroll bar */
+    height: calc(100% - 120px); 
+    overflow-y: auto; 
+    z-index: 1; 
 }
 
+/* Timeline container */
 .timeline {
     position: relative;
     padding: 20px;
     flex-grow: 1;
 }
 
+/* Timeline item styles */
 .timelineItem {
     display: flex;
     align-items: flex-start;
@@ -44,14 +45,16 @@
     position: relative;
 }
 
+/* Line and circle container */
 .lineAndCircle {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-right: 20px;
+    /*margin-right: 20px;*/
 }
 
+/* Vertical line in the timeline */
 .verticalLine {
     width: 3px;
     height: 60px;
@@ -59,6 +62,7 @@
     position: relative;
 }
 
+/* Circle in the timeline */
 .circle {
     width: 15px;
     height: 15px;
@@ -70,6 +74,7 @@
     left: 50%;
 }
 
+/* Card (for each announcement) style */
 .card {
     border: 3px solid #000;
     background-color: #D9D9D9;
@@ -79,6 +84,7 @@
     flex: 1;
 }
 
+/* Date text style */
 .date {
     font-size: 16px;
     color: #000000;
@@ -86,6 +92,7 @@
     margin-bottom: 8px;
 }
 
+/* Row for details in each announcement */
 .detailRow {
     display: flex;
     align-items: center;
@@ -93,11 +100,13 @@
     line-height: 1.5;
 }
 
+/* Strong text for details */
 .detailRow strong {
     margin-right: 5px;
     color: #333;
 }
 
+/* Image wrapper for the download icon */
 .imageWrapper {
     display: flex;
     align-items: center;
@@ -106,6 +115,7 @@
     margin-top: 10px;
 }
 
+/* Download icon styling */
 .downloadIcon {
     font-size: 24px;
     color: #000;
@@ -117,12 +127,14 @@
     color: #007bff;
 }
 
+/* Current date/time container */
 .currentDateTime {
     text-align: right;
     font-size: 18px;
     position: absolute;
     top: -70px;
     right: -280px;
+    z-index: 1; 
 }
 
 .time {
@@ -132,4 +144,156 @@
 
 .date {
     font-size: 16px;
+}
+
+/* Style for the modal (to ensure it stays on top of everything else) */
+.modalOverlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; 
+}
+
+/* Modal content styling */
+.modal {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    height: 80%;
+    overflow-y: auto; 
+    text-align: center;
+    position: relative;
+    z-index: 10000; 
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #333; 
+    background: transparent; 
+    border: none;
+    outline: none;
+    z-index: 3000;
+    margin-top: 10px;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.iconContainer {
+    margin: 20px 0;
+}
+
+.modalKeyIcon {
+    font-size: 80px;
+    color: #333;
+}
+
+.infoText {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px; 
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-around; 
+    margin-top: 20px; 
+}
+
+.reportButton, .viewButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reportButton {
+    background-color: #062442; 
+    color: white;
+    margin-right: 20px;
+}
+
+.viewButton {
+    background-color: #05463e; 
+    color: white;
+}
+
+.reportButton:hover, .viewButton:hover {
+    opacity: 0.8; 
+}
+
+.formContainer {
+    margin-top: 20px;
+}
+
+.formContainer label {
+    display: block;
+    margin: 10px 0;
+}
+
+.sendButton {
+    margin-top: 10px;
+    background-color: #092e55; 
+    color: rgb(255, 254, 254);
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.notificationsContainer {
+    margin-top: 20px;
+    text-align: left; 
+}
+
+.notificationsList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.notificationItem {
+    background-color: #b9b3b3;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.backButton {
+    margin-top: 20px;
+    background-color: #05463e; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.backButton:hover {
+    opacity: 0.8;
+}
+
+.cancelButton {
+    margin-top: 10px;
+    background-color: #c44d34; 
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.cancelButton:hover {
+    opacity: 0.8;
 }
