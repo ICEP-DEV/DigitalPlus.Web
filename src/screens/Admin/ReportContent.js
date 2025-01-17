@@ -107,6 +107,7 @@ const ReportContent = () => {
     fetchMentorsWithModules();
   }, []);
 
+
   const handleFilter = () => {
     const filtered = mentors.filter((mentor) => {
       const matchCourse = selectedCourse
@@ -255,6 +256,7 @@ const ReportContent = () => {
                 </option>
               ))}
             </select> */}
+
             <button className={styles.filterBtn} onClick={handleFilter}>
               <IoFilter /> Filter
             </button>

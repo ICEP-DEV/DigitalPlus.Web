@@ -14,6 +14,7 @@ import {
   InputAdornment,
   Tabs,
   Tab,
+  CircularProgress,
 } from "@mui/material";
 import {
   Visibility,
@@ -23,6 +24,8 @@ import {
   Person,
   Email,
   Phone,
+  Image,
+  LockPerson,
 } from "@mui/icons-material";
 
 const Settings = () => {
@@ -34,18 +37,56 @@ const Settings = () => {
     contactNo: "",
     password: "",
     confirmPassword: "",
-    adminId: "",
+    admin_Id: "", // Ensure admin_Id is initialized as an empty string
+    departmentId: 0,
+    imageData: "",
+    image: "",
   });
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [showPasswordField, setShowPasswordField] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const storedUserData = localStorage.getItem("user");
     if (storedUserData) {
-      setUserData(JSON.parse(storedUserData));
+      const parsedUserData = JSON.parse(storedUserData);
+      console.log("Admin ID from local storage:", parsedUserData.admin_Id); // Debug log
+      setUserData(parsedUserData);
+      fetchAdminDetails(parsedUserData);
     }
   }, []);
+
+  const fetchAdminDetails = async (storedUserData) => {
+    if (!storedUserData.admin_Id) {
+      toast.error("Admin ID is missing. Unable to fetch details.");
+      console.error("Admin ID is missing.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `https://localhost:7163/api/DigitalPlusUser/GetAdministrator/${storedUserData.admin_Id}`
+      );
+      const profileData = response.data;
+      console.log("Fetched profile data:", profileData); // Debug log
+      setProfileForm({
+        admin_Id: profileData.admin_Id, // Set the admin_Id properly
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        emailAddress: profileData.emailAddress,
+        contactNo: profileData.contactNo,
+        password: "",
+        confirmPassword: "",
+        departmentId: profileData.departmentId || 0,
+        imageData: profileData.imageData || "",
+        image: profileData.image || "",
+      });
+    } catch (error) {
+      toast.error("Error fetching admin details.");
+      console.error("Error fetching admin details:", error);
+    }
+  };
 
   const handleInputChange = (field, value) => {
     setProfileForm((prevForm) => ({
@@ -58,42 +99,82 @@ const Settings = () => {
     setActiveTab(newValue);
   };
 
-  const handleUpdateProfile = async () => {
-    if (!profileForm.adminId) {
-      console.error("Admin ID is null or undefined");
-      return;
+  const validateProfileForm = () => {
+    const { emailAddress, contactNo } = profileForm;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const contactRegex = /^[0-9]{10,15}$/;
+
+    if (!emailRegex.test(emailAddress)) {
+      toast.error("Please enter a valid email address.");
+      return false;
     }
 
+    if (!contactRegex.test(contactNo)) {
+      toast.error("Please enter a valid contact number (10-15 digits).");
+      return false;
+    }
+
+    return true;
+  };
+
+  const validatePasswordForm = () => {
+    const { password, confirmPassword } = profileForm;
+
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters long.");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!validateProfileForm()) return;
+
+    setLoading(true);
     try {
       const updatedProfile = {
-        adminId: profileForm.adminId,
-        firstName: profileForm.firstName,
-        lastName: profileForm.lastName,
-        email: profileForm.email,
-        contactNo: profileForm.contactNo,
+        admin_Id: profileForm.admin_Id,
+        firstName: profileForm.firstName.trim(),
+        lastName: profileForm.lastName.trim(),
+        emailAddress: profileForm.emailAddress.trim(),
+        contactNo: profileForm.contactNo.trim(),
+        password: profileForm.password.trim(),
+        departmentId: parseInt(profileForm.departmentId, 10),
+        imageData: profileForm.imageData || null,
+        image: null,
       };
 
+      console.log("Updating profile with payload:", updatedProfile);
+
       await axios.put(
-        `https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${profileForm.adminId}`,
+        `https://localhost:7163/api/DigitalPlusUser/UpdateAdministrator/${userData.admin_Id}`,
         updatedProfile,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
+      toast.success("Profile updated successfully!");
       const updatedUserData = { ...userData, ...updatedProfile };
       setUserData(updatedUserData);
       localStorage.setItem("user", JSON.stringify(updatedUserData));
       setOpenEditDialog(false);
-      toast.success("Profile updated successfully!");
     } catch (error) {
-      console.error(
-        "Error updating profile:",
-        error.response ? error.response.data : error.message
-      );
-      toast.error("Failed to update profile. Please try again.");
+      if (error.response) {
+        console.error("API Response Error:", error.response.data);
+        toast.error(error.response.data.message || "Failed to update profile.");
+      } else {
+        console.error("Error updating profile:", error.message);
+        toast.error("An unexpected error occurred.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,16 +182,20 @@ const Settings = () => {
     setProfileForm({
       firstName: userData.firstName || "",
       lastName: userData.lastName || "",
-      email: userData.email || "",
+      emailAddress: userData.emailAddress || "",
       contactNo: userData.contactNo || "",
-      password: "",
-      confirmPassword: "",
-      adminId: userData.adminId || "",
+      password: userData.password || "",
+      confirmPassword: userData.password || "",
+      admin_Id: userData.admin_Id || "", // Ensure admin_Id is passed
+      departmentId: userData.departmentId || 0,
+      imageData: userData.imageData || "",
+      image: userData.image || "",
     });
     setOpenEditDialog(true);
   };
 
   const closeEditDialog = () => {
+    setProfileForm({ ...userData });
     setOpenEditDialog(false);
   };
 
@@ -119,7 +204,11 @@ const Settings = () => {
   };
 
   if (!userData) {
-    return <div>Loading...</div>;
+    return (
+      <div className={styles.loadingContainer}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (
@@ -140,7 +229,6 @@ const Settings = () => {
               </div>
               <span className={styles.detailValue}>{userData.firstName}</span>
             </div>
-            <div className={styles.separator}></div>
 
             <div className={styles.detailRow}>
               <div className={styles.iconAndLabel}>
@@ -149,16 +237,16 @@ const Settings = () => {
               </div>
               <span className={styles.detailValue}>{userData.lastName}</span>
             </div>
-            <div className={styles.separator}></div>
 
             <div className={styles.detailRow}>
               <div className={styles.iconAndLabel}>
                 <Email className={styles.icon} />
                 <span className={styles.detailLabel}>Email Address:</span>
               </div>
-              <span className={styles.detailValue}>{userData.email}</span>
+              <span className={styles.detailValue}>
+                {userData.emailAddress}
+              </span>
             </div>
-            <div className={styles.separator}></div>
 
             <div className={styles.detailRow}>
               <div className={styles.iconAndLabel}>
@@ -167,7 +255,28 @@ const Settings = () => {
               </div>
               <span className={styles.detailValue}>{userData.contactNo}</span>
             </div>
+
+            <div className={styles.detailRow}>
+              <div className={styles.iconAndLabel}>
+              <LockPerson className={styles.icon} />
+                <span className={styles.detailLabel}>Department ID:</span>
+              </div>
+              <span className={styles.detailValue}>
+                {userData.departmentId}
+              </span>
+            </div>
+
+            <div className={styles.detailRow}>
+              <div className={styles.iconAndLabel}>
+                <Image className={styles.icon} />
+                <span className={styles.detailLabel}>Profile Image:</span>
+              </div>
+              <span className={styles.detailValue}>
+                {userData.image ? "Image uploaded" : "No image"}
+              </span>
+            </div>
           </div>
+
           <div className={styles.buttonContainer}>
             <IconButton
               color="primary"
@@ -180,27 +289,17 @@ const Settings = () => {
         </div>
       </div>
 
-      {/* Edit Profile Dialog positioned near Profile Section */}
       <Dialog
         open={openEditDialog}
         onClose={closeEditDialog}
         aria-labelledby="edit-profile-dialog"
         fullWidth
         maxWidth="sm"
-        PaperProps={{
-          style: {
-            position: "absolute",
-            top: "20%", // Adjust this value to control vertical positioning
-            left: "55%", // Align it to the right of the Profile Information section
-            transform: "translate(-50%, 0)",
-          },
-        }}
       >
         <DialogTitle id="edit-profile-dialog">Edit Profile</DialogTitle>
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
-          className={styles.tabsContainer}
           indicatorColor="primary"
           textColor="primary"
           variant="fullWidth"
@@ -210,10 +309,28 @@ const Settings = () => {
         </Tabs>
         <DialogContent>
           {activeTab === 0 && (
-            <div>
+            <>
+              <TextField
+                label="First Name"
+                value={profileForm.firstName}
+                onChange={(e) => handleInputChange("firstName", e.target.value)}
+                fullWidth
+                margin="normal"
+                required
+                type="text"
+              />
+              <TextField
+                label="Last Name"
+                value={profileForm.lastName}
+                onChange={(e) => handleInputChange("lastName", e.target.value)}
+                fullWidth
+                margin="normal"
+                required
+                type="text"
+              />
               <TextField
                 label="Email Address"
-                value={profileForm.email}
+                value={profileForm.emailAddress}
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 fullWidth
                 margin="normal"
@@ -223,31 +340,32 @@ const Settings = () => {
               <TextField
                 label="Contact Number"
                 value={profileForm.contactNo}
-                onChange={(e) =>
-                  handleInputChange("contactNo", e.target.value)
-                }
+                onChange={(e) => handleInputChange("contactNo", e.target.value)}
                 fullWidth
                 margin="normal"
                 required
                 type="tel"
               />
-            </div>
-          )}
-          {activeTab === 1 && (
-            <div>
               <TextField
-                label="Current Password"
-                type="password"
+                label="Department ID"
+                value={profileForm.departmentId}
+                onChange={(e) =>
+                  handleInputChange("departmentId", e.target.value)
+                }
                 fullWidth
                 margin="normal"
+                required
+                type="number"
               />
+            </>
+          )}
+          {activeTab === 1 && (
+            <>
               <TextField
                 label="New Password"
                 type={showPasswordField ? "text" : "password"}
                 value={profileForm.password}
-                onChange={(e) =>
-                  handleInputChange("password", e.target.value)
-                }
+                onChange={(e) => handleInputChange("password", e.target.value)}
                 fullWidth
                 margin="normal"
                 required
@@ -258,11 +376,7 @@ const Settings = () => {
                         onClick={togglePasswordFieldVisibility}
                         edge="end"
                       >
-                        {showPasswordField ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
+                        {showPasswordField ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -270,7 +384,7 @@ const Settings = () => {
               />
               <TextField
                 label="Confirm Password"
-                type="password"
+                type={showPasswordField ? "text" : "password"}
                 value={profileForm.confirmPassword}
                 onChange={(e) =>
                   handleInputChange("confirmPassword", e.target.value)
@@ -279,7 +393,7 @@ const Settings = () => {
                 margin="normal"
                 required
               />
-            </div>
+            </>
           )}
         </DialogContent>
         <DialogActions>
@@ -290,8 +404,9 @@ const Settings = () => {
             onClick={handleUpdateProfile}
             color="primary"
             startIcon={<Save />}
+            disabled={loading}
           >
-            Save Changes
+            {loading ? <CircularProgress size={20} /> : "Save Changes"}
           </Button>
         </DialogActions>
       </Dialog>
