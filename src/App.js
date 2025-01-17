@@ -12,6 +12,8 @@ import MenteeDashboard from './screens/Mentee/MenteeDashboard.jsx';
 import RosterPage from './screens/Mentor/RosterPage';
 import SignUp from './screens/Register/SignUp.js';
 import AnnouncementPage from './screens/Mentor/AnnouncementPage';
+import LandingPageAnnouncements from './screens/Landing/AnnouncePage.jsx';
+import LandingPageRoster from './screens/Landing/RosterPg.jsx';
 import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
 import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
 import ForgotPassword from './screens/Login/ForgotPassword.js';
@@ -39,6 +41,8 @@ const App = () => {
         <Route path="/roster" element={<RosterPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/Send-OTP" element={<SendOTP />} />
+        <Route path="/AnnouncePage" element={<LandingPageAnnouncements />} />
+        <Route path="/RosterPg" element={<LandingPageRoster />} />
 
         {/* Protected routes for Admin, Mentor, and Mentee Dashboards */}
         <Route

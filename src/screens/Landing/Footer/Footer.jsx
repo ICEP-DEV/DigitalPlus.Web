@@ -42,11 +42,11 @@ const Footer = () => {
         <div style={{ flex: '1', minWidth: '200px', textAlign: 'left' }}>
           <h4 style={{ color: '#fff', fontSize: '18px', marginBottom: '15px' }}>Useful Links</h4>
           <ul style={{ listStyleType: 'none', padding: 0 }}>
-            <li><a href="#content" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>myTutor</a></li>
-            <li><a href="#how-it-works" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>Student / Staff Email</a></li>
-            <li><a href="#create" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>Student Password Reset</a></li>
+            <li><a href="https://www.tut.ac.za/mytutor-home" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>myTutor</a></li>
+            <li><a href="https://outlook.office.com/mail/" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>Student / Staff Email</a></li>
+            <li><a href="https://tut4life.tut.ac.za/" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>Student Password Reset</a></li>
             <li><a href="#explore" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>Staff iEnabler</a></li>
-            <li><a href="#terms" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>Tshwane University of Technology</a></li>
+            <li><a href="https://www.tut.ac.za/" style={{ color: '#aaa', textDecoration: 'none', fontSize: '15px' }}>Tshwane University of Technology</a></li>
           </ul>
         </div>
 
