@@ -107,7 +107,9 @@ const ComplainsContent = () => {
       // Helper function to create the HTML email body
       const createHtmlMessage = (recipientEmail) => `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-          <p>Hi <strong>${recipientEmail}</strong>,</p>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
+      <h2 style="color: #007BFF; text-align: center;">Hi <strong>${recipientEmail}</strong>,</h2>
           <p>${emailMessage}</p>
           <p>Best Regards,</p>
           <p><strong>${adminEmail}</strong></p>
