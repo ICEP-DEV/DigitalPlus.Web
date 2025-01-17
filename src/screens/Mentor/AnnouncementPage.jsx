@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { FaInfoCircle, FaDownload } from 'react-icons/fa';
+import { FaDownload } from 'react-icons/fa';
 import styles from './AnnouncementPage.module.css'; // Importing the CSS module
 import SideBar from './Navigation/SideBar';
-import NavBar from './Navigation/NavBar';
+import NavBar from './Navigation/NavBar'; // Importing NavBar
+import KeyPageAlert from './KeyPageAlert'; // Import the KeyPageAlert component
 
 function AnnouncementPage() {
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
     const [announcements, setAnnouncements] = useState([]);
     const userRole = 'mentor'; // Define the user role for mentors
+    const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
 
     useEffect(() => {
-        // Set the body overflow to hidden
-        document.body.style.overflow = 'hidden';
+        // Set the body overflow to hidden to avoid scrolling when the modal is open
+        document.body.style.overflow = isModalOpen ? 'hidden' : 'auto'; // Adjust based on modal state
 
         // Update the current time every second
         const intervalId = setInterval(() => {
@@ -23,22 +25,20 @@ function AnnouncementPage() {
 
         // Cleanup function
         return () => {
-            document.body.style.overflow = 'auto';
+            document.body.style.overflow = 'auto'; // Reset overflow when component is unmounted
             clearInterval(intervalId);
         };
-    }, []);
+    }, [isModalOpen]); // Re-run when modal visibility changes
 
     const fetchAnnouncements = async () => {
         try {
             const response = await fetch(`https://localhost:7163/api/Announcement/${userRole}`);
             if (response.ok) {
                 const data = await response.json();
-
                 // Sort announcements by date in descending order
                 const sortedData = data.sort(
                     (a, b) => new Date(b.announcementDate) - new Date(a.announcementDate)
                 );
-
                 setAnnouncements(sortedData);
             } else {
                 console.error('Failed to fetch announcements:', response.statusText);
@@ -73,7 +73,7 @@ function AnnouncementPage() {
 
     return (
         <div className={styles.container}>
-            <NavBar />
+            <NavBar onKeyIconClick={() => setIsModalOpen(true)} /> {/* Pass the function to NavBar */}
             <SideBar />
             <div className={styles.content}>
                 <h1>Mentor Announcements</h1>
@@ -129,6 +129,11 @@ function AnnouncementPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Key page modal */}
+            {isModalOpen && (
+                <KeyPageAlert showModal={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            )}
         </div>
     );
 }

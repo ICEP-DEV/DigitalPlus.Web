@@ -1,77 +1,41 @@
+// React Component for the Mentorship Landing Page
 import React from 'react';
-import { useLocation } from 'react-router-dom'; // Import useLocation to get navigation state
-import styles from './ModuleInfo.module.css'; // Import the CSS module
+import styles from './ModuleInfo.module.css'; // CSS module
 
-const ModuleInfo = ({ moduleDetails }) => {
-  const location = useLocation(); // Get the navigation state
-  const moduleId = location.state?.moduleId; // Access moduleId from the state
-
-  // Check if the moduleId matches, otherwise display a default module
-  const selectedModule = moduleDetails.find(module => module.id === moduleId) || moduleDetails[0];
-
+const ModuleInfo = () => {
   return (
-    <div className={styles.moduleInficontainer}>
-      <img src={selectedModule.image} alt="Module" className={styles.moduleImage} />
-      <div className={styles.section}>
-        <h2>Description</h2>
-        <p>{selectedModule.description}</p>
-      </div>
-      <div className={styles.section}>
-        <h2>Learning Objectives</h2>
+    <div className={styles["mi-container"]}>
+      <header className={styles["mi-header"]}>
+        <h1 className={styles["mi-title"]}>Empowering the Future Through Mentorship</h1>
+        <p className={styles["mi-subtitle"]}>Discover the transformative power of guidance and growth.</p>
+      </header>
+
+      <section className={styles["mi-section"]}>  
+       
+        <div className={styles["mi-content"]}>
+          <h2>Why Mentorship Matters</h2>
+          <p>
+            Mentorship fosters growth, builds confidence, and empowers individuals to achieve their
+            goals. By connecting mentors and mentees, we create opportunities for shared learning,
+            personal development, and community building.
+          </p>
+        </div>
+      </section>
+
+      <section className={styles["mi-features"]}>  
+        <h2>Benefits of Mentorship</h2>
         <ul>
-          {selectedModule.objectives.map((objective, index) => (
-            <li key={index}>{objective}</li>
-          ))}
+          <li>Improved skills and knowledge</li>
+          <li>Increased confidence and motivation</li>
+          <li>Building meaningful connections</li>
         </ul>
-      </div>
-      <div className={styles.section}>
-        <h2>Learn More</h2>
-        <ul>
-          {selectedModule.resources.map((resource, index) => (
-            <li key={index}>
-              <a href={resource.link} target="_blank" rel="noopener noreferrer">
-                {resource.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className={styles.section}>
-        <h2>Download Study Guide</h2>
-        <a href={selectedModule.studyGuide} download className={styles.downloadButton}>
-          Download PDF
-        </a>
-      </div>
+      </section>
+
+      <footer className={styles["mi-footer"]}>
+        <p>&copy; 2025 Mentorship Program. All rights reserved.</p>
+      </footer>
     </div>
   );
-};
-
-// Default props to illustrate the structure
-ModuleInfo.defaultProps = {
-  moduleDetails: [
-    {
-      image: "https://imgv2-2-f.scribdassets.com/img/word_document/317276308/original/adfe3e30f6/1611644272?v=1", // Updated image URL
-      description:
-        "This module introduces the fundamental data structures used in computer science, including arrays, linked lists, stacks, queues, trees, and graphs. Students will learn about the operations, time complexity, and practical applications of each structure.",
-      objectives: [
-        "Understand the concept of data structures",
-        "Learn how to implement various data structures",
-        "Analyze the time complexity of different operations",
-        "Explore real-world applications of data structures",
-      ],
-      resources: [
-        {
-          name: "Official Documentation",
-          link: "https://example.com/data-structures-doc",
-        },
-        {
-          name: "Introduction to Algorithms - Online Course",
-          link: "https://example.com/intro-to-algorithms",
-        },
-      ],
-      studyGuide: "/path/to/study-guide.pdf", // Replace with the actual file path
-    },
-  ],
 };
 
 export default ModuleInfo;

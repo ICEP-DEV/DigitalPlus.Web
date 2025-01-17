@@ -1,6 +1,4 @@
 .container {
-    padding:100px;
-    font-family: 'Arial, sans-serif';
     width: 100%;
     height: 100vh;
     background-color: #D9D9D9;
@@ -12,6 +10,7 @@
     flex: 1;
     overflow: hidden;
     padding: 20px;
+    position: relative;
 }
 
 .header {
@@ -29,11 +28,13 @@
     align-items: flex-start;
     height: calc(100% - 120px);
     width: 70%;
+    overflow-y: auto; /* Add scroll bar */
 }
 
 .timeline {
     position: relative;
-    flex: 1;
+    padding: 20px;
+    flex-grow: 1;
 }
 
 .timelineItem {
@@ -63,9 +64,9 @@
     height: 50%;
     background-color: #000000;
     position: absolute;
-    right: 0;
+    right: 20%;
     bottom: 0;
-    top:0;
+    top: 0;
 }
 
 .circle {
@@ -81,7 +82,7 @@
 
 .card {
     border: 3px solid #000; /* Increase the border width (e.g., from 1px to 3px) */
-    background-color: white;
+    background-color: #D9D9D9;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 10px 15px;
@@ -91,19 +92,20 @@
 .date {
     font-size: 16px;
     color: #000000;
-    margin-bottom: 5px;
+    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 .message {
-    font-size: 14px;
+    font-size: 16px;
     color: black;
     display: flex;
     align-items: center;
 }
 
 .icon {
-    margin-right: 5px;
-    color: #00796b;
+    margin-right: 8px;
+    color: black;
 }
 
 .viewRosterLink {
@@ -126,15 +128,72 @@
 }
 
 .currentDateTime {
-    position: relative;
-    right: 30px;
-    top: 0;
     text-align: right;
-    margin-top:20px;
-    
+    font-size: 18px;
+    position: absolute;
+    top: -70px;
+    right: -280px;
 }
 
 .time {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.date {
     font-size: 16px;
-    color: #000000;
+    margin-left: 100px;
+    right: 20px;
+}
+
+.currentDateTime .time {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.currentDateTime .date {
+    font-size: 16px;
+    margin-left: 100px;
+    right: 20px;
+}
+
+/* New styles for the download icon functionality */
+.imageWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between the icon and any other content */
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.downloadIcon {
+    font-size: 24px;
+    color: #000;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.downloadIcon:hover {
+    color: #007bff;
+}
+
+/* Detail row for displaying announcement details */
+.detailRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.detailRow strong {
+    margin-right: 5px;
+    color: #333;
+}
+
+h1{
+    margin-top: 80px;
+    font-weight: bolder;
 }
