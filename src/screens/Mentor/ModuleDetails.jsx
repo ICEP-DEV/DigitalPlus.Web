@@ -12,7 +12,7 @@ import MentorChatBoard from './ModuleDetails/MentorChatBoard';
 import ModuleLandingPage from './ModuleDetails/ModuleLandingPage';
 
 function App() {
-  const [activePage, setActivePage] = useState('chat');  // Default page is ChatPage (LIVE CHAT)
+  const [activePage, setActivePage] = useState('moduleLanding');  // Default page is ChatPage (LIVE CHAT)
 
   return (
     <div className={styles.appC}>
