@@ -16,20 +16,24 @@ const ComplainsContent = () => {
   const [emailMessage, setEmailMessage] = useState('');
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [recipientType, setRecipientType] = useState('mentee'); // New state for recipient type
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch complaints from API
   useEffect(() => {
     const fetchComplaints = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllComplaints');
         if (response.data && Array.isArray(response.data.result)) {
           setComplaints(response.data.result);
         } else {
           setComplaints([]);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Error fetching complaints:', error);
         setComplaints([]);
+        setIsLoading(false);
       }
     };
 

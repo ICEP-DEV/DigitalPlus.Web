@@ -11,7 +11,7 @@
 .contentWrapper {
   display: flex;
   flex: 1;
-  margin-top: -18px; /* Space below the header */
+  margin-top: -80px; /* Space below the header */
   margin-left: 200px;
 }
 
