@@ -1,15 +1,13 @@
 .bookingContainer {
-    width: 100%;
     padding: 20px;
     background-color:  #D9D9D9;
     color: #212121;
-    border-radius: 10px;
     text-align: center;
     z-index: -1;
-    /* margin-left: 180px; */
-    /* min-height: 20vh; */
-    height: 57vh;
+    height: 43vh;
     padding: 200px;
+    margin-left: 100px;
+ 
 }
   
 .bookingTitle {
@@ -28,6 +26,7 @@
     align-items: center;
     margin-left: 150px; 
     margin-right: 500px;
+    width: 90%;
 }
   
 .formRow {

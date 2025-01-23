@@ -106,8 +106,6 @@ const AnnouncementModal = ({
                 <th>Date</th>
                 <th>Content</th>
                 <th>Image</th>
-                <th>Frequency</th>
-                <th>Total Occurrences</th>
                 <th>End Date</th>
                 <th>Actions</th>
               </tr>
@@ -147,8 +145,6 @@ const AnnouncementModal = ({
                       }
                     />
                   </td>
-                  <td>{announcement.frequency}</td>
-                  <td>{announcement.totalOccurrences}</td>
                   <td>
                     {announcement.endDate
                       ? new Date(announcement.endDate).toLocaleDateString()
@@ -227,13 +223,6 @@ const AnnouncementModal = ({
                 className={styles.imageThumbnail}
               />
             )}
-            <p>
-              <strong>Frequency:</strong> {selectedAnnouncement.frequency}
-            </p>
-            <p>
-              <strong>Total Occurrences:</strong>{" "}
-              {selectedAnnouncement.totalOccurrences}
-            </p>
             <p>
               <strong>End Date:</strong>{" "}
               {selectedAnnouncement.endDate
