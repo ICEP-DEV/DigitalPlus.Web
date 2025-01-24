@@ -53,6 +53,7 @@ const ReportContent = () => {
     fetchCourses();
   }, []);
 
+  
   useEffect(() => {
     const fetchMentorsWithModules = async () => {
       try {
@@ -111,10 +112,9 @@ const ReportContent = () => {
   const handleFilter = () => {
     const filtered = mentors.filter((mentor) => {
       const matchCourse = selectedCourse
-        ? mentor.modules.some((module) => module.courseName === selectedCourse)
-        : true;
-      const matchMonth = selectedMonth ? mentor.month === selectedMonth : true;
-      return matchCourse && matchMonth;
+        ? mentor.modules.some((module) => module.moduleName === selectedCourse) // Match by moduleName
+        : true; // If no course is selected, include all mentors
+      return matchCourse;
     });
 
     setFilteredReports(filtered);
@@ -124,23 +124,25 @@ const ReportContent = () => {
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
   
-    const filtered = mentors.filter((mentor) =>
-      String(mentor.mentorId).toLowerCase().includes(searchValue) ||
-      mentor.firstName.toLowerCase().includes(searchValue) ||
-      mentor.lastName.toLowerCase().includes(searchValue) ||
-      `${mentor.firstName} ${mentor.lastName}`.toLowerCase().includes(searchValue)
-    );
+    const filtered = mentors.filter((mentor) => {
+      const mentorName = `${mentor.firstName} ${mentor.lastName}`.toLowerCase();
+      const moduleMatch = mentor.modules.some((module) =>
+        module.moduleName.toLowerCase().includes(searchValue)
+      );
   
-    if (filtered.length === 0) {
-      setErrorMessage("No results found");
-    } else {
-      setErrorMessage("");
-    }
+      return (
+        String(mentor.mentorId).toLowerCase().includes(searchValue) ||
+        mentor.firstName.toLowerCase().includes(searchValue) ||
+        mentor.lastName.toLowerCase().includes(searchValue) ||
+        mentorName.includes(searchValue) ||
+        moduleMatch // Check if any module name matches the search value
+      );
+    });
   
-    setFilteredReports(filtered);
+    setFilteredReports(filtered); // Update the filtered reports with the search result
   };
 
-//Handling the register and report of the mentor
+  //Handling the register and report of the mentor
   const viewRegister = (mentorId) => {
     setSelectedReport(`${mentorId}`);
     setViewType("details");
@@ -211,11 +213,11 @@ const ReportContent = () => {
           <div className={styles.filterContainer}>
             <input
               type="text"
-              placeholder="Search by student number"
+              placeholder="Search Student Report"
               onChange={handleSearch}
               className={styles.searchInput}
             />
-            <select
+            {/* <select
               className={styles.dropdown}
               value={selectedCourse}
               onChange={(e) => setSelectedCourse(e.target.value)}
@@ -230,7 +232,7 @@ const ReportContent = () => {
               ) : (
                 <option disabled>No courses available</option>
               )}
-            </select>
+            </select> */}
 
             {/* <select
               className={styles.dropdown}
@@ -257,9 +259,9 @@ const ReportContent = () => {
               ))}
             </select> */}
 
-            <button className={styles.filterBtn} onClick={handleFilter}>
+            {/* <button className={styles.filterBtn} onClick={handleFilter}>
               <IoFilter /> Filter
-            </button>
+            </button> */}
           </div>
 
           <table className={styles.reportTable}>
@@ -284,7 +286,7 @@ const ReportContent = () => {
                     <td>{mentor.mentorId}</td>
                     <td>{`${mentor.firstName} ${mentor.lastName}`}</td>
                     <td>
-                      {mentor.modules.length > 0
+                      {mentor.modules && mentor.modules.length > 0
                         ? mentor.modules.map((mod) => mod.moduleName).join(", ")
                         : "No module assigned"}
                     </td>
@@ -366,9 +368,6 @@ const ReportContent = () => {
   );
 };
 
-
-
-
 const RegisterComponent = ({ mentorId, goBack }) => {
   const [registerData, setRegisterData] = useState([]);
   const [mentorData, setMentor] = useState({});
@@ -399,7 +398,8 @@ const RegisterComponent = ({ mentorId, goBack }) => {
       } catch (err) {
         console.error("Error fetching data:", err.response || err);
         setError(
-          err.response?.data?.message || "Failed to load data. Please try again."
+          err.response?.data?.message ||
+            "Failed to load data. Please try again."
         );
       } finally {
         setLoading(false);
@@ -454,7 +454,6 @@ RegisterComponent.propTypes = {
   mentorId: PropTypes.string.isRequired,
   goBack: PropTypes.func.isRequired,
 };
-
 
 const MentorReportComponent = ({ mentorId, goBack }) => {
   const [reports, setReportData] = useState([]);
