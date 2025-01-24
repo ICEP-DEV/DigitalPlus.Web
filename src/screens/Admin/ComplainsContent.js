@@ -16,20 +16,24 @@ const ComplainsContent = () => {
   const [emailMessage, setEmailMessage] = useState('');
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [recipientType, setRecipientType] = useState('mentee'); // New state for recipient type
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch complaints from API
   useEffect(() => {
     const fetchComplaints = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllComplaints');
         if (response.data && Array.isArray(response.data.result)) {
           setComplaints(response.data.result);
         } else {
           setComplaints([]);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Error fetching complaints:', error);
         setComplaints([]);
+        setIsLoading(false);
       }
     };
 
@@ -204,83 +208,214 @@ const ComplainsContent = () => {
         </tbody>
       </table>
 
-      {/* Dialog for Status Change */}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          style: {
-            padding: '20px',
-            borderRadius: '10px',
-            backgroundColor: '#f0f4f7',
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-          },
+ {/* Dialog for Status Change */}
+<Dialog
+  open={open}
+  onClose={handleClose}
+  PaperProps={{
+    style: {
+      padding: '20px',
+      borderRadius: '15px',
+      background: 'linear-gradient(145deg, #ffffff, #dce1e6)',
+    },
+  }}
+>
+  <DialogTitle style={{ 
+    textAlign: 'center', 
+    fontWeight: 'bold', 
+    color: '#333',
+    textShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)' 
+  }}>
+    Confirm Status Change
+  </DialogTitle>
+  <DialogContent>
+    <DialogContentText
+      style={{
+        color: '#555',
+        textAlign: 'center',
+        fontSize: '1rem',
+        lineHeight: '1.6',
+      }}
+    >
+      Are you sure you want to change the status of this complaint to{' '}
+      <strong
+        style={{
+          color: selectedComplaint?.action === 1 ? '#ff4d4d' : '#28a745',
+          textShadow: '0px 1px 2px rgba(0, 0, 0, 0.2)',
         }}
       >
-        <DialogTitle>Confirm Status Change</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to change the status of this complaint to
-            <strong>{selectedComplaint?.action === 1 ? ' Unresolved' : ' Resolved'}</strong>?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>No</Button>
-          <Button onClick={handleStatusChange} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {selectedComplaint?.action === 1 ? 'Unresolved' : 'Resolved'}
+      </strong>
+      ?
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions style={{ justifyContent: 'center', gap: '10px' }}>
+    <Button
+      onClick={handleClose}
+      style={{
+        padding: '10px 20px',
+        borderRadius: '10px',
+        background: 'linear-gradient(145deg, #f5f5f5, #d1d9de)',
+        boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.8)',
+        color: '#333',
+        fontWeight: 'bold',
+        transition: 'all 0.3s',
+      }}
+      onMouseOver={(e) =>
+        (e.currentTarget.style.background = 'linear-gradient(145deg, #e0e7ec, #c1c9cf)')
+      }
+      onMouseOut={(e) =>
+        (e.currentTarget.style.background = 'linear-gradient(145deg, #f5f5f5, #d1d9de)')
+      }
+    >
+      No
+    </Button>
+    <Button
+      onClick={handleStatusChange}
+      autoFocus
+      style={{
+        padding: '10px 20px',
+        borderRadius: '10px',
+        background: 'linear-gradient(145deg, #4caf50, #43a047)',
+        boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.15), -4px -4px 10px rgba(255, 255, 255, 0.8)',
+        color: '#fff',
+        fontWeight: 'bold',
+        transition: 'all 0.3s',
+      }}
+      onMouseOver={(e) =>
+        (e.currentTarget.style.background = 'linear-gradient(145deg, #43a047, #388e3c)')
+      }
+      onMouseOut={(e) =>
+        (e.currentTarget.style.background = 'linear-gradient(145deg, #4caf50, #43a047)')
+      }
+    >
+      Yes
+    </Button>
+  </DialogActions>
+</Dialog>
 
-      {/* Dialog for Email */}
-      <Dialog
-        open={emailDialogOpen}
-        onClose={handleEmailClose}
-        PaperProps={{
-          style: {
-            padding: '20px',
-            borderRadius: '10px',
-            backgroundColor: '#f0f4f7',
-            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-          },
-        }}
-      >
-        <DialogTitle>Send Email</DialogTitle>
-        <DialogContent>
-          <InputLabel id="recipient-label">Recipient</InputLabel>
-          <Select
-            labelId="recipient-label"
-            value={recipientType}
-            onChange={(e) => setRecipientType(e.target.value)}
-            fullWidth
-            margin="normal"
-          >
-            <MenuItem value="mentee">Mentee</MenuItem>
-            <MenuItem value="mentor">Mentor</MenuItem>
-            <MenuItem value="both">Both</MenuItem>
-          </Select>
-          <TextField
-            label="Subject"
-            fullWidth
-            margin="normal"
-            value={emailSubject}
-            onChange={(e) => setEmailSubject(e.target.value)}
-          />
-          <TextField
-            label="Message"
-            fullWidth
-            multiline
-            rows={4}
-            margin="normal"
-            value={emailMessage}
-            onChange={(e) => setEmailMessage(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleEmailClose}>Cancel</Button>
-          <Button onClick={handleSendEmail}>Send</Button>
-        </DialogActions>
-      </Dialog>
+
+{/* Dialog for Email */}
+<Dialog
+  open={emailDialogOpen}
+  onClose={handleEmailClose}
+  PaperProps={{
+    style: {
+      padding: '20px',
+      borderRadius: '15px',
+      backgroundColor: 'linear-gradient(135deg, #ffffff, #e0f7fa)',
+      boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.2)',
+      border: '1px solid #b2ebf2',
+    },
+  }}
+>
+  <DialogTitle
+    style={{
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+      color: '#00796b',
+      textAlign: 'center',
+      marginBottom: '10px',
+    }}
+  >
+    Send Email
+  </DialogTitle>
+  <DialogContent
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '15px',
+    }}
+  >
+    <InputLabel
+      id="recipient-label"
+      style={{
+        color: '#004d40',
+        fontWeight: '500',
+      }}
+    >
+      Recipient
+    </InputLabel>
+    <Select
+      labelId="recipient-label"
+      value={recipientType}
+      onChange={(e) => setRecipientType(e.target.value)}
+      fullWidth
+      margin="normal"
+      style={{
+        backgroundColor: '#ffffff',
+        borderRadius: '10px',
+        boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.1)',
+      }}
+    >
+      <MenuItem value="mentee">Mentee</MenuItem>
+      <MenuItem value="mentor">Mentor</MenuItem>
+      <MenuItem value="both">Both(Mentee and Mentor)</MenuItem>
+    </Select>
+    <TextField
+      label="Subject"
+      fullWidth
+      margin="normal"
+      value={emailSubject}
+      onChange={(e) => setEmailSubject(e.target.value)}
+      style={{
+        backgroundColor: '#ffffff',
+        borderRadius: '10px',
+        boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.1)',
+      }}
+    />
+    <TextField
+      label="Message"
+      fullWidth
+      multiline
+      rows={8} /* Increased from 4 to 8 to allow more text */
+      margin="normal"
+      value={emailMessage}
+      onChange={(e) => setEmailMessage(e.target.value)}
+      style={{
+        backgroundColor: '#ffffff',
+        borderRadius: '10px',
+        boxShadow: 'inset 0px 2px 4px rgba(0, 0, 0, 0.1)',
+      }}
+    />
+  </DialogContent>
+  <DialogActions
+    style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '10px 20px',
+    }}
+  >
+    <Button
+      onClick={handleEmailClose}
+      style={{
+        backgroundColor: '#b2dfdb',
+        color: '#004d40',
+        fontWeight: 'bold',
+        borderRadius: '8px',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+        padding: '10px 20px',
+      }}
+    >
+      Cancel
+    </Button>
+    <Button
+      onClick={handleSendEmail}
+      style={{
+        backgroundColor: '#00796b',
+        color: '#ffffff',
+        fontWeight: 'bold',
+        borderRadius: '8px',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.2)',
+        padding: '10px 20px',
+      }}
+    >
+      Send
+    </Button>
+  </DialogActions>
+</Dialog>
+
+
     </div>
   );
 };

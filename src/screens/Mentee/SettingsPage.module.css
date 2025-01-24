@@ -1,11 +1,11 @@
 .settingsContainer {
   width: 86%;
-  background-color: #ffffff;
+
   color: #212121;
   border-radius: 10px;
   text-align: center;
   height: 60vh;
-  margin-left: 181px;
+  margin-left: 220px;
   margin-bottom: 60px;
   min-height: -20vh;
 }
@@ -13,7 +13,10 @@
 .settingsContainer h2 {
   display: flex;
   justify-self: start;
-  font-size: 20px;
+  font-size: 40px;
+  margin-left: 700px;
+  margin-bottom: 50px;
+  
 }
 
 /* Tabs Section */

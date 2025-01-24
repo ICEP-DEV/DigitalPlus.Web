@@ -8,6 +8,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [showDialog, setShowDialog] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -25,11 +26,11 @@ const Login = () => {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                toast.success('Login successful!', { autoClose: 2000 });
-
                 localStorage.setItem('user', JSON.stringify(data.user));
-                
+                setShowDialog(true); // Show the dialog on success
+
                 setTimeout(() => {
+                    setShowDialog(false);
                     if (data.role === 'Admin') {
                         navigate('/admin-dashboard/dashboard');
                     } else if (data.role === 'Mentor') {
@@ -47,7 +48,6 @@ const Login = () => {
             setError('Login failed. Please check your network or try again.');
         }
     };
-
     return (
         <div className={styles.loginContainer}>
             <ToastContainer /> {/* Add ToastContainer here */}
@@ -88,8 +88,17 @@ const Login = () => {
                     Don’t have an account yet? <Link to="/SignUp" className={styles.signupLink}>Sign Up</Link>
                 </p>
             </div>
+{/* Popup dialog */}
+{showDialog && (
+    <div className={styles.dialogOverlay}>
+        <div className={styles.dialog}>
+            <h3>Login Successful!</h3>
+            <p>Redirecting to your dashboard...</p>
         </div>
-    );
+    </div>
+)}
+</div>
+);
 };
 
 export default Login;

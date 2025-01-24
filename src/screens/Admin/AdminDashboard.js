@@ -34,7 +34,11 @@ const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showWelcomeDialog, setShowWelcomeDialog] = useState(true); // Show the dialog initially
 
+  const closeDialog = () => {
+      setShowWelcomeDialog(false); // Hide the dialog when the button is clicked
+  };
   const handleCropComplete = (_, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   };
@@ -541,6 +545,15 @@ const closeCropModal = () => setIsCropModalOpen(false);
           </Routes>
         </div>
       </div>
+      {showWelcomeDialog && (
+                <div className={styles.dialogOverlay}>
+                    <div className={styles.dialog}>
+                        <h3>Welcome!</h3>
+                        <p>We're glad to have you here. Explore your dashboard and manage your tasks efficiently.</p>
+                        <button onClick={closeDialog} className={styles.closeButton}>Close</button>
+                    </div>
+                </div>
+            )}
     </div>
   );
 };
