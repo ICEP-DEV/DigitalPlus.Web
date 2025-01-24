@@ -103,14 +103,6 @@ const ClassListPage = () => {
                                     <td>{mentee.mentee_Id}</td>
                                     <td>{`${mentee.firstName} ${mentee.lastName}`}</td>
                                     <td>{mentee.studentEmail}</td>
-                                    <td>
-                                        <button
-                                            className={styles.messageBtn}
-                                            onClick={() => handleMessageClick(mentee.mentee_Id)}
-                                        >
-                                            MESSAGE
-                                        </button>
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>

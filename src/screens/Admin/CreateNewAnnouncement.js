@@ -11,13 +11,9 @@ const CreateNewAnnouncement = ({
   const [formData, setFormData] = useState({
     announcementTitle: '',
     userRole: 'Mentee',
-    type: 'OneTime',
     announcementDate: '',
     announcementContent: '',
     announcementImageFile: null,
-    isImageUpload: false,
-    frequency: 'TwoWeeks',
-    totalOccurrences: '',
     endDate: '',
   });
 
@@ -30,13 +26,9 @@ const CreateNewAnnouncement = ({
       setFormData({
         announcementTitle: editingAnnouncement.announcementTitle || '',
         userRole: editingAnnouncement.userRole || 'Mentee',
-        type: editingAnnouncement.type || 'OneTime',
         announcementDate: editingAnnouncement.announcementDate || '',
         announcementContent: editingAnnouncement.announcementContent || '',
         announcementImageFile: null,
-        isImageUpload: false,
-        frequency: editingAnnouncement.frequency || 'TwoWeeks',
-        totalOccurrences: editingAnnouncement.totalOccurrences || '',
         endDate: editingAnnouncement.endDate || '',
       });
     } else {
@@ -109,13 +101,9 @@ const CreateNewAnnouncement = ({
     setFormData({
       announcementTitle: '',
       userRole: 'Mentee',
-      type: 'OneTime',
       announcementDate: '',
       announcementContent: '',
       announcementImageFile: null,
-      isImageUpload: false,
-      frequency: 'TwoWeeks',
-      totalOccurrences: '',
       endDate: '',
     });
   };
@@ -165,21 +153,7 @@ const CreateNewAnnouncement = ({
             </select>
           </label>
 
-          <label className={styles.label}>
-            Announcement Type:
-            <select
-              name="type"
-              value={formData.type}
-              onChange={handleInputChange}
-              className={styles.select}
-            >
-              <option value="OneTime">One Time</option>
-              <option value="Recurring">Recurring</option>
-            </select>
-          </label>
-
-          {formData.type === 'OneTime' && (
-            <>
+          
               <label className={styles.label}>
                 Announcement Date:
                 <input
@@ -202,51 +176,7 @@ const CreateNewAnnouncement = ({
                   className={styles.input}
                 />
               </label>
-            </>
-          )}
-
-          {formData.type === 'Recurring' && (
-            <>
-              <label className={styles.label}>
-                Frequency:
-                <select
-                  name="frequency"
-                  value={formData.frequency}
-                  onChange={handleInputChange}
-                  required
-                  className={styles.select}
-                >
-                  <option value="TwoWeeks">Two Weeks</option>
-                  <option value="Monthly">Monthly</option>
-                  <option value="Quarterly">Quarterly</option>
-                </select>
-              </label>
-              <label className={styles.label}>
-                Total Occurrences:
-                <input
-                  type="number"
-                  name="totalOccurrences"
-                  value={formData.totalOccurrences}
-                  onChange={handleInputChange}
-                  min="1"
-                  required
-                  className={styles.input}
-                />
-              </label>
-              <label className={styles.label}>
-                End Date:
-                <input
-                  type="datetime-local"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleInputChange}
-                  required
-                  className={styles.input}
-                />
-              </label>
-            </>
-          )}
-
+           
           <label className={styles.label}>
             Content:
             <textarea
