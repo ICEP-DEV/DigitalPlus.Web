@@ -19,10 +19,7 @@
     font-size: 30px;
   }
 
-  .inactivePage {
-    opacity: 0.6;
-    pointer-events: none; /* Disable all interactions */
-  }
+  
   
   
   .mainContent {

@@ -70,7 +70,7 @@ const RegisterPage = () => {
                 IsRegisteractivated: !isRegisterActivated, // Toggle activation
             };
 
-            const response = await axios.post('https://localhost:7163/api/MenteeAndMentorRegister', payload);
+            const response = await axios.post('https://localhost:7163/api/MenteeAndMentorRegister/InsertMentorRegister', payload);
 
             alert(response.data.message || "Register status updated successfully.");
             setIsRegisterActivated(!isRegisterActivated); // Update local state

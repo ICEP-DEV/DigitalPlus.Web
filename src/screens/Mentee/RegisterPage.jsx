@@ -1,42 +1,89 @@
+
 import React, { useState, useEffect } from 'react';
-import styles from './RegisterPage.module.css'; // Import CSS module
+import axios from 'axios';
+import styles from './RegisterPage.module.css';
 import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const RegisterPage = () => {
+  const [formData, setFormData] = useState({
+    studentNumber: '',
+    fullNames: ''
+  });
   const [selectedModule, setSelectedModule] = useState('');
   const [mentors, setMentors] = useState([]);
-  const [rating, setRating] = useState(0); // State to manage the slider value
-  const [menteeID, setMenteeID] = useState(''); // State to store mentee ID
-  const [fetchedMenteeID, setFetchedMenteeID] = useState(''); // New state for displaying mentor ID
-  const [isInactive, setIsInactive] = useState(true); // State to control page activity
+  const [rating, setRating] = useState(0);
+  const [isInactive, setIsInactive] = useState(true);
+  const [moduleRegisters, setModuleRegisters] = useState([]);
 
-  // Fetch Mentee ID from localStorage on component mount
+  // Mock module-to-ID mapping
+  const moduleToIdMapping = {
+    'PPA F05D': 1,
+    'PPB 216D': 2,
+    'OOP 216D': 3,
+    'AOP 316D': 4,
+  };
+
+  // Fetch user data and update state
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser && storedUser.menteeID) {
-      setMenteeID(storedUser.menteeID);
-      setFetchedMenteeID(storedUser.menteeID); // Display mentee ID in Student Number field
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setFormData((prevData) => ({
+        ...prevData,
+        studentNumber: user.mentee_Id || '',
+        fullNames: `${user.firstName} ${user.lastName}` || ''
+      }));
+    } else {
+      console.warn('User data not found in localStorage');
     }
   }, []);
 
-  // Define mentors for each module
-  const moduleMentors = {
-    'PPA F05D': ['B Buthelezi', 'S Vinjwa', 'T Mmethi'],
-    'PPB 216D': ['A Nkosi', 'L Dlamini', 'K Ndlovu'],
-    'OOP 216D': ['M Khumalo', 'R Sithole', 'S Ncube'],
-    'AOP 316D': ['J Moyo', 'C Hadebe', 'G Mthethwa'],
-  };
-
-  // Handle module change
-  const handleModuleChange = (event) => {
+  // Handle module selection and fetch data
+  const handleModuleChange = async (event) => {
     const selected = event.target.value;
     setSelectedModule(selected);
-    setMentors(moduleMentors[selected] || []);
+
+    // Map module to ID
+    const moduleId = moduleToIdMapping[selected];
+
+    // Fetch mentor registers for the selected module
+    try {
+      const response = await axios.get(
+        `https://localhost:7163/api/MenteeAndMentorRegister/GetMentorRegister/ByModuleId/${moduleId}`
+      );
+      setModuleRegisters(response.data); // Save fetched data to state
+      console.log('Fetched Mentor Registers:', response.data);
+
+      // Update mentors based on response (optional if mentors are predefined)
+      setMentors(response.data.map((register) => register.MentorId));
+    } catch (error) {
+      console.error('Error fetching mentor registers:', error);
+    }
   };
 
-  // Handle rating change
   const handleRatingChange = (event) => {
     setRating(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const menteeRegisterData = {
+      menteeID: formData.studentNumber,
+      moduleCode: selectedModule,
+      mentorName: event.target.mentor.value,
+      rating: rating,
+      comment: event.target.comment.value,
+    };
+
+    try {
+      const response = await axios.post(
+        'https://localhost:7163/api/MenteeAndMentorRegister/InsertMenteeRegister',
+        menteeRegisterData
+      );
+      console.log('Mentee Register Added:', response.data);
+    } catch (error) {
+      console.error('Error adding mentee register:', error);
+    }
   };
 
   return (
@@ -47,14 +94,15 @@ const RegisterPage = () => {
           <div className={styles.mainContent}>
             <div className={styles.formWrapper}>
               <div className={styles.formContainer}>
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Student Number:</label>
                     <input
-                      value={fetchedMenteeID}
+                      type="text"
+                      value={formData.studentNumber || 'Not Found'}
+                      placeholder="Mentee ID"
+                      disabled
                       className={styles.input}
-                      readOnly
-                      disabled={isInactive} // Disable input if inactive
                     />
                   </div>
 
@@ -64,20 +112,28 @@ const RegisterPage = () => {
                       value={selectedModule}
                       onChange={handleModuleChange}
                       className={styles.input}
-                      disabled={isInactive} // Disable select if inactive
                     >
-                      <option value="" disabled>Module Code</option>
-                      <option value="PPA F05D">PPA F05D</option>
-                      {/* Add more modules as needed */}
+                      <option value="" disabled>
+                        Module Code
+                      </option>
+                      {Object.keys(moduleToIdMapping).map((module) => (
+                        <option key={module} value={module}>
+                          {module}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Mentor's Name:</label>
-                    <select className={styles.input} disabled={isInactive}>
-                      <option value="" disabled>Select mentor</option>
+                    <select name="mentor" className={styles.input}>
+                      <option>
+                        Select mentor
+                      </option>
                       {mentors.map((mentor, index) => (
-                        <option key={index} value={mentor}>{mentor}</option>
+                        <option key={index} value={mentor}>
+                          {mentor}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -89,10 +145,9 @@ const RegisterPage = () => {
                       min="0"
                       max="10"
                       step="1"
-                      value={rating} // Bind the value to the state
-                      onChange={handleRatingChange} // Handle the slider value change
+                      value={rating}
+                      onChange={handleRatingChange}
                       className={styles.rangeSlider}
-                      disabled={isInactive} // Disable slider if inactive
                     />
                   </div>
 
@@ -107,9 +162,9 @@ const RegisterPage = () => {
                 <div className={styles.formGroup}>
                   <label className={styles.formLabel}>Comment:</label>
                   <textarea
+                    name="comment"
                     placeholder="Write your comment"
                     className={styles.textarea}
-                    disabled={isInactive} // Disable textarea if inactive
                   />
                   <i className={`fas fa-upload ${styles.uploadIcon}`} />
                 </div>
@@ -123,3 +178,4 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+
