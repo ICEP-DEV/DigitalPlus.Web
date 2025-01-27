@@ -6,21 +6,22 @@ import { BsFillPersonCheckFill, BsFileEarmarkTextFill } from "react-icons/bs";
 import { RiShareFill, RiDownload2Fill } from "react-icons/ri";
 import { FaArrowLeft } from "react-icons/fa";
 import { GoReport } from "react-icons/go";
-import { IoFilter } from "react-icons/io5";
+//import { IoFilter } from "react-icons/io5";
 import PropTypes from "prop-types";
+import { Typography, CircularProgress } from "@mui/material";
 
 const ReportContent = () => {
   const [filteredReports, setFilteredReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
   const [viewType, setViewType] = useState("main");
   const [tabView, setTabView] = useState("register");
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
+  //const [selectedCourse, setSelectedCourse] = useState("");
   const reportRef = useRef(null);
 
   const [courses, setCourses] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch courses from the backend
@@ -53,7 +54,6 @@ const ReportContent = () => {
     fetchCourses();
   }, []);
 
-  
   useEffect(() => {
     const fetchMentorsWithModules = async () => {
       try {
@@ -90,6 +90,7 @@ const ReportContent = () => {
 
           setMentors(mentorsWithModules);
           setFilteredReports(mentorsWithModules);
+          setLoading(false);
         } else {
           console.error(
             "Unexpected mentor response structure:",
@@ -108,28 +109,27 @@ const ReportContent = () => {
     fetchMentorsWithModules();
   }, []);
 
+  // const handleFilter = () => {
+  //   const filtered = mentors.filter((mentor) => {
+  //     const matchCourse = selectedCourse
+  //       ? mentor.modules.some((module) => module.moduleName === selectedCourse) // Match by moduleName
+  //       : true; // If no course is selected, include all mentors
+  //     return matchCourse;
+  //   });
 
-  const handleFilter = () => {
-    const filtered = mentors.filter((mentor) => {
-      const matchCourse = selectedCourse
-        ? mentor.modules.some((module) => module.moduleName === selectedCourse) // Match by moduleName
-        : true; // If no course is selected, include all mentors
-      return matchCourse;
-    });
-
-    setFilteredReports(filtered);
-  };
+  //   setFilteredReports(filtered);
+  // };
 
   //Handling the search bar when searching for mentor using the name or mento ID
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
-  
+
     const filtered = mentors.filter((mentor) => {
       const mentorName = `${mentor.firstName} ${mentor.lastName}`.toLowerCase();
       const moduleMatch = mentor.modules.some((module) =>
         module.moduleName.toLowerCase().includes(searchValue)
       );
-  
+
       return (
         String(mentor.mentorId).toLowerCase().includes(searchValue) ||
         mentor.firstName.toLowerCase().includes(searchValue) ||
@@ -138,7 +138,7 @@ const ReportContent = () => {
         moduleMatch // Check if any module name matches the search value
       );
     });
-  
+
     setFilteredReports(filtered); // Update the filtered reports with the search result
   };
 
@@ -264,53 +264,63 @@ const ReportContent = () => {
             </button> */}
           </div>
 
-          <table className={styles.reportTable}>
-            <thead>
-              <tr>
-                <th>Student Number</th>
-                <th>Mentor Name & Surname</th>
-                <th>Modules</th>
-                <th className={styles.actionCol}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {errorMessage ? (
+          {isLoading ? (
+            // Show loading spinner while fetching data
+            <div className={styles.loadingContainer}>
+              <CircularProgress />
+              <Typography variant="h6">Loading Reports...</Typography>
+            </div>
+          ) : (
+            <table className={styles.reportTable}>
+              <thead>
                 <tr>
-                  <td colSpan="4" className={styles.noResultMessage}>
-                    {errorMessage}
-                  </td>
+                  <th>Student Number</th>
+                  <th>Mentor Name & Surname</th>
+                  <th>Modules</th>
+                  <th className={styles.actionCol}>Action</th>
                 </tr>
-              ) : (
-                filteredReports.map((mentor, index) => (
-                  <tr key={index}>
-                    <td>{mentor.mentorId}</td>
-                    <td>{`${mentor.firstName} ${mentor.lastName}`}</td>
-                    <td>
-                      {mentor.modules && mentor.modules.length > 0
-                        ? mentor.modules.map((mod) => mod.moduleName).join(", ")
-                        : "No module assigned"}
-                    </td>
-                    <td className={styles.actionCell}>
-                      <button
-                        className={styles.registerIconBtn}
-                        onClick={() => viewRegister(mentor.mentorId)}
-                        title="Register"
-                      >
-                        <BsFillPersonCheckFill />
-                      </button>
-                      <button
-                        className={styles.reportIconBtn}
-                        onClick={() => viewMentorReport(mentor.mentorId)}
-                        title="Mentor Report"
-                      >
-                        <BsFileEarmarkTextFill />
-                      </button>
+              </thead>
+              <tbody>
+                {errorMessage ? (
+                  <tr>
+                    <td colSpan="4" className={styles.noResultMessage}>
+                      {errorMessage}
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  filteredReports.map((mentor, index) => (
+                    <tr key={index}>
+                      <td>{mentor.mentorId}</td>
+                      <td>{`${mentor.firstName} ${mentor.lastName}`}</td>
+                      <td>
+                        {mentor.modules && mentor.modules.length > 0
+                          ? mentor.modules
+                              .map((mod) => mod.moduleName)
+                              .join(", ")
+                          : "No module assigned"}
+                      </td>
+                      <td className={styles.actionCell}>
+                        <button
+                          className={styles.registerIconBtn}
+                          onClick={() => viewRegister(mentor.mentorId)}
+                          title="Register"
+                        >
+                          <BsFillPersonCheckFill />
+                        </button>
+                        <button
+                          className={styles.reportIconBtn}
+                          onClick={() => viewMentorReport(mentor.mentorId)}
+                          title="Mentor Report"
+                        >
+                          <BsFileEarmarkTextFill />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       )}
 

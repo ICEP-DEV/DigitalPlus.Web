@@ -17,6 +17,8 @@ const Report = () => {
     const [modalOpen, setModalOpen] = useState(false); // To control the modal visibility
     const [modalMessage, setModalMessage] = useState(''); // To control the modal message
 
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
     // Get the current month
     const getCurrentMonth = () => {
         return new Date().toLocaleString('default', { month: 'long' });
@@ -35,7 +37,7 @@ const Report = () => {
 
         setIsSubmitting(true); // Start submission
         const reportData = {
-            mentorId: 1, // Replace with the correct mentorId as needed
+            mentorId: storedUser.mentorId, // Replace with the correct mentorId as needed
             date: formData.date,
             month: getCurrentMonth(), // Automatically get the current month
             noOfStudents: formData.studentNumber,
