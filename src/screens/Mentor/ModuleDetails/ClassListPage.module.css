@@ -20,6 +20,14 @@
   overflow-y: auto;
 }
 
+.container .searchInput{
+
+  width: 25%;
+  background-color: #142a4d;
+  color: #ffffff;
+
+}
+
 .tableContainer {
   display: flex;
   justify-content: center;
