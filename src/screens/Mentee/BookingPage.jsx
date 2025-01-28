@@ -67,47 +67,47 @@ const Booking = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-  
+   
 
     const bookingData = {
-      bookingId: 0, 
-      menteeId: formData.studentNumber, 
-      mentorId: formData.mentorId, 
-      moduleId: mentorModules.moduleId, 
-      bookingDateTime: formData.dateTime, 
-      sessionType: formData.lessonType, 
-      status: "Scheduled" 
-    };
+        bookingId: 0, 
+        menteeId: formData.studentNumber, 
+        mentorId: formData.mentorId, 
+        moduleId: formData.moduleId,  // Corrected to use formData.moduleId
+        bookingDateTime: formData.dateTime, 
+        sessionType: formData.lessonType, 
+        status: "Scheduled" 
+    }; 
   
     try {
-      const response = await axios.post('https://localhost:7163/api/Booking/AddBooking', bookingData, {
-        headers: {
-          'Content-Type': 'application/json' // Ensure we're sending JSON
-        }
-      });
-  
-      console.log(response.data); // Handle the API response
-  
-      setShowSuccess(true);
-  
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 3000);
-  
-      // Clear the form data after successful submission
-      setFormData(prev => ({
-        ...prev,
-        mentorId: '',
-        moduleId: '', // Clear selected module after submission
-        lessonType: '',
-        dateTime: ''
-      }));
-      setMentorModules([]); // Clear the modules list if necessary
+        const response = await axios.post('https://localhost:7163/api/Booking/AddBooking', bookingData, {
+            headers: {
+                'Content-Type': 'application/json' // Ensure we're sending JSON
+            }
+        });
+
+        console.log(response.data); // Handle the API response
+
+        setShowSuccess(true);
+
+        setTimeout(() => {
+            setShowSuccess(false);
+        }, 3000);
+
+        // Clear the form data after successful submission
+        setFormData(prev => ({
+            ...prev,
+            mentorId: '',
+            moduleId: '', // Clear selected module after submission
+            lessonType: '',
+            dateTime: ''
+        }));
+        setMentorModules([]); // Clear the modules list if necessary
     } catch (error) {
-      console.error('Error creating booking:', error);
+        console.error('Error creating booking:', error);
     }
-  };
+};
+
 
   return (
     <SideBarNavBar>
