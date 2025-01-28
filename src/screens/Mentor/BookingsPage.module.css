@@ -9,7 +9,7 @@
 .contentWrapper {
   display: flex;
   flex: 1;
-  margin-top: 50px; /* Space below the header */
+  margin-top: 130px; /* Space below the header */
 }
 
 .bookingsMainTitle {

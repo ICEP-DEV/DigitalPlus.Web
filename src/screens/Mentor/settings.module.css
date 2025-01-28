@@ -4,7 +4,7 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 90%; /* Adjust the width to fit the screen */
     max-width: 1000px; /* Increase max-width to allow more space */
-    padding: 40px; /* Increase padding for better spacing */
+    padding: 70px; /* Increase padding for better spacing */
     margin: auto;
     height: 80vh; /* Set the height to cover most of the viewport */
     overflow-y: auto; /* Ensure the content is scrollable if necessary */

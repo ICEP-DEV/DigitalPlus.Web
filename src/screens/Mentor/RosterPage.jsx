@@ -173,7 +173,7 @@ const styles = {
     flex: 1,
     overflow: "auto", // Allows vertical scrolling for the main content
     marginLeft: "200px",
-    padding: "20px",
+    padding: "60px",
   },
   header: {
     fontSize: "30px",
