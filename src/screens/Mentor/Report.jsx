@@ -45,7 +45,7 @@ const Report = () => {
 
         setIsSubmitting(true); // Start submission
         const reportData = {
-            mentorId: 1, // Replace with the correct mentorId as needed
+            mentorId: storedUser.mentorId, // Replace with the correct mentorId as needed
             date: formData.date,
             month: getCurrentMonth(), // Automatically get the current month
             noOfStudents: formData.studentNumber,

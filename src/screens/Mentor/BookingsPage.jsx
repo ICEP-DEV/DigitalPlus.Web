@@ -29,13 +29,13 @@ const MentorBookingsPage = () => {
         if (!response.ok) throw new Error('Failed to fetch modules');
         
         const moduleData = await response.json();
-        console.log(moduleData);
+        
         const moduleMap = moduleData.reduce((acc, module) => {
           acc[module.module_Id] = module.module_Name;
           return acc;
         }, {});
-        console.log(moduleMap);
-        console.log("UP");
+        
+        
         setModules(moduleMap);
       } catch (error) {
         //setError(error.message);
@@ -48,12 +48,12 @@ const MentorBookingsPage = () => {
       try {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         // Fetch bookings by mentorId dynamically
-        console.log(storedUser.mentorId);
         const response = await fetch(`https://localhost:7163/api/Booking/GetBookingsByMentorId/${storedUser.mentorId}`);
-        console.log(storedUser.mentorId);
+    
         if (!response.ok) throw new Error('Failed to fetch bookings');
         const data = await response.json();
-        //console.log(data);
+        console.log(" THIS MA DAATAA "+data)
+      ;
   
     
         // Ensure the response is an array
@@ -65,11 +65,11 @@ const MentorBookingsPage = () => {
             if (!menteeId) {
               throw new Error('Mentee ID (studentNumber) not found in the booking data');
             }
-            console.log(`Heres the mentee ID ${menteeId}`);
+            
             const menteeResponse = await fetch(`https://localhost:7163/api/DigitalPlusUser/GetMentee/${menteeId}`);
             if (!menteeResponse.ok) throw new Error('Failed to fetch mentee details');
             const menteeData = await menteeResponse.json(); 
-            console.log(menteeData);
+            console.log("TEST "+event.moduleId);
             // Map the booking data with mentee name and other fields
             return {
               id: event.bookingId,

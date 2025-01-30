@@ -1,0 +1,71 @@
+.dialogContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    perspective: 1000px;
+}
+
+.dialog {
+    border-radius: 12px;
+    padding: 16px;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transform: rotateY(0deg);
+    animation: fadeInScale 0.5s ease-in-out, rotateIn 0.8s ease-in-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        transform: rotateY(-90deg);
+    }
+    to {
+        transform: rotateY(0deg);
+    }
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.content {
+    font-size: 1rem;
+    color: #555;
+    text-align: center;
+    margin: 16px 0;
+}
+
+.button {
+    color: white !important;
+    background-color: #007bff !important;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.button:hover {
+    background-color: #0056b3 !important;
+    transform: scale(1.1);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.button:active {
+    transform: scale(0.95);
+}

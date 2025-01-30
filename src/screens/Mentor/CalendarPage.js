@@ -186,6 +186,8 @@ const CalendarPage = () => {
       const currentTime = new Date().getTime();
       const appointmentTime = new Date(appointment.dateTime).getTime();
   
+      //console.log("Appo "+appointments.json())
+
       const reminderIntervals = [
         { label: 'You have an appointment in 2 minutes', delta: 2 * 60 * 1000 },
         { label: 'You have an appointment in 15 minutes', delta: 15 * 60 * 1000 },
@@ -208,7 +210,7 @@ const CalendarPage = () => {
               body: JSON.stringify({
                 email: `${storedUser.mentorId}@tut4life.ac.za`, // Mentor's email
                 subject: `Appointment Reminder: ${label}`,
-                message: `Hi, this is a reminder for your appointment with ${appointment.name} ${appointment.surname} scheduled at ${new Date(appointment.dateTime).toLocaleString()}. Reminder: ${label}`,
+                message: `Hi, this is a reminder for your ${appointment.sessionType} appointment with ${appointment.name} ${appointment.surname} scheduled at ${new Date(appointment.dateTime).toLocaleString()}. Reminder: ${label}`,
               }),
             });
           }, reminderTime - currentTime);
@@ -227,7 +229,7 @@ const CalendarPage = () => {
     setSelectedEvent(null);
   };
 
-  if (error) return <p>Error: {error}</p>;
+  
 
   return (
     <>
@@ -246,6 +248,7 @@ const CalendarPage = () => {
             <h2>Event Details</h2>
             <p><strong>Mentee:</strong> {selectedEvent.name} {selectedEvent.surname}</p>
             <p><strong>Module:</strong> {selectedEvent.module}</p>
+            <p><strong>Type:</strong> {selectedEvent.sessionType}</p>
             <p><strong>Time:</strong> {moment(selectedEvent.start).format('hh:mm A')}</p>
             <button onClick={closeModal}>Close</button>
           </Modal>

@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'; // Import MUI components
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import styles from './LogoutComponent.module.css'; // Import the CSS module
+import { WarningAmber as WarningIcon } from '@mui/icons-material';
+import styles from './LogoutComponent.module.css';
 
 const LogoutComponent = () => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(true); // State to control dialog visibility
+  const [open, setOpen] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleYesClick = () => {
-    // Clear all session-related data from localStorage
-    localStorage.clear(); // Clears all data from localStorage
+    localStorage.clear();
     sessionStorage.clear();
-    navigate('/'); // Redirect to the home or login page
+    navigate('/');
   };
 
   const handleNoClick = () => {
@@ -24,18 +24,27 @@ const LogoutComponent = () => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Confirm Logout</DialogTitle>
+    <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <WarningIcon sx={{ color: 'red', fontSize: 32 }} />
+        Confirm Logout
+      </DialogTitle>
       <DialogContent>
-        <div className={styles.questionIcon}>?</div>
-        <h2>ARE YOU SURE YOU WANT TO LOG OUT?</h2>
+        <Box display="flex" flexDirection="column" alignItems="center" textAlign="center">
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            Are you sure you want to log out?
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            You will need to log in again to access your account.
+          </Typography>
+        </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleYesClick} sx={{ color: 'red' }}>
-          YES
+      <DialogActions sx={{ justifyContent: 'center', pb: 2 }}>
+        <Button onClick={handleYesClick} variant="contained" color="error" sx={{ width: 100 }}>
+          Yes
         </Button>
-        <Button onClick={handleNoClick} sx={{ color: 'blue' }}>
-          NO
+        <Button onClick={handleNoClick} variant="outlined" color="primary" sx={{ width: 100 }}>
+          No
         </Button>
       </DialogActions>
     </Dialog>
