@@ -124,6 +124,13 @@ const CalendarPage = () => {
   const [error, setError] = useState(null); // Error state for the API call
 
   const storedUser = JSON.parse(localStorage.getItem('user'));
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
+  }, []);
   // Fetch bookings from the API
   useEffect(() => {
     const fetchBookings = async () => {

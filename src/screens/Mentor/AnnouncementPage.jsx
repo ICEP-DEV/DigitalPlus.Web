@@ -12,7 +12,7 @@ function AnnouncementPage() {
     const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
 
     useEffect(() => {
-        // Set the body overflow to hidden to avoid scrolling when the modal is open
+        // Prevent scrolling when the modal is open
         document.body.style.overflow = isModalOpen ? 'hidden' : 'auto'; // Adjust based on modal state
 
         // Update the current time every second

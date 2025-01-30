@@ -14,6 +14,15 @@ const MentorBookingsPage = () => {
 
 
   useEffect(() => {
+    document.body.style.overflow = "hidden";
+    
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
+  }, []);
+
+  
+  useEffect(() => {
     const fetchModules = async () => {
       try {
         const response = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');

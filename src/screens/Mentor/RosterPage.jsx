@@ -172,8 +172,9 @@ const styles = {
   content: {
     flex: 1,
     overflow: "auto", // Allows vertical scrolling for the main content
-    marginLeft: "200px",
+    marginLeft: "70px",
     padding: "20px",
+    marginTop: '50px',
   },
   header: {
     fontSize: "30px",
@@ -209,9 +210,19 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    overflowX: "auto", // Allows horizontal scrolling for wide tables
     marginTop: "-40px",
     borderRadius: "10px",
+    padding: "10px", // Added padding for better spacing
+    "@media (max-width: 768px)": {
+      marginTop: "0px", // Adjust margin for smaller screens
+      padding: "5px",   // Reduce padding
+    },
+    "@media (max-width: 480px)": {
+      flexDirection: "column", // Stack content vertically on small screens
+      alignItems: "stretch",   // Ensure the table fits smaller widths
+      padding: "0px",
+    },
+    
   },
   table: {
     width: "100%",

@@ -10,12 +10,14 @@
     scroll-behavior: smooth;
     overflow-x: hidden;
   }
+  
 .carouselSection {
     position: relative;
     width: 100%;
     height: 90vh; 
     overflow: hidden;
     max-width: 100%;
+    align-items: center;
   }
   
   .overlay {
@@ -47,6 +49,7 @@
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds a shadow for better readability */
     letter-spacing: 2px;
     line-height: 1.2;
+    z-index: 2;
   }
   
   /* About Section */
@@ -295,6 +298,14 @@
     color: #fff;
     margin-bottom: 20px;
   }
+  .serviceTitle {
+  color: white; /* Change the title font color to white */
+}
+
+.serviceDescription {
+  color: white; /* Change the description font color to white */
+}
+
   
   .servicesParagraph {
     font-size: 1.2rem;
@@ -455,24 +466,144 @@
 
 
 .wementor {
-  font-size: 4.5rem; /* Increase size as needed */
-  /* text-decoration: underline;  */
+  font-size: 5rem; /* Increase size as needed */
+  text-decoration: underline;  
   color: #fff; /* Ensure the color matches your design */
-  font-family: 'Montserrat', sans-serif; /* Font for the <h1> */
+  font-family: 'Candara', sans-serif; /* Font for the <h1> */
   display: inline-table; /* Keep it on the same line */
   margin-right: 35px; /* Add some margin between the words */
 }
 
 .platform {
-  font-size: 4.5rem; /* Same size as WE-MEN-TOR */
+  font-size: 5rem; /* Same size as WE-MEN-TOR */
   color: #fff;
-  font-family: 'Montserrat', sans-serif; /* Font for the <h1> */
+  font-family: 'Candara', sans-serif; /* Font for the <h1> */
   display: inline; /* Keep it on the same line */
   margin-left: 35px; /* You can remove this if needed */
+  display: inline;
 }
 .overlayTextContainer h4 {
   font-size: 2rem; /* Increase the size (adjust as needed) */
   font-weight: bold; /* Make it bold if needed */
   color: white; /* You can also customize the color */
+}
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+  .wementor {
+    font-size: 3rem; /* Smaller font size on mobile */
+    margin-right: 20px; /* Adjust margin for mobile */
+  }
+
+  .platform {
+    font-size: 3rem; /* Smaller font size on mobile */
+    margin-left: 20px; /* Adjust margin for mobile */
+  }
+}
+
+/* Optional: Media Query for very small screens */
+@media (max-width: 480px) {
+  .wementor, .platform {
+    font-size: 2.5rem; /* Even smaller font size on very small screens */
+  }
+}
+
+
+/* Responsive Adjustments */
+@media screen and (max-width: 1024px) {
+  /* Tablet Styles */
+  .aboutContent, .missionContent {
+    margin-left: 20px; /* Reduce left margin for smaller screens */
+  }
+  
+  .aboutParagraph, .missionParagraph, .coreValueParagraph {
+    font-size: 1rem; /* Adjust font size */
+    padding: 10px; /* Reduce padding */
+  }
+
+  .aboutImage, .missionImage {
+    height: auto; /* Ensure images scale correctly */
+    width: 100%; /* Full width for smaller screens */
+    max-width: none;
+  }
+
+  .missionText {
+    margin-left: 0; /* Remove unnecessary margin */
+    text-align: center; /* Center-align text for smaller screens */
+  }
+
+  .coreValuesSection {
+    text-align: center; /* Align all core values to center */
+  }
+
+  .coreValueContainer {
+    flex-direction: column; /* Stack the core value cards */
+  }
+
+  .coreValueCard {
+    margin: 10px auto; /* Center core value cards */
+  }
+
+  .servicesParagraph {
+    font-size: 1rem; /* Reduce paragraph font size */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Mobile Styles */
+  .carouselSection {
+    height: 70vh; /* Adjust carousel height for smaller screens */
+  }
+
+  .overlayText {
+    font-size: 2rem; /* Smaller font for mobile */
+    line-height: 1.4; /* Adjust line height */
+  }
+
+  .aboutContent, .missionContent {
+    padding: 10px; /* Reduce padding for tighter layouts */
+  }
+
+  .aboutHeading, .missionHeading, .coreValuesHeading, .servicesHeading {
+    font-size: 1.8rem; /* Smaller headings for mobile */
+    text-align: center; /* Center-align headings */
+  }
+
+  .aboutParagraph, .missionParagraph, .servicesParagraph {
+    font-size: 0.9rem; /* Smaller font size */
+  }
+
+  .aboutImage, .missionImage {
+    width: 100%; /* Images take full width */
+    max-width: none;
+  }
+
+  .coreValueContainer {
+    flex-direction: column; /* Stack core values vertically */
+  }
+
+  .coreValueCard {
+    width: 90%; /* Core value cards take up most of the width */
+    margin: 10px auto; /* Center-align */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Extra Small Mobile Styles */
+  .overlayText {
+    font-size: 1.5rem; /* Smaller font for extra small devices */
+  }
+
+  .aboutParagraph, .missionParagraph, .servicesParagraph {
+    font-size: 0.8rem; /* Reduce font size further */
+    padding: 5px; /* Minimize padding */
+  }
+
+  .aboutHeading, .missionHeading, .coreValuesHeading, .servicesHeading {
+    font-size: 1.5rem; /* Smaller headings */
+  }
+
+  .coreValueCard {
+    width: 95%; /* Maximize use of small screen width */
+  }
 }
 

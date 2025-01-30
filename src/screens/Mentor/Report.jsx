@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Report.module.css';
 import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
@@ -16,6 +16,16 @@ const Report = () => {
     const [isSubmitting, setIsSubmitting] = useState(false); // To manage submission state
     const [modalOpen, setModalOpen] = useState(false); // To control the modal visibility
     const [modalMessage, setModalMessage] = useState(''); // To control the modal message
+
+    // Hide overflow when the component is mounted
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+        
+        // Cleanup function to reset overflow when the component is unmounted
+        return () => {
+            document.body.style.overflow = "auto"; 
+        };
+    }, []);
 
     // Get the current month
     const getCurrentMonth = () => {

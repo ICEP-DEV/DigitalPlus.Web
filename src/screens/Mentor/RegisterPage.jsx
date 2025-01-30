@@ -31,7 +31,9 @@ const RegisterPage = () => {
                             assignedModules.map(async (module) => {
                                 try {
                                     const moduleDetailsResponse = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetModule/${module.moduleId}`);
+                                    console.log(moduleDetailsResponse.data.result);
                                     return moduleDetailsResponse.data.result;
+
                                 } catch (moduleError) {
                                     console.error("Error fetching module details:", moduleError);
                                     return null;
@@ -60,12 +62,12 @@ const RegisterPage = () => {
             alert("Please select a module.");
             return;
         }
-
+        
         try {
             const payload = {
                 MentorId: mentorID,
                 MentorName: displayName,
-                ModuleId: allModules.find((module) => module.module_Code === selectedModule)?.moduleId,
+                ModuleId: allModules.find((module) => module.module_Code === selectedModule)?.module_Id,
                 ModuleCode: selectedModule,
                 IsRegisteractivated: !isRegisterActivated, // Toggle activation
             };
@@ -171,7 +173,7 @@ const styles = {
     mainContent: {
         backgroundColor: '#D9D9D9',
         padding: '20px',
-        maxWidth: '1200px',
+        maxWidth: '1000px',
         boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
         borderRadius: '8px',
         width: '100%',
@@ -179,6 +181,27 @@ const styles = {
         flexDirection: 'row',
         gap: '20px',
     },
+
+      // Media query for screens smaller than 768px
+      '@media (max-width: 768px)': {
+        registerPageContainer: {
+            height: 'auto', // Allow the height to adjust
+            padding: '10px', // Adjust padding for smaller screens
+        },
+        mainContent: {
+            flexDirection: 'column', // Stack elements vertically
+            gap: '15px', // Reduce the gap between elements
+            padding: '15px', // Adjust padding for smaller screens
+        },
+    },
+
+    // Media query for very small screens below 480px
+    '@media (max-width: 480px)': {
+        mainContent: {
+            padding: '10px', // Adjust padding further for smaller screens
+            gap: '10px', // Further reduce the gap between elements
+        },
+    }, 
     header: {
         display: 'flex',
         justifyContent: 'space-between',
@@ -229,6 +252,7 @@ const styles = {
         justifyContent: 'center',
         marginTop: '20px',
     },
+
 };
 
 export default RegisterPage;
