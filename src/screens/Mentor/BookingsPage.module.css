@@ -12,6 +12,10 @@
   margin-top: 50px; /* Space below the header */
 }
 
+.noBookings {
+  margin-top: 50%;
+}
+
 .bookingsMainTitle {
   font-size: 50px;
   font-weight: lighter;
