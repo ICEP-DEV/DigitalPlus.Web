@@ -222,23 +222,31 @@ const VideoLandingPage = () => {
 
         <div className={styles.servicesContent}>
           <h2 className={styles.servicesHeading}>Our Services</h2>
-          <div className={styles.servicesParagraph}>
-            <li>
-              <p>
-                <ul> Key Possession Notification</ul>
-              </p>
-              <p>
-                <ul>Mentor Behavior Repoting Platform</ul>
-              </p>
-              <p>
-                <ul>Mentor's Schedule and Expertise View</ul>
-              </p>
-              <p>Mentor's Performance Evaluation</p>
-            </li>
+          <div className={styles.serviceContainer}>
+            {/* Service Card 1 */}
+            <div className={styles.serviceCard}>
+            <h3 className={styles.serviceTitle}>Mentorship Matching</h3>
+            <p className={styles.serviceDescription}>
+              Our platform uses advanced algorithms to pair mentors and mentees based on their goals, skills, and interests, ensuring a productive mentorship relationship.
+            </p>
+</div>
+{/* Service Card 2 */}
+<div className={styles.serviceCard}>
+  <h3 className={styles.serviceTitle}>Real-Time Communication</h3>
+  <p className={styles.serviceDescription}>
+    Communicate seamlessly with built-in messaging and video conferencing tools, designed to enhance interaction and minimize miscommunication.
+  </p>
+</div>
+{/* Service Card 3 */}
+<div className={styles.serviceCard}>
+  <h3 className={styles.serviceTitle}>Progress Tracking</h3>
+  <p className={styles.serviceDescription}>
+    Monitor your goals and milestones with our progress tracking system, designed to keep both mentors and mentees accountable and motivated.
+  </p>
+</div>
           </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );

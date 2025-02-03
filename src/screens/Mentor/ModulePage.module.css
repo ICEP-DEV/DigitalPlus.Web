@@ -1,9 +1,10 @@
 .course-modules {
     max-width: 1200px;
     margin: 0 auto; /* Centers the content */
-    padding: 20px;
+    padding: 60px;
     position: relative;
     left: 100px; /* Moves it 100px to the right */
+    padding: 70px;
 }
 
 .module-grid {
