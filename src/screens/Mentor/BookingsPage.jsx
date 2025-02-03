@@ -14,6 +14,15 @@ const MentorBookingsPage = () => {
 
 
   useEffect(() => {
+    document.body.style.overflow = "hidden";
+    
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
+  }, []);
+
+  
+  useEffect(() => {
     const fetchModules = async () => {
       try {
         const response = await fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllModules');
@@ -43,7 +52,7 @@ const MentorBookingsPage = () => {
     
         if (!response.ok) throw new Error('Failed to fetch bookings');
         const data = await response.json();
-        console.log(" THIS MA DAATAA "+data)
+        
       ;
   
     
@@ -186,7 +195,7 @@ const MentorBookingsPage = () => {
           <h2 className={styles.bookingsTitle}>Upcoming Bookings</h2>
 
           {bookings.length === 0 ? (
-            <p className={styles.noBookings}>No bookings available.</p>
+            <p className={styles.noBookings}>You have no bookings right now.</p>
           ) : (
             <table className={styles.bookingsTable}>
               <thead>

@@ -378,92 +378,118 @@ const ReportContent = () => {
   );
 };
 
-const RegisterComponent = ({ mentorId, goBack }) => {
+const RegisterComponent = ({ mentorId, menteeId, goBack }) => {
   const [registerData, setRegisterData] = useState([]);
   const [mentorData, setMentor] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [menteeData, setMentee] = useState({});
+  const [menteeRegister, setMenteeRegister] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Group register data by moduleCode
+  const groupByModule = (data) => {
+    return data.reduce((acc, item) => {
+      const moduleCode = item.moduleCode || "Unknown Module";
+      if (!acc[moduleCode]) {
+        acc[moduleCode] = [];
+      }
+      acc[moduleCode].push(item);
+      return acc;
+    }, {});
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        const [registerResponse, mentorResponse] = await Promise.all([
-          axios.get(
-            `https://localhost:7163/api/MenteeAndMentorRegister/GetMentorRegister/ByMentorId/${mentorId}`
-          ),
-          axios.get(
-            `https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`
-          ),
+        const [registerResponse, mentorResponse, menteeResponse, menteeRegisterResponse] = await Promise.all([
+          axios.get(`https://localhost:7163/api/MenteeAndMentorRegister/GetMentorRegister/ByMentorId/${mentorId}`),
+          axios.get(`https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`),
+          axios.get(`https://localhost:7163/api/DigitalPlusUser/GetMentee/${menteeId}`),
+          axios.get(`https://localhost:7163/api/MenteeAndMentorRegister/GetMenteeRegister/ByMenteeId/${menteeId}`)
         ]);
 
         console.log("Register Response:", registerResponse.data);
         console.log("Mentor Response:", mentorResponse.data);
+        console.log("Mentee Response:", menteeResponse.data);
+        console.log("Mentee Register Response:", menteeRegisterResponse.data);
 
         setRegisterData(registerResponse.data);
         setMentor(mentorResponse.data);
+        setMentee(menteeResponse.data);
+        setMenteeRegister(menteeRegisterResponse.data);
 
-        setError(null); // Clear previous errors
+        setError(null);
       } catch (err) {
         console.error("Error fetching data:", err.response || err);
-        setError(
-          err.response?.data?.message ||
-            "Failed to load data. Please try again."
-        );
+        setError(err.response?.data?.message || "Failed to load data. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, [mentorId]);
+    if (mentorId && menteeId) { // ✅ Prevents unnecessary API calls
+      fetchData();
+    }
+  }, [mentorId, menteeId]);
 
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
 
+  const groupedData = groupByModule(registerData);
+
   return (
     <div>
-      <h2>Register for Student: {mentorData?.mentorName || mentorId}</h2>
-      <table className={styles.mentorReportTable}>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Mentee Name</th>
-            <th>Mentor Name</th>
-            <th>Module Name</th>
-            <th>Comment</th>
-          </tr>
-        </thead>
-        <tbody>
-          {registerData.length > 0 ? (
-            registerData.map((menteeregister, index) => (
-              <tr key={index}>
-                <td>{new Date(menteeregister.date).toLocaleDateString()}</td>
-                <td>{menteeregister.menteeId}</td>
-                <td>{menteeregister.mentorData?.mentorName || mentorId}</td>
-                <td>{menteeregister.moduleCode || "Unknown Module"}</td>
-                <td>{menteeregister.comment || "No Comment"}</td>
+      <h2>Registers for Mentor: {mentorData?.mentorName || mentorId}</h2>
+
+      {Object.keys(groupedData).map((moduleCode) => (
+        <div key={moduleCode} className={styles.moduleSection}>
+          <h3>Module: {moduleCode}</h3>
+          <table className={styles.mentorReportTable}>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Mentee Name</th>
+                <th>Mentor Name</th>
+                <th>Module Name</th>
+                <th>Rating</th>
+                <th>Comment</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No register data available for this mentor.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <button onClick={goBack} className={styles.backButton}>
-        Back
-      </button>
+            </thead>
+            <tbody>
+            {groupedData[moduleCode].length > 0 ? (
+              groupedData[moduleCode].map((menteeregister, index) => (
+                <tr key={index}>
+                  <td>{new Date(menteeregister.date).toLocaleDateString()}</td>
+                  <td>{menteeregister.menteeData?.menteeName || menteeregister.menteeId || "Unknown Mentee"}</td>
+                  <td>{menteeregister.mentorData?.mentorName || menteeregister.mentorId || "Unknown Mentor"}</td>
+                  <td>{menteeregister.moduleCode || "Unknown Module"}</td>
+                  <td>{menteeregister.rating || "No Rating"}</td>
+                  <td>{menteeregister.comment || "No Comment"}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6">No register data available for this module.</td>
+              </tr>
+            )}
+            </tbody>
+          </table>
+        </div>
+      ))}
+
+      <button onClick={goBack} className={styles.backButton}>Back</button>
     </div>
   );
 };
 
 RegisterComponent.propTypes = {
   mentorId: PropTypes.string.isRequired,
+  menteeId: PropTypes.string.isRequired,
   goBack: PropTypes.func.isRequired,
 };
+
 
 const MentorReportComponent = ({ mentorId, goBack }) => {
   const [reports, setReportData] = useState([]);

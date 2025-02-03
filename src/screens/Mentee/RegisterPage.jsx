@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './RegisterPage.module.css';
@@ -7,70 +6,104 @@ import SideBarNavBar from './Navigation/SideBarNavBar';
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     studentNumber: '',
-    fullNames: ''
+    fullNames: '',
   });
-  const [selectedModule, setSelectedModule] = useState('');
-  const [mentors, setMentors] = useState([]);
+  const [modules, setModules] = useState([]); // Modules from backend
+  const [selectedModule, setSelectedModule] = useState(''); // User-selected module
+  const [mentors, setMentors] = useState([]); // Mentors for the selected module
   const [rating, setRating] = useState(0);
   const [isInactive, setIsInactive] = useState(true);
-  const [moduleRegisters, setModuleRegisters] = useState([]);
 
-  // Mock module-to-ID mapping
-  const moduleToIdMapping = {
-    'PPA F05D': 1,
-    'PPB 216D': 2,
-    'OOP 216D': 3,
-    'AOP 316D': 4,
-  };
-
-  // Fetch user data and update state
+  // Fetch user data and update form state
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       setFormData((prevData) => ({
         ...prevData,
         studentNumber: user.mentee_Id || '',
-        fullNames: `${user.firstName} ${user.lastName}` || ''
+        fullNames: `${user.firstName} ${user.lastName}` || '',
       }));
     } else {
       console.warn('User data not found in localStorage');
     }
   }, []);
 
-  // Handle module selection and fetch data
-  const handleModuleChange = async (event) => {
-    const selected = event.target.value;
-    setSelectedModule(selected);
+  // Fetch all modules dynamically from backend
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await axios.get(
+          'https://localhost:7163/api/MenteeAndMentorRegister/GetRegisterByStatus?activation=true'
+        );
+        console.log("Modules fetched from API:", response.data);  // Log modules from the backend
+        setModules(response.data);
+      } catch (error) {
+        console.error('Error fetching modules:', error);
+      }
+    };
+    fetchModules();
+  }, []);
 
-    // Map module to ID
-    const moduleId = moduleToIdMapping[selected];
-
-    // Fetch mentor registers for the selected module
-    try {
-      const response = await axios.get(
-        `https://localhost:7163/api/MenteeAndMentorRegister/GetMentorRegister/ByModuleId/${moduleId}`
-      );
-      setModuleRegisters(response.data); // Save fetched data to state
-      console.log('Fetched Mentor Registers:', response.data);
-
-      // Update mentors based on response (optional if mentors are predefined)
-      setMentors(response.data.map((register) => register.MentorId));
-    } catch (error) {
-      console.error('Error fetching mentor registers:', error);
+  // Fetch mentors for the selected module
+  useEffect(() => {
+    if (!selectedModule) {
+      return;
     }
+
+    const fetchMentorsForModule = async () => {
+      try {
+        console.log("Selected Module:", selectedModule); // Log selected module
+        console.log("Modules:", modules); // Log entire modules array
+
+        // Get the module object from the selected module code
+        const module = modules.find((module) => module.moduleCode === selectedModule);
+
+        console.log("Found Module:", module);  // Log the module object
+
+        if (!module) {
+          console.warn('Module with the selected moduleCode not found');
+          return;
+        }
+
+        const moduleId = module.moduleId;  // Get moduleId from the module object
+        console.log('Module ID:', moduleId);  // Log moduleId to ensure it's correct
+
+        if (!moduleId) {
+          console.warn('Module ID is missing or invalid');
+          return;
+        }
+
+        const response = await axios.get(
+          `https://localhost:7163/api/AssignMod/getmentorsBy_ModuleId/${moduleId}`
+        );
+        setMentors(response.data?.Mentors || []);
+      } catch (error) {
+        console.error('Error fetching mentors:', error);
+      }
+    };
+
+    fetchMentorsForModule();
+  }, [selectedModule, modules]);
+
+  // Handle module selection
+  const handleModuleChange = (event) => {
+    setSelectedModule(event.target.value); // Update selected module
+    console.log("Selected Module Code:", event.target.value);  // Log selected module code
   };
 
+  // Handle rating change
   const handleRatingChange = (event) => {
     setRating(event.target.value);
   };
 
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const menteeRegisterData = {
       menteeID: formData.studentNumber,
       moduleCode: selectedModule,
-      mentorName: event.target.mentor.value,
+      mentorID: event.target.mentor.value,
       rating: rating,
       comment: event.target.comment.value,
     };
@@ -114,11 +147,11 @@ const RegisterPage = () => {
                       className={styles.input}
                     >
                       <option value="" disabled>
-                        Module Code
+                        Select Module Code
                       </option>
-                      {Object.keys(moduleToIdMapping).map((module) => (
-                        <option key={module} value={module}>
-                          {module}
+                      {modules.map((module) => (
+                        <option key={module.moduleId} value={module.moduleCode}>
+                          {module.moduleCode}
                         </option>
                       ))}
                     </select>
@@ -127,8 +160,8 @@ const RegisterPage = () => {
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Mentor's Name:</label>
                     <select name="mentor" className={styles.input}>
-                      <option>
-                        Select mentor
+                      <option value="" disabled>
+                        Select Mentor
                       </option>
                       {mentors.map((mentor, index) => (
                         <option key={index} value={mentor}>
@@ -178,4 +211,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-

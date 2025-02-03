@@ -8,6 +8,7 @@
     margin: auto;
     height: 80vh; /* Set the height to cover most of the viewport */
     overflow-y: auto; /* Ensure the content is scrollable if necessary */
+    padding: 150px;
 }
 
 .settings-title {

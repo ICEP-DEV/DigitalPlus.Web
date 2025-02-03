@@ -15,6 +15,9 @@ export default function ModulePage() {
   const mentorId = user.mentorId;
 
   useEffect(() => {
+    // Disable scrolling on body
+    document.body.style.overflow = "hidden";
+
     // Fetch the modules assigned to the mentor
     const fetchModules = async () => {
       try {
@@ -38,6 +41,11 @@ export default function ModulePage() {
     };
 
     fetchModules();
+
+    // Clean up overflow style on component unmount
+    return () => {
+      document.body.style.overflow = "auto"; 
+    };
   }, [mentorId]);
 
   const handleNavigation = (moduleCode) => {

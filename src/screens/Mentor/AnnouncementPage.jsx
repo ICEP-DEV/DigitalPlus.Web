@@ -10,8 +10,9 @@ function AnnouncementPage() {
   const [announcements, setAnnouncements] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    document.body.style.overflow = isModalOpen ? "hidden" : "auto";
+    useEffect(() => {
+        // Prevent scrolling when the modal is open
+        document.body.style.overflow = isModalOpen ? 'hidden' : 'auto'; // Adjust based on modal state
 
     const intervalId = setInterval(() => {
       setCurrentDateTime(new Date());

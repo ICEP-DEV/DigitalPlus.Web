@@ -32,6 +32,14 @@ const Settings = () => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
 
     useEffect(() => {
+        document.body.style.overflow = "hidden";
+        
+        return () => {
+          document.body.style.overflow = "auto"; 
+        };
+      }, []);
+
+    useEffect(() => {
         // Fetch the logged-in mentor's details
         const fetchMentorDetails = async () => {
             try {
