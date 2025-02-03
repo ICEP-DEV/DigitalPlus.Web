@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './PrivateRoute.module.css';
 import { FaLock } from 'react-icons/fa';
@@ -37,19 +37,14 @@ const PrivateRoute = ({ children }) => {
                         transition={{ duration: 0.3 }}
                         className={styles.dialogContainer}
                     >
-                        <Dialog open={open} onClose={handleClose} className={styles.dialog}>
-                            <DialogTitle className={styles.title}>
-                                <FaLock /> Access Denied
-                            </DialogTitle>
-                            <DialogContent className={styles.content}>
-                                You need to log in to access this page.
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={handleRedirectToLogin} className={styles.button}>
-                                    Go to Login
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
+                        <div className={styles.dialog}>
+                            <div className={styles.title}>
+                                <FaLock size={32} />
+                            </div>
+                            <Button onClick={handleRedirectToLogin} className={styles.button}>
+                                Go to Login
+                            </Button>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
