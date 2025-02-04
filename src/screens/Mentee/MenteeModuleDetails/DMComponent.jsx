@@ -5,13 +5,10 @@ import styles from './DmPage.module.css';
 import {
   FaPaperPlane,
   FaPaperclip,
-  FaReply,
   FaTimes,
   FaFilePdf,
   FaDownload,
   FaFileAlt,
-  FaEdit,
-  FaTrash,
   FaSearch,
 } from 'react-icons/fa';
 
@@ -20,8 +17,6 @@ const DMComponent = () => {
   const [mentorMessages, setMentorMessages] = useState({});
   const [newMessage, setNewMessage] = useState('');
   const [file, setFile] = useState(null);
-  const [replyTo, setReplyTo] = useState(null);
-  const [editingMessage, setEditingMessage] = useState(null);
   const [mentors, setMentors] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -29,7 +24,7 @@ const DMComponent = () => {
 
   const { moduleId } = useParams();
 
-  // Get current user (Mentee) from localStorage
+  // Get current user (mentee) from localStorage
   const user = JSON.parse(localStorage.getItem('user')) || {};
   const currentUser = {
     id: (user.mentee_Id || 0).toString(),
@@ -38,12 +33,11 @@ const DMComponent = () => {
   };
 
   /**
-   * 1) Fetch Mentors for this module
+   * 1) Fetch mentors for the module
    */
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        // We can read the moduleId from localStorage if needed
         const storedModule = localStorage.getItem('selectedModule');
         let actualModuleId = moduleId;
         if (storedModule) {
@@ -66,7 +60,7 @@ const DMComponent = () => {
             name: `${mentor.firstName} ${mentor.lastName}`,
             email: mentor.studentEmail,
             contactNo: mentor.contactNo,
-            online: false, // or true if your API includes an online/offline status
+            online: false,
           }))
         );
       } catch (error) {
@@ -74,13 +68,14 @@ const DMComponent = () => {
       }
     };
 
-    // Only fetch if moduleId is present
     if (moduleId) {
       fetchMentors();
     }
   }, [moduleId]);
 
-  // Debugging: see the mentors
+  /**
+   * 2) Debugging: list mentors
+   */
   useEffect(() => {
     if (mentors.length > 0) {
       console.log('Mentor IDs:');
@@ -89,7 +84,7 @@ const DMComponent = () => {
   }, [mentors]);
 
   /**
-   * 2) Set up the SignalR connection
+   * 3) Initialize SignalR connection ONCE
    */
   useEffect(() => {
     const newConnection = new signalR.HubConnectionBuilder()
@@ -105,54 +100,54 @@ const DMComponent = () => {
       .then(() => {
         console.log('Connected to SignalR hub as Mentee');
 
-        // Handle receiving a text message
-        newConnection.on(
-          'ReceiveDirectMessage',
-          (senderUserId, senderName, message, timestamp) => {
-            // If it's from the currently-selected mentor, add to local state
-            if (selectedMentor && senderUserId === selectedMentor.id) {
-              setMentorMessages((prev) => ({
-                ...prev,
-                [selectedMentor.id]: [
-                  ...(prev[selectedMentor.id] || []),
-                  {
-                    id: Date.now(),
-                    sender: senderName,
-                    text: message,
-                    timestamp,
-                    senderId: senderUserId,
-                    role: 'mentor', // because the sender is the mentor
-                  },
-                ],
-              }));
-            }
-          }
-        );
+        // Listen for text messages
+        newConnection.on('ReceiveDirectMessage', (senderUserId, senderName, message, timestamp) => {
+          setMentorMessages((prev) => ({
+            ...prev,
+            [senderUserId]: [
+              ...(prev[senderUserId] || []),
+              {
+                id: Date.now(),
+                sender: senderName,
+                text: message,
+                timestamp,
+                senderId: senderUserId,
+                role: 'mentor',
+                // No file attachments in text-only message
+                attachments: [],
+              },
+            ],
+          }));
+        });
 
-        // Handle receiving a file message
+        // Listen for file messages
         newConnection.on(
           'ReceiveFileMessage',
           (senderUserId, senderName, base64File, fileType, timestamp, fileName) => {
-            if (selectedMentor && senderUserId === selectedMentor.id) {
-              setMentorMessages((prev) => ({
-                ...prev,
-                [selectedMentor.id]: [
-                  ...(prev[selectedMentor.id] || []),
-                  {
-                    id: Date.now(),
-                    sender: senderName,
-                    text: '[File Received]',
-                    base64File,
-                    fileType,
-                    timestamp,
-                    isFile: true,
-                    senderId: senderUserId,
-                    role: 'mentor',
-                    fileName,
-                  },
-                ],
-              }));
-            }
+            setMentorMessages((prev) => ({
+              ...prev,
+              [senderUserId]: [
+                ...(prev[senderUserId] || []),
+                {
+                  id: Date.now(),
+                  sender: senderName,
+                  text: '[File Received]',
+                  timestamp,
+                  senderId: senderUserId,
+                  role: 'mentor',
+                  attachments: [
+                    {
+                      // Here we only have base64 in real-time, but
+                      // you might rely on a separate fetch for the actual file.
+                      attachmentId: null, // no ID from server's broadcast
+                      fileName,
+                      fileType,
+                      base64: base64File,
+                    },
+                  ],
+                },
+              ],
+            }));
           }
         );
 
@@ -160,21 +155,22 @@ const DMComponent = () => {
       })
       .catch((err) => console.error('Connection failed:', err));
 
-    // Cleanup on unmount
+    // Cleanup
     return () => {
       if (newConnection) newConnection.stop();
     };
-  }, [selectedMentor, currentUser.id]);
+  }, [currentUser.id]);
 
   /**
-   * 3) Fetch existing messages whenever we select a mentor
+   * 4) Fetch existing messages for the currently selected mentor
+   *    This calls our updated endpoint: GET /api/Messages/get-messages/{senderId}/{receiverId}
+   *    which returns an array of messages with an 'attachments' array.
    */
   useEffect(() => {
     if (!selectedMentor) return;
 
     const fetchMessages = async () => {
       try {
-        // GET all messages between this Mentee (currentUser) and the selected Mentor
         const url = `https://localhost:7163/api/Messages/get-messages/${currentUser.id}/${selectedMentor.id}`;
         const response = await fetch(url);
         if (!response.ok) {
@@ -182,37 +178,36 @@ const DMComponent = () => {
           throw new Error(errorText || 'Failed to fetch messages');
         }
 
-        const data = await response.json();
-        // data might look like:
+        // The updated endpoint returns something like:
         // [
         //   {
-        //     messageId: 29,
-        //     senderId: 123,
-        //     receiverId: 456,
-        //     messageText: "Hello Mentee",
-        //     timestamp: "2025-01-10T14:45:24.1308853",
-        //     ...
-        //   }
+        //     messageId, senderId, receiverId, messageText, ...
+        //     attachments: [ { attachmentId, fileName, fileType }, ... ]
+        //   }, ...
         // ]
+        const data = await response.json();
 
-        // Convert them to the shape we use in local state
         const mapped = data.map((msg) => {
           const isCurrentUser = msg.senderId.toString() === currentUser.id;
+          // Convert each attachment to a front-end friendly object
+          const attachments = (msg.attachments || []).map((att) => ({
+            attachmentId: att.attachmentId,
+            fileName: att.fileName,
+            fileType: att.fileType,
+            base64: null, // We'll fetch or rely on get-attachment if needed
+          }));
+
           return {
             id: msg.messageId,
             senderId: msg.senderId.toString(),
             sender: isCurrentUser ? currentUser.name : selectedMentor.name,
             role: isCurrentUser ? 'mentee' : 'mentor',
             text: msg.messageText,
-            timestamp: new Date(msg.timestamp).toLocaleTimeString(), 
-            isFile: !!msg.filePath, // or any logic that your back-end uses
-            fileType: msg.fileType || null,
-            fileName: msg.fileName || null,
-            base64File: null, // fill if your API returns base64 data
+            timestamp: new Date(msg.timestamp).toLocaleTimeString(),
+            attachments,
           };
         });
 
-        // Put them under the selected mentor's ID
         setMentorMessages((prev) => ({
           ...prev,
           [selectedMentor.id]: mapped,
@@ -226,7 +221,7 @@ const DMComponent = () => {
   }, [selectedMentor, currentUser.id]);
 
   /**
-   * 4) Sending a message (POST) to the server
+   * 5) Send message (text or file)
    */
   const handleSendMessage = async () => {
     if (
@@ -235,25 +230,18 @@ const DMComponent = () => {
       connection.state === signalR.HubConnectionState.Connected &&
       selectedMentor
     ) {
-      const timestamp = new Date().toLocaleTimeString();
-
       try {
-        // 1) Build FormData for the .NET back-end [FromForm]
+        // Send to our API
         const formData = new FormData();
         formData.append('SenderId', parseInt(currentUser.id, 10));
         formData.append('ReceiverId', parseInt(selectedMentor.id, 10));
         formData.append('MessageText', newMessage);
+        formData.append('ModuleId', moduleId || 1);
 
-        // If your server expects a numeric moduleId
-        const numericModuleId = moduleId ? parseInt(moduleId, 10) : 1;
-        formData.append('ModuleId',1);
-
-        // If a file was selected
         if (file) {
           formData.append('File', file);
         }
 
-        // 2) POST to your backend
         const postResponse = await fetch('https://localhost:7163/api/Messages/send-message', {
           method: 'POST',
           body: formData,
@@ -261,14 +249,18 @@ const DMComponent = () => {
 
         if (!postResponse.ok) {
           const errorText = await postResponse.text();
-          console.error('Server responded with error:', postResponse.status, errorText);
+          console.error('Server error:', postResponse.status, errorText);
           alert(`Error sending message: ${errorText}`);
           return;
         }
 
-        // 3) SignalR broadcast so the Mentor sees it in real time
+        // Optionally, read the JSON to see the created Message object
+        // const newMsgFromServer = await postResponse.json();
+
+        // If there's a file, we broadcast via SignalR's SendFileMessage
+        // If there's no file, we broadcast via SendDirectMessage
+        const timestamp = new Date().toLocaleTimeString();
         if (file) {
-          // Convert the file to base64 for real-time
           const reader = new FileReader();
           reader.onloadend = async () => {
             const base64String = reader.result.split(',')[1];
@@ -285,7 +277,6 @@ const DMComponent = () => {
           };
           reader.readAsDataURL(file);
         } else {
-          // Text-only
           await connection.invoke(
             'SendDirectMessage',
             selectedMentor.id,
@@ -296,28 +287,34 @@ const DMComponent = () => {
           );
         }
 
-        // 4) Update local state so we see our own message instantly
-        setMentorMessages((prev) => ({
-          ...prev,
-          [selectedMentor.id]: [
-            ...(prev[selectedMentor.id] || []),
-            {
-              id: Date.now(),
-              sender: currentUser.name,
-              senderId: currentUser.id,
-              role: currentUser.role,
-              text: newMessage,
-              timestamp,
-              isFile: !!file,
-              fileType: file ? file.type : null,
-              fileName: file ? file.name : null,
-            },
-          ],
-        }));
+        // Add to local chat
+        setMentorMessages((prev) => {
+          const newEntry = {
+            id: Date.now(),
+            sender: currentUser.name,
+            senderId: currentUser.id,
+            role: currentUser.role,
+            text: newMessage || '[File Sent]',
+            timestamp,
+            attachments: file
+              ? [
+                  {
+                    attachmentId: null, // We don't have an ID yet
+                    fileName: file.name,
+                    fileType: file.type,
+                    base64: null, // we haven't fetched or broadcast this from server
+                  },
+                ]
+              : [],
+          };
 
-        // Reset input
+          return {
+            ...prev,
+            [selectedMentor.id]: [...(prev[selectedMentor.id] || []), newEntry],
+          };
+        });
+
         setNewMessage('');
-        setReplyTo(null);
         setFile(null);
       } catch (error) {
         console.error('Error sending message:', error);
@@ -326,68 +323,48 @@ const DMComponent = () => {
     }
   };
 
-  // Handle file selection
+  /**
+   * 6) File selection
+   */
   const handleFileUpload = (event) => {
     const uploadedFile = event.target.files[0];
     if (uploadedFile) setFile(uploadedFile);
   };
 
-  // For replies (optional)
-  const handleReply = (message) => setReplyTo(message);
-  const handleCancelReply = () => setReplyTo(null);
-  const handleCancelFile = () => setFile(null);
+  /**
+   * Helper: get file icon
+   */
+  const getFileIcon = (fileName) => {
+    if (!fileName) return <FaFileAlt className={styles.dmFileIcon} />;
+    const ext = fileName.split('.').pop().toLowerCase();
+    if (ext === 'pdf') return <FaFilePdf className={styles.dmFileIcon} />;
+    // add more checks if needed (image icons, etc.)
+    return <FaFileAlt className={styles.dmFileIcon} />;
+  };
+
+  /**
+   * Sidebar toggling & searching
+   */
   const handleSidebarToggle = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
-  // When user clicks a mentor in the sidebar
-  const handleMentorClick = (mentor) => {
-    setSelectedMentor(mentor);
-    setNewMessage('');
-    setReplyTo(null);
-  };
-
-  // File download helper
-  const downloadFile = (base64Data, fileName, fileType) => {
-    const byteCharacters = atob(base64Data);
-    const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: fileType });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  // Choose an icon for the file
-  const getFileIcon = (fileName) => {
-    const fileExtension = fileName.split('.').pop().toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
-      // If you want an inline image preview, that would be different logic.
-      // For now, we just show a generic "file" icon or an image icon:
-      return <FaFileAlt className={styles.dmFileIcon} />;
-    } else if (fileExtension === 'pdf') {
-      return <FaFilePdf className={styles.dmFileIcon} />;
-    } else {
-      return <FaFileAlt className={styles.dmFileIcon} />;
-    }
-  };
-
-  // Filter mentors by search
   const filteredMentors = mentors.filter((mentor) =>
     mentor.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  /**
+   * Selecting a mentor
+   */
+  const handleMentorClick = (mentor) => {
+    setSelectedMentor(mentor);
+    setNewMessage('');
+    setFile(null);
+  };
 
   return (
     <div className={styles.dmPage}>
       {/* Sidebar */}
       <div
-        className={`${styles.dmPageSidebar} ${
-          isSidebarCollapsed ? styles.dmSidebarCollapsed : ''
-        }`}
+        className={`${styles.dmPageSidebar} ${isSidebarCollapsed ? styles.dmSidebarCollapsed : ''}`}
         onDoubleClick={handleSidebarToggle}
       >
         <div className={styles.dmSidebarHeader}>
@@ -423,14 +400,14 @@ const DMComponent = () => {
         <div className={styles.dmHeader}>
           <h2>{selectedMentor ? selectedMentor.name : 'Direct Message'}</h2>
         </div>
+
+        {/* Messages */}
         <div className={styles.dmMessages}>
           {selectedMentor &&
             (mentorMessages[selectedMentor.id] || []).map((message) => (
               <div
                 key={message.id}
                 className={`${styles.dmMessageItem} ${
-                  // If the message's senderId is the current user (mentee),
-                  // show it on the right. Otherwise, on the left.
                   message.senderId === currentUser.id ? styles.dmSent : styles.dmReceived
                 }`}
               >
@@ -440,55 +417,61 @@ const DMComponent = () => {
                   </span>
                   <span className={styles.dmTimestamp}>{message.timestamp}</span>
                 </div>
-                {message.replyTo && (
-                  <div className={styles.dmReplyTo}>
-                    <span className={styles.dmReplySender}>{message.replyTo.sender}:</span>{' '}
-                    {message.replyTo.text || 'Attachment'}
-                  </div>
-                )}
                 <div className={styles.dmMessageText}>
                   <p>{message.text}</p>
-                  {message.isFile && (
-                    <div className={styles.dmFileAttachment}>
-                      {getFileIcon(message.fileName || 'file')}
-                      <span className={styles.dmFileName}>
-                        {message.fileName || 'Attachment'}
-                      </span>
-                      {/* If you have base64 file content, show a download button */}
-                      {message.base64File && (
-                        <button
-                          onClick={() =>
-                            downloadFile(message.base64File, message.fileName, message.fileType)
-                          }
-                          className={styles.dmDownloadButton}
-                        >
-                          <FaDownload /> Download
-                        </button>
-                      )}
-                    </div>
-                  )}
+
+                  {/* If there are attachments, list them */}
+                  {message.attachments &&
+                    message.attachments.map((att, index) => {
+                      // If you have "get-attachment" endpoint:
+                      //   GET /api/Messages/get-attachment/{attachmentId}
+                      // you can create a link or button for each attachment
+                      const downloadUrl = att.attachmentId
+                        ? `https://localhost:7163/api/Messages/get-attachment/${att.attachmentId}`
+                        : null;
+
+                      return (
+                        <div key={index} className={styles.dmFileAttachment}>
+                          {getFileIcon(att.fileName)}
+                          <span className={styles.dmFileName}>
+                            {att.fileName || 'Attachment'}
+                          </span>
+
+                          {downloadUrl ? (
+                            // Direct link to download from server
+                            <a
+                              href={downloadUrl}
+                              className={styles.dmDownloadButton}
+                              download
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <FaDownload /> Download
+                            </a>
+                          ) : (
+                            // If there's no attachmentId (like ephemeral local message),
+                            // you could hide or disable this link
+                            <span className={styles.dmDownloadButton} style={{ opacity: 0.5 }}>
+                              No Download
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             ))}
         </div>
 
-        {/* Input Area */}
+        {/* Input area */}
         <div className={styles.dmInputArea}>
-          {replyTo && (
-            <div className={styles.dmReplyBox}>
-              <span>
-                Replying to: {replyTo.sender} - {replyTo.text || 'Attachment'}
-              </span>
-              <FaTimes className={styles.dmCancelReplyIcon} onClick={handleCancelReply} />
-            </div>
-          )}
           {file && (
             <div className={styles.dmFilePreviewBox}>
               <div className={styles.dmFilePreviewContent}>
                 <span>File ready to send:</span>
                 <p>{file.name}</p>
               </div>
-              <FaTimes className={styles.dmCancelFileIcon} onClick={handleCancelFile} />
+              <FaTimes className={styles.dmCancelFileIcon} onClick={() => setFile(null)} />
             </div>
           )}
           <div className={styles.dmInputRow}>
