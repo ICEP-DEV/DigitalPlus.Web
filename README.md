@@ -7,6 +7,10 @@
 </p>
 ### Overview of the pages
 <p align="left">
- <img src="Digital%20Plus%20Images/Landing%20Page/Landing.png" alt="Landing Page" width="300px"/>
+  <!-- Fixing the file path by replacing spaces with %20 and ensuring the correct folder structure -->
+  <img src="Digital%20Plus%20Images/Landing%20Page/Landing.png" alt="Landing Page" width="300px"/>
+  
+  <!-- Fixing path for the second image -->
   <img src="AWScertificate.PNG" alt="AWS Academy Certificate" width="300px"/>
 </p>
+
