@@ -8,6 +8,9 @@
 ### Overview of the pages
 <p align="left">
   <img src="/landing.PNG" alt="landing" width="100%"/>
+ <img src="/landing.PNG" alt="landing" width="100%"/>
+ <img src="/landing.PNG" alt="landing" width="100%"/>
+ <img src="/landing.PNG" alt="landing" width="100%"/>
 </p>
 
 
