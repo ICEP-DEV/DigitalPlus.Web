@@ -29,14 +29,14 @@ const ModulesContent = () => {
     backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
 
   // Hardcoded list of departments
-  const departments = [
+  const [departments, setDepartments] = useState([
     'ALL DEPARTMENTS',
     'COMPUTER SCIENCE',
     'MULTIMEDIA COMPUTING',
     'COMPUTER SYSTEM ENGINEERING',
     'INFORMATICS',
     'INFORMATION TECHNOLOGY',
-  ];
+  ]);
 
   // State to hold modules
   const [modules, setModules] = useState([]);
@@ -57,7 +57,9 @@ const ModulesContent = () => {
   const [editingModule, setEditingModule] = useState(null); // State for the module being edited
 
   // State to manage modal open/close
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
+  const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
+  const [newDepartmentName, setNewDepartmentName] = useState('');
 
   // Fetch modules from the server when the component mounts
   useEffect(() => {
@@ -167,7 +169,7 @@ const ModulesContent = () => {
             setNewCourseId(0);
             setNewDescription('');
             setNewDepartment('');
-            setIsModalOpen(false); // Close the modal
+            setIsModuleModalOpen(false); // Close the modal
 
             // Refresh modules from the server
             fetchModulesFromServer();
@@ -181,19 +183,27 @@ const ModulesContent = () => {
     }
   };
 
+  // Function to edit an existing module
+  const handleEditModule = (module) => {
+    setEditingModule(module);
+    setNewModuleName(module.module_Name);
+    setNewModuleCode(module.module_Code);
+    setNewCourseId(module.course_Id);
+    setNewDescription(module.description);
+    setNewDepartment(module.department);
+    setIsModuleModalOpen(true); // Open the modal for editing
+  };
+
   // Function to delete a module
   const handleDeleteModule = (moduleId) => {
     if (window.confirm('Are you sure you want to delete this module?')) {
-      fetch(
-        `https://localhost:7163/api/DigitalPlusCrud/DeleteModule/${moduleId}`,
-        {
-          method: 'DELETE',
-        }
-      )
+      fetch(`https://localhost:7163/api/DigitalPlusCrud/DeleteModule/${moduleId}`, {
+        method: 'DELETE',
+      })
         .then((response) => {
           if (response.ok) {
-            // Refresh modules from the server
-            fetchModulesFromServer();
+            alert('Module deleted successfully');
+            fetchModulesFromServer(); // Refresh the module list
           } else {
             throw new Error('Failed to delete module');
           }
@@ -204,85 +214,15 @@ const ModulesContent = () => {
     }
   };
 
-  // Function to start editing a module
-  const handleEditModule = (module) => {
-    setEditingModule(module);
-    setNewModuleName(module.module_Name);
-    setNewModuleCode(module.module_Code);
-    setNewCourseId(module.course_Id);
-    setNewDescription(module.description);
-    setNewDepartment(module.department);
-    setIsModalOpen(true); // Open the modal
-  };
-
-  // Function to update a module
-  const handleUpdateModule = () => {
-    if (
-      newModuleName.trim() !== '' &&
-      newCourseId !== 0 &&
-      newDescription.trim() !== '' &&
-      newDepartment.trim() !== ''
-    ) {
-      if (window.confirm('Are you sure you want to update this module?')) {
-        const updatedModule = {
-          module_Id: editingModule.module_Id,
-          module_Name: newModuleName,
-          module_Code: newModuleCode,
-          course_Id: parseInt(newCourseId),
-          description: newDescription,
-          department: newDepartment,
-        };
-
-        // Send PUT request to API
-        fetch(
-          `https://localhost:7163/api/DigitalPlusCrud/UpdateModule/${editingModule.module_Id}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedModule),
-          }
-        )
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              throw new Error('Failed to update module');
-            }
-          })
-          .then((data) => {
-            // Clear the editing state and input fields
-            setEditingModule(null);
-            setNewModuleName('');
-            setNewModuleCode('');
-            setNewCourseId(0);
-            setNewDescription('');
-            setNewDepartment('');
-            setIsModalOpen(false); // Close the modal
-
-            // Refresh modules from the server
-            fetchModulesFromServer();
-          })
-          .catch((error) => {
-            alert(error.message);
-          });
-      }
+  // Function to add a new department
+  const handleAddDepartment = () => {
+    if (newDepartmentName.trim() !== '') {
+      const updatedDepartments = [...departments, newDepartmentName];
+      setDepartments(updatedDepartments);
+      setNewDepartmentName('');
+      setIsDepartmentModalOpen(false); // Close the modal
     } else {
-      alert('Please fill in all fields.');
-    }
-  };
-
-  // Function to cancel editing
-  const handleCancelEdit = () => {
-    if (window.confirm('Are you sure you want to cancel editing?')) {
-      setEditingModule(null);
-      setNewModuleName('');
-      setNewModuleCode('');
-      setNewCourseId(0);
-      setNewDescription('');
-      setNewDepartment('');
-      setIsModalOpen(false); // Close the modal
+      alert('Please enter a department name.');
     }
   };
 
@@ -342,18 +282,22 @@ const ModulesContent = () => {
                   <strong>Department:</strong> {module.department}
                 </p>
 
-                {/* Icons for Edit and Delete at the bottom left corner */}
-                <div className={styles.moduleIcons}>
-                  <FaEdit
-                    className={styles.editIcon}
+                {/* Edit and Delete buttons */}
+                <div className={styles.modulesActionButtons}>
+                  <button
                     onClick={() => handleEditModule(module)}
+                    className={styles.editButton}
                     title="Edit Module"
-                  />
-                  <FaTrash
-                    className={styles.deleteIcon}
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
                     onClick={() => handleDeleteModule(module.module_Id)}
+                    className={styles.deleteButton}
                     title="Delete Module"
-                  />
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
               </div>
             ))}
@@ -373,13 +317,7 @@ const ModulesContent = () => {
         <button
           className={styles.addModuleButton}
           onClick={() => {
-            setEditingModule(null); // Clear editingModule
-            setNewModuleName('');
-            setNewModuleCode('');
-            setNewCourseId(0);
-            setNewDescription('');
-            setNewDepartment('');
-            setIsModalOpen(true); // Open the modal
+            setIsModuleModalOpen(true); // Open the module modal
           }}
           title="Add Module"
         >
@@ -387,15 +325,45 @@ const ModulesContent = () => {
         </button>
       </div>
 
+      {/* Add Department Button */}
+      <div className={styles.addDepartmentContainer}>
+        <button
+          className={styles.addDepartmentButton}
+          onClick={() => {
+            setIsDepartmentModalOpen(true); // Open the department modal
+          }}
+          title="Add Department"
+        >
+          <FaPlus className={styles.addDepartmentIcon} />
+        </button>
+      </div>
+
+      {/* Department Table Below Add Icon */}
+      <div className={styles.departmentTableContainer}>
+        <h3>Departments</h3>
+        <table className={styles.departmentTable}>
+          <thead>
+            <tr>
+              <th>Department Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {departments.map((dept) => (
+              <tr key={dept}>
+                <td>{dept}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       {/* Modal for Add/Edit Module */}
-      {isModalOpen && (
+      {isModuleModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             {/* Form content */}
             <div className={styles.modulesFormContainer}>
-              {/* Add/Edit Module Section */}
               <div className={styles.modulesAddModuleSection}>
-                {/* Section 1 */}
                 <div className={styles.formSection}>
                   <label className={styles.label}>Module Name</label>
                   <input
@@ -415,7 +383,6 @@ const ModulesContent = () => {
                     disabled={!!editingModule} // Disable code input when editing
                   />
                 </div>
-                {/* Section 2 */}
                 <div className={styles.formSection}>
                   <label className={styles.label}>Course ID</label>
                   <input
@@ -449,43 +416,60 @@ const ModulesContent = () => {
                   </select>
                 </div>
               </div>
+              <div className={styles.addModuleActions}>
+                <button
+                  className={styles.addModuleButton}
+                  onClick={handleAddModule}
+                  title="Add Module"
+                >
+                  <FaCheck className={styles.addModuleIcon} />
+                </button>
+                <button
+                  className={styles.cancelModuleButton}
+                  onClick={() => setIsModuleModalOpen(false)}
+                  title="Cancel"
+                >
+                  <FaTimes className={styles.cancelModuleIcon} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-              {/* Action Buttons */}
-              {editingModule ? (
-                <div className={styles.editModuleActions}>
-                  <button
-                    className={styles.updateModuleButton}
-                    onClick={handleUpdateModule}
-                    title="Update Module"
-                  >
-                    <FaCheck className={styles.updateModuleIcon} />
-                  </button>
-                  <button
-                    className={styles.cancelModuleButton}
-                    onClick={handleCancelEdit}
-                    title="Cancel Editing"
-                  >
-                    <FaTimes className={styles.cancelModuleIcon} />
-                  </button>
+      {/* Modal for Add Department */}
+      {isDepartmentModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modulesFormContainer}>
+              <div className={styles.modulesAddModuleSection}>
+                <div className={styles.formSection}>
+                  <label className={styles.label}>Department Name</label>
+                  <input
+                    type="text"
+                    value={newDepartmentName}
+                    onChange={(e) => setNewDepartmentName(e.target.value)}
+                    placeholder="Department Name"
+                    className={styles.newModuleInput}
+                  />
                 </div>
-              ) : (
-                <div className={styles.addModuleActions}>
-                  <button
-                    className={styles.updateModuleButton}
-                    onClick={handleAddModule}
-                    title="Add Module"
-                  >
-                    <FaCheck className={styles.updateModuleIcon} />
-                  </button>
-                  <button
-                    className={styles.cancelModuleButton}
-                    onClick={() => setIsModalOpen(false)}
-                    title="Cancel"
-                  >
-                    <FaTimes className={styles.cancelModuleIcon} />
-                  </button>
-                </div>
-              )}
+              </div>
+              <div className={styles.addModuleActions}>
+                <button
+                  className={styles.addModuleButton}
+                  onClick={handleAddDepartment}
+                  title="Add Department"
+                >
+                  <FaCheck className={styles.addModuleIcon} />
+                </button>kj
+                <button
+                  className={styles.cancelModuleButton}
+                  onClick={() => setIsDepartmentModalOpen(false)}
+                  title="Cancel"
+                >
+                  <FaTimes className={styles.cancelModuleIcon} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -495,3 +479,4 @@ const ModulesContent = () => {
 };
 
 export default ModulesContent;
+
