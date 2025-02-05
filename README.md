@@ -8,7 +8,7 @@
 ### Overview of the pages
 <p align="left">
   <!-- Fixing the file path by replacing spaces with %20 and ensuring the correct folder structure -->
-  <img src="Landing.png" alt="Landing Page" width="300px"/>
+  <img src="landing.png" alt="Landing Page" width="300px"/>
   
   <!-- Fixing path for the second image -->
   <img src="AWScertificate.PNG" alt="AWS Academy Certificate" width="300px"/>
