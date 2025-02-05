@@ -7,6 +7,6 @@
 </p>
 ### Overview of the pages
 <p align="left">
-  <img src="aws-academy-graduate-aws-academy-cloud-foundations.png" alt="AWS Academy Cloud Foundations Badge" width="300px"/>
+  <img src="Digitalplus Images/Landing Page/About us.png" alt="AWS Academy Cloud Foundations Badge" width="300px"/>
   <img src="AWScertificate.PNG" alt="AWS Academy Certificate" width="300px"/>
 </p>
