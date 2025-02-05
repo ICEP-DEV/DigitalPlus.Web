@@ -7,7 +7,7 @@
 </p>
 ### Overview of the pages
 <p align="left">
-  <img src="images/landing.png" alt="landing" width="300px"/>
+  <img src="/landing.png" alt="landing" width="300px"/>
 </p>
 
 
