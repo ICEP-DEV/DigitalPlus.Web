@@ -7,6 +7,6 @@
 </p>
 ### Overview of the pages
 <p align="left">
-  <img src="Digital Plus Images/Landing Page/Landing.png" alt="Landing Page" width="300px"/>
+ <img src="Digital%20Plus%20Images/Landing%20Page/Landing.png" alt="Landing Page" width="300px"/>
   <img src="AWScertificate.PNG" alt="AWS Academy Certificate" width="300px"/>
 </p>
