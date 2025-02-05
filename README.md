@@ -7,8 +7,7 @@
 </p>
 ### Overview of the pages
 <p align="left">
-  <!-- Fixing the file path by replacing spaces with %20 and ensuring the correct folder structure -->
-  <img src="landing.png" alt="landing" width="300px"/>
-  
+  <img src="images/landing.png" alt="landing" width="300px"/>
 </p>
+
 
