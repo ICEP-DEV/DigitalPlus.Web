@@ -23,7 +23,7 @@
     "canvas-to-blob": "^1.0.0",
     "cropperjs": "^1.6.2",
     "html2canvas": "^1.4.1",
-    "html2pdf.js": "^0.10.2",
+    "html2pdf.js": "^0.9.3",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "mammoth": "^1.8.0",

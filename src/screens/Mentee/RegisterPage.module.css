@@ -138,6 +138,18 @@
     outline: none;
     cursor: pointer;
   }
+
+  .ratingLabels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .ratingNumber {
+    flex: 1;
+    text-align: center;
+  }
   
   .sliderLabels {
     display: flex;

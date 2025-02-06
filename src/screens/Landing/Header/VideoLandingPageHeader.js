@@ -39,34 +39,22 @@ const VideoLandingPageHeader = () => {
       </div>
 
       <nav className={`${styles.nav} ${loaded ? styles.navLoaded : ''}`}>
-        {['HOME', 'ABOUT', 'SERVICES'].map((link) => (
-          <div
-            key={link}
-            style={{ position: 'relative' }}
-            onMouseEnter={() => setHoveredLink(link)}
-            onMouseLeave={() => setHoveredLink(null)}
-          >
-            <a 
-            href="/"
-            className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}
-            onMouseEnter={() => setHoveredLink('HOME')}
-            onMouseLeave={() => setHoveredLink(null)}
-            >
-              {link}
-            </a>
-            <div className={`${styles.underline} ${hoveredLink === link ? styles.underlineHovered : ''}`} />
-          </div>
-        ))}
-        <a
-          href="/login"
-          className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}
-          onMouseEnter={() => setHoveredLink('LOGIN')}
-          onMouseLeave={() => setHoveredLink(null)}
-        >
-          LOGIN
-          <div className={`${styles.underline} ${hoveredLink === 'LOGIN' ? styles.underlineHovered : ''}`} />
-        </a>
-      </nav>
+  {['HOME', 'ABOUT', 'SERVICES'].map((link) => (
+    <a 
+      key={link}
+      href="/"
+      className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}
+    >
+      {link}
+    </a>
+  ))}
+  <a
+    href="/login"
+    className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}
+  >
+    LOGIN
+  </a>
+</nav>
     </header>
   );
 };

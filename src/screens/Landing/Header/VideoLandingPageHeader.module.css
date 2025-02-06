@@ -71,15 +71,19 @@
     margin-left: 0; /* Set this to 0 to move all links closer to each other */
     text-decoration: none;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out, transform 0.3s ease-in-out;
     position: relative;
     padding-left: 15px; /* Optional: Adds space between links */
     margin:0 50px;
 
   }
+  
 
   .navLink:hover {
-    color: #f0f0f0; /* Hover effect */
+    transform: scale(1.2); /* Zoom effect */
+    color: white; /* Optional: Slight color change */
+    opacity: 1; /* Make sure it fades in when hovered */
+    text-shadow: 0 0 8px #fff, 0 0 12px #fff, 0 0 20px #fff; /* Glow effect */
   }
   
   .navLinkLoaded {
