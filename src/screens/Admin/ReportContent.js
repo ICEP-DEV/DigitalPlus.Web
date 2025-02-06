@@ -6,7 +6,6 @@ import { BsFillPersonCheckFill, BsFileEarmarkTextFill } from "react-icons/bs";
 import { RiShareFill, RiDownload2Fill } from "react-icons/ri";
 import { FaArrowLeft } from "react-icons/fa";
 import { GoReport } from "react-icons/go";
-//import { IoFilter } from "react-icons/io5";
 import PropTypes from "prop-types";
 import { Typography, CircularProgress } from "@mui/material";
 
@@ -15,44 +14,9 @@ const ReportContent = () => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [viewType, setViewType] = useState("main");
   const [tabView, setTabView] = useState("register");
-  //const [selectedCourse, setSelectedCourse] = useState("");
   const reportRef = useRef(null);
-
-  const [courses, setCourses] = useState([]);
   const [mentors, setMentors] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Fetch courses from the backend
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get(
-          "https://localhost:7163/api/DigitalPlusCrud/GetAllCourses"
-        );
-        console.log("Full API Response:", response);
-
-        if (
-          response.data &&
-          response.data.success &&
-          Array.isArray(response.data.result)
-        ) {
-          setCourses(response.data.result);
-        } else {
-          console.error(
-            "Expected an array in response.data.result but received:",
-            response.data
-          );
-          setCourses([]); // Fallback to an empty array if data is not in the expected format
-        }
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-        setCourses([]); // Fallback to an empty array on error
-      }
-    };
-
-    fetchCourses();
-  }, []);
 
   useEffect(() => {
     const fetchMentorsWithModules = async () => {
@@ -109,16 +73,6 @@ const ReportContent = () => {
     fetchMentorsWithModules();
   }, []);
 
-  // const handleFilter = () => {
-  //   const filtered = mentors.filter((mentor) => {
-  //     const matchCourse = selectedCourse
-  //       ? mentor.modules.some((module) => module.moduleName === selectedCourse) // Match by moduleName
-  //       : true; // If no course is selected, include all mentors
-  //     return matchCourse;
-  //   });
-
-  //   setFilteredReports(filtered);
-  // };
 
   //Handling the search bar when searching for mentor using the name or mento ID
   const handleSearch = (e) => {
@@ -237,10 +191,10 @@ const ReportContent = () => {
                 </tr>
               </thead>
               <tbody>
-                {errorMessage ? (
+                {isLoading ? (
                   <tr>
                     <td colSpan="4" className={styles.noResultMessage}>
-                      {errorMessage}
+                      {isLoading}
                     </td>
                   </tr>
                 ) : (
