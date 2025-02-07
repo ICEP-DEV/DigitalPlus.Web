@@ -16,8 +16,9 @@ const Report = () => {
     const [isSubmitting, setIsSubmitting] = useState(false); // To manage submission state
     const [modalOpen, setModalOpen] = useState(false); // To control the modal visibility
     const [modalMessage, setModalMessage] = useState(''); // To control the modal message
+
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    
+
     // Hide overflow when the component is mounted
     useEffect(() => {
         document.body.style.overflow = "hidden";

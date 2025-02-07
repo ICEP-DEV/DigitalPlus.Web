@@ -217,51 +217,7 @@ const ReportContent = () => {
               onChange={handleSearch}
               className={styles.searchInput}
             />
-            {/* <select
-              className={styles.dropdown}
-              value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.target.value)}
-            >
-              <option value="">Select Course</option>
-              {courses.length > 0 ? (
-                courses.map((course) => (
-                  <option key={course.course_Id} value={course.course_name}>
-                    {course.course_Name}
-                  </option>
-                ))
-              ) : (
-                <option disabled>No courses available</option>
-              )}
-            </select> */}
 
-            {/* <select
-              className={styles.dropdown}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-            >
-              <option value="">Select Month</option>
-              {[
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-              ].map((month, index) => (
-                <option key={index} value={month}>
-                  {month}
-                </option>
-              ))}
-            </select> */}
-
-            {/* <button className={styles.filterBtn} onClick={handleFilter}>
-              <IoFilter /> Filter
-            </button> */}
           </div>
 
           {isLoading ? (
@@ -383,30 +339,45 @@ const RegisterComponent = ({ mentorId, goBack }) => {
   const [mentorData, setMentor] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [menteeregister, setMenteeregister] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(""); // Stores selected month
+
+  // Function to group register data by module
+  const groupByModule = (data) => {
+    return data.reduce((acc, item) => {
+      const moduleCode = item.moduleCode || "Unknown Module";
+      if (!acc[moduleCode]) {
+        acc[moduleCode] = [];
+      }
+      acc[moduleCode].push(item);
+      return acc;
+    }, {});
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        const [registerResponse, mentorResponse] = await Promise.all([
+        // Fetch register data and mentor details
+        const [registerResponse, mentorResponse, menteeregisterResponse] = await Promise.all([
           axios.get(
             `https://localhost:7163/api/MenteeAndMentorRegister/GetMentorRegister/ByMentorId/${mentorId}`
           ),
           axios.get(
             `https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`
           ),
+          axios.get(
+            `https://localhost:7163/api/MenteeAndMentorRegister/GetAllMenteesRegisters`
+          ),
         ]);
 
-        console.log("Register Response:", registerResponse.data);
-        console.log("Mentor Response:", mentorResponse.data);
-
-        setRegisterData(registerResponse.data);
-        setMentor(mentorResponse.data);
-
+        setRegisterData(registerResponse.data || []); // Ensure data is always an array
+        setMentor(mentorResponse.data || {}); // Ensure mentorData is an object
+        setMenteeregister(menteeregisterResponse.data || []);
         setError(null); // Clear previous errors
       } catch (err) {
-        console.error("Error fetching data:", err.response || err);
+        console.error("Error fetching data:", err);
         setError(
           err.response?.data?.message ||
             "Failed to load data. Please try again."
@@ -419,40 +390,83 @@ const RegisterComponent = ({ mentorId, goBack }) => {
     fetchData();
   }, [mentorId]);
 
+  // Filter register data based on the selected month
+  const filteredMenteeRegister = menteeregister
+    .filter((item) => registerData.some((register) => register.moduleId === item.moduleId))
+    .filter((item) => {
+      if (!selectedMonth) return true; // Show all if no month is selected
+      const itemMonth = new Date(item.date).getMonth() + 1; // JS Months are 0-based, so add 1
+      return itemMonth === parseInt(selectedMonth, 10);
+    });
+
+  // Group filtered data by module
+  const groupedData = groupByModule(filteredMenteeRegister);
+  console.log("Filtered Register Data:", filteredMenteeRegister);
+
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
 
   return (
     <div>
-      <h2>Register for Student: {mentorData?.mentorName || mentorId}</h2>
-      <table className={styles.mentorReportTable}>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Mentee Name</th>
-            <th>Mentor Name</th>
-            <th>Module Name</th>
-            <th>Comment</th>
-          </tr>
-        </thead>
-        <tbody>
-          {registerData.length > 0 ? (
-            registerData.map((menteeregister, index) => (
-              <tr key={index}>
-                <td>{new Date(menteeregister.date).toLocaleDateString()}</td>
-                <td>{menteeregister.menteeId}</td>
-                <td>{menteeregister.mentorData?.mentorName || mentorId}</td>
-                <td>{menteeregister.moduleCode || "Unknown Module"}</td>
-                <td>{menteeregister.comment || "No Comment"}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No register data available for this mentor.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <h2>Register for Mentor: {mentorData?.mentorName || mentorId}</h2>
+
+      {/* Month Filter */}
+      <label htmlFor="monthFilter">Filter by Month: </label>
+      <select
+        id="monthFilter"
+        value={selectedMonth}
+        onChange={(e) => setSelectedMonth(e.target.value)}
+      >
+        <option value="">All Months</option>
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+
+      {/* Render a table for each module */}
+      {Object.keys(groupedData).length > 0 ? (
+        Object.keys(groupedData).map((moduleCode) => (
+          <div key={moduleCode} className={styles.moduleSection}>
+            <h3>Module: {moduleCode}</h3>
+            <table className={styles.mentorReportTable}>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Module Name</th>
+                  <th>Mentee Name</th>
+                  <th>Mentor Name</th>
+                  <th>Comment</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                {groupedData[moduleCode].map((menteeregister, index) => (
+                  <tr key={index}>
+                    <td>{new Date(menteeregister.date).toLocaleDateString()}</td>
+                    <td>{menteeregister.moduleCode || " Module Unknown"}</td>
+                    <td>{menteeregister.menteeName || menteeregister.menteeId || "Unknown Mentee"}</td>
+                    <td>{menteeregister.mentorId || "Unknown Mentor"}</td>
+                    <td>{menteeregister.comment || "No Comment"}</td>
+                    <td>{menteeregister.rating || "No Rating"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))
+      ) : (
+        <p>No register data available for this mentor in the selected month.</p>
+      )}
+
       <button onClick={goBack} className={styles.backButton}>
         Back
       </button>
@@ -465,10 +479,11 @@ RegisterComponent.propTypes = {
   goBack: PropTypes.func.isRequired,
 };
 
+
 const MentorReportComponent = ({ mentorId, goBack }) => {
   const [reports, setReportData] = useState([]);
   const [loading, setLoading] = useState(true);
-  //const [error, setError] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(""); // Stores selected month
 
   useEffect(() => {
     const fetchReportData = async () => {
@@ -479,7 +494,7 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
         console.log("Report Response:", response.data);
 
         if (response.data && Array.isArray(response.data.reports)) {
-          setReportData(response.data.reports);
+          setReportData(response.data.reports || []);
         } else {
           setReportData([]);
         }
@@ -487,7 +502,6 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching report data:", err);
-        //setError("Failed to load mentor report data.");
         setLoading(false);
       }
     };
@@ -495,16 +509,46 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
     fetchReportData();
   }, [mentorId]);
 
+  // Filter reports based on the selected month
+  const filteredReports = reports.filter((report) => {
+    if (!selectedMonth) return true; // Show all if no month is selected
+
+    const reportMonth = new Date(report.date).getMonth() + 1; // JS Months are 0-based, so add 1
+    return reportMonth === parseInt(selectedMonth, 10);
+  });
+
   if (loading) return <div>Loading...</div>;
-  //if (error) return <div>{error}</div>;
 
   return (
     <div className={styles.mentorReportView}>
       <h2>Mentor Report for Student: {`${mentorId}`}</h2>
+
+      {/* Month Filter */}
+      <label htmlFor="monthFilter">Filter by Month: </label>
+      <select
+        id="monthFilter"
+        value={selectedMonth}
+        onChange={(e) => setSelectedMonth(e.target.value)}
+      >
+        <option value="">All Months</option>
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+
       <table className={styles.mentorReportTable}>
         <thead>
           <tr>
-            <th>Mentor ID </th>
+            <th>Mentor ID</th>
             <th>Date of Session</th>
             <th>Students Present</th>
             <th>Challenges</th>
@@ -512,8 +556,8 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
           </tr>
         </thead>
         <tbody>
-          {reports.length > 0 ? (
-            reports.map((mentorreports, index) => (
+          {filteredReports.length > 0 ? (
+            filteredReports.map((mentorreports, index) => (
               <tr key={index}>
                 <td>{mentorreports.mentorId}</td>
                 <td>{new Date(mentorreports.date).toLocaleDateString()}</td>
@@ -524,11 +568,12 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
             ))
           ) : (
             <tr>
-              <td colSpan="3">No mentor reports available for this student.</td>
+              <td colSpan="5">No mentor reports available for this month.</td>
             </tr>
           )}
         </tbody>
       </table>
+
       <button onClick={goBack}>Back</button>
     </div>
   );
