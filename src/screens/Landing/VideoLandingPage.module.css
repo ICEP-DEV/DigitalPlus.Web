@@ -345,6 +345,7 @@
     overflow: hidden;
     margin: 0 auto; /* Center the scroller */
     max-width: 100vw; /* Ensure no overflow */
+    
   }
   
   .highlightsContent {

@@ -54,11 +54,10 @@ const Footer = () => {
         <div style={{ flex: '1', minWidth: '200px', textAlign: 'left' }}>
           <h4 style={{ color: '#fff', fontSize: '18px', marginBottom: '15px' }}>Services</h4>
           <ul style={{ listStyleType: 'none', padding: 0 }}>
-            <li><a href="#help-center" style={{ color: '#aaa', textDecoration: 'none' }}></a></li>
-            <li><a href="#partners" style={{ color: '#aaa', textDecoration: 'none' }}></a></li>
-            <li><a href="#suggestions" style={{ color: '#aaa', textDecoration: 'none' }}></a></li>
-            <li><a href="#blog" style={{ color: '#aaa', textDecoration: 'none' }}></a></li>
-            <li><a href="#newsletters" style={{ color: '#aaa', textDecoration: 'none' }}></a></li>
+            <li style={{ color: '#aaa', textDecoration: 'none' , fontSize: '15px'}}>Mentorship Matching</li>
+            <li style={{ color: '#aaa', textDecoration: 'none' , fontSize: '15px'}}>Real-Time Communication</li>
+            <li style={{ color: '#aaa', textDecoration: 'none' , fontSize: '15px'}}>Progress Tracking</li>
+            
           </ul>
         </div>
 

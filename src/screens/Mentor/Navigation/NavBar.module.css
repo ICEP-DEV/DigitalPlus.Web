@@ -158,3 +158,44 @@
   margin-left: auto;
   margin-right: 10px; /* Add margin to move group closer to the center */
 }
+
+/* Fixed navbar offset to prevent overlap */
+.pageContainer {
+  padding-top: 120px; /* Match the navBar height */
+  margin-top: 120px; /* Prevents overlap by adjusting the content below */
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Prevents content from overlapping on smaller screens */
+.container {
+  padding-top: 120px; /* Matches the navBar height */
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Ensure flex items within page content don't overflow */
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Adjusts top padding for smaller screens */
+@media (max-width: 768px) {
+  .container, .pageContainer {
+    padding-top: 80px; /* Adjust for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .container, .pageContainer {
+    padding-top: 60px; /* Adjust for very small screens */
+  }
+}
