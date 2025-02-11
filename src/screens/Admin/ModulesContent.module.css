@@ -37,6 +37,33 @@
   background-color: #16a085;
 }
 
+/* Department table styling */
+.departmentTable {
+  width: 100%;
+  margin-top: 30px;
+  border-collapse: collapse;
+}
+
+.departmentTable th,
+.departmentTable td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.departmentTable th {
+  background-color: #3498db;
+  color: white;
+}
+
+.departmentTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.departmentTable tr:hover {
+  background-color: #ddd;
+}
+
 /* Carousel styling */
 .modulesCarousel {
   display: flex;
@@ -92,30 +119,27 @@
   color: #2c3e50;
 }
 
-/* Module icon above the details */
-.modulesModuleIcon {
-  margin-bottom: 10px; /* Space below the icon */
-  font-size: 40px; /* Adjusted icon size */
-  color: #3498db; /* Bright color for icon */
-  align-self: center; /* Center the icon horizontally */
-}
-
-/* Icons for Edit and Delete at the bottom left corner */
+/* Icons for Edit and Delete inside the module card */
 .moduleIcons {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  top: 10px; /* Place icons at the top */
+  width: 100%;
   display: flex;
-  align-items: center;
+  justify-content: space-between; /* Distribute the icons to left and right */
+  padding: 0 10px;
 }
 
+/* Edit and Delete icon styling */
 .editIcon,
 .deleteIcon {
   font-size: 18px;
   cursor: pointer;
-  margin-right: 10px;
-  color: #3f51b5;
   transition: all 0.3s ease;
+  color: #3f51b5;
+  background-color: transparent; /* Remove any background color */
+  border: none; /* Remove any border */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Ensure no additional space around icons */
 }
 
 .editIcon:hover {
@@ -166,7 +190,7 @@
 
 /* Add Module Button */
 .addModuleButton {
-  background-color: #3498db;
+  background-color: #23db69;
   color: white;
   padding: 10px;
   border: none;
@@ -183,6 +207,35 @@
 }
 
 .addModuleIcon {
+  font-size: 24px;
+}
+
+/* Add Department Button (like Add Module Button) */
+.addDepartmentContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Add Department Button */
+.addDepartmentButton {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+}
+
+.addDepartmentButton:hover {
+  background-color: #2980b9;
+}
+
+.addDepartmentIcon {
   font-size: 24px;
 }
 
