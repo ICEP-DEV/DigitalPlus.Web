@@ -73,7 +73,6 @@ const ReportContent = () => {
     fetchMentorsWithModules();
   }, []);
 
-
   //Handling the search bar when searching for mentor using the name or mento ID
   const handleSearch = (e) => {
     const searchValue = e.target.value.toLowerCase();
@@ -171,7 +170,6 @@ const ReportContent = () => {
               onChange={handleSearch}
               className={styles.searchInput}
             />
-
           </div>
 
           {isLoading ? (
@@ -289,8 +287,8 @@ const ReportContent = () => {
 };
 
 const RegisterComponent = ({ mentorId, goBack }) => {
-  const [registerData, setRegisterData] = useState([]);
   const [mentorData, setMentor] = useState({});
+  const [mentees, setMentees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [menteeregister, setMenteeregister] = useState([]);
@@ -312,30 +310,26 @@ const RegisterComponent = ({ mentorId, goBack }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const [mentorResponse, menteeResponse, menteeregisterResponse] =
+          await Promise.all([
+            axios.get(
+              `https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`
+            ),
+            axios.get(
+              `https://localhost:7163/api/DigitalPlusUser/GetAllMentees`
+            ),
+            axios.get(
+              `https://localhost:7163/api/MenteeAndMentorRegister/GetAllMenteesRegisters`
+            ),
+          ]);
 
-        // Fetch register data and mentor details
-        const [registerResponse, mentorResponse, menteeregisterResponse] = await Promise.all([
-          axios.get(
-            `https://localhost:7163/api/MenteeAndMentorRegister/GetMentorRegister/ByMentorId/${mentorId}`
-          ),
-          axios.get(
-            `https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`
-          ),
-          axios.get(
-            `https://localhost:7163/api/MenteeAndMentorRegister/GetAllMenteesRegisters`
-          ),
-        ]);
-
-        setRegisterData(registerResponse.data || []); // Ensure data is always an array
-        setMentor(mentorResponse.data || {}); // Ensure mentorData is an object
+        setMentor(mentorResponse.data || {});
+        setMentees(menteeResponse.data || []);
         setMenteeregister(menteeregisterResponse.data || []);
-        setError(null); // Clear previous errors
+        setError(null);
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError(
-          err.response?.data?.message ||
-            "Failed to load data. Please try again."
-        );
+        setError(err.response?.data?.message || "Failed to load data.");
       } finally {
         setLoading(false);
       }
@@ -344,25 +338,45 @@ const RegisterComponent = ({ mentorId, goBack }) => {
     fetchData();
   }, [mentorId]);
 
+  const getMenteeName = (mentee_Id) => {
+    const mentee = mentees?.find((m) => m.mentee_Id === mentee_Id);
+    return mentee ? `${mentee.firstName} ${mentee.lastName}` : "Unknown Mentee";
+  };
+
+  const getMentorName = () => {
+    return mentorData?.firstName && mentorData?.lastName
+      ? `${mentorData.firstName} ${mentorData.lastName}`
+      : "Unknown Mentor";
+  };
+
+  console.log("mentorId:", mentorId);
+  console.log("menteeregister (before filtering):", menteeregister);
+
   // Filter register data based on the selected month
   const filteredMenteeRegister = menteeregister
-    .filter((item) => registerData.some((register) => register.moduleId === item.moduleId))
+    .filter((item) => item.mentorId?.toString() === mentorId?.toString())
     .filter((item) => {
       if (!selectedMonth) return true; // Show all if no month is selected
+      if (!item.date) return false; // Prevent errors if date is missing
       const itemMonth = new Date(item.date).getMonth() + 1; // JS Months are 0-based, so add 1
       return itemMonth === parseInt(selectedMonth, 10);
     });
 
   // Group filtered data by module
   const groupedData = groupByModule(filteredMenteeRegister);
-  console.log("Filtered Register Data:", filteredMenteeRegister);
+  console.log("Filtered Mentee Register:", filteredMenteeRegister);
 
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
 
   return (
     <div>
-      <h2>Register for Mentor: {mentorData?.mentorName || mentorId}</h2>
+      <h2>
+        Register for Mentor:{" "}
+        {mentorData.firstName && mentorData.lastName
+          ? `${mentorData.firstName} ${mentorData.lastName} (ID: ${mentorId})`
+          : `Mentor ID: ${mentorId}`}
+      </h2>
 
       {/* Month Filter */}
       <label htmlFor="monthFilter">Filter by Month: </label>
@@ -396,7 +410,9 @@ const RegisterComponent = ({ mentorId, goBack }) => {
                 <tr>
                   <th>Date</th>
                   <th>Module Name</th>
+                  <th>Mentee Student Number</th>
                   <th>Mentee Name</th>
+                  <th>Mentor Student Number</th>
                   <th>Mentor Name</th>
                   <th>Comment</th>
                   <th>Rating</th>
@@ -405,10 +421,22 @@ const RegisterComponent = ({ mentorId, goBack }) => {
               <tbody>
                 {groupedData[moduleCode].map((menteeregister, index) => (
                   <tr key={index}>
-                    <td>{new Date(menteeregister.date).toLocaleDateString()}</td>
+                    <td>
+                      {new Date(menteeregister.date).toLocaleDateString()}
+                    </td>
                     <td>{menteeregister.moduleCode || " Module Unknown"}</td>
-                    <td>{menteeregister.menteeName || menteeregister.menteeId || "Unknown Mentee"}</td>
+                    <td>{menteeregister.menteeId || "Unknown Mentee"}</td>
+                    <td>
+                      {getMenteeName(
+                        menteeregister.menteeId || "Unknown Mentee"
+                      )}
+                    </td>
                     <td>{menteeregister.mentorId || "Unknown Mentor"}</td>
+                    <td>
+                      {getMentorName(
+                        menteeregister.mentorId || "Unknown Mentor"
+                      )}
+                    </td>
                     <td>{menteeregister.comment || "No Comment"}</td>
                     <td>{menteeregister.rating || "No Rating"}</td>
                   </tr>
@@ -432,7 +460,6 @@ RegisterComponent.propTypes = {
   mentorId: PropTypes.string.isRequired,
   goBack: PropTypes.func.isRequired,
 };
-
 
 const MentorReportComponent = ({ mentorId, goBack }) => {
   const [reports, setReportData] = useState([]);
