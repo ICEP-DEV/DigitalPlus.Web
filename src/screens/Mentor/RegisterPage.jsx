@@ -10,6 +10,7 @@ const RegisterPage = () => {
     const [fetchedMentorID, setFetchedMentorID] = useState('');
     const [displayName, setDisplayName] = useState('PROFILE');
     const [isRegisterActivated, setIsRegisterActivated] = useState(false);
+    const [activationTime, setActivationTime] = useState(null);
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -19,6 +20,15 @@ const RegisterPage = () => {
             setFetchedMentorID(storedUser.mentorId);
         }
     }, []);
+
+    useEffect(() => {
+        if (isRegisterActivated && activationTime) {
+            const timer = setTimeout(() => {
+                handleDeactivateRegister();
+            }, 3600000); // 1 hour in milliseconds
+            return () => clearTimeout(timer);
+        }
+    }, [isRegisterActivated, activationTime]);
 
     useEffect(() => {
         const fetchAssignedModules = async () => {
@@ -31,19 +41,14 @@ const RegisterPage = () => {
                             assignedModules.map(async (module) => {
                                 try {
                                     const moduleDetailsResponse = await axios.get(`https://localhost:7163/api/DigitalPlusCrud/GetModule/${module.moduleId}`);
-                                    console.log(moduleDetailsResponse.data.result);
                                     return moduleDetailsResponse.data.result;
-
                                 } catch (moduleError) {
                                     console.error("Error fetching module details:", moduleError);
                                     return null;
                                 }
                             })
                         );
-                        const validModules = moduleDetails.filter(detail => detail !== null);
-                        setAllModules(validModules);
-                    } else {
-                        console.log("No assigned modules found for this mentor.");
+                        setAllModules(moduleDetails.filter(detail => detail !== null));
                     }
                 } catch (error) {
                     console.error("Error fetching assigned modules:", error);
@@ -69,16 +74,36 @@ const RegisterPage = () => {
                 MentorName: displayName,
                 ModuleId: allModules.find((module) => module.module_Code === selectedModule)?.module_Id,
                 ModuleCode: selectedModule,
-                IsRegisteractivated: !isRegisterActivated, // Toggle activation
+                IsRegisteractivated: true,
             };
 
             const response = await axios.post('https://localhost:7163/api/MenteeAndMentorRegister/InsertMentorRegister', payload);
 
-            alert(response.data.message || "Register status updated successfully.");
-            setIsRegisterActivated(!isRegisterActivated); // Update local state
+            alert(response.data.message || "Register activated successfully.");
+            setIsRegisterActivated(true);
+            setActivationTime(Date.now());
         } catch (error) {
             console.error("Error activating register:", error);
-            alert("Failed to update register status.");
+            alert("Failed to activate register.");
+        }
+    };
+
+    const handleDeactivateRegister = async () => {
+        try {
+            const payload = {
+                MentorId: mentorID,
+                MentorName: displayName,
+                ModuleId: allModules.find((module) => module.module_Code === selectedModule)?.module_Id,
+                ModuleCode: selectedModule,
+                IsRegisteractivated: false,
+            };
+
+            await axios.post('https://localhost:7163/api/MenteeAndMentorRegister/InsertMentorRegister', payload);
+            setIsRegisterActivated(false);
+            setActivationTime(null);
+            alert("Register automatically deactivated.");
+        } catch (error) {
+            console.error("Error deactivating register:", error);
         }
     };
 
@@ -95,51 +120,26 @@ const RegisterPage = () => {
                             <form>
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Student Number:</label>
-                                    <input
-                                        value={fetchedMentorID}
-                                        style={styles.input}
-                                        disabled
-                                        readOnly
-                                    />
+                                    <input value={fetchedMentorID} style={styles.input} disabled readOnly />
                                 </div>
 
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Module Code:</label>
-                                    <select
-                                        value={selectedModule}
-                                        onChange={handleModuleChange}
-                                        style={styles.input}
-                                    >
+                                    <select value={selectedModule} onChange={handleModuleChange} style={styles.input}>
                                         <option value="">Select the module</option>
-                                        {allModules.length > 0 ? (
-                                            allModules.map((module) => (
-                                                <option key={module.moduleId} value={module.module_Code}>
-                                                    {module.module_Code}
-                                                </option>
-                                            ))
-                                        ) : (
-                                            <option disabled>No modules available</option>
-                                        )}
+                                        {allModules.map((module) => (
+                                            <option key={module.moduleId} value={module.module_Code}>{module.module_Code}</option>
+                                        ))}
                                     </select>
                                 </div>
 
                                 <div style={styles.formGroup}>
                                     <label style={styles.formLabel}>Mentor's Name:</label>
-                                    <input
-                                        type="text"
-                                        value={displayName}
-                                        style={styles.input}
-                                        disabled
-                                        readOnly
-                                    />
+                                    <input type="text" value={displayName} style={styles.input} disabled readOnly />
                                 </div>
 
                                 <div style={styles.buttonContainer}>
-                                    <button
-                                        type="button"
-                                        style={styles.submitButton}
-                                        onClick={handleActivateRegister}
-                                    >
+                                    <button type="button" style={styles.submitButton} onClick={handleActivateRegister}>
                                         {isRegisterActivated ? "Deactivate" : "Activate"}
                                     </button>
                                 </div>
@@ -151,6 +151,9 @@ const RegisterPage = () => {
         </div>
     );
 };
+
+
+
 
 
 
