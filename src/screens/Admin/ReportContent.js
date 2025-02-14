@@ -18,6 +18,7 @@ const ReportContent = () => {
   const [mentors, setMentors] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
+  //UseEffect to fetch the mentors and the modules assigned to them
   useEffect(() => {
     const fetchMentorsWithModules = async () => {
       try {
@@ -51,7 +52,7 @@ const ReportContent = () => {
               }
             })
           );
-
+          // Update state with mentors and modules data
           setMentors(mentorsWithModules);
           setFilteredReports(mentorsWithModules);
           setLoading(false);
@@ -123,6 +124,7 @@ const ReportContent = () => {
     });
   };
 
+  //For when you want to share the report
   const handleShare = async () => {
     const element = reportRef.current;
     const options = {
@@ -156,6 +158,7 @@ const ReportContent = () => {
     }
   };
 
+  // Return the main reports container
   return (
     <div className={styles.reportsContainer}>
       {viewType === "main" && (
@@ -306,6 +309,7 @@ const RegisterComponent = ({ mentorId, goBack }) => {
     }, {});
   };
 
+  // Fetch mentor, mentees, and register data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -323,6 +327,7 @@ const RegisterComponent = ({ mentorId, goBack }) => {
             ),
           ]);
 
+        // Update state with fetched data
         setMentor(mentorResponse.data || {});
         setMentees(menteeResponse.data || []);
         setMenteeregister(menteeregisterResponse.data || []);
@@ -338,11 +343,13 @@ const RegisterComponent = ({ mentorId, goBack }) => {
     fetchData();
   }, [mentorId]);
 
+  // Function to get mentee name based on ID
   const getMenteeName = (mentee_Id) => {
     const mentee = mentees?.find((m) => m.mentee_Id === mentee_Id);
     return mentee ? `${mentee.firstName} ${mentee.lastName}` : "Unknown Mentee";
   };
 
+  // Function to get mentor name based on ID
   const getMentorName = () => {
     return mentorData?.firstName && mentorData?.lastName
       ? `${mentorData.firstName} ${mentorData.lastName}`
@@ -369,6 +376,7 @@ const RegisterComponent = ({ mentorId, goBack }) => {
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (error) return <div className={styles.error}>{error}</div>;
 
+  //  Render the register data
   return (
     <div>
       <h2>
@@ -456,6 +464,7 @@ const RegisterComponent = ({ mentorId, goBack }) => {
   );
 };
 
+// Prop types for RegisterComponent
 RegisterComponent.propTypes = {
   mentorId: PropTypes.string.isRequired,
   goBack: PropTypes.func.isRequired,
@@ -463,23 +472,30 @@ RegisterComponent.propTypes = {
 
 const MentorReportComponent = ({ mentorId, goBack }) => {
   const [reports, setReportData] = useState([]);
+  const [mentorData, setMentor] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(""); // Stores selected month
 
+  // Fetch mentor reports data
   useEffect(() => {
     const fetchReportData = async () => {
       try {
-        const response = await axios.get(
-          `https://localhost:7163/api/MentorReport/add_Report/reports/${mentorId}`
-        );
+        const [response, mentorResponse] = await Promise.all([
+          axios.get(`https://localhost:7163/api/MentorReport/add_Report/reports/${mentorId}`
+        ),
+          axios.get(`https://localhost:7163/api/DigitalPlusUser/GetMentor/${mentorId}`),
+        ]);
+
         console.log("Report Response:", response.data);
+        console.log("Mentor Response:", mentorResponse.data);
 
         if (response.data && Array.isArray(response.data.reports)) {
           setReportData(response.data.reports || []);
         } else {
           setReportData([]);
         }
-
+        // Update state with fetched data
+        setMentor(mentorResponse.data || {});
         setLoading(false);
       } catch (err) {
         console.error("Error fetching report data:", err);
@@ -489,6 +505,13 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
 
     fetchReportData();
   }, [mentorId]);
+
+  // Function to get mentor name based on ID
+  const getMentorName = () => {
+    return mentorData?.firstName && mentorData?.lastName
+      ? `${mentorData.firstName} ${mentorData.lastName}`
+      : "Unknown Mentor";
+  };
 
   // Filter reports based on the selected month
   const filteredReports = reports.filter((report) => {
@@ -500,9 +523,15 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
 
   if (loading) return <div>Loading...</div>;
 
+  // Render the mentor report data
   return (
     <div className={styles.mentorReportView}>
-      <h2>Mentor Report for Student: {`${mentorId}`}</h2>
+      <h2>
+        Report for Mentor:{" "}
+        {mentorData.firstName && mentorData.lastName
+          ? `${mentorData.firstName} ${mentorData.lastName} (ID: ${mentorId})`
+          : `Mentor ID: ${mentorId}`}
+      </h2>
 
       {/* Month Filter */}
       <label htmlFor="monthFilter">Filter by Month: </label>
@@ -530,6 +559,7 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
         <thead>
           <tr>
             <th>Mentor ID</th>
+            <th>Mentors Name</th>
             <th>Date of Session</th>
             <th>Students Present</th>
             <th>Challenges</th>
@@ -541,6 +571,7 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
             filteredReports.map((mentorreports, index) => (
               <tr key={index}>
                 <td>{mentorreports.mentorId}</td>
+                <td>{getMentorName()}</td>
                 <td>{new Date(mentorreports.date).toLocaleDateString()}</td>
                 <td>{mentorreports.noOfStudents}</td>
                 <td>{mentorreports.challenges}</td>
@@ -560,6 +591,7 @@ const MentorReportComponent = ({ mentorId, goBack }) => {
   );
 };
 
+// Prop types for MentorReportComponent
 MentorReportComponent.propTypes = {
   mentorId: PropTypes.string.isRequired,
   goBack: PropTypes.func.isRequired,
