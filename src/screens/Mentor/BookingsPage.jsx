@@ -11,7 +11,7 @@ const MentorBookingsPage = () => {
   //const [loading, setLoading] = useState(true);
   const [modalInfo, setModalInfo] = useState({ show: false, action: '', bookingId: null });
   const [reason, setReason] = useState('');
-
+  const [studEmail, setStudEmail] = useState("");
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -69,7 +69,7 @@ const MentorBookingsPage = () => {
             const menteeResponse = await fetch(`https://localhost:7163/api/DigitalPlusUser/GetMentee/${menteeId}`);
             if (!menteeResponse.ok) throw new Error('Failed to fetch mentee details');
             const menteeData = await menteeResponse.json(); 
-            console.log("TEST "+event.moduleId);
+            setStudEmail(menteeData.studentEmail);
             // Map the booking data with mentee name and other fields
             return {
               id: event.bookingId,
@@ -148,30 +148,56 @@ const MentorBookingsPage = () => {
           break;
   
           case 'Reschedule':
-            // Prepare the URL with the bookingId as a query parameter
-            const url = new URL('https://localhost:7163/api/Booking/MentorRescheduleRequest');
-            url.searchParams.append('bookingId', bookingId);
-          
-            // Prepare the body if a reason is provided
-            const body = reasonToSend ? JSON.stringify({ reason: reasonToSend }) : null;
-          
-            // Make the fetch request
-            const rescheduleResponse = await fetch(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: body, // Include body only if reason is provided
-            });
-          
-            if (!rescheduleResponse.ok) throw new Error('Failed to reschedule booking');
-            
-            toast.warning(`Rescheduling booking with ID ${bookingId} for the reason: ${reasonToSend || 'No specific reason provided'}.`);
-            console.log(rescheduleResponse);
-            break;
-          
-          default:
-            break;
+              // Prepare the URL with the bookingId as a query parameter
+              const url = new URL('https://localhost:7163/api/Booking/MentorRescheduleRequest');
+              url.searchParams.append('bookingId', bookingId);
+
+              // Prepare the body if a reason is provided
+              const body = reasonToSend ? JSON.stringify({ reason: reasonToSend }) : null;
+
+              try {
+                // Make the fetch request for rescheduling
+                const rescheduleResponse = await fetch(url, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: body, // Include body only if reason is provided
+                });
+
+                if (!rescheduleResponse.ok) throw new Error('Failed to reschedule booking');
+
+                // Send email after reschedule is successful
+                const studentEmail = studEmail; // Replace with actual student's email
+                const emailSubject = "Your booking has been rescheduled";
+                const emailMessage = `Your booking with ID ${bookingId} has been successfully rescheduled. Reason: ${reasonToSend || 'No specific reason provided.'}`;
+
+                const emailResponse = await fetch('https://localhost:7163/api/Email/send', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    email: studentEmail,
+                    subject: emailSubject,
+                    message: emailMessage,
+                  }),
+                });
+
+                if (!emailResponse.ok) throw new Error('Failed to send email notification');
+
+                toast.warning(`Rescheduling booking with ID ${bookingId} for the reason: ${reasonToSend || 'No specific reason provided'}.`);
+                console.log(rescheduleResponse);
+                console.log(emailResponse);
+
+              } catch (error) {
+                console.error(error);
+              }
+              break;
+
+            default:
+              break;
+
           
       }
     } catch (error) {
