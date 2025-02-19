@@ -3,12 +3,12 @@
     transition: transform 0.3s ease;
   }
 .header {
-    position: fixed;
+    position: fixed !important;
     top: 0;
     left: 0;
     width: 100%;
     background-color: rgba(6, 7, 8, 0.7);
-    height: 60px;
+    /* height: 60px; */
     z-index: 1000;
     display: flex;
     justify-content: space-between;

@@ -38,7 +38,7 @@ const VideoLandingPageHeader = () => {
         </a>
       </div>
 
-      <nav className={`${styles.nav} ${loaded ? styles.navLoaded : ''}`}>
+      {/* <nav className={`${styles.nav} ${loaded ? styles.navLoaded : ''}`}>
   {['HOME', 'ABOUT', 'SERVICES'].map((link) => (
     <a 
       key={link}
@@ -54,7 +54,22 @@ const VideoLandingPageHeader = () => {
   >
     LOGIN
   </a>
+</nav> */}
+<nav className={`${styles.nav} ${loaded ? styles.navLoaded : ''}`}>
+  <a href="#carousel-section" className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}>
+    HOME
+  </a>
+  <a href="#about-section" className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}>
+    ABOUT
+  </a>
+  <a href="#services-section" className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}>
+    SERVICES
+  </a>
+  <a href="/login" className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}>
+    LOGIN
+  </a>
 </nav>
+
     </header>
   );
 };
