@@ -87,7 +87,8 @@ const Schedule = () => {
           if (!acc[key]) acc[key] = [];
           acc[key].push({
             mentorName: item.mentorName,
-            selectedModules: item.moduleList
+            selectedModules: item.moduleList,
+            mentor: item.mentorId,
 
           });
           return acc;
