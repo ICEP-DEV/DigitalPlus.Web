@@ -88,7 +88,7 @@ const Schedule = () => {
           acc[key].push({
             mentorName: item.mentorName,
             selectedModules: item.moduleList,
-            mentor: item.mentorId,
+            scheduleId: item.scheduleId,
 
           });
           return acc;
@@ -193,18 +193,18 @@ const Schedule = () => {
           return;
         }
   
-        const mentorId = entryToDelete?.mentorName || entryToDelete?.mentorId;
-        if (!mentorId) {
-          console.error("Invalid entry or missing mentor ID:", entryToDelete.mentorId);
+        const scheduleId = entryToDelete?.scheduleId ;
+        if (!scheduleId) {
+          console.error("Invalid entry or missing mentor ID:", entryToDelete.scheduleId);
           alert("Failed to find the mentor ID for deletion. Please ensure it exists.");
           return;
         }
   
-        console.log("Deleting mentor with ID:", mentorId);
+        console.log("Deleting mentor with ID:", scheduleId);
   
         // Perform deletion
         const response = await axios.delete(
-          `https://localhost:7163/api/DigitalPlusCrud/DeleteSchedulesByMentorId/mentor/${mentorId}`
+          `https://localhost:7163/api/DigitalPlusCrud/DeleteSchedule/${scheduleId}`
         );
   
         console.log("Server response:", response);
