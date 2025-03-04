@@ -233,7 +233,7 @@ export default function MenteeModulePage() {
       <SideBar modules={modules} /> {/* Pass the module list to Sidebar */}
       <div className={styles['course-modules']}>
       <button className={styles['add-module-button']} onClick={openModal}>
-              ADD MODULE
+              MANAGE MODULES
             </button>
         <h1>Assigned Modules</h1>
          
