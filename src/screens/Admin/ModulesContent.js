@@ -114,19 +114,6 @@ const ModulesContent = () => {
     filterModules(modules, selected);
   };
 
-  const handlePrevClick = () => {
-    if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.clientWidth / 3;
-      carouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const handleNextClick = () => {
-    if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.clientWidth / 3;
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
 
   // Function to add a new module
   const handleAddModule = () => {
@@ -248,68 +235,40 @@ const ModulesContent = () => {
         <p>Loading modules...</p>
       ) : (
         <div className={styles.modulesCarousel}>
+        <div className={styles.modulesCarouselItems} ref={carouselRef}>
+        {filteredModules.map((module) => (
+      <div className={styles.modulesCarouselItem} key={module.module_Id}>
+        {/* Module Details */}
+        <div className={styles.moduleDetails}>
+          <p><strong>Name:</strong> {module.module_Name}</p>
+          <p><strong>Code:</strong> {module.module_Code}</p>
+          <p><strong>Course ID:</strong> {module.course_Id}</p>
+          <p><strong>Description:</strong> {module.description}</p>
+          <p><strong>Department:</strong> {module.department}</p>
+        </div>
+
+        {/* Edit & Delete Buttons on the Right */}
+        <div className={styles.moduleIcons}>
           <button
-            className={`${styles.modulesCarouselBtn} ${styles.modulesLeftBtn}`}
-            onClick={handlePrevClick}
-            aria-label="Previous"
+            onClick={() => handleEditModule(module)}
+            className={styles.editIcon}
+            title="Edit Module"
           >
-            {'<'}
+            <FaEdit />
           </button>
-          <div className={styles.modulesCarouselItems} ref={carouselRef}>
-            {filteredModules.map((module) => (
-              <div
-                className={styles.modulesCarouselItem}
-                key={module.module_Id}
-                style={{ backgroundColor: module.backgroundColor }}
-              >
-                {/* Module icon above the details */}
-                <div className={styles.modulesModuleIcon}>{module.icon}</div>
-
-                {/* Display module details */}
-                <p>
-                  <strong>Name:</strong> {module.module_Name}
-                </p>
-                <p>
-                  <strong>Code:</strong> {module.module_Code}
-                </p>
-                <p>
-                  <strong>Course ID:</strong> {module.course_Id}
-                </p>
-                <p>
-                  <strong>Description:</strong> {module.description}
-                </p>
-                <p>
-                  <strong>Department:</strong> {module.department}
-                </p>
-
-                {/* Edit and Delete buttons */}
-                <div className={styles.modulesActionButtons}>
-                  <button
-                    onClick={() => handleEditModule(module)}
-                    className={styles.editButton}
-                    title="Edit Module"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteModule(module.module_Id)}
-                    className={styles.deleteButton}
-                    title="Delete Module"
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
           <button
-            className={`${styles.modulesCarouselBtn} ${styles.modulesRightBtn}`}
-            onClick={handleNextClick}
-            aria-label="Next"
+            onClick={() => handleDeleteModule(module.module_Id)}
+            className={styles.deleteIcon}
+            title="Delete Module"
           >
-            {'>'}
+            <FaTrash />
           </button>
         </div>
+      </div>
+    ))}
+        </div>
+      </div>
+      
       )}
 
       {/* Add Module Button under the carousel */}
@@ -461,7 +420,7 @@ const ModulesContent = () => {
                   title="Add Department"
                 >
                   <FaCheck className={styles.addModuleIcon} />
-                </button>kj
+                </button>
                 <button
                   className={styles.cancelModuleButton}
                   onClick={() => setIsDepartmentModalOpen(false)}

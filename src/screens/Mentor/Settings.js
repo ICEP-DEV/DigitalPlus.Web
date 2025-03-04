@@ -210,13 +210,13 @@ const Settings = () => {
                             />
                         </div>
                         <div className={styles['settings-form-column']}>
-                            <label htmlFor="lab" className={styles['settings-label']}>Year of Study:</label>
+                            <label htmlFor="lab" className={styles['settings-label']}>Activated:</label>
                             <input
                                 type="text"
                                 id="yearOfStudy"
                                 name="yearOfStudy"
                                 className={styles['settings-input']}
-                                value={mentorForm.lab}
+                                value={mentorForm.activated.toString().toUpperCase()}
                                 readOnly
                             />
                         </div>

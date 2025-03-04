@@ -48,13 +48,11 @@
   .modal {
 
     width: 300px;
-    margin: auto;
+    margin: 280px 50%;
   }
   /* Assuming you have a CSS module named styles.module.css */
 .modal {
-  z-index: 9999;
-  position: fixed;
-  top: 20%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white; /* Customize background color */

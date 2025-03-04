@@ -186,8 +186,6 @@ const CalendarPage = () => {
       const currentTime = new Date().getTime();
       const appointmentTime = new Date(appointment.dateTime).getTime();
   
-      //console.log("Appo "+appointments.json())
-
       const reminderIntervals = [
         { label: 'You have an appointment in 2 minutes', delta: 2 * 60 * 1000 },
         { label: 'You have an appointment in 15 minutes', delta: 15 * 60 * 1000 },

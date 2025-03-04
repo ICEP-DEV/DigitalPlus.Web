@@ -2,9 +2,87 @@
 
 /* Container Styles */
 .rate_container {
-  max-width: 1200px; /* Set a maximum width for the table */
-  margin: 0 auto; /* Center the container */
-  padding: 20px; /* Add padding around the container */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #ffffff; /* White text for contrast */
+}
+
+.demoQuizzesContainer {
+  margin-top: 20px;
+}
+.demoQuizzes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 4 quiz cards per row */
+  gap: 20px; /* Adds spacing between cards */
+  justify-content: center;
+  padding: 20px;
+}
+
+.quizCard {
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #1a237e; /* Deep blue */
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .demoQuizzes {
+    grid-template-columns: repeat(3, 1fr); /* 3 cards per row on medium screens */
+  }
+}
+
+@media (max-width: 900px) {
+  .demoQuizzes {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row on smaller screens */
+  }
+}
+
+@media (max-width: 600px) {
+  .demoQuizzes {
+    grid-template-columns: 1fr; /* 1 card per row on mobile screens */
+  }
+}
+
+.quizCard {
+  border: 1px solid #f54949;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #e6cfcf; /* Deep blue for contrast */
+  width: 250px;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.quizCard h4 {
+  margin: 0 0 10px;
+  color: #f31111;
+}
+
+.quizCard p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #0f0c0c;
+}
+
+.quizCard strong {
+  color: #090e11;
+}
+
+.searchContainer {
+  margin: 10px 0;
+  text-align: center;
+}
+.searchInput {
+  padding: 8px;
+  width: 80%;
+  max-width: 400px;
+  border: 1px solid #b0bec5;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #0d1431;
 }
 
 /* Table Styles */
@@ -12,14 +90,16 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  overflow: hidden; /* Ensures rounded corners on table */
+  overflow: hidden;
+  background-color: #1a237e;
+  color: #ffffff;
 }
 
 .rating_table th {
-  background-color: #009688; /* Teal background for header */
-  color: #ffffff; /* White text color */
+  background-color: #0d1431;
+  color: #ffffff;
   padding: 15px;
   font-weight: bold;
   text-align: left;
@@ -28,11 +108,11 @@
 .rating_table td {
   padding: 12px;
   text-align: left;
-  border: 1px solid #E0E0E0; /* Soft borders for table cells */
+  border: 1px solid #b0bec5;
 }
 
 .rating_table tr:hover {
-  background-color: #FFEBEE; /* Light coral on hover */
+  background-color: #3949ab;
 }
 
 /* Input Styles */
@@ -41,47 +121,48 @@
 textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc; /* Soft border for inputs */
-  border-radius: 5px; /* Rounded corners */
-  transition: border-color 0.3s; /* Smooth transition */
+  border: 1px solid #b0bec5;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #0d1431;
 }
 
 .rate_name_input[type="text"]:focus, 
 .rate_surname_input[type="text"]:focus,
 textarea:focus {
-  border-color: #009688; /* Change border color on focus */
-  outline: none; /* Remove outline */
+  border-color: #3949ab;
+  outline: none;
 }
 
 /* Button Styles */
 .back_Button,
 .rate_deleteButton,
 .rate_duplicateButton {
-  background-color: #FF5722; /* Coral color for buttons */
+  background-color: #3949ab;
   color: white;
   border: none;
   padding: 10px 15px;
-  border-radius: 5px; /* Rounded corners */
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s; /* Smooth transition */
+  transition: background-color 0.3s;
 }
 
 .back_Button:hover,
 .rate_deleteButton:hover,
 .rate_duplicateButton:hover {
-  background-color: #E64A19; /* Darker coral on hover */
+  background-color: #283593;
 }
 
 /* Title Styles */
 h2 {
-  margin-bottom: 20px; /* More spacing below the title */
-  color: #333333; /* Dark gray for title */
-  font-size: 24px; /* Increase title size */
+  margin-bottom: 20px;
+  color: #ffffff;
+  font-size: 24px;
 }
 
 /* Textarea Styles */
 textarea {
-  resize: none; /* Prevent resizing */
+  resize: none;
 }
 
 /* Answer Rating Styles */
@@ -91,10 +172,10 @@ textarea {
 
 /* Star Rating Styles */
 .answer_rating svg {
-  cursor: pointer; /* Cursor pointer for stars */
-  transition: color 0.3s; /* Smooth transition for star color */
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
 .answer_rating svg:hover {
-  color: #FFD700; /* Gold color for stars on hover */
+  color: #FFD700;
 }
