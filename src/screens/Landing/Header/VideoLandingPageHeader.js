@@ -13,21 +13,14 @@ const VideoLandingPageHeader = () => {
       setLoaded(true);
     }, 100);
 
-    const handleScroll = () => {
-      const currentScrollPos = window.pageYOffset;
-      setScrolled(currentScrollPos > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   return (
-    <header className={`${styles.header} ${scrolled ? styles.headerScrolled : ''}`}>
+    <header className={`${styles.header} ${scrolled ? styles.headerScrolled : ''}`} 
+    style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 1000 }}>
       <div className={styles.logoContainer}>
         <a href="#carousel-section">
           <img
@@ -38,23 +31,7 @@ const VideoLandingPageHeader = () => {
         </a>
       </div>
 
-      {/* <nav className={`${styles.nav} ${loaded ? styles.navLoaded : ''}`}>
-  {['HOME', 'ABOUT', 'SERVICES'].map((link) => (
-    <a 
-      key={link}
-      href="/"
-      className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}
-    >
-      {link}
-    </a>
-  ))}
-  <a
-    href="/login"
-    className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}
-  >
-    LOGIN
-  </a>
-</nav> */}
+  
 <nav className={`${styles.nav} ${loaded ? styles.navLoaded : ''}`}>
   <a href="#carousel-section" className={`${styles.navLink} ${loaded ? styles.navLinkLoaded : ''}`}>
     HOME
