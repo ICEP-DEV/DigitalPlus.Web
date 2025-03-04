@@ -22,6 +22,7 @@
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
+  color: #01182e;
 }
 
 .filterContainer {
@@ -159,4 +160,11 @@
 .actionButtons button:hover, .shareBtn:hover, .downloadBtn:hover, .backBtn:hover {
   background-color: #3e3e3e;
   color: white;
+}
+
+.mentorRegisterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #01182e;
 }

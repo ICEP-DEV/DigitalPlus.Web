@@ -379,7 +379,7 @@ const RegisterComponent = ({ mentorId, goBack }) => {
   //  Render the register data
   return (
     <div>
-      <h2>
+      <h2  className="mentorRegisterHeader">
         Register for Mentor:{" "}
         {mentorData.firstName && mentorData.lastName
           ? `${mentorData.firstName} ${mentorData.lastName} (ID: ${mentorId})`
