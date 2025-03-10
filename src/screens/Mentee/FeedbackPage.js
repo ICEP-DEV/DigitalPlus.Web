@@ -6,16 +6,12 @@ import SideBarNavBar from './Navigation/SideBarNavBar';
 
 const FeedbackPage = () => {
 
-
   const [complains, setComplains] = useState({
     menteeEmail: '',
     mentorEmail: '',
     moduleName: '',
     complaint: '',
   });
-
-  
-
 
   const [showModal, setShowModal] = useState(false); // State for showing modal
   const [userData, setUserData] = useState(''); 

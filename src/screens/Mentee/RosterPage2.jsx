@@ -95,6 +95,7 @@ function RosterPage() {
     <SideBarNavBar>
       <div style={styles.container}>
         <h1 style={styles.header}>Mentor's Lab 10-252</h1>
+        <h3>Weekly Roster</h3>
         {loading ? (
           <div className={styles.loadingContainer}>
           <div className={styles.loadingSpinner}></div>

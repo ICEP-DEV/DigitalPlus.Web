@@ -4,8 +4,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh; /* Centering vertically in the viewport */
-    background-color: #D9D9D9; /* Soft background color */
+    height: 82.9vh; /* Centering vertically in the viewport */
+    background-color: #D9D9D9;
     padding: 20px;
     border-radius: 10px; /* Rounded corners for a modern look */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
@@ -30,7 +30,7 @@
 
 h2 {
     font-size: 2rem; /* Heading size */
-    color: #333; /* Darker text color */
+    color: #000000; /* Darker text color */
     margin-bottom: 30px; /* Space below the heading */
 }
 

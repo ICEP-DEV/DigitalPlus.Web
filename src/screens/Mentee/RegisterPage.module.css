@@ -2,7 +2,7 @@
     height: 87vh;
     margin: 0;
     overflow: hidden; /* Prevents scrolling */
-    background-color: #D9D9D9; /* Set background color of the page */
+    background-color: #D9D9D9;
   }
   
   .registerPageContainer {

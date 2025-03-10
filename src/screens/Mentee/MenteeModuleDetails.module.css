@@ -19,6 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  background-color: #D9D9D9;
 }
 
 .loadingContainer {

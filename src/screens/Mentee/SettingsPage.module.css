@@ -1,6 +1,5 @@
 .settingsContainer {
   width: 86%;
-
   color: #212121;
   border-radius: 10px;
   text-align: center;
@@ -8,6 +7,7 @@
   margin-left: 220px;
   margin-bottom: 60px;
   min-height: -20vh;
+  
 }
 
 .settingsContainer h2 {
@@ -16,6 +16,7 @@
   font-size: 40px;
   margin-left: 700px;
   margin-bottom: 50px;
+  color: #070707;
   
 }
 
@@ -155,4 +156,8 @@
 .updateButton {
   background-color: #28a745;
   color: #fff;
+}
+
+h2{
+  color: #070707;
 }

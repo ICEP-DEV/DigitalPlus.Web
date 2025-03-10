@@ -7,7 +7,6 @@ import axios from 'axios';
 const Settings = () => {
   const navigate = useNavigate();
 
-
   const [activeTab, setActiveTab] = useState('changePassword'); // Default to 'Change Password'
   const [isEditing, setIsEditing] = useState(false); // State to toggle between view and edit mode
   const [userData, setUserData] = useState({});
@@ -26,10 +25,8 @@ const Settings = () => {
       "At least one special character"
   ]);
 
-
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -79,7 +76,6 @@ const Settings = () => {
     }
 }, [successMessage, errorMessage]);
 
-
   const updateDetails = async () => {
     try {
       const response = await axios.put(`https://localhost:7163/api/DigitalPlusUser/UpdateMentee/${userData.mentee_Id}`, {
@@ -103,9 +99,6 @@ const Settings = () => {
     }
   };
 
-
-
-  
   const handlePasswordChange = (password) => {
     setNewPassword(password);
 
@@ -176,11 +169,7 @@ const resetPassword = () => {
       });
 };
 
-
-
-
   //HANDLES
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -190,7 +179,6 @@ const resetPassword = () => {
     setIsEditing(!isEditing); 
   };
  
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if(activeTab === 'personalDetails')
@@ -318,9 +306,7 @@ const resetPassword = () => {
 
           {activeTab === 'changePassword' && (
 
-            
             <div>
-
               {successMessage && <div style={{ marginTop: '20px', marginBottom: '20px', color: 'green' }}>{successMessage}</div>}
               {errorMessage && <div style={{ marginTop: '20px', marginBottom: '20px', color: 'red' }}>{errorMessage}</div>}
               <div className={styles.passwordForm}>
