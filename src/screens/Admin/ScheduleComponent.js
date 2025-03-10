@@ -189,14 +189,14 @@ const Schedule = () => {
             time,
             index,
           });
-          alert("Failed to find the entry to delete. Please try again.");
+          toast.error("Failed to find the mentor ID for deletion. Please ensure it exists.");
           return;
         }
   
         const scheduleId = entryToDelete?.scheduleId ;
         if (!scheduleId) {
           console.error("Invalid entry or missing mentor ID:", entryToDelete.scheduleId);
-          alert("Failed to find the mentor ID for deletion. Please ensure it exists.");
+          toast.error("Failed to find the mentor ID for deletion. Please ensure it exists.");
           return;
         }
   
@@ -236,6 +236,7 @@ const Schedule = () => {
       }
     }
   };
+  
   
 
   const handleChange = async (e) => {

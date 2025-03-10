@@ -9,6 +9,7 @@ function RosterPage() {
   const [scheduleData, setScheduleData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [timeFilter, setTimeFilter] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -25,6 +26,8 @@ function RosterPage() {
         }
       } catch (error) {
         console.error("Error fetching schedule data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchScheduleData();
@@ -66,7 +69,6 @@ function RosterPage() {
 
   const downloadPDF = () => {
     const { days, tableData } = organizeData(filteredData);
-
     const doc = new jsPDF();
     doc.setFontSize(18);
     doc.text("Mentor's Lab 10-252 Roster", 14, 15);
@@ -93,62 +95,71 @@ function RosterPage() {
     <SideBarNavBar>
       <div style={styles.container}>
         <h1 style={styles.header}>Mentor's Lab 10-252</h1>
+        {loading ? (
+          <div className={styles.loadingContainer}>
+          <div className={styles.loadingSpinner}></div>
+          <p style={styles.loadingMessage}>Loading Roster Data...</p>
+          </div>
+        ) : (
+          <>
+            <div style={styles.filterContainer}>
+              <label htmlFor="timeFilter" style={styles.filterLabel}>
+                Filter by Time:
+              </label>
+              <input
+                id="timeFilter"
+                type="text"
+                value={timeFilter}
+                onChange={handleFilterChange}
+                placeholder="Enter time (e.g., 10:00 AM)"
+                style={styles.filterInput}
+              />
+            </div>
 
-        <div style={styles.filterContainer}>
-          <label htmlFor="timeFilter" style={styles.filterLabel}>
-            Filter by Time:
-          </label>
-          <input
-            id="timeFilter"
-            type="text"
-            value={timeFilter}
-            onChange={handleFilterChange}
-            placeholder="Enter time (e.g., 10:00 AM)"
-            style={styles.filterInput}
-          />
-        </div>
-
-        <div style={styles.tableContainer}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th style={styles.headerCell}>
-                  <FaClock /> Time
-                </th>
-                {days.map((day) => (
-                  <th key={day} style={styles.headerCell}>
-                    <FaCalendarAlt /> {day}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.map((row, index) => (
-                <tr key={index}>
-                  <td style={styles.timeCell}>{row.time}</td>
-                  {days.map((day) => (
-                    <td key={day} style={styles.dataCell}>
-                      {row[day]
-                        ? row[day]
-                            .split("\n")
-                            .map((line, i) => <div key={i}>{line}</div>)
-                        : "N/A"}
-                    </td>
+            <div style={styles.tableContainer}>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.headerCell}>
+                      <FaClock /> Time
+                    </th>
+                    {days.map((day) => (
+                      <th key={day} style={styles.headerCell}>
+                        <FaCalendarAlt /> {day}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {tableData.map((row, index) => (
+                    <tr key={index}>
+                      <td style={styles.timeCell}>{row.time}</td>
+                      {days.map((day) => (
+                        <td key={day} style={styles.dataCell}>
+                          {row[day]
+                            ? row[day]
+                                .split("\n")
+                                .map((line, i) => <div key={i}>{line}</div>)
+                            : "N/A"}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                </tbody>
+              </table>
+            </div>
 
-        <button onClick={downloadPDF} style={styles.downloadButton}>
-          <FaDownload style={styles.icon} />
-          Download PDF
-        </button>
+            <button onClick={downloadPDF} style={styles.downloadButton}>
+              <FaDownload style={styles.icon} />
+              Download PDF
+            </button>
+          </>
+        )}
       </div>
     </SideBarNavBar>
   );
 }
+
 
 const styles = {
   container: {

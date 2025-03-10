@@ -40,7 +40,9 @@
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 8px;
+    color: #000; /* Set the text color to black */
 }
+
 
 .module-description {
     font-size: 14px;

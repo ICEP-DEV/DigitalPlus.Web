@@ -168,14 +168,23 @@ const styles = {
     overflow: "hidden", // Prevents unintended overflow on the main container
     display: "flex",
     flexDirection: "column",
+    
   },
   content: {
     flex: 1,
-    overflow: "auto", // Allows vertical scrolling for the main content
-    marginLeft: "70px",
+    overflow: "auto",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center", // Centers content vertically
+    alignItems: "center", // Centers content horizontally
+    marginLeft: "auto",
+    marginRight: "auto",
     padding: "20px",
-    marginTop: '50px',
+    width: "80%", // Adjust width for better centering
+    textAlign: "center",
+    marginTop: "13px", // Adjust for the top navigation bar
   },
+
   header: {
     fontSize: "30px",
     textAlign: "center",

@@ -80,7 +80,7 @@ export default function ModulePage() {
                   <div key={module.module_Id} className={styles['module-card']}>
                     <img className={styles['module-image']} src={`https://picsum.photos/seed/${module.module_Code}/300/200`} alt={module.description} />
                     <div className={styles['module-content']}>
-                      <h2>{module.module_Name}</h2>
+                      <h2>{module.module_Name }</h2>
                       <p>{module.description}</p>
                       <button className={styles['module-button']} onClick={() => handleNavigation(module.module_Code)}>
                         {module.module_Code}
@@ -95,7 +95,7 @@ export default function ModulePage() {
             <div className={styles['module-grid']}>
               {modules.slice(2, 4).map((module) => (
                 module && module.module_Code ? (
-                  <div key={module.module_Id} className={styles['module-card']}>
+                  <div key={module.module_Id } className={styles['module-card']}>
                     <img className={styles['module-image']} src={`https://picsum.photos/seed/${module.module_Code}/300/200`} alt={module.description} />
                     <div className={styles['module-content']}>
                       <h2>{module.module_Name}</h2>
