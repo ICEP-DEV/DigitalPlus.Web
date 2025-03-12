@@ -164,12 +164,12 @@ function RosterPage() {
 
 const styles = {
   container: {
-    marginBottom: "-60px",
+    marginBottom: "-80px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    minHeight: "80vh",
+    minHeight: "40vh",
     backgroundColor: "#f5f5f5",
     padding: "20px",
     fontFamily: "'Arial', sans-serif",

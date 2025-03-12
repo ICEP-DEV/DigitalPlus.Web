@@ -20,7 +20,7 @@
 
 .settings-tabs {
     display: flex;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #cccccc;
     margin-bottom: 30px;
     justify-content: space-evenly; /* Space out the tabs evenly */
 }
@@ -100,3 +100,27 @@
 .settings-button.cancel:hover {
     background-color: #999;
 }
+
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.settings-input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 35px; /* Ensures space for the icon */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.password-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #888;
+    font-size: 16px;
+}
+
