@@ -452,3 +452,30 @@
   background-color: gray;
   cursor: not-allowed;
 }
+/* Existing styles... */
+
+/* Wrapper around the spinner and "Loading messages..." text */
+.mentorDMComponentLoadingSpinnerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0; 
+}
+
+/* Spinner icon style */
+.mentorDMComponentLoadingSpinner {
+  font-size: 40px;
+  color: #666;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+/* Keyframes for spin */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

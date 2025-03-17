@@ -13,13 +13,15 @@ import {
   FaEdit,
   FaTrash,
   FaSearch,
+  // 1) Import a spinner icon (or any icon you prefer for the loading state)
+  FaSpinner,
 } from 'react-icons/fa';
 
-// 1) Import crypto-js and define a secret key:
+// 2) Import crypto-js and define a secret key:
 import CryptoJS from 'crypto-js';
 const SECRET_KEY = 'YOUR_SECRET_KEY_HERE'; // For demo only
 
-// 2) Helper functions for encryption/decryption:
+// Helper functions for encryption/decryption:
 function encryptText(plainText) {
   return CryptoJS.AES.encrypt(plainText, SECRET_KEY).toString();
 }
@@ -43,6 +45,9 @@ const MentorDMComponent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [selectedMentee, setSelectedMentee] = useState(null);
+
+  // 3) Add a new loading state
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
 
   const { moduleId } = useParams();
 
@@ -200,6 +205,10 @@ const MentorDMComponent = () => {
    */
   useEffect(() => {
     if (!selectedMentee) return;
+
+    // 3a) Start loading:
+    setIsLoadingMessages(true);
+
     const fetchMessages = async () => {
       try {
         const response = await fetch(
@@ -213,7 +222,7 @@ const MentorDMComponent = () => {
         const mapped = data.map((msg) => {
           const isMentor = msg.senderId.toString() === currentUser.id;
 
-          // 3a) Decrypt the stored ciphertext from DB
+          // Decrypt the stored ciphertext from DB
           const decryptedText = decryptText(msg.messageText);
 
           const attachments = (msg.attachments || []).map((att) => ({
@@ -239,6 +248,9 @@ const MentorDMComponent = () => {
         }));
       } catch (error) {
         console.error('Error fetching messages:', error);
+      } finally {
+        // 3b) Done loading:
+        setIsLoadingMessages(false);
       }
     };
     fetchMessages();
@@ -315,7 +327,7 @@ const MentorDMComponent = () => {
             selectedMentee.id,
             currentUser.id,
             currentUser.name,
-            encryptedText,  // <--- we pass the encrypted text to the hub
+            encryptedText, // <--- we pass the encrypted text to the hub
             timestamp
           );
         }
@@ -472,7 +484,18 @@ const MentorDMComponent = () => {
         </div>
 
         <div className={styles.mentorDMComponentMessages}>
-          {selectedMentee && mentorMessages[selectedMentee.id] && (
+          {/* 
+            4) If we are still loading the messages for this mentee,
+               show the spinner/loading text:
+          */}
+          {isLoadingMessages && (
+            <div className={styles.mentorDMComponentLoadingSpinnerWrapper}>
+              <FaSpinner className={styles.mentorDMComponentLoadingSpinner} />
+              <p>Loading messages...</p>
+            </div>
+          )}
+
+          {!isLoadingMessages && selectedMentee && mentorMessages[selectedMentee.id] && (
             Object.entries(groupMessagesByDate(mentorMessages[selectedMentee.id])).map(([date, msgs]) => (
               <div key={date}>
                 <div className={styles.dmDateDivider}>
@@ -549,6 +572,7 @@ const MentorDMComponent = () => {
               </div>
             ))
           )}
+
           {/* Dummy div for auto-scroll */}
           <div ref={messagesEndRef} />
         </div>

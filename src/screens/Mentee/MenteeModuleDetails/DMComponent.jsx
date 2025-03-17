@@ -10,13 +10,15 @@ import {
   FaDownload,
   FaFileAlt,
   FaSearch,
+  // 1) Import the spinner icon
+  FaSpinner,
 } from 'react-icons/fa';
 
-// 1) Import crypto-js and define a secret key:
+// 2) Import crypto-js and define a secret key:
 import CryptoJS from 'crypto-js';
 const SECRET_KEY = 'YOUR_SECRET_KEY_HERE'; // For demo only
 
-// 2) Helper functions for encryption/decryption:
+// Helper functions for encryption/decryption:
 function encryptText(plainText) {
   return CryptoJS.AES.encrypt(plainText, SECRET_KEY).toString();
 }
@@ -39,6 +41,9 @@ const DMComponent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [selectedMentor, setSelectedMentor] = useState(null);
+
+  // 3) Add a loading state for messages
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
 
   const { moduleId } = useParams();
 
@@ -200,6 +205,9 @@ const DMComponent = () => {
 
     const fetchMessages = async () => {
       try {
+        // 3a) Turn on loading
+        setIsLoadingMessages(true);
+
         const url = `https://localhost:7163/api/Messages/get-messages/${currentUser.id}/${selectedMentor.id}`;
         const response = await fetch(url);
         if (!response.ok) {
@@ -211,10 +219,8 @@ const DMComponent = () => {
 
         const mapped = data.map((msg) => {
           const isCurrentUser = msg.senderId.toString() === currentUser.id;
-
           // Decrypt the stored ciphertext
           const decryptedText = decryptText(msg.messageText);
-
           const attachments = (msg.attachments || []).map((att) => ({
             attachmentId: att.attachmentId,
             fileName: att.fileName,
@@ -239,6 +245,9 @@ const DMComponent = () => {
         }));
       } catch (error) {
         console.error('Error fetching messages:', error);
+      } finally {
+        // 3b) Turn off loading
+        setIsLoadingMessages(false);
       }
     };
 
@@ -316,7 +325,7 @@ const DMComponent = () => {
             selectedMentor.id,
             currentUser.id,
             currentUser.name,
-            encryptedText,  // <--- ciphertext
+            encryptedText,
             timestamp
           );
         }
@@ -328,7 +337,7 @@ const DMComponent = () => {
             sender: currentUser.name,
             senderId: currentUser.id,
             role: currentUser.role,
-            text: plainText, // keep it readable in our UI
+            text: plainText,
             timestamp,
             attachments: file
               ? [
@@ -438,7 +447,15 @@ const DMComponent = () => {
 
         {/* Messages */}
         <div className={styles.dmMessages}>
-          {selectedMentor && mentorMessages[selectedMentor.id] && (
+          {/* 4) If we are still loading the messages for this mentor, show spinner */}
+          {isLoadingMessages && (
+            <div className={styles.dmLoadingSpinnerWrapper}>
+              <FaSpinner className={styles.dmLoadingSpinner} />
+              <p>Loading messages...</p>
+            </div>
+          )}
+
+          {!isLoadingMessages && selectedMentor && mentorMessages[selectedMentor.id] && (
             Object.entries(groupMessagesByDate(mentorMessages[selectedMentor.id])).map(([date, msgs]) => (
               <div key={date}>
                 <div className={styles.dmDateDivider}>
