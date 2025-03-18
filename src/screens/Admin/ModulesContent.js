@@ -36,8 +36,7 @@ const ModulesContent = () => {
   const [loading, setLoading] = useState(true);
 
   // State to hold the currently selected department and filtered modules
-  const [selectedDepartment, setSelectedDepartment] =
-    useState("ALL DEPARTMENTS");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [filteredModules, setFilteredModules] = useState([]);
 
   // State for managing new module creation and editing
@@ -88,22 +87,15 @@ const ModulesContent = () => {
   };
 
   // Function to filter modules based on selected department
-  const filterModules = (modulesList, department) => {
-    if (department === "ALL DEPARTMENTS") {
+  const filterModules = (modulesList, departmentId) => {
+    if (departmentId === "ALL DEPARTMENTS" || departmentId === "") {
       setFilteredModules(modulesList);
     } else {
       const filtered = modulesList.filter(
-        (module) => module.department === department
+        (module) => module.department_Id === parseInt(departmentId) // Ensure correct type
       );
       setFilteredModules(filtered);
     }
-  };
-
-  // Function to handle department dropdown change
-  const handleDepartmentChange = (e) => {
-    const selected = e.target.value;
-    setSelectedDepartment(selected);
-    filterModules(modules, selected);
   };
 
   // Function to add a new module
@@ -122,7 +114,7 @@ const ModulesContent = () => {
           module_Code: newModuleCode,
           course_Id: parseInt(newCourseId),
           description: newDescription,
-          department: newDepartment,
+          department_Id: parseInt(newDepartment), // Store ID instead of an object
         };
 
         // Send POST request to API
@@ -205,11 +197,12 @@ const ModulesContent = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched Data:", data); // Debugging
-        if (Array.isArray(data)) {
-          setDepartments(data); // Set the state with the fetched array
+
+        if (Array.isArray(data.result)) {
+          setDepartments(data.result); // ✅ Store only the array of departments
         } else {
           console.error("API did not return an array:", data);
-          setDepartments([]); // Fallback to empty array
+          setDepartments([]); // Fallback to an empty array
         }
       })
       .catch((error) => {
@@ -257,6 +250,13 @@ const ModulesContent = () => {
     }
   };
 
+  // Function to handle department dropdown change
+  const handleDepartmentChange = (event) => {
+    const selectedDept = event.target.value;
+    setSelectedDepartment(selectedDept);
+    filterModules(modules, selectedDept);
+  };
+
   return (
     <div className={styles.modulesContainer}>
       <h2 className={styles.modulesTitle}>
@@ -265,10 +265,15 @@ const ModulesContent = () => {
 
       {/* Department Dropdown */}
       <div className={styles.modulesDepartmentDropdown}>
-        <select value={selectedDepartment} onChange={handleDepartmentChange}>
+        <select
+          value={newDepartment}
+          onChange={(e) => setNewDepartment(e.target.value)}
+          className={styles.newModuleSelect}
+        >
+          <option value="">Select Department</option>
           {departments.map((dept) => (
-            <option key={dept} value={dept}>
-              {dept}
+            <option key={dept.department_Id} value={dept.department_Id}>
+              {dept.department_Name}
             </option>
           ))}
         </select>
@@ -300,7 +305,10 @@ const ModulesContent = () => {
                     <strong>Description:</strong> {module.description}
                   </p>
                   <p>
-                    <strong>Department:</strong> {module.department}
+                    <strong>Department:</strong>{" "}
+                    {departments.find(
+                      (d) => d.department_Id === module.department_Id
+                    )?.department_Name || "Unknown"}
                   </p>
                 </div>
 
@@ -363,10 +371,11 @@ const ModulesContent = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(departments) && departments.length > 0 ? (
+            {departments.length > 0 ? (
               departments.map((dept) => (
                 <tr key={dept.department_Id}>
-                  <td>{dept.department_Name}</td>
+                  <td>{dept.department_Name}</td>{" "}
+                  {/* ✅ Correctly extract department name */}
                 </tr>
               ))
             ) : (
