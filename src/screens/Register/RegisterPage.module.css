@@ -2,6 +2,7 @@
     position: relative;
     min-height: 100vh;
     overflow: hidden;
+    background-color: #031b38;
 }
 
 .registerPageBackground {
@@ -12,7 +13,7 @@
     height: 100%;
     object-fit: cover;
     z-index: -1;
-    opacity: 0.8;
+    opacity: 0.5;
 }
 
 .registerPageHeader {
@@ -39,13 +40,19 @@
     text-decoration: none;
     font-weight: bold;
     font-size: 20px;
+    transition: color 0.3s;
+}
+
+.registerPageNavigation a:hover {
+    color: #007bff;
 }
 
 .registerPageContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 150px);
+    min-height: calc(100vh - 150px);
+    padding: 20px;
 }
 
 .registerPageBox {
@@ -53,11 +60,12 @@
     border-radius: 15px;
     display: flex;
     justify-content: space-between;
-    width: 50%;
+    width: 60%;
+    max-width: 1000px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     position: relative;
-
-    
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(100px);
 }
 
 .registerPageTitle {
@@ -71,23 +79,19 @@
     font-size: 24px;
     font-weight: bold;
     color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .registerPageFormSection {
-    width: 50%;
+    width: 48%;
     padding: 20px;
 }
 
 .registerPageFormSectionLeft {
-    background-color: #0c1a2b;
-    padding-right: 40px;
     border-radius: 15px 0 0 15px;
-    height: 100%;
 }
 
 .registerPageFormSectionRight {
-    background-color: rgba(10, 15, 82, 0.171);
-    padding-left: 40px;
     border-radius: 0 15px 15px 0;
 }
 
@@ -97,55 +101,189 @@
     font-size: 18px;
     text-align: left;
     font-weight: bold;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
 }
 
 label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-weight: bold;
     color: #c4c4c4;
+    font-size: 14px;
 }
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="tel"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+    color: #ffffff;
+    transition: border 0.3s, background 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+select {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
     border-radius: 5px;
-    border: none;
-    background-color: #f5f5f5;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     font-size: 14px;
-    color: #0c1a2b;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    appearance: none;
 }
 
-input::placeholder {
-    color: #b0b0b0;
+select:focus {
+    outline: none;
+    border-color: #007bff;
 }
 
-select {
-    width: 100%; 
-    padding: 12px; 
-    margin-bottom: 20px;
-    border-radius: 5px; 
-    border: 1px solid white; 
-    font-size: 14px; 
-   background-color: #f5f5f5;
+.passwordInputContainer {
+    position: relative;
 }
 
-button {
+.passwordToggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+}
+
+button[type="submit"] {
     width: 100%;
     padding: 15px;
     background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 5px;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
+    transition: background-color 0.3s;
 }
 
-button:hover {
+button[type="submit"]:hover {
     background-color: #0056b3;
 }
 
+.passwordRequirements {
+    padding-left: 20px;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    background-color: #1a3b64;
+}
+
+.passwordRequirements li {
+    margin-bottom: 5px;
+}
+
+.successMessage {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.errorMessage {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #f53346;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.loginLink {
+    text-align: center;
+    margin-top: 15px;
+    color: #c4c4c4;
+}
+
+.loginLink a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.loginLink a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .registerPageHeader {
+        padding: 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .registerPageBox {
+        width: 95%;
+        flex-direction: column;
+        padding: 30px 20px;
+    }
+
+    .registerPageFormSection {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .registerPageFormSectionLeft {
+        border-radius: 15px 15px 0 0;
+    }
+
+    .registerPageFormSectionRight {
+        border-radius: 0 0 15px 15px;
+    }
+
+    .registerPageTitle {
+        font-size: 20px;
+        top: -20px;
+        padding: 8px 15px;
+    }
+}
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    appearance: none;
+}
+
+select option {
+    color: #000000; /* Black text for options */
+    background-color: white; /* White background for options */
+}
+
+select:focus {
+    outline: none;
+    border-color: #007bff;
+}
