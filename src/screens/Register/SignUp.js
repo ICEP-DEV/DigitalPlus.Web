@@ -369,21 +369,22 @@ const SignUp = () => {
 
 <ul className={styles.passwordRequirements}>
     <li style={{ color: passwordStrength.minLength ? 'green' : 'red' }}>
-        At least 8 characters long
+        {passwordStrength.minLength ? '✅' : '❌'} At least 8 characters long
     </li>
     <li style={{ color: passwordStrength.upperCase ? 'green' : 'red' }}>
-        At least one uppercase letter
+        {passwordStrength.upperCase ? '✅' : '❌'} At least one uppercase letter
     </li>
     <li style={{ color: passwordStrength.lowerCase ? 'green' : 'red' }}>
-        At least one lowercase letter
+        {passwordStrength.lowerCase ? '✅' : '❌'} At least one lowercase letter
     </li>
     <li style={{ color: passwordStrength.digit ? 'green' : 'red' }}>
-        At least one digit
+        {passwordStrength.digit ? '✅' : '❌'} At least one digit
     </li>
     <li style={{ color: passwordStrength.specialChar ? 'green' : 'red' }}>
-        At least one special character
+        {passwordStrength.specialChar ? '✅' : '❌'} At least one special character
     </li>
 </ul>
+
                             <label>Confirm Password:</label>
                             <div style={{ position: 'relative' }}>
                                 <input

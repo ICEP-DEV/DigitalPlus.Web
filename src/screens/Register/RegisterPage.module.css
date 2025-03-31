@@ -84,15 +84,19 @@
 
 .registerPageFormSection {
     width: 48%;
-    padding: 20px;
+    padding: 30px;
+   
 }
 
 .registerPageFormSectionLeft {
     border-radius: 15px 0 0 15px;
+     background-color: #031b38;
+   
 }
 
 .registerPageFormSectionRight {
     border-radius: 0 15px 15px 0;
+    background-color: #223b5a;
 }
 
 .registerPageFormSection h3 {
@@ -102,7 +106,7 @@
     text-align: left;
     font-weight: bold;
     border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 label {
