@@ -410,7 +410,7 @@ const SignUp = () => {
                             <button type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? 'Processing...' : 'Sign Up'}
                             </button>
-                            <p >Already have an account? <span className={styles.loginLink}><Link to="/login" className={styles.loginLink}>Login</Link></span> </p>
+                            <p className={styles.passwordParagraph}>Already have an account? <span className={styles.loginLink}><Link to="/login" className={styles.loginLink}>Login</Link></span> </p>
                         </form>
                     </div>
                 </div>

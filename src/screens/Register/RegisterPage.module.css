@@ -96,8 +96,119 @@
 
 .registerPageFormSectionRight {
     border-radius: 0 15px 15px 0;
-    background-color: #223b5a;
+    background-color: #213c5a;
 }
+/* Add to your RegisterPage.module.css */
+
+.passwordParagraph {
+    color: #c4c4c4;
+    text-align: center;
+    margin-top: 25px;
+    position: relative;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    padding: 10px 0;
+  }
+  
+  .passwordParagraph::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.3) 20%, 
+                rgba(255,255,255,0.3) 80%, 
+                transparent 100%);
+  }
+  
+  .loginLink {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-block;
+    padding: 0 3px;
+    margin-left: 5px;
+  }
+  
+  .loginLink::before {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #007bff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  
+  .loginLink::after {
+    content: "→";
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .loginLink:hover {
+    color: #5ab1ff;
+    transform: translateY(-1px);
+  }
+  
+  .loginLink:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  
+  .loginLink:hover::after {
+    opacity: 1;
+    right: -20px;
+  }
+  
+  /* Animation for the entire paragraph */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .passwordParagraph {
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .passwordParagraph {
+      font-size: 14px;
+      margin-top: 20px;
+    }
+    
+    .loginLink {
+      margin-left: 3px;
+    }
+    
+    .loginLink::after {
+      right: -12px;
+    }
+    
+    .loginLink:hover::after {
+      right: -15px;
+    }
+  }
 
 .registerPageFormSection h3 {
     margin-bottom: 20px;
@@ -239,20 +350,6 @@ button[type="submit"]:hover {
     text-align: center;
 }
 
-.loginLink {
-    text-align: center;
-    margin-top: 15px;
-    color: #c4c4c4;
-}
-
-.loginLink a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.loginLink a:hover {
-    text-decoration: underline;
-}
 
 @media (max-width: 768px) {
     .registerPageHeader {
