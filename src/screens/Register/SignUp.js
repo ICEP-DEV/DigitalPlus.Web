@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logoTUT from '../../Assets/TUT_Logo_Transparent.png'; 
-import background from '../../Assets/Login Background.jpeg'; 
-import styles from './RegisterPage.module.css'; 
+import logoTUT from '../../Assets/TUT_Logo_Transparent.png';
+import background from '../../Assets/Login Background.jpeg';
+import styles from './RegisterPage.module.css';
 import axios from 'axios';
 
 const SignUp = () => {
@@ -206,7 +206,7 @@ const SignUp = () => {
                 },
                 { headers: { 'Content-Type': 'application/json' } }
             );
-            
+
         } catch (error) {
             console.error('There was an error registering the mentee! and Sending an email', error);
             setErrorMessage('An error occurred while registering. Please try again.');
@@ -240,67 +240,72 @@ const SignUp = () => {
                 <div className={styles.registerPageBox}>
                     <h2 className={styles.registerPageTitle}>WE-MEN-TOR <span role="img" aria-label="alert" style={{ fontSize: '24px' }}>❗</span></h2>
                     <div className={styles.registerPageFormSection + ' ' + styles.registerPageFormSectionLeft}>
-                        <h3>SIGN UP </h3>
+                        <h3>SIGN UP</h3>
                         {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
                         {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
                         <form onSubmit={handleSubmit}>
-                            <label>Student Number:</label>
-                            <input 
-                                type="text" 
-                                name="Mentee_Id" 
-                                value={mentee.Mentee_Id} 
-                                onChange={handleChange} 
-                                className={formErrors.Mentee_Id ? styles.errorInput : ''}
+                            <label className={styles.formLabel}>Student Number:</label>
+                            <input
+                                type="text"
+                                name="Mentee_Id"
+                                value={mentee.Mentee_Id}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.Mentee_Id ? styles.errorInput : ''}`}
                             />
                             {formErrors.Mentee_Id && <span className={styles.errorText}>{formErrors.Mentee_Id}</span>}
 
-                            <label>First Name:</label>
-                            <input 
-                                type="text" 
-                                name="FirstName" 
-                                value={mentee.FirstName} 
-                                onChange={handleChange} 
-                                className={formErrors.FirstName ? styles.errorInput : ''}
+                            {/* First Name */}
+                            <label className={styles.formLabel}>First Name:</label>
+                            <input
+                                type="text"
+                                name="FirstName"
+                                value={mentee.FirstName}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.FirstName ? styles.errorInput : ''}`}
                             />
                             {formErrors.FirstName && <span className={styles.errorText}>{formErrors.FirstName}</span>}
-                        
-                            <label>Last Name:</label>
-                            <input 
-                                type="text" 
-                                name="LastName" 
-                                value={mentee.LastName} 
-                                onChange={handleChange} 
-                                className={formErrors.LastName ? styles.errorInput : ''}
+
+                            {/* Last Name */}
+                            <label className={styles.formLabel}>Last Name:</label>
+                            <input
+                                type="text"
+                                name="LastName"
+                                value={mentee.LastName}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.LastName ? styles.errorInput : ''}`}
                             />
                             {formErrors.LastName && <span className={styles.errorText}>{formErrors.LastName}</span>}
-                        
-                            <label>Email:</label>  
-                            <input 
-                                type="email" 
-                                name="StudentEmail" 
-                                value={mentee.StudentEmail} 
-                                onChange={handleChange}  
-                                placeholder={`${mentee.Mentee_Id ? mentee.Mentee_Id + '@tut4life.ac.za' : '@tut4life.ac.za'}`} 
-                                readOnly 
-                                className={formErrors.StudentEmail ? styles.errorInput : ''}
-                            />  
-                    
-                            <label>Contact No:</label>
-                            <input 
-                                type="text" 
-                                name="ContactNo" 
-                                value={mentee.ContactNo} 
-                                onChange={handleChange} 
-                                className={formErrors.ContactNo ? styles.errorInput : ''}
+
+                            {/* Email */}
+                            <label className={styles.formLabel}>Email:</label>
+                            <input
+                                type="email"
+                                name="StudentEmail"
+                                value={mentee.StudentEmail}
+                                onChange={handleChange}
+                                placeholder={`${mentee.Mentee_Id ? mentee.Mentee_Id + '@tut4life.ac.za' : '@tut4life.ac.za'}`}
+                                readOnly
+                                className={`${styles.formInput} ${formErrors.StudentEmail ? styles.errorInput : ''}`}
+                            />
+
+                            {/* Contact No */}
+                            <label className={styles.formLabel}>Contact No:</label>
+                            <input
+                                type="tel"
+                                name="ContactNo"
+                                value={mentee.ContactNo}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.ContactNo ? styles.errorInput : ''}`}
                             />
                             {formErrors.ContactNo && <span className={styles.errorText}>{formErrors.ContactNo}</span>}
-                    
-                            <label>Department:</label>
-                            <select 
-                                name="DepartmentId" 
-                                value={mentee.DepartmentId} 
-                                onChange={handleChange} 
-                                className={formErrors.DepartmentId ? styles.errorInput : ''}
+
+                            {/* Department */}
+                            <label className={styles.formLabel}>Department:</label>
+                            <select
+                                name="DepartmentId"
+                                value={mentee.DepartmentId}
+                                onChange={handleChange}
+                                className={`${styles.selectInput} ${formErrors.DepartmentId ? styles.errorInput : ''}`}
                             >
                                 <option value="">Select department</option>
                                 {departments.map((dep) => (
@@ -311,100 +316,93 @@ const SignUp = () => {
                             </select>
                             {formErrors.DepartmentId && <span className={styles.errorText}>{formErrors.DepartmentId}</span>}
 
-                            <label>Semester:</label>
-                            <input 
-                                type="text" 
-                                name="Semester" 
-                                value={mentee.Semester} 
-                                onChange={handleChange} 
-                                className={formErrors.Semester ? styles.errorInput : ''}
+                            {/* Semester */}
+                            <label className={styles.formLabel}>Semester:</label>
+                            <input
+                                type="text"
+                                name="Semester"
+                                value={mentee.Semester}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.Semester ? styles.errorInput : ''}`}
                             />
                             {formErrors.Semester && <span className={styles.errorText}>{formErrors.Semester}</span>}
-                        
                         </form>
                     </div>
-                    <div className={styles.registerPageFormSection + ' ' + styles.registerPageFormSectionRight}>
+                    <div className={`${styles.registerPageFormSection} ${styles.registerPageFormSectionRight}`}>
                         <h3>CREATE PASSWORD</h3>
                         <form onSubmit={handleSubmit}>
-                        <label>Password:</label>
-<div style={{ position: 'relative' }}>
-    <input
-        type={passwordVisible ? 'text' : 'password'}
-        name="Password"
-        value={mentee.Password}
-        onChange={handleChange}
-        className={formErrors.Password ? styles.errorInput : ''}
-    />
-    <span
-        onClick={togglePasswordVisibility}
-        style={{
-            position: 'absolute',
-            right: '10px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            cursor: 'pointer'
-        }}
-    >
-        {passwordVisible ? '🙈' : '👁'}
-    </span>
-</div>
-{formErrors.Password && <span className={styles.errorText}>{formErrors.Password}</span>}
+                            {/* Password */}
+                            <label className={styles.formLabel}>Password:</label>
+                            <div className={styles.passwordInputContainer}>
+                                <input
+                                    type={passwordVisible ? 'text' : 'password'}
+                                    name="Password"
+                                    value={mentee.Password}
+                                    onChange={handleChange}
+                                    className={`${styles.formInput} ${formErrors.Password ? styles.errorInput : ''}`}
+                                />
+                                <span
+                                    type="button"
+                                    className={styles.passwordToggle}
+                                    onClick={togglePasswordVisibility}
+                                >
+                                    {passwordVisible ? '🙈' : '👁'}
+                                </span>
+                            </div>
+                            {formErrors.Password && <span className={styles.errorText}>{formErrors.Password}</span>}
 
-<div style={{ display: 'flex', alignItems: 'center', gap: '1px', marginTop: '1px' }}>
-    
-    <span 
-        style={{ cursor: 'pointer', fontSize: '18px', paddingBottom:'10px' }} 
-        onClick={() => setShowPasswordInfo(!showPasswordInfo)}
-    >
-        ℹ️
-    </span>
-</div>
 
-{showPasswordInfo && (
-    <p style={{ fontSize: '14px', color: 'white' }}>
-        <strong>Green ✅</strong> means the requirement is met.  
-        <strong> Red ❌</strong> means it is not met.
-    </p>
-)}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1px', marginTop: '1px' }}>
 
-<ul className={styles.passwordRequirements}>
-    <li style={{ color: passwordStrength.minLength ? 'green' : 'red' }}>
-        {passwordStrength.minLength ? '✅' : '❌'} At least 8 characters long
-    </li>
-    <li style={{ color: passwordStrength.upperCase ? 'green' : 'red' }}>
-        {passwordStrength.upperCase ? '✅' : '❌'} At least one uppercase letter
-    </li>
-    <li style={{ color: passwordStrength.lowerCase ? 'green' : 'red' }}>
-        {passwordStrength.lowerCase ? '✅' : '❌'} At least one lowercase letter
-    </li>
-    <li style={{ color: passwordStrength.digit ? 'green' : 'red' }}>
-        {passwordStrength.digit ? '✅' : '❌'} At least one digit
-    </li>
-    <li style={{ color: passwordStrength.specialChar ? 'green' : 'red' }}>
-        {passwordStrength.specialChar ? '✅' : '❌'} At least one special character
-    </li>
-</ul>
+                                <span
+                                    style={{ cursor: 'pointer', fontSize: '18px', paddingBottom: '10px' }}
+                                    onClick={() => setShowPasswordInfo(!showPasswordInfo)}
+                                >
+                                    ℹ️
+                                </span>
+                            </div>
 
-                            <label>Confirm Password:</label>
+                            {showPasswordInfo && (
+                                <p style={{ fontSize: '14px', color: 'white' }}>
+                                    <strong>Green ✅</strong> means the requirement is met.
+                                    <strong> Red ❌</strong> means it is not met.
+                                </p>
+                            )}
+
+                            <ul className={styles.passwordRequirements}>
+                                <li className={passwordStrength.minLength ? styles.valid : styles.invalid}>
+                                    {passwordStrength.minLength ? '✅' : '❌'} At least 8 characters long
+                                </li>
+                                <li className={passwordStrength.upperCase ? styles.valid : styles.invalid}>
+                                    {passwordStrength.upperCase ? '✅' : '❌'} At least one uppercase letter
+                                </li>
+                                <li className={passwordStrength.lowerCase ? styles.valid : styles.invalid}>
+                                    {passwordStrength.lowerCase ? '✅' : '❌'} At least one lowercase letter
+                                </li>
+                                <li className={passwordStrength.digit ? styles.valid : styles.invalid}>
+                                    {passwordStrength.digit ? '✅' : '❌'} At least one digit
+                                </li>
+                                <li className={passwordStrength.specialChar ? styles.valid : styles.invalid}>
+                                    {passwordStrength.specialChar ? '✅' : '❌'} At least one special character
+                                </li>
+                            </ul>
+
+                            <label className={styles.formLabel}>Confirm Password:</label>
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type={confirmPasswordVisible ? 'text' : 'password'}
                                     name="ConfirmPassword"
                                     value={mentee.ConfirmPassword}
                                     onChange={handleChange}
-                                    className={formErrors.ConfirmPassword ? styles.errorInput : ''}
+                                    className={`${styles.formInput} ${formErrors.ConfirmPassword ? styles.errorInput : ''}`}
+
                                 />
                                 <span
-                                    onClick={toggleConfirmPasswordVisibility}
-                                    style={{
-                                        position: 'absolute',
-                                        right: '10px',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        cursor: 'pointer'
-                                    }}
+                                    type="button"
+                                    className={styles.passwordToggle}
+                                    onClick={togglePasswordVisibility}
                                 >
-                                    {confirmPasswordVisible ? '🙈' : '👁'}
+                                    {passwordVisible ? '🙈' : '👁'}
                                 </span>
                             </div>
                             {formErrors.ConfirmPassword && <span className={styles.errorText}>{formErrors.ConfirmPassword}</span>}
@@ -412,7 +410,7 @@ const SignUp = () => {
                             <button type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? 'Processing...' : 'Sign Up'}
                             </button>
-                            <p>Already have an account? <Link to="/login">Login</Link></p>
+                            <p >Already have an account? <span className={styles.loginLink}><Link to="/login" className={styles.loginLink}>Login</Link></span> </p>
                         </form>
                     </div>
                 </div>
