@@ -238,10 +238,7 @@
     color: #ff6b6b;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"] {
+.formInput{
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;

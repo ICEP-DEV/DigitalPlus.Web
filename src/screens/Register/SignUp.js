@@ -400,9 +400,9 @@ const SignUp = () => {
                                 <span
                                     type="button"
                                     className={styles.passwordToggle}
-                                    onClick={togglePasswordVisibility}
+                                    onClick={toggleConfirmPasswordVisibility}
                                 >
-                                    {passwordVisible ? '🙈' : '👁'}
+                                    {confirmPasswordVisible ? '🙈' : '👁'}
                                 </span>
                             </div>
                             {formErrors.ConfirmPassword && <span className={styles.errorText}>{formErrors.ConfirmPassword}</span>}
