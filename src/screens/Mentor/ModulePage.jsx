@@ -120,7 +120,7 @@ export default function ModulePage() {
                         alt={module.description}
                       />
                       <div className={styles['module-content']}>
-                        <h2>{module.module_Name}</h2>
+                      <h2 className={styles.moduleTitle}>{module.module_Name}</h2>
                         <p>{module.description}</p>
                         <button
                           className={styles['module-button']}
