@@ -2,6 +2,7 @@
     position: relative;
     min-height: 100vh;
     overflow: hidden;
+    background-color: #031b38;
 }
 
 .registerPageBackground {
@@ -12,7 +13,7 @@
     height: 100%;
     object-fit: cover;
     z-index: -1;
-    opacity: 0.8;
+    opacity: 0.5;
 }
 
 .registerPageHeader {
@@ -39,13 +40,19 @@
     text-decoration: none;
     font-weight: bold;
     font-size: 20px;
+    transition: color 0.3s;
+}
+
+.registerPageNavigation a:hover {
+    color: #007bff;
 }
 
 .registerPageContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 150px);
+    min-height: calc(100vh - 150px);
+    padding: 20px;
 }
 
 .registerPageBox {
@@ -53,11 +60,12 @@
     border-radius: 15px;
     display: flex;
     justify-content: space-between;
-    width: 50%;
+    width: 60%;
+    max-width: 1000px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     position: relative;
-
-    
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(100px);
 }
 
 .registerPageTitle {
@@ -71,25 +79,136 @@
     font-size: 24px;
     font-weight: bold;
     color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .registerPageFormSection {
-    width: 50%;
-    padding: 20px;
+    width: 48%;
+    padding: 30px;
+
 }
 
 .registerPageFormSectionLeft {
-    background-color: #0c1a2b;
-    padding-right: 40px;
     border-radius: 15px 0 0 15px;
-    height: 100%;
+    background-color: #031b38;
+
 }
 
 .registerPageFormSectionRight {
-    background-color: rgba(10, 15, 82, 0.171);
-    padding-left: 40px;
     border-radius: 0 15px 15px 0;
+    background-color: #213c5a;
 }
+/* Add to your RegisterPage.module.css */
+
+.passwordParagraph {
+    color: #c4c4c4;
+    text-align: center;
+    margin-top: 25px;
+    position: relative;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    padding: 10px 0;
+  }
+  
+  .passwordParagraph::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.3) 20%, 
+                rgba(255,255,255,0.3) 80%, 
+                transparent 100%);
+  }
+  
+  .loginLink {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-block;
+    padding: 0 3px;
+    margin-left: 5px;
+  }
+  
+  .loginLink::before {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #007bff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  
+  .loginLink::after {
+    content: "→";
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .loginLink:hover {
+    color: #5ab1ff;
+    transform: translateY(-1px);
+  }
+  
+  .loginLink:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  
+  .loginLink:hover::after {
+    opacity: 1;
+    right: -20px;
+  }
+  
+  /* Animation for the entire paragraph */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .passwordParagraph {
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .passwordParagraph {
+      font-size: 14px;
+      margin-top: 20px;
+    }
+    
+    .loginLink {
+      margin-left: 3px;
+    }
+    
+    .loginLink::after {
+      right: -12px;
+    }
+    
+    .loginLink:hover::after {
+      right: -15px;
+    }
+  }
 
 .registerPageFormSection h3 {
     margin-bottom: 20px;
@@ -97,55 +216,316 @@
     font-size: 18px;
     text-align: left;
     font-weight: bold;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
 }
 
-label {
+/* Add these to your existing CSS */
+.formLabel {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-weight: bold;
     color: #c4c4c4;
+    font-size: 14px;
+}
+
+.formLabel.errorLabel {
+    color: #ff6b6b;
+}
+
+/* Add this if you want labels to change when their input has error */
+.errorInput+.formLabel {
+    color: #ff6b6b;
 }
 
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="tel"] {
     width: 100%;
     padding: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     border-radius: 5px;
-    border: none;
-    background-color: #f5f5f5;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
     font-size: 14px;
-    color: #0c1a2b;
+    transition: border 0.3s, background 0.3s;
 }
 
-input::placeholder {
-    color: #b0b0b0;
+/* Form element styles */
+.formLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #c4c4c4;
+    font-size: 14px;
 }
 
-select {
-    width: 100%; 
-    padding: 12px; 
-    margin-bottom: 20px;
-    border-radius: 5px; 
-    border: 1px solid white; 
-    font-size: 14px; 
-   background-color: #f5f5f5;
+.formInput {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    font-size: 14px;
+    color: #ffffff;
+    /* White text color */
+    transition: border 0.3s, background 0.3s;
 }
 
-button {
+.formInput:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.formInput::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+
+
+.passwordInputContainer {
+    position: relative;
+}
+
+.passwordToggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+}
+
+button[type="submit"] {
     width: 100%;
     padding: 15px;
     background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 5px;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     margin-top: 10px;
+    transition: background-color 0.3s;
 }
 
-button:hover {
+button[type="submit"]:hover {
     background-color: #0056b3;
 }
 
+.passwordRequirements {
+    padding-left: 20px;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    background-color: #1a3b64;
+}
+
+.passwordRequirements li {
+    margin-bottom: 5px;
+}
+
+.successMessage {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.errorMessage {
+    margin: 15px 0;
+    padding: 10px;
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #f53346;
+    border-radius: 5px;
+    text-align: center;
+}
+
+
+@media (max-width: 768px) {
+    .registerPageHeader {
+        padding: 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .registerPageBox {
+        width: 95%;
+        flex-direction: column;
+        padding: 30px 20px;
+    }
+
+    .registerPageFormSection {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .registerPageFormSectionLeft {
+        border-radius: 15px 15px 0 0;
+    }
+
+    .registerPageFormSectionRight {
+        border-radius: 0 0 15px 15px;
+    }
+
+    .registerPageTitle {
+        font-size: 20px;
+        top: -20px;
+        padding: 8px 15px;
+    }
+}
+
+.selectInput {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #b4b4b4;
+    appearance: none;
+}
+
+.selectInput option {
+    color: #000000;
+    /* Black text for options */
+    background-color: white;
+    /* White background for options */
+}
+
+.selectInput:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.loginLink {
+    text-align: center;
+    margin-top: 15px;
+    color: #c4c4c4;
+}
+
+.loginLink a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.loginLink a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.passwordRequirements {
+    list-style-type: none;
+    padding: 10px 15px 10px 25px;
+    margin: 10px 0;
+    background-color: rgba(26, 59, 100, 0.7);
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.passwordRequirements li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* You can also add these if you want to style the emojis specifically */
+.passwordRequirements li span {
+    font-size: 16px;
+}
+
+.passwordRequirements li.valid {
+    color: green;
+}
+
+.passwordRequirements li.invalid {
+    color: red;
+}
+
+/* Add these styles to your existing CSS */
+
+/* Error styling */
+.errorInput {
+    border: 1px solid #ff6b6b !important;
+    background-color: rgba(255, 107, 107, 0.1) !important;
+    animation: shake 0.5s ease-in-out;
+}
+
+.errorText {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(-5px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(5px);
+    }
+}
+
+/* Login link styling */
+.loginLink {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.loginLink:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.loginText {
+    text-align: center;
+    margin-top: 15px;
+    color: #c4c4c4;
+}
+
+/* Password requirements styling */
+.passwordRequirements {
+    list-style: none;
+    padding: 12px 20px;
+    margin: 15px 0;
+    background-color: rgba(26, 59, 100, 0.7);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.passwordRequirements li {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+}
+
+/* Select dropdown error styling */
+select.errorInput {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%23ff6b6b' d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3e%3c/svg%3e") !important;
+}
