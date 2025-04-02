@@ -162,7 +162,7 @@ const ModulesContent = () => {
     setNewModuleCode(module.module_Code);
     setNewCourseId(module.course_Id);
     setNewDescription(module.description);
-    setNewDepartment(module.department);
+    setNewDepartment(module.department_Id);
     setIsModuleModalOpen(true); // Open the modal for editing
   };
 
@@ -279,9 +279,9 @@ const ModulesContent = () => {
           className={styles.newModuleSelect}
         >
           <option value="">Select Department</option>
-          {departments.map((d) => (
-            <option key={d.department_Id} value={d.department_Id}>
-              {d.department_Name}
+          {departments.map((dept) => (
+            <option key={dept.department_Id} value={dept.department_Id}>
+              {dept.department_Name}
             </option>
           ))}
         </select>
@@ -442,13 +442,16 @@ const ModulesContent = () => {
                   <label className={styles.label}>Department</label>
                   <select
                     value={newDepartment}
-                    onChange={(e) => setNewDepartment(e.target.value)}
+                    onChange={(e) => setNewDepartment(parseInt(e.target.value))}
                     className={styles.newModuleSelect}
                   >
                     <option value="">Select Department</option>
-                    {departments.slice(1).map((dept) => (
-                      <option key={dept} value={dept}>
-                        {dept}
+                    {departments.map((dept) => (
+                      <option
+                        key={dept.department_Id}
+                        value={dept.department_Id}
+                      >
+                        {dept.department_Name}
                       </option>
                     ))}
                   </select>
@@ -457,8 +460,8 @@ const ModulesContent = () => {
               <div className={styles.addModuleActions}>
                 <button
                   className={styles.addModuleButton}
-                  onClick={handleAddModule}
-                  title="Add Module"
+                  onClick={editingModule ? handleEditModule : handleAddModule}
+                  title={editingModule ? "Update Module" : "Add Module"}
                 >
                   <FaCheck className={styles.addModuleIcon} />
                 </button>
