@@ -16,7 +16,7 @@ th, td {
 
 input[type="text"], textarea {
   width: 100%;
-  padding: 5px;
+  padding: 15px;
   box-sizing: border-box;
   border: black solid 1px;
 }
