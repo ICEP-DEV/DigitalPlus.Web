@@ -100,12 +100,14 @@ const ModulesContent = () => {
 
   // Function to add a new module
   const handleAddModule = () => {
+    console.log("New Department Value:", newDepartment); // Debugging log
+
     if (
       newModuleName.trim() !== "" &&
       newModuleCode.trim() !== "" &&
       newCourseId !== 0 &&
       newDescription.trim() !== "" &&
-      newDepartment.trim() !== ""
+      newDepartment !== "" // Ensure newDepartment is not empty
     ) {
       if (window.confirm("Are you sure you want to add this module?")) {
         const newModule = {
@@ -114,7 +116,7 @@ const ModulesContent = () => {
           module_Code: newModuleCode,
           course_Id: parseInt(newCourseId),
           description: newDescription,
-          department_Id: parseInt(newDepartment), // Store ID instead of an object
+          department_Id: parseInt(newDepartment) || 0, // Ensure it's a number
         };
 
         // Send POST request to API
@@ -133,7 +135,7 @@ const ModulesContent = () => {
             }
           })
           .then((data) => {
-            // Clear the input fields
+            // Clear input fields
             setNewModuleName("");
             setNewModuleCode("");
             setNewCourseId(0);
@@ -141,7 +143,7 @@ const ModulesContent = () => {
             setNewDepartment("");
             setIsModuleModalOpen(false); // Close the modal
 
-            // Refresh modules from the server
+            // Refresh modules
             fetchModulesFromServer();
           })
           .catch((error) => {
@@ -257,6 +259,12 @@ const ModulesContent = () => {
     filterModules(modules, selectedDept);
   };
 
+  console.log(departments);
+  console.log(module.department_Id);
+  console.log(
+    departments.find((d) => d.department_Id === module.department_Id)
+  );
+
   return (
     <div className={styles.modulesContainer}>
       <h2 className={styles.modulesTitle}>
@@ -271,9 +279,9 @@ const ModulesContent = () => {
           className={styles.newModuleSelect}
         >
           <option value="">Select Department</option>
-          {departments.map((dept) => (
-            <option key={dept.department_Id} value={dept.department_Id}>
-              {dept.department_Name}
+          {departments.map((d) => (
+            <option key={d.department_Id} value={d.department_Id}>
+              {d.department_Name}
             </option>
           ))}
         </select>
