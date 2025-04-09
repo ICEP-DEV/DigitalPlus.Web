@@ -7,7 +7,7 @@ import { Icon, Typography, IconButton,CircularProgress } from '@mui/material';
 import 'react-toastify/dist/ReactToastify.css';
 import styles from './MenteesContent.module.css';
 import { SiCodementor } from "react-icons/si";
-
+import { useNotification } from './NotificationContext';
 
 const MenteesContent = () => {
   const [mentees, setMentees] = useState([]);
@@ -28,6 +28,7 @@ const MenteesContent = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [menteeToDelete, setMenteeToDelete] = useState(null); // Track which mentee to delete
+const { showNotification } = useNotification();
 
   const [errors, setErrors] = useState({
     mentee_Id: '',
@@ -140,7 +141,7 @@ const MenteesContent = () => {
       try {
         await axios.delete(`https://localhost:7163/api/DigitalPlusUser/DeleteMentee/${menteeToDelete.mentee_Id}`);
         setMentees(mentees.filter(mentee => mentee.mentee_Id !== menteeToDelete.mentee_Id));
-        toast.success('Mentee deleted successfully!');
+        showNotification('Mentee deleted successfully!');
         setDeleteDialogOpen(false); // Close the dialog after deletion
         setMenteeToDelete(null); // Clear the mentee to delete
       } catch (error) {
@@ -179,7 +180,7 @@ const MenteesContent = () => {
       setMentees(updatedMentees);
       resetForm();
       setIsDialogOpen(false);
-      toast.success('Mentee updated successfully!');
+      showNotification('Mentee updated successfully!');
     } catch (error) {
       console.error('Error updating mentee:', error.response ? error.response.data : error.message);
       toast.error('Failed to update mentee. Please try again.');
@@ -217,7 +218,7 @@ const MenteesContent = () => {
       setMentees([...mentees, response.data]);
       resetForm();
       setIsDialogOpen(false);
-      toast.success('Mentee added and Email sent to the mentee successfully!');
+      showNotification('Mentee added and Email sent to the mentee successfully!');
 
       // Send the welcome email to the mentee using HTML formatting for the email body
       const emailMessage = `
@@ -240,7 +241,7 @@ const MenteesContent = () => {
         { headers: { 'Content-Type': 'application/json' } }
       );
 
-      toast.success('Email sent to the mentee successfully!');
+      showNotification('Email sent to the mentee successfully!');
     } catch (error) {
       console.error('Error adding mentee or sending email:', error.response ? error.response.data : error.message);
       toast.error('Failed to add mentee or send email. Please try again.');

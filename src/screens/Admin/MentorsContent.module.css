@@ -13,7 +13,18 @@
   width: 100%;
   margin-bottom: 20px;
 }
+.headerPopup {
+  position: absolute;
+  top: 10px;
+  left: 70%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
 
+.popupMessage {
+  white-space: nowrap;
+  padding: 8px 20px;
+}
 .searchBarContainer {
   width: 35%;
   display: flex;

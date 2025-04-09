@@ -170,7 +170,7 @@ useEffect(() => {
       setShowGoalCelebration(false);
       setConfettiPieces([]);
     }, 5000);
-  }, 6000); // 10 minutes
+  }, 60000); // 10 minutes
 
   return () => clearInterval(celebrationInterval);
 }, []);

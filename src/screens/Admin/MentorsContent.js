@@ -26,6 +26,7 @@ import "react-toastify/dist/ReactToastify.css";
 import styles from "./MentorsContent.module.css";
 import { SiCodementor } from "react-icons/si";
 import { MdInfoOutline } from "react-icons/md";
+import { useNotification } from './NotificationContext';
 
 const MentorsContent = () => {
   const [mentors, setMentors] = useState([]);
@@ -41,7 +42,8 @@ const MentorsContent = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const [popupType, setPopupType] = useState("success");
   const [assignedModules, setAssignedModules] = useState([]);
-
+  const { showNotification } = useNotification();
+  
   const [mentorForm, setMentorForm] = useState({
     mentorId: "",
     firstName: "",
@@ -138,10 +140,10 @@ const MentorsContent = () => {
           (module) => module.assignModId !== assignModId
         )
       );
-      showPopupMessage("Module removed successfully.");
+      showNotification("Module removed successfully.");
     } catch (error) {
       console.error("Error removing module:", error);
-      showPopupMessage("Failed to remove module. Please try again.", "error");
+      showNotification("Failed to remove module. Please try again.", "error");
     }
   };
 
@@ -153,7 +155,6 @@ const MentorsContent = () => {
 
     setTimeout(() => setShowPopup(false), 7000);
   };
-
   const openModuleDialog = async (mentorId) => {
     setSelectedMentorId(mentorId);
     setModuleDialogOpen(true);
@@ -201,7 +202,7 @@ const MentorsContent = () => {
           )
         )
       );
-      showPopupMessage("Modules assigned successfully!");
+      showNotification("Modules assigned successfully!");
       setModuleDialogOpen(false);
       setSelectedModules([]);
 
@@ -211,13 +212,13 @@ const MentorsContent = () => {
       );
       if (response.data && response.data.length > 0) {
         setAssignedModules(response.data);
-        showPopupMessage("Modules assigned successfully!");
+        showNotification("Modules assigned successfully!");
       } else {
         setAssignedModules([]); // Set an empty array if no modules are assigned
       }
     } catch (error) {
       console.error("Error assigning modules:", error);
-      showPopupMessage("Failed to assign modules. Please try again.", "error");
+      showNotification("Failed to assign modules. Please try again.", "error");
     }
   };
 
@@ -248,12 +249,12 @@ const MentorsContent = () => {
             (mentor) => mentor.mentorId !== mentorToDelete.mentorId
           )
         );
-        showPopupMessage("Mentor deleted successfully!");
+        showNotification("Mentor deleted successfully!");
         setDeleteDialogOpen(false); // Close the dialog after deletion
         setMentorToDelete(null); // Clear the mentor to delete
       } catch (error) {
         console.error("Error deleting mentor:", error);
-        showPopupMessage("Failed to delete mentor. Please try again.", "error");
+        showNotification("Failed to delete mentor. Please try again.", "error");
       }
     }
   };
@@ -387,19 +388,19 @@ const MentorsContent = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      showPopupMessage("Mentor added and email sent successfully!");
+      showNotification("Mentor added and email sent successfully!");
     } catch (error) {
       console.error(
         "Error adding mentor or sending email:",
         error.response ? error.response.data : error.message
       );
-      showPopupMessage("Failed to add mentor. Please try again.", "error");
+      showNotification("Failed to add mentor. Please try again.", "error");
     }
   };
 
   const handleEditMentor = async () => {
     if (!mentorForm.mentorId) {
-      showPopupMessage("Mentor ID is missing", "error");
+      showNotification("Mentor ID is missing", "error");
       return;
     }
 
@@ -431,13 +432,13 @@ const MentorsContent = () => {
       setMentors(updatedMentors);
       resetForm();
       setIsDialogOpen(false);
-      showPopupMessage("Mentor updated successfully!");
+      showNotification("Mentor updated successfully!");
     } catch (error) {
       console.error(
         "Error updating mentor:",
         error.response ? error.response.data : error.message
       );
-      showPopupMessage("Failed to update mentor. Please try again.", "error");
+      showNotification("Failed to update mentor. Please try again.", "error");
     }
   };
 
@@ -481,6 +482,16 @@ const MentorsContent = () => {
         {" "}
         <SiCodementor /> MENTORS
       </h2>
+                {/* Popup Container - Positioned absolutely below header */}
+  <div className={styles.headerPopup}>
+    {showPopup && (
+      <PopupMessage
+        message={popupMessage}
+        type={popupType}
+        onClose={() => setShowPopup(false)}
+      />
+    )}
+  </div>
       <div className={styles.dividerContainer}>
         <div className={styles.dividerLine}></div>
         <div className={styles.dividerTab}></div>
@@ -501,6 +512,7 @@ const MentorsContent = () => {
             id="search-email-unique"
           />
         </div>
+
         <div className={styles.buttonGroup}>
           <Button
             onClick={openAddMentorDialog}
@@ -512,6 +524,7 @@ const MentorsContent = () => {
             Add
           </Button>
         </div>
+        
       </div>
 
       <div className={styles.tableWrapper}>
@@ -902,14 +915,7 @@ const MentorsContent = () => {
         </DialogActions>
       </Dialog>
 
-      {/*  Popup */}
-      {showPopup && (
-        <PopupMessage
-          message={popupMessage}
-          type={popupType}
-          onClose={() => setShowPopup(false)}
-        />
-      )}
+     
     </div>
   );
 };
