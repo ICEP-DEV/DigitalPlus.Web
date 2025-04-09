@@ -1,0 +1,105 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  background-color: #D9D9D9;
+  align-items: center;
+}
+
+.profileSection {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+}
+
+.leftSection, .rightSection {
+  width: 40%;
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align PersonalDetails to the left */
+  margin-left: 200px;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align ModuleDetails to the right */
+  margin-right: 100px;
+}
+
+.personalDetails, .moduleDetails {
+  background-color: #ABAAAA;
+  padding: 20px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  width: 100%;
+  color: #000000;
+}
+h2{
+  color: #000000;
+}
+.profileTitle {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+/* Center Profile Picture Section */
+.profilePictureSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Styling for the profile picture */
+.profilePicture {
+  width: 120px;    
+  height: 120px;   
+  border-radius: 50%; 
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.courseName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+.editButton {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #1E5D8A;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.editButton:hover {
+  background-color: #0b324e;
+}
+
+/* ProfilePage.module.css */
+
+/* Add this to your existing CSS */
+
+.fileInput {
+  margin-top: 10px; /* Space above the file input */
+  padding: 10px; /* Padding for the input */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  background-color: #f0f4f8; /* Background color */
+}
+

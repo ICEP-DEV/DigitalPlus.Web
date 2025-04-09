@@ -1,0 +1,239 @@
+/* Schedule Container */
+.scheduleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+/* Success Message Styling */
+.successMessage {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Table Styling */
+.timetable {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px auto;
+  max-width: 1200px;
+  border: 5px solid #162a4d;
+}
+
+.timetable th,
+.timetable td {
+  border: 1px solid #ccc;
+  min-width: 150px;
+  min-height: 60px;
+  padding: 15px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.timetable th {
+  background-color: #01182e;
+  color: #eff2f4;
+}
+
+/* Icon Action Styling */
+.iconAction {
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Add Icon - Green */
+.iconAdd {
+  color: #28a745; /* Green color for the add icon */
+}
+
+.iconAdd:hover {
+  color: #218838; /* Darker green on hover */
+}
+
+/* Clear Icon - Red */
+.iconClear {
+  color: #dc3545; /* Red color for the clear icon */
+}
+
+.iconClear:hover {
+  color: #c82333; /* Darker red on hover */
+}
+
+/* Mentor Info Styling */
+.mentorInfo {
+  text-align: left;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #f2f2f2;
+}
+
+/* Mentor Name and Modules Styling */
+.mentorName {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.mentorModules {
+  margin: 0 0 8px;
+  color: #333;
+}
+
+/* Cell Info Styling */
+.cellInfo {
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+/* Align icons horizontally and remove button styling */
+.icons {
+  display: flex;
+  gap: 8px;
+}
+
+.icon {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Popup Styling */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popupContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 600px;
+  max-width: 800px;
+}
+
+/* Centered Title */
+.dialogTitle {
+  text-align: center;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+/* Form Row Layout */
+.formRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Label Styling */
+.formLabel {
+  flex: 1;
+  font-weight: bold;
+  text-align: left;
+  padding-right: 10px;
+}
+
+/* Field Styling */
+.formField {
+  flex: 2;
+}
+
+/* Module Option: aligns module name and checkbox in a row */
+.moduleOption {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Small gap between module name and checkbox */
+  margin-bottom: 5px;
+}
+
+/* Compact Checkbox Styling */
+.checkbox {
+  width: 16px;          /* Control size of the checkbox */
+  height: 16px;         /* Make it square */
+  margin: 0;
+  padding: 0;
+  appearance: none;     /* Remove default styling */
+  border: 1px solid #333; /* Add a visible border */
+  border-radius: 3px;   /* Optional: rounding for modern look */
+  cursor: pointer;
+}
+
+/* Style the checkbox when checked */
+.checkbox:checked {
+  background-color: #007BFF;
+  border-color: #007BFF;
+}
+
+.checkbox:checked::after {
+  content: '✓';             /* Display tick symbol */
+  color: white;
+  font-weight: bold;
+  font-size: 12px;          /* Adjust size of tick */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Popup Actions */
+.popupActions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Icon Button Styling */
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #1f3f61;
+}
+
+.iconButton:hover {
+  color: #0056b3;
+}
+
+/* Day Header Styling */
+.dayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/* Style for the select dropdown */
+.formField {
+  font-size: 14px;
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Style for the options inside the select dropdown */
+.moduleOption {
+  color: black; /* Black color for module code */
+  background-color: #fff;
+  padding: 10px;
+  font-size: 14px;
+}
+
+/* Style for the default 'Select Module' option */
+.defaultOption {
+  color: gray;
+  font-style: italic;
+}

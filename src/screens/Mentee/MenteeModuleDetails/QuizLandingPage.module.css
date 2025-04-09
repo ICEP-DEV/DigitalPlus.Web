@@ -1,0 +1,102 @@
+.quizzLanding_container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Responsive Grid Layout */
+.quizzLanding_cardContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive */
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Default Active Quiz Card */
+.quizzLanding_card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+/* Hover Effect for Active Quizzes */
+.quizzLanding_card:hover {
+  transform: translateY(-5px);
+}
+
+/* Past Quiz Styling */
+.quizzLanding_card.quizzLanding_cardExpired {
+  background-color: #f8d7da; /* Light Red */
+  border: 1px solid #dc3545; /* Darker Red */
+  opacity: 0.7; /* Make it slightly transparent */
+}
+
+/* Title Styling */
+.quizzLanding_cardTitle {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: black; /* Default color for current quizzes */
+}
+
+/* Expired Quiz Title Styling */
+.quizzLanding_cardTitle.quizzLanding_cardTitleExpired {
+  color: red; /* Red color for expired quizzes */
+}
+
+/* Quiz Details */
+.quizzLanding_cardDetails p {
+  margin: 8px 0;
+}
+
+/* Start Button */
+.quizzLanding_startButton {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.quizzLanding_startButton:hover {
+  background-color: #0056b3;
+}
+
+/* Expired Message */
+.quizzLanding_expiredMessage {
+  font-size: 1rem;
+  color: #721c24;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Search Bar */
+.quizzLanding_searchContainer {
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.quizzLanding_searchInput {
+  width: 50%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* No Quizzes Message */
+.quizzLanding_noQuizzesMessage {
+  font-size: 1.2rem;
+  color: #666;
+}
+

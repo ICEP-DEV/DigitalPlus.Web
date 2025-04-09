@@ -1,0 +1,359 @@
+/* Container for the entire chat + input */
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    height: 83vh;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    /* A more modern shadow */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Optional: subtle background gradient
+       background: linear-gradient(to bottom, #f7f9fc, #ffffff);
+    */
+}
+
+/* The main chat area (scrollable) */
+.chatWindow {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ddd;
+    position: relative; /* needed for scrollToBottom button to anchor absolutely */
+}
+
+/* The list of messages */
+.messages {
+    display: flex;
+    flex-direction: column;
+    /* A bit more spacing from top */
+    margin-top: 10px;
+}
+
+/* When no messages are present */
+.noMessages {
+    text-align: center;
+    color: #888;
+    margin-top: 30px;
+}
+
+/* Each message container + spacing */
+.messageContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+/* Shared message box styling */
+.message {
+    max-width: 90%;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    font-size: 15px;
+    line-height: 1.6;
+    word-wrap: break-word;
+    word-break: break-word;
+    background-color: #f7f7f7;
+    color: #333;
+    border: 1px solid #ddd;
+    /* Subtle shadow for a modern card look */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Non-error text messages */
+.textMessage {
+    background-color: #f3f5f7; /* Slightly different background than default */
+    position: relative;
+}
+
+/* If you handle file messages differently */
+.fileMessage {
+    background-color: #e7eaee;
+    color: #333;
+    align-self: flex-start;
+    border: solid 1px #aaa;
+}
+
+/* Each line within a message (split by \n) */
+.messageLine {
+    margin: 0;
+    padding: 0;
+    white-space: pre-line;
+}
+
+/* The big red error block for system errors */
+/* The big red error block for system errors */
+.errorMessage {
+    background-color: #ffe6e6; /* Light red background */
+    border-left: 4px solid #ff4d4d; /* Red border */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+
+    /* Use flex so the icon is displayed before the text */
+    display: flex;
+    align-items: flex-start; /* or center if you want the icon vertically centered */
+    gap: 8px; /* space between icon and text */
+}
+
+/* Error icon styling */
+/* Error icon styling */
+.errorIcon {
+    /* Removed absolute positioning */
+    color: #ff4d4d; /* Red color */
+    font-size: 20px;
+    /* Add optional margin or keep relying on .errorMessage's gap */
+    margin-top: 2px; /* slight tweak if you want to align top with text */
+}
+
+/* The container for the message input area */
+.messageInputContainer {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    background-color: #f7f9fc; /* Slightly tinted for modern feel */
+}
+
+/* The text input for sending messages */
+.messageInput {
+    flex-grow: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.messageInput:focus {
+    border-color: #182a3d; /* Match the theme color */
+}
+
+/* The send button */
+.sendButton {
+    padding: 10px 15px;
+    margin-left: 10px;
+    background-color: #182a3d; /* Darker theme color */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    outline: none;
+    font-size: 14px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.sendButton:hover {
+    background-color: #0f1e2e;
+    transform: translateY(-1px);
+}
+
+/* The upload input is hidden (we use a label with icon) */
+.uploadInput {
+    display: none;
+}
+
+/* The label that triggers file upload (clip icon) */
+.clipUploadButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    outline: none;
+}
+
+.clipIcon {
+    font-size: 24px;
+    color: #6e6e6e;
+    transition: color 0.2s;
+}
+
+.clipUploadButton:hover .clipIcon {
+    color: #3e3e3e;
+}
+
+/* Deletion button in the dropdown - optional if you want special styling */
+.deleteButton {
+    background-color: #747172;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* For system error or loading spinner (if you have one) */
+.loadingSpinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border-left-color: #09f;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* The options dropdown for a long-press on a message */
+.dropdown {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownButton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dropdownButton:hover {
+    background-color: #f1f1f1;
+}
+
+/* Close button inside the dropdown */
+.closeButton {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+}
+
+.closeButton:hover {
+    background-color: darkred;
+}
+
+/* PDF Download Buttons at the bottom */
+.pdfButtonsContainer {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f7f9fc; /* same subtle color as input container */
+    border-top: 1px solid #ddd;
+}
+
+.pdfButton {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #182a3d; /* Theme color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.pdfButton:hover {
+    background-color: #0f1e2e;
+    transform: translateY(-1px);
+}
+
+.pdfButton:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+/* ---- Scroll-to-Bottom Button ---- */
+.scrollToBottomButton {
+    position: fixed; /* or absolute, if you prefer inside container */
+    bottom: 100px;
+    right: 30px;
+    width: 45px;
+    height: 45px;
+    background-color: #182a3d;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.scrollToBottomButton:hover {
+    background-color: #0f1e2e;
+    transform: translateY(-1px);
+}
+
+.scrollToBottomIcon {
+    font-size: 22px;
+    color: #ffffff;
+}
+
+/* Error Fallback Component Styles */
+.errorFallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background-color: #ffe6e6; /* Light red background */
+    border: 2px solid #ff4d4d; /* Red border */
+    border-radius: 8px;
+    margin: 20px;
+    text-align: center;
+  }
+  
+  .errorMessageText {
+    color: #ff1a1a;
+    margin: 10px 0;
+    white-space: pre-wrap;
+  }
+  
+  .retryButton {
+    padding: 10px 20px;
+    background-color: #182a3d; /* Theme color */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  
+  .retryButton:hover {
+    background-color: #0f1e2e;
+    transform: translateY(-1px);
+  }
+  
+  /* Ensure the errorIcon is properly styled within the fallback */
+  .errorIcon {
+    font-size: 40px;
+    color: #ff4d4d; /* Red color */
+    margin-bottom: 20px;
+  }

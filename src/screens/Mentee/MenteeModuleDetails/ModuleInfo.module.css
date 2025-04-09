@@ -1,0 +1,161 @@
+/* Module CSS for Mentorship Landing Page */
+
+.mi-container {
+  width: 90%;
+  margin: auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f9f9f9, #e8f5ff);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mi-header {
+  text-align: center;
+  margin-bottom: 30px;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.mi-title {
+  font-size: 2.5rem;
+  color: #0d1431;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid #0d1431;
+  width: fit-content;
+  margin: 0 auto;
+  animation: typing 14s steps(70, end), blink 0.8s step-end infinite;
+}
+
+.mi-subtitle {
+  font-size: 1.5rem;
+  color: #333;
+  margin-top: 10px;
+  animation: colorChange 5s infinite alternate ease-in-out;
+}
+
+.mi-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.mi-content {
+  width: 50%;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: #444;
+  animation: slideIn 2s ease-in-out;
+}
+
+.mi-features {
+  background-color: #eef7ff;
+  padding: 20px;
+  border-radius: 8px;
+  animation: slideIn 1.5s ease-in-out;
+}
+
+.mi-features h2 {
+  color: #0d1431;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  animation: float 6s infinite ease-in-out;
+}
+
+.mi-features ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.mi-features li {
+  margin-bottom: 10px;
+  animation: fadeUp 3s infinite ease-in-out;
+}
+
+.mi-footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #0d1431;
+  color: #fff;
+  border-radius: 5px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+/* Keyframes for Animations */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@keyframes colorChange {
+  0% {
+    color: #333;
+  }
+  100% {
+    color: #0d1431;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

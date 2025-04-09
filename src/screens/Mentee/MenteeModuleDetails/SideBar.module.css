@@ -1,0 +1,79 @@
+.menteeSidebar {
+  background-color: #070c24; /* Dark theme background */
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  padding-top: 10px;
+  overflow-y: auto;
+  height: 100vh; /* Full-height sidebar */
+}
+
+.menteeSidebarOpen {
+  width: 250px;
+}
+
+.menteeSidebarClosed {
+  width: 80px;
+}
+
+.menteeNavLinks {
+  width: 100%;
+  flex-grow: 1;
+  padding-left: 10px;
+  border-bottom: none;
+  text-decoration: none;
+}
+
+.menteeNavItem {
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none !important; /* Ensure no underline on links */
+  border-bottom: none !important; /* Remove any borders that might appear as lines */
+}
+
+.menteeNavItem:hover {
+  background-color: lightgray; /* Hover effect consistent with dark theme */
+}
+
+.menteeNavItem span {
+  margin-left: 15px;
+  text-decoration: none !important; /* Ensure no underline on span text */
+}
+
+.menteeSidebarClosed .menteeNavItem span {
+  display: none; /* Hide text when the sidebar is closed */
+}
+
+.menteeIcon {
+  font-size: 22px;
+  margin-right: 15px;
+}
+
+.menteeToggleButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  margin-left: 15px;
+  align-self: flex-start;
+}
+
+.menteeNavItem.active {
+  background-color: #273a61;
+  color: white;
+}
+
+.menteeSidebarClosed .menteeToggleButton {
+  margin-left: 5px;
+}

@@ -1,0 +1,68 @@
+/* Navigation Bar styles */
+.navBar {
+    height: 120px;
+    background-color: #070c24;
+    display: flex;
+    align-items: center;
+    padding: 0 20px; /* Add padding for inner spacing */
+    overflow: hidden; /* Prevent overflow */
+  }
+  
+  /* Style for profile container */
+  .profileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto; /* Push icon and text to the right */
+    color: white;
+  }
+  
+  /* Profile Icon */
+  .profileIcon {
+    height: 90px;
+    width: 90px;
+  }
+  
+  /* Profile text under the icon */
+  .profileText {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  /* Responsive behavior for smaller screens */
+  @media (max-width: 768px) {
+    .navBar {
+      height: auto;
+      padding: 10px 20px; /* Reduce padding on smaller screens */
+    }
+  }
+  
+  /* Extra Small Screens */
+  @media (max-width: 480px) {
+    .navBar {
+      height: auto;
+      padding: 5px 10px;
+      flex-wrap: wrap; /* Adjust for very small screens */
+    }
+  
+    .profileIcon {
+      height: 80px; /* Adjust size for smaller screens */
+      width: 80px;
+    }
+  
+    .profileText {
+      font-size: 80px;
+    }
+  }
+  .profileIcon {
+    width: 90px;  /* Adjust width */
+    height: 90px; /* Adjust height */
+    border-radius: 50%; /* Make the image round */
+    object-fit: cover; /* Ensures the image covers the area without stretching */
+    margin-right: 8px; /* Space between image and text */
+  }
+  
+  .profileText {
+    font-size: 16px; /* Adjust font size as needed */
+  }
+  

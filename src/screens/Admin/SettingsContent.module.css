@@ -1,0 +1,109 @@
+/* General Styling */
+.settingsContainer {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Arial', sans-serif;
+  background-color: #f2f4f7;
+  min-height: 100vh;
+  padding: 20px;
+  align-items: center;
+}
+
+.settingsContent {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.pageTitle {
+  font-size: 36px;
+  color: #2d3436;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Profile Section */
+.profileSection {
+  position: relative; /* Enable absolute positioning within */
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.profileTitle {
+  font-size: 24px;
+  color: #2d3436;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.profileDetails {
+  width: 100%;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 15px auto;
+}
+
+.iconAndLabel {
+  display: flex;
+  align-items: center;
+  width: 50%; /* Left half of the row */
+}
+
+.icon {
+  color: #b0b0b0; /* Light gray color for icons */
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.detailLabel {
+  font-weight: bold;
+  color: #636e72;
+  font-size: 16px;
+}
+
+.detailValue {
+  color: #2d3436;
+  font-size: 16px;
+  text-align: left;
+  width: 50%; /* Right half of the row */
+}
+
+.separator {
+  width: 100%;
+  max-width: 600px;
+  height: 1px;
+  background-color: #dfe6e9;
+  margin: 10px auto;
+}
+
+.buttonContainer {
+  position: absolute; /* Position the container absolutely within the form */
+  bottom: 20px;       /* Distance from the bottom of the form */
+  right: 20px;        /* Distance from the right edge of the form */
+}
+
+.editButton {
+  /* Additional styles for the edit button if needed */
+}
+
+/* Tabs Styling */
+.tabsContainer {
+  margin-bottom: 10px;
+}

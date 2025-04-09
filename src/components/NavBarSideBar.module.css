@@ -1,0 +1,12 @@
+/* Ensure that the container can scroll vertically if there's overflow */
+.scrollable-container {
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Enable vertical scroll */
+  }
+  
+  .app-navigations {
+    display: flex;
+    flex-direction: column; /* Adjust this if necessary */
+    max-height: 100%;
+  }
+  

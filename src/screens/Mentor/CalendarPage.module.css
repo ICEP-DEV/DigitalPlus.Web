@@ -1,0 +1,64 @@
+.calendarContainer {
+  width: 70%;
+  padding: 100px 20px;
+  margin-left: 250px;
+  color: black;
+  font-size: 16px; /* Default font size */
+  position:fixed;
+  overflow: hidden;
+}
+
+/* Medium screens (Tablets) */
+@media (max-width: 1024px) {
+  .calendarContainer {
+    width: 80%;
+    margin-left: 100px;
+    padding: 80px 20px;
+  }
+}
+
+/* Small screens (Mobile) */
+@media (max-width: 768px) {
+  .calendarContainer {
+    width: 90%;
+    margin-left: 50px;
+    padding: 60px 15px;
+  }
+}
+
+/* Very small screens (Mobile Portrait) */
+@media (max-width: 480px) {
+  .calendarContainer {
+    width: 95%;
+    margin-left: 25px;
+    padding: 40px 10px;
+  }
+}
+
+/* Extra small screens (Smaller Phones) */
+@media (max-width: 375px) {
+  .calendarContainer {
+    width: 90%;
+    margin-left: 10px;
+    padding: 30px 5px; /* Further reduce padding for small screens */
+  }
+}
+
+
+  .modal {
+
+    width: 300px;
+    margin: 280px 50%;
+  }
+  /* Assuming you have a CSS module named styles.module.css */
+.modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white; /* Customize background color */
+  padding: 20px; /* Customize padding */
+  border-radius: 8px; /* Customize border radius */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+}
+  
+  

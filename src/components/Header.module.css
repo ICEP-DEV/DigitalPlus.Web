@@ -1,0 +1,68 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #070c24;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .logo img {
+    height: 50px; /* Adjust as needed */
+  }
+  
+  .nav ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .nav li {
+    margin-right: 20px; /* Adjust spacing between links */
+  }
+  
+  .nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px; /* Adjust font size as needed */
+  }
+
+  .nav ul li a {
+    color: white;  /* Change color to white */
+    font-size: 20px;  /* Increase font size */
+    font-weight: bold;  /* Set font to bold */
+    text-decoration: none;
+  }
+  
+  .nav a:hover {
+    color: #007bff; /* Change color on hover */
+  }
+  
+  .profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profileLink {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #ffffff;
+  }
+  
+  .profileIcon {
+    font-size: 24px; /* Adjust icon size */
+    margin-right: 10px; /* Space between icon and text */
+  }
+  
+  .profileInfo {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .name {
+    font-size: 16px; /* Adjust font size */
+    font-weight: bold;
+  }
+  

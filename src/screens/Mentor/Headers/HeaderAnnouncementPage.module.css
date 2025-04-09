@@ -1,0 +1,85 @@
+
+.navBar {
+  height: 120px;
+  background-color: #070c24;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1000; 
+}
+
+.appLogo {
+  height: 60px;
+  width: auto;
+}
+
+.profileContainer {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  color: white;
+  gap: 10px; 
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+}
+
+.profileIcon {
+  font-size: 52px;
+  color: white;
+}
+
+.keyIcon {
+  font-size: 44px;
+  color: white;
+}
+
+
+.profileText {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.modalOverlay {
+  position: fixed; 
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+}
+
+/* Modal Content */
+.modalContent {
+  background-color: #f1f1f1; /* Light gray background for the modal */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 80%;
+  text-align: center; /* Center content */
+}
+
+.closeButton, .viewInfoButton {
+  background-color: #0E4C79; /* Matches theme */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 10px 5px; /* Space between buttons */
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.closeButton:hover, .viewInfoButton:hover {
+  background-color: #0B3B5C; /* Darker shade on hover */
+}

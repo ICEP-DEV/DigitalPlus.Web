@@ -1,0 +1,55 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table, th, td {
+  border: 1px solid black;
+  color: #000000;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+  border: black solid 1px;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #0d1431;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+button:hover {
+  background-color: #0c163b;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+textarea {
+  resize: none;
+}
+
+.rating {
+  text-align: center;
+}
+
+.addButton {
+  background-color: #0d1431;
+}
+
+.deleteButton {
+  background-color: #0d1431;
+}

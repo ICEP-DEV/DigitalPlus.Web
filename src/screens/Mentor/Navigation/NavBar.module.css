@@ -1,0 +1,201 @@
+/* Navigation Bar styles */
+.navBar {
+  height: 120px;
+  background-color: #070c24;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  overflow: hidden;
+  position: fixed;
+  justify-content: space-between;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  max-width: 100vw; /* Prevent exceeding the viewport width */
+  box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+/* Logo */
+.appLogo {
+  height: 60px;
+  width: auto;
+}
+
+/* Style for key icon container (Left side) */
+.notificationContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+  position: relative;
+}
+
+/* Key Icon */
+.notificationIcon {
+  font-size: 60px;
+  cursor: pointer;
+  color: white;
+}
+
+.notificationIcon:hover {
+  color: #007bff;
+}
+
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto;
+  color: white;
+  margin-right: 5px;
+}
+
+.profileIcon {
+  height: 90px;
+  width: 90px;
+}
+
+.profileText {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Media Queries */
+
+/* For screens 768px and below */
+@media (max-width: 768px) {
+  .navBar {
+    height: auto;
+    padding: 10px 20px;
+  }
+
+  .profileContainer {
+    margin-left: 0;
+  }
+
+  .notificationIcon {
+    font-size: 40px; /* Adjust icon size */
+  }
+
+  .appLogo {
+    height: 50px; /* Reduce logo size for medium screens */
+  }
+
+  .profileIcon {
+    height: 80px; /* Reduce profile icon size */
+    width: 80px;
+  }
+
+  .profileText {
+    font-size: 16px; /* Smaller text for profile */
+  }
+}
+
+/* For screens 480px and below */
+@media (max-width: 480px) {
+  .navBar {
+    height: auto;
+    padding: 5px 10px;
+    flex-wrap: wrap;
+  }
+
+  .profileContainer {
+    margin-left: 0;
+  }
+
+  .notificationIcon {
+    font-size: 30px; /* Adjust icon size */
+  }
+
+  .appLogo {
+    height: 40px; /* Further reduce logo size for smaller screens */
+  }
+
+  .profileIcon {
+    height: 70px; /* Further reduce profile icon size */
+    width: 70px;
+  }
+
+  .profileText {
+    font-size: 14px; /* Reduce text size */
+  }
+}
+
+/* For screens 375px and below (e.g., iPhone SE) */
+@media (max-width: 375px) {
+  .navBar {
+    height: auto;
+    padding: 5px 10px;
+    flex-wrap: wrap;
+  }
+
+  .profileContainer {
+    margin-left: 0;
+  }
+
+  .notificationIcon {
+    font-size: 25px; /* Further reduce icon size */
+  }
+
+  .appLogo {
+    height: 35px; /* Reduce logo size for small devices */
+  }
+
+  .profileIcon {
+    height: 60px; /* Further reduce profile icon size */
+    width: 60px;
+  }
+
+  .profileText {
+    font-size: 12px; /* Further reduce text size for small screens */
+  }
+}
+
+/* Icon Group */
+.iconGroup {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 10px; /* Add margin to move group closer to the center */
+}
+
+/* Fixed navbar offset to prevent overlap */
+.pageContainer {
+  padding-top: 120px; /* Match the navBar height */
+  margin-top: 120px; /* Prevents overlap by adjusting the content below */
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Prevents content from overlapping on smaller screens */
+.container {
+  padding-top: 120px; /* Matches the navBar height */
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Ensure flex items within page content don't overflow */
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Adjusts top padding for smaller screens */
+@media (max-width: 768px) {
+  .container, .pageContainer {
+    padding-top: 80px; /* Adjust for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .container, .pageContainer {
+    padding-top: 60px; /* Adjust for very small screens */
+  }
+}

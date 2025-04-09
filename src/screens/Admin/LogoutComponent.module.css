@@ -1,0 +1,65 @@
+.logoutContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #003366; /* Deep blue background */
+}
+
+.logoutContent {
+  background-color: #ffffff; /* White background for contrast */
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Stronger shadow for depth */
+  border: none;
+  width: 400px;
+}
+
+.questionIcon {
+  font-size: 50px;
+  margin-bottom: 20px;
+  display: inline-block;
+  border: 3px solid #0056b3; /* Blue border */
+  border-radius: 50%;
+  padding: 10px;
+  color: #0056b3; /* Blue color */
+}
+
+.logoutContent h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #003366; /* Darker blue text */
+  font-weight: bold;
+}
+
+.logoutButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.yesButton,
+.noButton {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.yesButton:hover,
+.noButton:hover {
+  background-color: #003366; /* Darker blue on hover */
+}
+
+.yesButton {
+  background-color: #d32f2f; /* Red for emphasis */
+}
+
+.yesButton:hover {
+  background-color: #b71c1c; /* Darker red on hover */
+}

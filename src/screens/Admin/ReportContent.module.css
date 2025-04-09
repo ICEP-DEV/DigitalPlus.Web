@@ -1,0 +1,170 @@
+.reportsContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.mainView, .registerView, .mentorReportView {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #01182e;
+}
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 250px;
+}
+
+.dropdown {
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filterBtn {
+  padding: 10px 20px;
+  background-color: #1f3751;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.noResultMessage {
+  text-align: center;
+  color: #d9534f; /* A red color for error messages */
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.reportTable, .registerTable, .mentorReportTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.reportTable th, .registerTable th, .mentorReportTable th {
+  background-color: #01182e;
+  color: #efeff4;
+  padding: 12px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.reportTable th, .reportTable td,
+.registerTable th, .registerTable td,
+.mentorReportTable th, .mentorReportTable td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.actionCell {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.registerIconBtn, .reportIconBtn {
+  background-color: #01182e;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.registerIconBtn:hover, .reportIconBtn:hover {
+  background-color: #003366;
+}
+
+.tabSwitcher {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.tabBtn {
+  background-color: #01182e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tabBtn:hover, .tabBtn.activeTab {
+  background-color: #003366;
+}
+
+.extraReport, .actionButtons {
+  margin-top: 20px;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.actionButtons button, .shareBtn, .downloadBtn, .backBtn {
+  background-color: #01182e;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 5px;
+  width: 35px;
+  height: 35px;
+}
+
+.actionButtons button:hover, .shareBtn:hover, .downloadBtn:hover, .backBtn:hover {
+  background-color: #3e3e3e;
+  color: white;
+}
+
+.mentorRegisterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #01182e;
+}

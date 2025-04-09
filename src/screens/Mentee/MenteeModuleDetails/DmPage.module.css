@@ -1,0 +1,483 @@
+/* Root Variables */
+:root {
+    --dmPage-primary-color: #0d1431;
+    --dmPage-secondary-color: #f9fafb;
+    --dmPage-accent-color: #e5e7eb;
+    --dmPage-hover-color: #bdbfc2;
+    --dmPage-text-color: #ffffff;
+    --dmPage-border-radius: 15px;
+    --dmPage-transition-time: 0.3s;
+    --dmPage-shadow-color: rgba(0, 0, 0, 0.08);
+    --dmPage-online-color: #4caf50;
+    --dmPage-offline-color: #f44336;
+    --dmPage-sent-color: rgba(13, 20, 49, 0.1);
+    --dmPage-received-color: #f1f3f5;
+    --dmPage-header-background: linear-gradient(90deg, #0d1431, #1f2a63);
+    --dmPage-input-background: #e5e7eb;
+    --dmPage-reply-bar-color: #007bff;
+    --dmPage-delete-color: #ff6347; /* Tomato color */
+}
+
+/* General Layout */
+.dmPage {
+    display: flex;
+    height: 80vh;
+    width: 80vw;
+    background-color: var(--dmPage-secondary-color);
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    border-radius: var(--dmPage-border-radius);
+    box-shadow: 0 4px 10px var(--dmPage-shadow-color);
+}
+.dmDateDivider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .dmDateDivider span {
+    background-color: #f7f9fc;
+    padding: 5px 10px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+/* Sidebar for Mentors */
+.dmPageSidebar {
+    width: 25%;
+    background-color: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transition: width var(--dmPage-transition-time);
+    position: relative;
+}
+
+.dmSidebarCollapsed {
+    width: 5%;
+    transition: width var(--dmPage-transition-time);
+}
+
+/* Sidebar Header */
+.dmSidebarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.dmSearchContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.dmSearchIcon {
+    margin-right: 5px;
+    color: var(--dmPage-primary-color);
+}
+
+.dmSearchInput {
+    border: 1px solid var(--dmPage-accent-color);
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.dmMentorList {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.dmMentorItem {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: var(--dmPage-secondary-color);
+    cursor: pointer;
+    transition: background-color var(--dmPage-transition-time);
+}
+
+.dmMentorItem:hover {
+    background-color: var(--dmPage-hover-color);
+}
+
+
+/* Main chat area */
+.dmMain {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--dmPage-secondary-color);
+    border-radius: 0 var(--dmPage-border-radius) var(--dmPage-border-radius) 0;
+}
+
+/* Chat Header */
+.dmHeader {
+    background: var(--dmPage-header-background);
+    color: var(--dmPage-text-color);
+    padding: 15px 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: var(--dmPage-border-radius) var(--dmPage-border-radius) 0 0;
+}
+
+/* Messages Area */
+.dmMessages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f3f4f6;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Individual Message */
+.dmMessageItem {
+    max-width: 60%;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: background-color var(--dmPage-transition-time);
+}
+
+.dmMessageItem:hover {
+    background-color: #f9fafb;
+}
+
+.dmSent {
+    background-color: var(--dmPage-sent-color);
+    align-self: flex-end;
+    margin-left: auto;
+    text-align: right;
+}
+
+.dmReceived {
+    background-color: var(--dmPage-received-color);
+    align-self: flex-start;
+    margin-right: auto;
+    text-align: left;
+}
+
+/* Sender Info */
+.dmSenderInfo {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--dmPage-hover-color);
+    margin-bottom: 5px;
+}
+
+.dmSenderName {
+    font-weight: bold;
+}
+
+.dmTimestamp {
+    font-size: 12px;
+    color: var(--dmPage-hover-color);
+    margin-top: 5px;
+}
+
+/* Message Text */
+.dmMessageText {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* WhatsApp-style Reply */
+.dmReplyTo {
+    display: flex;
+    align-items: center;
+    background-color: #e9ecef;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--dmPage-primary-color);
+    border-left: 4px solid var(--dmPage-reply-bar-color);
+}
+
+.dmReplySender {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Message Actions (Reply, Edit, Delete) */
+/* Hide icons by default */
+.dmMessageActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    opacity: 0; /* Hide icons */
+    transition: opacity 0.3s ease; /* Smooth transition */
+}
+
+/* Show icons on hover */
+.dmMessageItem:hover .dmMessageActions {
+    opacity: 1; /* Show icons */
+}
+
+.dmReplyIcon,
+.dmEditIcon,
+.dmDeleteIcon {
+    font-size: 16px;
+    color: var(--dmPage-primary-color);
+    cursor: pointer;
+    transition: color var(--dmPage-transition-time);
+}
+
+.dmReplyIcon:hover {
+    color: var(--dmPage-hover-color);
+}
+
+.dmEditIcon:hover {
+    color: var(--dmPage-reply-bar-color);
+}
+
+.dmDeleteIcon:hover {
+    color: var(--dmPage-delete-color);
+}
+
+/* File Attachments */
+.dmFileAttachment {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px solid var(--dmPage-accent-color);
+    border-radius: 10px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px var(--dmPage-shadow-color);
+    transition: background-color var(--dmPage-transition-time);
+    gap: 10px;
+}
+
+.dmFileAttachment:hover {
+    background-color: #f3f4f6;
+}
+
+.dmFileIcon {
+    font-size: 24px;
+    color: var(--dmPage-primary-color);
+}
+
+.dmFileName {
+    font-size: 16px;
+    color: #333;
+    flex-grow: 1;
+}
+
+.dmDownloadButton {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    background-color: var(--dmPage-primary-color);
+    color: var(--dmPage-text-color);
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color var(--dmPage-transition-time), transform var(--dmPage-transition-time);
+    font-size: 14px;
+}
+
+.dmDownloadButton:hover {
+    background-color: var(--dmPage-hover-color);
+    transform: scale(1.05);
+}
+
+/* Chat Input Area */
+.dmInputArea {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--dmPage-input-background);
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0 0 var(--dmPage-border-radius) var(--dmPage-border-radius);
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Reply Box Positioned Above Input */
+.dmReplyBox {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--dmPage-primary-color);
+    border-left: 4px solid var(--dmPage-reply-bar-color);
+}
+
+.dmReplyBox span {
+    flex-grow: 1;
+}
+
+.dmCancelReplyIcon {
+    font-size: 20px;
+    color: var(--dmPage-primary-color);
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color var(--dmPage-transition-time);
+}
+
+.dmCancelReplyIcon:hover {
+    color: var(--dmPage-hover-color);
+}
+
+/* File preview before sending */
+.dmFilePreviewBox {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f1f3f5;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.dmFilePreviewContent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dmPreviewImage {
+    max-width: 100px;
+    border-radius: 10px;
+}
+
+.dmPreviewVideo {
+    max-width: 150px;
+    border-radius: 10px;
+}
+
+.dmCancelFileIcon {
+    font-size: 20px;
+    color: var(--dmPage-primary-color);
+    cursor: pointer;
+    transition: color var(--dmPage-transition-time);
+    position: absolute;
+    right: 10px;
+}
+
+.dmCancelFileIcon:hover {
+    color: var(--dmPage-hover-color);
+}
+
+/* Input Row Adjustments for Horizontal Alignment */
+.dmInputRow {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.dmTextArea {
+    flex-grow: 1;
+    border: 1px solid var(--dmPage-accent-color);
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-size: 16px;
+    outline: none;
+    resize: none;
+    background-color: var(--dmPage-secondary-color);
+    transition: border-color var(--dmPage-transition-time);
+}
+
+.dmTextArea:focus {
+    border-color: var(--dmPage-primary-color);
+    box-shadow: 0 0 8px rgba(14, 165, 233, 0.1);
+}
+
+/* File Upload Button */
+.dmFileUploadIcon {
+    margin-top: 20px;
+    font-size: 30px;
+    color: var(--dmPage-primary-color);
+    cursor: pointer;
+    transition: color var(--dmPage-transition-time);
+}
+
+.dmFileUploadIcon:hover {
+    color: var(--dmPage-hover-color);
+}
+
+/* Send Button */
+.dmButton {
+    padding: 12px;
+    background-color: var(--dmPage-primary-color);
+    color: var(--dmPage-text-color);
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform var(--dmPage-transition-time);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+}
+
+.dmButton:hover {
+    transform: scale(1.1);
+}
+
+/* Typing Indicator */
+.dmTypingIndicator {
+    font-size: 14px;
+    color: var(--dmPage-hover-color);
+    padding: 10px;
+    text-align: center;
+}
+/* Upload Error */
+.dmUploadError {
+    color: red;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Disabled Send Button */
+.dmButton:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+/* Existing styles... */
+
+/* Wrapper around the spinner and "Loading messages..." text */
+.dmLoadingSpinnerWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  /* Spinner icon style */
+  .dmLoadingSpinner {
+    font-size: 40px;
+    color: #666;
+    animation: dmSpin 1s linear infinite;
+    margin-bottom: 10px;
+  }
+  
+  /* Keyframes for spin */
+  @keyframes dmSpin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

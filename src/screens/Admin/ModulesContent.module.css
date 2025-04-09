@@ -1,0 +1,322 @@
+/* Scoped container for the whole Modules section */
+.modulesContainer {
+  padding: 20px;
+  text-align: center;
+  background-color: #f4f7fc; /* Light background */
+  position: relative; /* Positioning for dropdown */
+}
+
+/* Modules title */
+.modulesTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+/* Department Dropdown on the right */
+.modulesDepartmentDropdown {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.modulesDepartmentDropdown select {
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modulesDepartmentDropdown select:hover {
+  background-color: #16a085;
+}
+
+/* Department table styling */
+.departmentTable {
+  width: 100%;
+  margin-top: 30px;
+  border-collapse: collapse;
+}
+
+.departmentTable th,
+.departmentTable td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.departmentTable th {
+  background-color: #3498db;
+  color: white;
+}
+
+.departmentTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.departmentTable tr:hover {
+  background-color: #ddd;
+}
+
+/* Modules section - VERTICAL SCROLLING */
+.modulesCarousel {
+  width: 100%;
+  height: 500px; /* Fixed height to allow scrolling */
+  overflow-y: auto; /* Enables vertical scrolling */
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+  border: 1px solid #ccc;
+  padding: 10px;
+
+  /* Scrollbar styling for Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* Scrollbar styling for Chrome, Edge, Safari */
+.modulesCarousel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modulesCarousel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.modulesCarousel::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Stack modules vertically */
+.modulesCarouselItems {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adds spacing between items */
+}
+
+/* Module item styling */
+.modulesCarouselItem {
+  display: flex;
+  align-items: center; /* Align content and buttons in a row */
+  justify-content: space-between; /* Text on left, buttons on right */
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #ccc;
+}
+
+.modulesCarouselItem:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Module details (keeps text on the left) */
+.moduleDetails {
+  flex-grow: 1; /* Takes up available space */
+  text-align: left;
+}
+
+/* Icons for Edit and Delete - aligned to the right */
+.moduleIcons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Edit and Delete button styling */
+.editIcon,
+.deleteIcon {
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #3f51b5;
+  background-color: transparent;
+  border: none;
+  padding: 5px;
+}
+
+.editIcon:hover {
+  color: #303f9f;
+}
+
+.deleteIcon {
+  color: #d32f2f;
+}
+
+.deleteIcon:hover {
+  color: #b71c1c;
+}
+
+/* Remove Left/Right buttons (since scrolling is vertical) */
+.modulesCarouselBtn {
+  display: none;
+}
+
+/* Add Module Button */
+.addModuleContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.addModuleButton {
+  background-color: #23db69;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+}
+
+.addModuleButton:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive Design: Stack buttons below text on small screens */
+@media (max-width: 600px) {
+  .modulesCarouselItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .moduleIcons {
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+}
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed; /* Ensures it covers the full screen */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensures it's above other elements */
+}
+
+/* Modal Content */
+.modalContent {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001; /* Ensure it's above the overlay */
+}
+
+/* Add/Edit Module Section within Modal */
+.modulesFormContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Form Sections */
+.formSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  text-align: left;
+  color: #2c3e50;
+}
+
+.newModuleInput,
+.newModuleTextarea {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.newModuleInput:hover,
+.newModuleTextarea:hover {
+  border-color: #3498db;
+}
+
+/* Action Buttons */
+.addModuleActions,
+.editModuleActions {
+  display: flex;
+  justify-content: center; /* Center the buttons */
+  align-items: center;
+  gap: 10px; /* Space between buttons */
+  margin-top: 10px;
+}
+
+/* Update Button */
+.updateModuleButton {
+  background-color: #2ecc71; /* Green for update */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+}
+
+.updateModuleButton:hover {
+  background-color: #27ae60;
+}
+
+/* Cancel Button */
+.cancelModuleButton {
+  background-color: #e74c3c; /* Red for cancel */
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+}
+
+.cancelModuleButton:hover {
+  background-color: #c0392b;
+}
+
+/* Optional: Adjust the textarea height */
+.newModuleTextarea {
+  height: 80px;
+}
+
+/* Make sure modal appears on top of everything */
+.modalOverlay.active {
+  display: flex;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .modalContent {
+    width: 95%;
+  }
+}

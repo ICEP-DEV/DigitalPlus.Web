@@ -1,0 +1,283 @@
+.menteesContainer {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f4f6f9;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.searchBarContainer {
+  width: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px
+}
+
+.searchBar {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.searchBar:focus {
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 15px;
+}
+
+.downloadCsvButton,
+.addMenteeButton {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  color: white;
+  background-color: #396ba0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.downloadCsvButton {
+  background-color: #007bff;
+}
+
+.downloadCsvButton:hover {
+  background-color: #0056b3;
+}
+
+.addMenteeButton {
+  background-color: #6c757d;
+  justify-content: space-between;
+}
+
+.addMenteeButton:hover {
+  background-color: #5a6268;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.menteesTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px ridge #c5c1c1;
+  border-radius: 5px;
+}
+
+.menteesTable th,
+.menteesTable td {
+  padding: 10px;
+  text-align:start;
+  border-bottom: 1px double #bdacac;
+  border-right: 1px double #bdacac;
+}
+
+.menteesTable th {
+  background-color: #01182e;
+  color: #eff2f4;
+  text-transform: uppercase;
+}
+
+.menteesTable td {
+  background-color: #fff;
+}
+
+.menteesTable td:last-child,
+.menteesTable th:last-child {
+  border-right: none;
+}
+
+.statusToggleButton {
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+.statusToggleButton.activate {
+  background-color: #28a745;
+}
+
+.statusToggleButton.deactivate {
+  background-color: #dc3545;
+}
+
+.manageButton {
+  background-color: #01182e;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  /* Dark background overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: auto;
+  /* Enable scrolling if content exceeds height */
+  padding: 20px;
+  /* Add padding to prevent content from touching edges */
+}
+
+.modalContent {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  width: 300px;
+  max-height: 90vh;
+  /* Limit height to 90% of the viewport height */
+  overflow-y:auto;
+  /* Add vertical scrolling inside the modal if needed */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10000;
+  position: relative;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 2px solid #74777b; /* Make the border thicker and use a color like blue */
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #fff; /* Ensure background color is white */
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover/focus states */
+}
+
+input:focus,
+select:focus {
+  border-color: #74777b; /* Border color on focus */
+  box-shadow: 0 0 5px rgba(112, 113, 115, 0.3); /* Slight glow on focus */
+  outline: none; /* Remove default outline */
+}
+
+.inputField {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #d2d5d8; /* Make the border more visible */
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition effect for focus */
+  background-color: #f2f2f2;
+}
+
+.passwordField {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  border: 2px solid #c0c1c3; /* Ensure password field border is visible */
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(112, 113, 115, 0.3); /* Subtle shadow */
+}
+
+.eyeIcon {
+  cursor: pointer;
+  margin-left: 10px;
+  color: #74777b; /* Eye icon color to match the input border */
+}
+
+.selectField {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #74777b; /* Enhanced border visibility */
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition effect for focus */
+}
+
+
+input:focus,
+select:focus {
+  border-color: #74777b; /* Border color on focus */
+  box-shadow: 0 0 5px rgba(112, 113, 115, 0.3); /* Slight glow on focus */
+  outline: none; /* Remove default outline */
+}
+
+.selectField {
+  width: 100%;
+  /* Ensure full width for dropdown */
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #74777b; /* Enhanced border visibility */
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition effect for focus */
+}
+
+.noMenteesMessage {
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+  padding: 20px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.dividerContainer {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  background-color: #3f5b89;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius:  50%;
+}
+
+.dividerLine {
+  width: 100%;
+  height: 1px;
+  background-color: #3f5b89;
+}
+
+.dividerTab {
+  position: absolute;
+  top: -6px;
+  width: 100px;
+  height: 7px;
+  background-color: #3f5b89;
+  border-radius:20px 20px 0 0;
+}

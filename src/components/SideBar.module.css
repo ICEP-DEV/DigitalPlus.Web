@@ -1,0 +1,153 @@
+/* Sidebar styles */
+.sideBar {
+  width: 180px;
+  min-height: 100vh; /* Full height of the viewport */
+  background-color: #002147;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  position: fixed; /* Sidebar stays fixed on the right */
+  left: 0%;
+  top: 20%;
+}
+
+.sideBarWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.hamburger {
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  background: none;
+  padding-right: 20px;
+}
+
+.hamburger:hover {
+  color: lightgray;
+}
+
+/* When sidebar is collapsed */
+.collapsed {
+  width: 70px; /* Reduce width to only show icons */
+  padding-right: 0; /* Remove extra padding */
+}
+
+.navLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex-grow: 1; /* Allows the sidebar items to take available space */
+}
+
+.navItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  color: white;
+  padding: 10px 15px; /* Add some padding for spacing */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Hover effect for nav-item */
+.navItem:hover {
+  background-color: lightgray; /* Changes background color on hover */
+  color: #070c24; /* Optional: change text color on hover for contrast */
+  border-radius: 5px; /* Optional: smooth the edges of the nav-item on hover */
+}
+
+/* Icons should scale correctly */
+.icon {
+  font-size: 25px;
+}
+
+/* Scrollbar customization */
+.sideBar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sideBar::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+  .sideBar {
+    width: 100%; /* Sidebar takes full width on small screens */
+    padding: 15px;
+    height: 100vh; /* Sidebar still takes full viewport height */
+    overflow-y: auto; /* Vertical scrolling */
+  }
+
+  .navLinks {
+    flex-direction: row;
+    flex-wrap: wrap; /* Allow links to wrap onto the next line if necessary */
+    justify-content: space-around;
+  }
+
+  .navLinks a {
+    padding: 5px;
+    font-size: 16px;
+  }
+
+  /* Adjustments for collapsed state */
+  .collapsed {
+    width: 80px;
+  }
+
+  .navItem {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .navItem .icon {
+    margin-left: 10px;
+    font-size: 20px;
+  }
+
+  .hamburger {
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin: 20px;
+    padding: 0;
+    color: white;
+    background: none;
+  }
+
+  .collapsed .navItem span {
+    display: none;
+    width: 30px;
+  }
+
+  .sideBar .navItem span {
+    font-size: 16px;
+    color: white;
+  }
+}
+
+/* Extra Small Screens */
+@media (max-width: 480px) {
+  .sideBar {
+    padding: 10px;
+  }
+
+  .navLinks a {
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  .mainContent {
+    padding: 5px;
+  }
+}

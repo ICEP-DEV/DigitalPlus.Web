@@ -1,0 +1,337 @@
+:root {
+    --mentorChatBoard-primary-color: #0d1431;
+    --mentorChatBoard-secondary-color: #f9fafb;
+    --mentorChatBoard-accent-color: #e5e7eb;
+    --mentorChatBoard-hover-color: #bdbfc2;
+    --mentorChatBoard-text-color: #ffffff;
+    --mentorChatBoard-border-radius: 15px;
+    --mentorChatBoard-transition-time: 0.3s;
+    --mentorChatBoard-shadow-color: rgba(0, 0, 0, 0.08);
+    --mentorChatBoard-online-color: #4caf50;
+    --mentorChatBoard-offline-color: #f44336;
+    --mentorChatBoard-sent-color: rgba(13, 20, 49, 0.1);
+    --mentorChatBoard-received-color: #f1f3f5;
+    --mentorChatBoard-header-background: linear-gradient(90deg, #0d1431, #1f2a63);
+    --mentorChatBoard-input-background: #e5e7eb;
+    --mentorChatBoard-reply-bar-color: #007bff;
+    --mentorChatBoard-delete-color: #ff6347;
+}
+
+/* Main Chat Layout */
+.mentorChatBoard {
+    display: flex;
+    height: 80vh;
+    width: 80vw;
+    background-color: var(--mentorChatBoard-secondary-color);
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    border-radius: var(--mentorChatBoard-border-radius);
+    box-shadow: 0 4px 10px var(--mentorChatBoard-shadow-color);
+}
+
+/* Main Chat Area */
+.mentorChatBoardMain {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--mentorChatBoard-secondary-color);
+    border-radius: 0 var(--mentorChatBoard-border-radius) var(--mentorChatBoard-border-radius) 0;
+}
+
+.mentorChatBoardHeader {
+    background: var(--mentorChatBoard-header-background);
+    color: var(--mentorChatBoard-text-color);
+    padding: 15px 20px;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--mentorChatBoard-border-radius) var(--mentorChatBoard-border-radius) 0 0;
+}
+
+/* Messages Area */
+.mentorChatBoardMessages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f3f4f6;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mentorChatBoardMessageItem {
+    max-width: 60%;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: background-color var(--mentorChatBoard-transition-time);
+}
+
+.mentorChatBoardMessageItem:hover {
+    background-color: #f9fafb;
+}
+
+.mentorChatBoardSent {
+    background-color: var(--mentorChatBoard-sent-color);
+    align-self: flex-end;
+    margin-left: auto;
+    text-align: right;
+}
+
+.mentorChatBoardReceived {
+    background-color: var(--mentorChatBoard-received-color);
+    align-self: flex-start;
+    margin-right: auto;
+    text-align: left;
+}
+
+/* Sender Info */
+.mentorChatBoardSenderInfo {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--mentorChatBoard-hover-color);
+    margin-bottom: 5px;
+}
+
+.mentorChatBoardSenderName {
+    font-weight: bold;
+}
+
+.mentorChatBoardMessageText {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Reply Container */
+.mentorChatBoardReplyTo {
+    display: flex;
+    align-items: center;
+    background-color: #e9ecef;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--mentorChatBoard-primary-color);
+    border-left: 4px solid var(--mentorChatBoard-reply-bar-color);
+}
+
+.mentorChatBoardReplySender {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.mentorChatBoardTimestamp {
+    display: block;
+    font-size: 12px;
+    color: var(--mentorChatBoard-hover-color);
+    margin-top: 5px;
+}
+
+/* Hidden icons until hover */
+.mentorChatBoardReplyIcon,
+.mentorChatBoardEditIcon,
+.mentorChatBoardDeleteIcon {
+    display: none;
+    font-size: 12px;
+    color: var(--mentorChatBoard-primary-color);
+    cursor: pointer;
+    transition: color var(--mentorChatBoard-transition-time);
+    padding: 10px;
+}
+
+.mentorChatBoardMessageItem:hover .mentorChatBoardReplyIcon,
+.mentorChatBoardMessageItem:hover .mentorChatBoardEditIcon,
+.mentorChatBoardMessageItem:hover .mentorChatBoardDeleteIcon {
+    display: inline-block;
+}
+
+.mentorChatBoardReplyIcon:hover {
+    color: var(--mentorChatBoard-hover-color);
+}
+
+.mentorChatBoardEditIcon:hover {
+    color: var(--mentorChatBoard-reply-bar-color);
+}
+
+.mentorChatBoardDeleteIcon:hover {
+    color: var(--mentorChatBoard-delete-color);
+}
+
+/* File Attachment Styling */
+.mentorChatBoardFileAttachment {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px solid var(--mentorChatBoard-accent-color);
+    border-radius: 10px;
+    margin-top: 10px;
+    box-shadow: 0 2px 8px var(--mentorChatBoard-shadow-color);
+    transition: background-color var(--mentorChatBoard-transition-time);
+    gap: 10px;
+}
+
+.mentorChatBoardFileAttachment:hover {
+    background-color: #f3f4f6;
+}
+
+.mentorChatBoardFileIcon {
+    font-size: 24px;
+    color: var(--mentorChatBoard-primary-color);
+}
+
+.mentorChatBoardFileName {
+    font-size: 16px;
+    color: #333;
+    flex-grow: 1;
+}
+
+.mentorChatBoardDownloadButton {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    background-color: var(--mentorChatBoard-primary-color);
+    color: var(--mentorChatBoard-text-color);
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color var(--mentorChatBoard-transition-time), transform var(--mentorChatBoard-transition-time);
+    font-size: 14px;
+}
+
+.mentorChatBoardDownloadButton:hover {
+    background-color: var(--mentorChatBoard-hover-color);
+    transform: scale(1.05);
+}
+
+/* Input Area */
+.mentorChatBoardInputArea {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--mentorChatBoard-input-background);
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0 0 var(--mentorChatBoard-border-radius) var(--mentorChatBoard-border-radius);
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Reply Box Positioned Above Input */
+.mentorChatBoardReplyBox {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--mentorChatBoard-primary-color);
+    border-left: 4px solid var(--mentorChatBoard-reply-bar-color);
+}
+
+.mentorChatBoardReplyBox span {
+    flex-grow: 1;
+}
+
+.mentorChatBoardCancelReplyIcon {
+    font-size: 20px;
+    color: var(--mentorChatBoard-primary-color);
+    cursor: pointer;
+    margin-left: 10px;
+    transition: color var(--mentorChatBoard-transition-time);
+}
+
+.mentorChatBoardCancelReplyIcon:hover {
+    color: var(--mentorChatBoard-hover-color);
+}
+
+/* File preview before sending */
+.mentorChatBoardFilePreviewBox {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f1f3f5;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.mentorChatBoardFilePreviewContent {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mentorChatBoardCancelFileIcon {
+    font-size: 20px;
+    color: var(--mentorChatBoard-primary-color);
+    cursor: pointer;
+    transition: color var(--mentorChatBoard-transition-time);
+    position: absolute;
+    right: 10px;
+}
+
+.mentorChatBoardCancelFileIcon:hover {
+    color: var(--mentorChatBoard-hover-color);
+}
+
+/* Input Row for Messages and File Upload */
+.mentorChatBoardInputRow {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.mentorChatBoardTextArea {
+    flex-grow: 1;
+    border: 1px solid var(--mentorChatBoard-accent-color);
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-size: 16px;
+    outline: none;
+    resize: none;
+    background-color: var(--mentorChatBoard-secondary-color);
+    transition: border-color var(--mentorChatBoard-transition-time);
+}
+
+.mentorChatBoardTextArea:focus {
+    border-color: var(--mentorChatBoard-primary-color);
+    box-shadow: 0 0 8px rgba(14, 165, 233, 0.1);
+}
+
+.mentorChatBoardFileUploadIcon {
+    margin-top: 20px;
+    font-size: 30px;
+    color: var(--mentorChatBoard-primary-color);
+    cursor: pointer;
+    transition: color var(--mentorChatBoard-transition-time);
+}
+
+.mentorChatBoardFileUploadIcon:hover {
+    color: var(--mentorChatBoard-hover-color);
+}
+
+.mentorChatBoardButton {
+    padding: 12px;
+    background-color: var(--mentorChatBoard-primary-color);
+    color: var(--mentorChatBoard-text-color);
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform var(--mentorChatBoard-transition-time);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+}
+
+.mentorChatBoardButton:hover {
+    transform: scale(1.1);
+}
