@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   FaBook,
   FaEdit,
@@ -6,22 +6,22 @@ import {
   FaPlus,
   FaTimes,
   FaCheck,
-} from 'react-icons/fa';
-import styles from './ModulesContent.module.css';
+} from "react-icons/fa";
+import styles from "./ModulesContent.module.css";
 
 const ModulesContent = () => {
   const carouselRef = useRef(null);
 
   // Define an array of random colors
   const backgroundColors = [
-    '#FFEBEE',
-    '#E3F2FD',
-    '#E8F5E9',
-    '#FFF3E0',
-    '#F3E5F5',
-    '#FBE9E7',
-    '#FFFDE7',
-    '#E0F7FA',
+    "#FFEBEE",
+    "#E3F2FD",
+    "#E8F5E9",
+    "#FFF3E0",
+    "#F3E5F5",
+    "#FBE9E7",
+    "#FFFDE7",
+    "#E0F7FA",
   ];
 
   // Function to get a random background color
@@ -29,37 +29,28 @@ const ModulesContent = () => {
     backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
 
   // Hardcoded list of departments
-  const [departments, setDepartments] = useState([
-    'ALL DEPARTMENTS',
-    'COMPUTER SCIENCE',
-    'MULTIMEDIA COMPUTING',
-    'COMPUTER SYSTEM ENGINEERING',
-    'INFORMATICS',
-    'INFORMATION TECHNOLOGY',
-  ]);
+  const [departments, setDepartments] = useState([]);
 
   // State to hold modules
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // State to hold the currently selected department and filtered modules
-  const [selectedDepartment, setSelectedDepartment] = useState(
-    'ALL DEPARTMENTS'
-  );
+  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [filteredModules, setFilteredModules] = useState([]);
 
   // State for managing new module creation and editing
-  const [newModuleName, setNewModuleName] = useState('');
-  const [newModuleCode, setNewModuleCode] = useState('');
+  const [newModuleName, setNewModuleName] = useState("");
+  const [newModuleCode, setNewModuleCode] = useState("");
   const [newCourseId, setNewCourseId] = useState(0);
-  const [newDescription, setNewDescription] = useState('');
-  const [newDepartment, setNewDepartment] = useState('');
+  const [newDescription, setNewDescription] = useState("");
+  const [newDepartment, setNewDepartment] = useState("");
   const [editingModule, setEditingModule] = useState(null); // State for the module being edited
 
   // State to manage modal open/close
   const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
   const [isDepartmentModalOpen, setIsDepartmentModalOpen] = useState(false);
-  const [newDepartmentName, setNewDepartmentName] = useState('');
+  const [newDepartmentName, setNewDepartmentName] = useState("");
 
   // Fetch modules from the server when the component mounts
   useEffect(() => {
@@ -69,19 +60,19 @@ const ModulesContent = () => {
   // Function to fetch modules from the server
   const fetchModulesFromServer = () => {
     setLoading(true);
-    fetch('https://localhost:7163/api/DigitalPlusCrud/GetAllModules')
+    fetch("https://localhost:7163/api/DigitalPlusCrud/GetAllModules")
       .then((response) => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error('Failed to fetch modules');
+          throw new Error("Failed to fetch modules");
         }
       })
       .then((data) => {
         // Assign random colors and icons to each module
         const modulesWithStyles = data.map((module) => ({
           ...module,
-          department: module.department || 'Unknown Department', // Ensure department is set
+          department: module.department || "Unknown Department", // Ensure department is set
           icon: <FaBook size={40} />,
           backgroundColor: getRandomColor(),
         }));
@@ -96,49 +87,43 @@ const ModulesContent = () => {
   };
 
   // Function to filter modules based on selected department
-  const filterModules = (modulesList, department) => {
-    if (department === 'ALL DEPARTMENTS') {
+  const filterModules = (modulesList, departmentId) => {
+    if (departmentId === "ALL DEPARTMENTS" || departmentId === "") {
       setFilteredModules(modulesList);
     } else {
       const filtered = modulesList.filter(
-        (module) => module.department === department
+        (module) => module.department_Id === parseInt(departmentId) // Ensure correct type
       );
       setFilteredModules(filtered);
     }
   };
 
-  // Function to handle department dropdown change
-  const handleDepartmentChange = (e) => {
-    const selected = e.target.value;
-    setSelectedDepartment(selected);
-    filterModules(modules, selected);
-  };
-
-
   // Function to add a new module
   const handleAddModule = () => {
+    console.log("New Department Value:", newDepartment); // Debugging log
+
     if (
-      newModuleName.trim() !== '' &&
-      newModuleCode.trim() !== '' &&
+      newModuleName.trim() !== "" &&
+      newModuleCode.trim() !== "" &&
       newCourseId !== 0 &&
-      newDescription.trim() !== '' &&
-      newDepartment.trim() !== ''
+      newDescription.trim() !== "" &&
+      newDepartment !== "" // Ensure newDepartment is not empty
     ) {
-      if (window.confirm('Are you sure you want to add this module?')) {
+      if (window.confirm("Are you sure you want to add this module?")) {
         const newModule = {
           module_Id: 0,
           module_Name: newModuleName,
           module_Code: newModuleCode,
           course_Id: parseInt(newCourseId),
           description: newDescription,
-          department: newDepartment,
+          department_Id: parseInt(newDepartment) || 0, // Ensure it's a number
         };
 
         // Send POST request to API
-        fetch('https://localhost:7163/api/DigitalPlusCrud/AddModule', {
-          method: 'POST',
+        fetch("https://localhost:7163/api/DigitalPlusCrud/AddModule", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(newModule),
         })
@@ -146,19 +131,19 @@ const ModulesContent = () => {
             if (response.ok) {
               return response.json();
             } else {
-              throw new Error('Failed to add module');
+              throw new Error("Failed to add module");
             }
           })
           .then((data) => {
-            // Clear the input fields
-            setNewModuleName('');
-            setNewModuleCode('');
+            // Clear input fields
+            setNewModuleName("");
+            setNewModuleCode("");
             setNewCourseId(0);
-            setNewDescription('');
-            setNewDepartment('');
+            setNewDescription("");
+            setNewDepartment("");
             setIsModuleModalOpen(false); // Close the modal
 
-            // Refresh modules from the server
+            // Refresh modules
             fetchModulesFromServer();
           })
           .catch((error) => {
@@ -166,7 +151,7 @@ const ModulesContent = () => {
           });
       }
     } else {
-      alert('Please fill in all fields.');
+      alert("Please fill in all fields.");
     }
   };
 
@@ -177,22 +162,25 @@ const ModulesContent = () => {
     setNewModuleCode(module.module_Code);
     setNewCourseId(module.course_Id);
     setNewDescription(module.description);
-    setNewDepartment(module.department);
+    setNewDepartment(module.department_Id);
     setIsModuleModalOpen(true); // Open the modal for editing
   };
 
   // Function to delete a module
   const handleDeleteModule = (moduleId) => {
-    if (window.confirm('Are you sure you want to delete this module?')) {
-      fetch(`https://localhost:7163/api/DigitalPlusCrud/DeleteModule/${moduleId}`, {
-        method: 'DELETE',
-      })
+    if (window.confirm("Are you sure you want to delete this module?")) {
+      fetch(
+        `https://localhost:7163/api/DigitalPlusCrud/DeleteModule/${moduleId}`,
+        {
+          method: "DELETE",
+        }
+      )
         .then((response) => {
           if (response.ok) {
-            alert('Module deleted successfully');
+            alert("Module deleted successfully");
             fetchModulesFromServer(); // Refresh the module list
           } else {
-            throw new Error('Failed to delete module');
+            throw new Error("Failed to delete module");
           }
         })
         .catch((error) => {
@@ -201,17 +189,81 @@ const ModulesContent = () => {
     }
   };
 
+  //Fetch departments from the server
+  useEffect(() => {
+    fetchDepartments();
+  }, []);
+
+  const fetchDepartments = () => {
+    fetch("https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched Data:", data); // Debugging
+
+        if (Array.isArray(data.result)) {
+          setDepartments(data.result); // ✅ Store only the array of departments
+        } else {
+          console.error("API did not return an array:", data);
+          setDepartments([]); // Fallback to an empty array
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching departments:", error);
+        setDepartments([]); // Ensure it's always an array
+      });
+  };
+
   // Function to add a new department
   const handleAddDepartment = () => {
-    if (newDepartmentName.trim() !== '') {
-      const updatedDepartments = [...departments, newDepartmentName];
-      setDepartments(updatedDepartments);
-      setNewDepartmentName('');
-      setIsDepartmentModalOpen(false); // Close the modal
+    if (newDepartmentName.trim() !== "") {
+      if (window.confirm("Are you sure you want to add this department?")) {
+        const newDepartment = {
+          department_Id: 0, // Adjust this based on your API model
+          department_Name: newDepartmentName, // Adjust this based on your API model
+        };
+
+        // Send POST request to the backend
+        fetch("https://localhost:7163/api/DigitalPlusCrud/AddDepartment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newDepartment),
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error("Failed to add department");
+            }
+          })
+          .then((data) => {
+            // Update the state with the new department
+            setDepartments((prevDepartments) => [...prevDepartments, data]);
+            setNewDepartmentName("");
+            setIsDepartmentModalOpen(false); // Close the modal
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      }
     } else {
-      alert('Please enter a department name.');
+      alert("Please enter a department name.");
     }
   };
+
+  // Function to handle department dropdown change
+  const handleDepartmentChange = (event) => {
+    const selectedDept = event.target.value;
+    setSelectedDepartment(selectedDept);
+    filterModules(modules, selectedDept);
+  };
+
+  console.log(departments);
+  console.log(module.department_Id);
+  console.log(
+    departments.find((d) => d.department_Id === module.department_Id)
+  );
 
   return (
     <div className={styles.modulesContainer}>
@@ -221,10 +273,15 @@ const ModulesContent = () => {
 
       {/* Department Dropdown */}
       <div className={styles.modulesDepartmentDropdown}>
-        <select value={selectedDepartment} onChange={handleDepartmentChange}>
+        <select
+          value={newDepartment}
+          onChange={(e) => setNewDepartment(e.target.value)}
+          className={styles.newModuleSelect}
+        >
+          <option value="">Select Department</option>
           {departments.map((dept) => (
-            <option key={dept} value={dept}>
-              {dept}
+            <option key={dept.department_Id} value={dept.department_Id}>
+              {dept.department_Name}
             </option>
           ))}
         </select>
@@ -235,40 +292,55 @@ const ModulesContent = () => {
         <p>Loading modules...</p>
       ) : (
         <div className={styles.modulesCarousel}>
-        <div className={styles.modulesCarouselItems} ref={carouselRef}>
-        {filteredModules.map((module) => (
-      <div className={styles.modulesCarouselItem} key={module.module_Id}>
-        {/* Module Details */}
-        <div className={styles.moduleDetails}>
-          <p><strong>Name:</strong> {module.module_Name}</p>
-          <p><strong>Code:</strong> {module.module_Code}</p>
-          <p><strong>Course ID:</strong> {module.course_Id}</p>
-          <p><strong>Description:</strong> {module.description}</p>
-          <p><strong>Department:</strong> {module.department}</p>
-        </div>
+          <div className={styles.modulesCarouselItems} ref={carouselRef}>
+            {filteredModules.map((module) => (
+              <div
+                className={styles.modulesCarouselItem}
+                key={module.module_Id}
+              >
+                {/* Module Details */}
+                <div className={styles.moduleDetails}>
+                  <p>
+                    <strong>Name:</strong> {module.module_Name}
+                  </p>
+                  <p>
+                    <strong>Code:</strong> {module.module_Code}
+                  </p>
+                  <p>
+                    <strong>Course ID:</strong> {module.course_Id}
+                  </p>
+                  <p>
+                    <strong>Description:</strong> {module.description}
+                  </p>
+                  <p>
+                    <strong>Department:</strong>{" "}
+                    {departments.find(
+                      (d) => d.department_Id === module.department_Id
+                    )?.department_Name || "Unknown"}
+                  </p>
+                </div>
 
-        {/* Edit & Delete Buttons on the Right */}
-        <div className={styles.moduleIcons}>
-          <button
-            onClick={() => handleEditModule(module)}
-            className={styles.editIcon}
-            title="Edit Module"
-          >
-            <FaEdit />
-          </button>
-          <button
-            onClick={() => handleDeleteModule(module.module_Id)}
-            className={styles.deleteIcon}
-            title="Delete Module"
-          >
-            <FaTrash />
-          </button>
+                {/* Edit & Delete Buttons on the Right */}
+                <div className={styles.moduleIcons}>
+                  <button
+                    onClick={() => handleEditModule(module)}
+                    className={styles.editIcon}
+                    title="Edit Module"
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteModule(module.module_Id)}
+                    className={styles.deleteIcon}
+                    title="Delete Module"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    ))}
-        </div>
-      </div>
-      
       )}
 
       {/* Add Module Button under the carousel */}
@@ -307,11 +379,18 @@ const ModulesContent = () => {
             </tr>
           </thead>
           <tbody>
-            {departments.map((dept) => (
-              <tr key={dept}>
-                <td>{dept}</td>
+            {departments.length > 0 ? (
+              departments.map((dept) => (
+                <tr key={dept.department_Id}>
+                  <td>{dept.department_Name}</td>{" "}
+                  {/* ✅ Correctly extract department name */}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="1">No departments found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
@@ -363,13 +442,16 @@ const ModulesContent = () => {
                   <label className={styles.label}>Department</label>
                   <select
                     value={newDepartment}
-                    onChange={(e) => setNewDepartment(e.target.value)}
+                    onChange={(e) => setNewDepartment(parseInt(e.target.value))}
                     className={styles.newModuleSelect}
                   >
                     <option value="">Select Department</option>
-                    {departments.slice(1).map((dept) => (
-                      <option key={dept} value={dept}>
-                        {dept}
+                    {departments.map((dept) => (
+                      <option
+                        key={dept.department_Id}
+                        value={dept.department_Id}
+                      >
+                        {dept.department_Name}
                       </option>
                     ))}
                   </select>
@@ -378,8 +460,8 @@ const ModulesContent = () => {
               <div className={styles.addModuleActions}>
                 <button
                   className={styles.addModuleButton}
-                  onClick={handleAddModule}
-                  title="Add Module"
+                  onClick={editingModule ? handleEditModule : handleAddModule}
+                  title={editingModule ? "Update Module" : "Add Module"}
                 >
                   <FaCheck className={styles.addModuleIcon} />
                 </button>
@@ -438,4 +520,3 @@ const ModulesContent = () => {
 };
 
 export default ModulesContent;
-

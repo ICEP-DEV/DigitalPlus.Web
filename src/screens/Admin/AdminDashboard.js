@@ -35,7 +35,8 @@ const [isCropModalOpen, setIsCropModalOpen] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showWelcomeDialog, setShowWelcomeDialog] = useState(true); // Show the dialog initially
-
+  const [showGoalCelebration, setShowGoalCelebration] = useState(false);
+  const [confettiPieces, setConfettiPieces] = useState([]);
   const closeDialog = () => {
       setShowWelcomeDialog(false); // Hide the dialog when the button is clicked
   };
@@ -152,8 +153,28 @@ function base64ToByteArray(base64) {
 
 
   
-  
-  
+useEffect(() => {
+  const celebrationInterval = setInterval(() => {
+    setShowGoalCelebration(true);
+    
+    const pieces = Array.from({ length: 100 }).map((_, i) => ({
+      id: Date.now() + i,
+      left: Math.random() * 100,
+      color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+      delay: Math.random() * 3,
+      duration: 2 + Math.random() * 3
+    }));
+    setConfettiPieces(pieces);
+    
+    setTimeout(() => {
+      setShowGoalCelebration(false);
+      setConfettiPieces([]);
+    }, 5000);
+  }, 60000); // 10 minutes
+
+  return () => clearInterval(celebrationInterval);
+}, []);
+
  useEffect(() => {
     const storedImage = localStorage.getItem('profileImage');
     if (storedImage) setProfileImage(storedImage);
@@ -235,38 +256,109 @@ const closeCropModal = () => setIsCropModalOpen(false);
 
   return (
     <div className={styles.adminDashboardContainer}>
+ {showGoalCelebration && (
+  <div className={styles.goalCelebration}>🎯 TOGETHER, WE'RE MAKING PROGRESS DAILY! 👏</div>
+)}
+
+<div className={styles.confettiContainer}>
+  {confettiPieces.map((piece) => (
+    <div 
+      key={piece.id}
+      className={styles.confettiPiece}
+      style={{
+        left: `${piece.left}%`,
+        background: piece.color,
+        animationDelay: `${piece.delay}s`,
+        animationDuration: `${piece.duration}s`,
+        transform: `rotate(${Math.random() * 360}deg)`
+      }}
+    />
+  ))}
+</div>
       <header className={styles.adminHeader}>
 
-<div className={styles.adminInfo}>
+      <div className={styles.adminInfo}>
+  {/* Floating Particles Background */}
+  <div className={styles.particlesContainer}>
+    {Array.from({ length: 15 }).map((_, i) => (
+      <div 
+        key={i}
+        className={styles.particle}
+        style={{
+          '--delay': `${i * 0.2}s`,
+          '--size': `${Math.random() * 4 + 2}px`,
+          '--x': `${Math.random() * 100}%`,
+          '--y': `${Math.random() * 100}%`,
+        }}
+      />
+    ))}
+  </div>
+
+  {/* Animated Profile Icon */}
   <div
-    className={styles.adminIcon}
-    onClick={() => setIsProfileModalOpen(true)} // Open the profile modal on click
+    className={`${styles.adminIcon} ${styles.holographicEffect}`}
+    onClick={() => setIsProfileModalOpen(true)}
     aria-label="View profile picture"
   >
-    {profileImage ? (
-      <img
-        src={profileImage}
-        alt="Admin"
-        className={styles.adminImage}
-        title="View Profile"
-      />
-    ) : (
-      <div className={styles.imagePlaceholder}>Upload Image</div>
-    )}
+    {/* Holographic Ring */}
+    <div className={styles.holoRing} />
+    
+    {/* Profile Image with Parallax Effect */}
+    <div className={styles.parallaxContainer}>
+      {profileImage ? (
+        <img
+          src={profileImage}
+          alt="Admin"
+          className={styles.adminImage}
+          title="View Profile"
+          data-parallax
+        />
+      ) : (
+        <div className={styles.imagePlaceholder}>
+          <span className={styles.uploadText}>Upload</span>
+          <div className={styles.uploadPulse} />
+        </div>
+      )}
+    </div>
   </div>
+
   <input
     type="file"
     id="profileImageInput"
     accept="image/*"
     onChange={handleImageUpload}
     style={{ display: 'none' }}
-    title="View Profile"
   />
+
+  {/* Glitch Text Effect */}
   <div className={styles.adminText}>
-    <span>Admin</span>
-    {adminEmail && <span className={styles.adminEmail}>{adminEmail}</span>}
+    <span className={styles.glitchText} data-text="Admin">Admin</span>
+    {adminEmail && (
+      <span className={`${styles.adminEmail} ${styles.flowingUnderline}`}>
+        {adminEmail}
+        <span className={styles.underlineWave} />
+      </span>
+    )}
   </div>
+  <div className={styles.confettiContainer}>
+    {[...Array(20)].map((_, i) => (
+      <div 
+        key={i}
+        className={styles.confettiPiece}
+        style={{
+          left: `${5 + (i * 5)}%`,
+          background: [
+            '#FFD700', '#FF5733', '#C70039', '#900C3F', '#581845',
+            '#1A5276', '#3498DB', '#27AE60', '#F39C12', '#8E44AD',
+            '#E74C3C', '#2ECC71', '#F1C40F', '#9B59B6', '#E67E22',
+            '#16A085', '#2980B9', '#D35400', '#C0392B', '#7F8C8D'
+          ][i % 20],
+          animationDelay: `${3600 + (i * 0.2)}s`
+        }}
+      />
+    ))}
   </div>
+</div>
 
 
         {/* Updated logout button */}

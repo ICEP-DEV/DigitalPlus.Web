@@ -18,6 +18,7 @@ import VideoLandingPage from './screens/Landing/VideoLandingPage.jsx';
 import PrivateRoute from './PrivateRoute'; // Import PrivateRoute
 import ForgotPassword from './screens/Login/ForgotPassword.js';
 import SendOTP from './screens/Login/SendOTP.js';
+import { NotificationProvider } from './screens/Admin/NotificationContext.js';
 
 
 import 'slick-carousel/slick/slick.css';
@@ -25,8 +26,10 @@ import 'slick-carousel/slick/slick-theme.css';
 
 const App = () => {
   
-  return (
+  return ( 
+  <NotificationProvider>
     <Router>
+     
       <Routes>
         <Route exact path="/" element={<VideoLandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -70,7 +73,9 @@ const App = () => {
           }
         />
       </Routes>
-    </Router>
+    
+    </Router>  
+    </NotificationProvider>
   );
 };
 

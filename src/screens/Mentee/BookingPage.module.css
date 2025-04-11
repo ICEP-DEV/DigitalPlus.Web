@@ -18,6 +18,7 @@
     margin-bottom: 20px;
     border-bottom: 1px solid black;
     margin-left: 150px; 
+    color: rgb(0, 0, 0);
 }
   
 .bookingForm {
@@ -51,7 +52,7 @@
 .inputGroup {
     display: flex;
     align-items: center;
-    background-color: #ABAAAA;
+    background-color: #f5f1f1;
     border-radius: 5px;
     padding: 10px;
 }

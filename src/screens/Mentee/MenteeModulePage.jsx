@@ -225,54 +225,53 @@ export default function MenteeModulePage() {
     module.module_Name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) return <p>Loading modules...</p>;
+ 
 
   return (
     <div>
       <NavBar />
       <SideBar modules={modules} /> {/* Pass the module list to Sidebar */}
-      <div className={styles['course-modules']}>
-      <button className={styles['add-module-button']} onClick={openModal}>
-              MANAGE MODULES
-            </button>
+      <div className={styles["course-modules"]}>
+        <button className={styles["add-module-button"]} onClick={openModal}>
+          MANAGE MODULES
+        </button>
         <h1>Assigned Modules</h1>
-         
-        
-        {modules.length > 0 ? (
-          <div className={styles['module-grid']}>
-            {modules.map((module) =>
-              module && module.module_Code ? (
-                <div key={module.module_Id} className={styles['module-card']}>
-                  <img
-                    className={styles['module-image']}
-                    src={`https://picsum.photos/seed/${module.module_Code}/300/200`} // Dynamic image URL
-                    alt={module.description || 'Module Image'}
-                  />
-                  <div className={styles['module-content']}>
-                    <h2>{module.module_Name}</h2>
-                    <p>{module.description || 'No description available.'}</p>
-                    <button
-                      className={styles['module-button']}
-                      onClick={() => handleNavigation(module.module_Code)}
-                    >
-                      {module.module_Code}
-                    </button>
+  
+        {loading ? (
+          <div className={styles.loadingContainer}>
+            <div className={styles.loadingSpinner}></div>
+            <p className={styles.loadingMessage}>Loading Modules Data...</p>
+          </div>
+        ) : modules.length > 0 ? (
+          <div className={styles["module-grid"]}>
+            {modules.map(
+              (module) =>
+                module?.module_Code && (
+                  <div key={module.module_Id} className={styles["module-card"]}>
+                    <img
+                      className={styles["module-image"]}
+                      src={`https://picsum.photos/seed/${module.module_Code}/300/200`} // Dynamic image URL
+                      alt={module.description || "Module Image"}
+                    />
+                    <div className={styles["module-content"]}>
+                      <h2>{module.module_Name}</h2>
+                      <p>{module.description || "No description available."}</p>
+                      <button
+                        className={styles["module-button"]}
+                        onClick={() => handleNavigation(module.module_Code)}
+                      >
+                        {module.module_Code}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <p>Module data is missing or incomplete</p>
-              )
+                )
             )}
           </div>
         ) : (
-          < >
-            <p>No modules assigned to this mentee yet.</p>
-            {/* <button className={styles['add-module-button']} onClick={openModal}>
-              ADD MODULE
-            </button> */}
-          </>
+          <p>No modules assigned to this mentee yet.</p>
         )}
       </div>
+  
       {/* Modal for Adding Modules */}
       <Modal
         isOpen={isModalOpen}
@@ -285,7 +284,12 @@ export default function MenteeModulePage() {
         <form>
           <label>
             Department:
-            <input type="text" value={selectedDepartment} placeholder={selectedDepartment} readOnly />
+            <input
+              type="text"
+              value={selectedDepartment}
+              placeholder={selectedDepartment}
+              readOnly
+            />
           </label>
           <label>
             Course:
@@ -294,122 +298,86 @@ export default function MenteeModulePage() {
               onChange={(e) => handleCourseSelection(e.target.value)}
             >
               <option value="">Select Course</option>
-              {allCourses.map((course) =>(
+              {allCourses.map((course) => (
                 <option key={course.course_Id} value={course.course_Id}>
                   {course.course_Name}
                 </option>
               ))}
             </select>
           </label>
+  
           {/* Display assigned modules with remove icons */}
-    {assignedModules.length > 0 ? (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-        {assignedModules.map((module) => (
-          <div key={module.moduleId} value={module.assignModId} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Button
-              variant="outlined"
-              // size="small"
-              length="20px"
-              style={{ textTransform: 'none' }}
-            >
-              {module.moduleCode}
-            </Button>
-            <IconButton
-              aria-label="remove"
-              color="secondary"
-              onClick={() => handleRemoveModule(module.assignModId)}
-            >
-              <Delete />
-            </IconButton>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <Typography color="textSecondary" style={{ marginBottom: '16px' }}>No modules assigned.</Typography>
-    )}
-          {/* <label>
-            Search Modules:
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearch}
-              placeholder="Search for modules..."
-            />
-          </label> */}
-          {/* {filteredModules.length > 0 ? (
-          <div className={styles['module-checkboxes']}>
-           {courseModules.map((module) =>(
-            <div key={module.module_Id}>
-              
-              <input
-                type="checkbox"
-                id={module.module_Id}
-                value={module.module_Id}
-                checked={
-                  Array.isArray(checkedModules)&& checkedModules.includes(module.module_Id)}
-                onChange={() => handleModuleCheck(module.module_Id)}
-              />
-              <label htmlFor={module.module_Id}>{module.module_Name}{module.module_Id}</label>
+          {assignedModules.length > 0 ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
+              {assignedModules.map((module) => (
+                <div key={module.moduleId} value={module.assignModId} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Button variant="outlined" style={{ textTransform: "none" }}>
+                    {module.moduleCode}
+                  </Button>
+                  <IconButton
+                    aria-label="remove"
+                    color="secondary"
+                    onClick={() => handleRemoveModule(module.assignModId)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </div>
+              ))}
             </div>
-            
-           ) 
-           )}
-          </div>
-            ) : (
-              <p>No modules found.</p>
-          )} */}
-
-<Select
-      multiple
-      displayEmpty
-      value={checkedModules}
-      onChange={handleModuleSelection}
-      fullWidth
-      renderValue={(selected) =>
-        selected.length === 0 ? (
-          <em>Select Modules</em>
-        ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {selected.map((id) => {
-              const module = modules.find((module) => module.module_Id === id);
-              return (
-                <Button
-                  key={id}
-                  variant="contained"
-                  size="small"
-                  style={{ textTransform: 'none' }}
-                >
-                  {module?.module_Code}
-                </Button>
-              );
-            })}
-          </div>
-        )
-      }
-      MenuProps={{
-        PaperProps: {
-          style: {
-            maxHeight: 200,
-          },
-        },
-      }}
-    >
-      <MenuItem disabled value="">
-        <em>Select Modules</em>
-      </MenuItem>
-      {filteredModules
-        .filter(
-          (module) =>
-            !assignedModules.some((assigned) => assigned.moduleId === module.module_Id) &&
-            !checkedModules.includes(module.module_Id)
-        )
-        .map((module) => (
-          <MenuItem key={module.module_Id} value={module.module_Id}>
-            {module.module_Code}
-          </MenuItem>
-        ))}
-    </Select>
-          <div className={styles['modal-buttons']}>
+          ) : (
+            <Typography color="textSecondary" style={{ marginBottom: "16px" }}>
+              No modules assigned.
+            </Typography>
+          )}
+  
+          {/* Select Modules */}
+          <Select
+            multiple
+            displayEmpty
+            value={checkedModules}
+            onChange={handleModuleSelection}
+            fullWidth
+            renderValue={(selected) =>
+              selected.length === 0 ? (
+                <em>Select Modules</em>
+              ) : (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                  {selected.map((id) => {
+                    const module = modules.find((module) => module.module_Id === id);
+                    return (
+                      <Button key={id} variant="contained" size="small" style={{ textTransform: "none" }}>
+                        {module?.module_Code}
+                      </Button>
+                    );
+                  })}
+                </div>
+              )
+            }
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 200,
+                },
+              },
+            }}
+          >
+            <MenuItem disabled value="">
+              <em>Select Modules</em>
+            </MenuItem>
+            {filteredModules
+              .filter(
+                (module) =>
+                  !assignedModules.some((assigned) => assigned.moduleId === module.module_Id) &&
+                  !checkedModules.includes(module.module_Id)
+              )
+              .map((module) => (
+                <MenuItem key={module.module_Id} value={module.module_Id}>
+                  {module.module_Code}
+                </MenuItem>
+              ))}
+          </Select>
+  
+          <div className={styles["modal-buttons"]}>
             <button type="button" onClick={handleAddModules}>
               Add Selected Modules
             </button>
@@ -421,4 +389,5 @@ export default function MenteeModulePage() {
       </Modal>
     </div>
   );
+  
 }

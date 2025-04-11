@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logoTUT from '../../Assets/TUT_Logo_Transparent.png'; 
-import background from '../../Assets/Login Background.jpeg'; 
-import styles from './RegisterPage.module.css'; 
+import logoTUT from '../../Assets/TUT_Logo_Transparent.png';
+import background from '../../Assets/Login Background.jpeg';
+import styles from './RegisterPage.module.css';
 import axios from 'axios';
 
 const SignUp = () => {
@@ -18,9 +18,7 @@ const SignUp = () => {
         Semester: ''
     });
 
-    
-    
-    const [departments,setDepartments]=useState([]);
+    const [departments, setDepartments] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [passwordStrength, setPasswordStrength] = useState({
@@ -30,12 +28,13 @@ const SignUp = () => {
         digit: false,
         specialChar: false
     });
+    const [formErrors, setFormErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Password visibility toggle states
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-
-
+    const [showPasswordInfo, setShowPasswordInfo] = useState(false);
 
     // Function to clear messages after 10 seconds
     useEffect(() => {
@@ -43,44 +42,95 @@ const SignUp = () => {
             const timer = setTimeout(() => {
                 setSuccessMessage('');
                 setErrorMessage('');
-            }, 1000); // 10 seconds
-
+            }, 10000); // 10 seconds
             return () => clearTimeout(timer);
-
-
         }
     }, [successMessage, errorMessage]);
 
-    useEffect(() =>{
-    
-        const FetchDepartments= async () =>{
-          try {
-            const response = await axios.get( 'https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments');
-          setDepartments(response.data.result);
-          console.log(response.data.result);
-          
-          } catch(error) {
-            console.error('Error fetching departments:', error);
-          }
+    useEffect(() => {
+        const FetchDepartments = async () => {
+            try {
+                const response = await axios.get('https://localhost:7163/api/DigitalPlusCrud/GetAllDepartments');
+                setDepartments(response.data.result);
+                console.log(response.data.result);
+            } catch (error) {
+                console.error('Error fetching departments:', error);
+            }
         }
-      
-  
-      FetchDepartments()
-    },[]);
-
-   
+        FetchDepartments();
+    }, []);
 
     // Handle input changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if(name === 'Mentee_Id'){
-            mentee.StudentEmail= `${value}@tut4life.ac.za`;
+        if (name === 'Mentee_Id') {
+            mentee.StudentEmail = `${value}@tut4life.ac.za`;
         }
         setMentee({ ...mentee, [name]: value });
 
-        if (name === 'Password') {
-            checkPasswordStrength(value); // Call function to update password strength as user types
+        // Clear error when user starts typing
+        if (formErrors[name]) {
+            setFormErrors({ ...formErrors, [name]: '' });
         }
+
+        if (name === 'Password') {
+            checkPasswordStrength(value);
+        }
+    };
+
+    // Function to validate form fields
+    const validateForm = () => {
+        const errors = {};
+        let isValid = true;
+
+        if (!mentee.Mentee_Id.trim()) {
+            errors.Mentee_Id = 'Student number is required';
+            isValid = false;
+        }
+
+        if (!mentee.FirstName.trim()) {
+            errors.FirstName = 'First name is required';
+            isValid = false;
+        }
+
+        if (!mentee.LastName.trim()) {
+            errors.LastName = 'Last name is required';
+            isValid = false;
+        }
+
+        if (!mentee.ContactNo.trim()) {
+            errors.ContactNo = 'Contact number is required';
+            isValid = false;
+        }
+
+        if (!mentee.DepartmentId) {
+            errors.DepartmentId = 'Department is required';
+            isValid = false;
+        }
+
+        if (!mentee.Semester.trim()) {
+            errors.Semester = 'Semester is required';
+            isValid = false;
+        }
+
+        if (!mentee.Password) {
+            errors.Password = 'Password is required';
+            isValid = false;
+        } else if (!areAllRequirementsMet()) {
+            errors.Password = 'Password does not meet requirements';
+            isValid = false;
+        }
+
+        if (!mentee.ConfirmPassword) {
+            errors.ConfirmPassword = 'Please confirm your password';
+            isValid = false;
+        } else if (mentee.Password !== mentee.ConfirmPassword) {
+            errors.ConfirmPassword = 'Passwords do not match';
+            isValid = false;
+        }
+
+        setFormErrors(errors);
+        return isValid;
     };
 
     // Function to check password strength
@@ -102,16 +152,10 @@ const SignUp = () => {
     // Validate password confirmation and overall password strength
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSubmitting(true);
 
-        const isPasswordValid = areAllRequirementsMet();
-
-        if (!isPasswordValid) {
-            setErrorMessage('Password does not meet all requirements.');
-            return;
-        }
-
-        if (mentee.Password !== mentee.ConfirmPassword) {
-            setErrorMessage('Passwords do not match!');
+        if (!validateForm()) {
+            setIsSubmitting(false);
             return;
         }
 
@@ -120,6 +164,7 @@ const SignUp = () => {
             const checkResponse = await axios.get(`https://localhost:7163/api/DigitalPlusUser/CheckMentee/${mentee.Mentee_Id}`);
             if (checkResponse.data.exists) {
                 setErrorMessage('Student number already exists!');
+                setIsSubmitting(false);
                 return;
             }
 
@@ -140,37 +185,35 @@ const SignUp = () => {
                 ConfirmPassword: '',
                 Semester: ''
             });
+            setFormErrors({});
             setErrorMessage('');
-
 
             //EMAIL MESSAGE
             const emailMessage = `
-            <p>Hi ${mentee.FirstName.charAt(0)} ${mentee.LastName},</p>
-            <p>Your account has been created Successfully. Please use your student email <strong>${mentee.StudentEmail}</strong> and password to log in. You can access the platform using the following link:</p>
-            <p><a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a></p>
-            <p>You are reminded to change your password by clicking on the 'Forgotten Password' link on the login page.</p>
-            <p>Regards,<br>Administrator</p>
-        `;
+                <p>Hi ${mentee.FirstName.charAt(0)} ${mentee.LastName},</p>
+                <p>Your account has been created Successfully. Please use your student email <strong>${mentee.StudentEmail}</strong> and password to log in. You can access the platform using the following link:</p>
+                <p><a href="http://localhost:3000/" target="_blank">http://localhost:3000/</a></p>
+                <p>You are reminded to change your password by clicking on the 'Forgotten Password' link on the login page.</p>
+                <p>Regards,<br>Administrator</p>
+            `;
 
-        await axios.post(
-            'https://localhost:7163/api/Email/Send',
-            {
-              email: mentee.StudentEmail,
-              subject: 'Your Mentee Account Created Successfully',
-              message: emailMessage
-            },
-            { headers: { 'Content-Type': 'application/json' } }
-          );
-            
+            await axios.post(
+                'https://localhost:7163/api/Email/Send',
+                {
+                    email: mentee.StudentEmail,
+                    subject: 'Your Mentee Account Created Successfully',
+                    message: emailMessage
+                },
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+
         } catch (error) {
             console.error('There was an error registering the mentee! and Sending an email', error);
             setErrorMessage('An error occurred while registering. Please try again.');
+        } finally {
+            setIsSubmitting(false);
         }
-    
     };
-
-    
-     
 
     // Toggle password visibility
     const togglePasswordVisibility = () => {
@@ -195,113 +238,179 @@ const SignUp = () => {
             </header>
             <div className={styles.registerPageContainer}>
                 <div className={styles.registerPageBox}>
-                    <h2 className={styles.registerPageTitle}>WE-MEN-TOR</h2>
+                    <h2 className={styles.registerPageTitle}>WE-MEN-TOR <span role="img" aria-label="alert" style={{ fontSize: '24px' }}>❗</span></h2>
                     <div className={styles.registerPageFormSection + ' ' + styles.registerPageFormSectionLeft}>
                         <h3>SIGN UP</h3>
-                        {successMessage && <div style={{ marginTop: '20px', marginBottom: '20px', color: 'green' }}>{successMessage}</div>}
-                        {errorMessage && <div style={{ marginTop: '20px', marginBottom: '20px', color: 'red' }}>{errorMessage}</div>}
+                        {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
+                        {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
                         <form onSubmit={handleSubmit}>
-                            <label>Student Number:</label>
-                            <input type="text" name="Mentee_Id" value={mentee.Mentee_Id} onChange={handleChange} required />
+                            <label className={styles.formLabel}>Student Number:</label>
+                            <input
+                                type="text"
+                                name="Mentee_Id"
+                                value={mentee.Mentee_Id}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.Mentee_Id ? styles.errorInput : ''}`}
+                            />
+                            {formErrors.Mentee_Id && <span className={styles.errorText}>{formErrors.Mentee_Id}</span>}
 
-                            <label>First Name:</label>
-                            <input type="text" name="FirstName" value={mentee.FirstName} onChange={handleChange} required />
-                        
-                            <label>Last Name:</label>
-                            <input type="text" name="LastName" value={mentee.LastName} onChange={handleChange} required />
-                        
-                              <label >Email:</label>  
-                              <input type="email" name="StudentEmail" value={mentee.StudentEmail} onChange={handleChange}  placeholder={`${mentee.StudentEmail}@tut4life.ac.za`} readOnly required />  
-                    
-                            <label>Contact No:</label>
-                            <input type="text" name="ContactNo" value={mentee.ContactNo} onChange={handleChange} required />
-                    
-                            <label>Department:</label>
-                            <select name="DepartmentId" value={mentee.DepartmentId} onChange={handleChange} required>
-                            <option value="">Select department</option>
-                                {departments.map((dep, xid) =>(
-                                <option key={dep.department_Id} value={dep.department_Id}>
-                                {dep.department_Name}
-                            </option>
-                            ))}
+                            {/* First Name */}
+                            <label className={styles.formLabel}>First Name:</label>
+                            <input
+                                type="text"
+                                name="FirstName"
+                                value={mentee.FirstName}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.FirstName ? styles.errorInput : ''}`}
+                            />
+                            {formErrors.FirstName && <span className={styles.errorText}>{formErrors.FirstName}</span>}
+
+                            {/* Last Name */}
+                            <label className={styles.formLabel}>Last Name:</label>
+                            <input
+                                type="text"
+                                name="LastName"
+                                value={mentee.LastName}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.LastName ? styles.errorInput : ''}`}
+                            />
+                            {formErrors.LastName && <span className={styles.errorText}>{formErrors.LastName}</span>}
+
+                            {/* Email */}
+                            <label className={styles.formLabel}>Email:</label>
+                            <input
+                                type="email"
+                                name="StudentEmail"
+                                value={mentee.StudentEmail}
+                                onChange={handleChange}
+                                placeholder={`${mentee.Mentee_Id ? mentee.Mentee_Id + '@tut4life.ac.za' : '@tut4life.ac.za'}`}
+                                readOnly
+                                className={`${styles.formInput} ${formErrors.StudentEmail ? styles.errorInput : ''}`}
+                            />
+
+                            {/* Contact No */}
+                            <label className={styles.formLabel}>Contact No:</label>
+                            <input
+                                type="tel"
+                                name="ContactNo"
+                                value={mentee.ContactNo}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.ContactNo ? styles.errorInput : ''}`}
+                            />
+                            {formErrors.ContactNo && <span className={styles.errorText}>{formErrors.ContactNo}</span>}
+
+                            {/* Department */}
+                            <label className={styles.formLabel}>Department:</label>
+                            <select
+                                name="DepartmentId"
+                                value={mentee.DepartmentId}
+                                onChange={handleChange}
+                                className={`${styles.selectInput} ${formErrors.DepartmentId ? styles.errorInput : ''}`}
+                            >
+                                <option value="">Select department</option>
+                                {departments.map((dep) => (
+                                    <option key={dep.department_Id} value={dep.department_Id}>
+                                        {dep.department_Name}
+                                    </option>
+                                ))}
                             </select>
+                            {formErrors.DepartmentId && <span className={styles.errorText}>{formErrors.DepartmentId}</span>}
 
-                            <label>Semester:</label>
-                            <input type="text" name="Semester" value={mentee.Semester} onChange={handleChange} required />
-                        
+                            {/* Semester */}
+                            <label className={styles.formLabel}>Semester:</label>
+                            <input
+                                type="text"
+                                name="Semester"
+                                value={mentee.Semester}
+                                onChange={handleChange}
+                                className={`${styles.formInput} ${formErrors.Semester ? styles.errorInput : ''}`}
+                            />
+                            {formErrors.Semester && <span className={styles.errorText}>{formErrors.Semester}</span>}
                         </form>
                     </div>
-                    <div className={styles.registerPageFormSection + ' ' + styles.registerPageFormSectionRight}>
+                    <div className={`${styles.registerPageFormSection} ${styles.registerPageFormSectionRight}`}>
                         <h3>CREATE PASSWORD</h3>
                         <form onSubmit={handleSubmit}>
-                            <label>Password:</label>
-                            <div style={{ position: 'relative' }}>
+                            {/* Password */}
+                            <label className={styles.formLabel}>Password:</label>
+                            <div className={styles.passwordInputContainer}>
                                 <input
                                     type={passwordVisible ? 'text' : 'password'}
                                     name="Password"
                                     value={mentee.Password}
                                     onChange={handleChange}
-                                    required
+                                    className={`${styles.formInput} ${formErrors.Password ? styles.errorInput : ''}`}
                                 />
                                 <span
+                                    type="button"
+                                    className={styles.passwordToggle}
                                     onClick={togglePasswordVisibility}
-                                    style={{
-                                        position: 'absolute',
-                                        right: '10px',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        cursor: 'pointer'
-                                    }}
                                 >
                                     {passwordVisible ? '🙈' : '👁'}
                                 </span>
                             </div>
+                            {formErrors.Password && <span className={styles.errorText}>{formErrors.Password}</span>}
 
-                            {!areAllRequirementsMet() && (
-                                <ul className={styles.passwordRequirements}>
-                                    <li style={{ color: passwordStrength.minLength ? 'green' : 'red' }}>
-                                        At least 8 characters long
-                                    </li>
-                                    <li style={{ color: passwordStrength.upperCase ? 'green' : 'red' }}>
-                                        At least one uppercase letter
-                                    </li>
-                                    <li style={{ color: passwordStrength.lowerCase ? 'green' : 'red' }}>
-                                        At least one lowercase letter
-                                    </li>
-                                    <li style={{ color: passwordStrength.digit ? 'green' : 'red' }}>
-                                        At least one digit
-                                    </li>
-                                    <li style={{ color: passwordStrength.specialChar ? 'green' : 'red' }}>
-                                        At least one special character
-                                    </li>
-                                </ul>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1px', marginTop: '1px' }}>
+
+                                <span
+                                    style={{ cursor: 'pointer', fontSize: '18px', paddingBottom: '10px' }}
+                                    onClick={() => setShowPasswordInfo(!showPasswordInfo)}
+                                >
+                                    ℹ️
+                                </span>
+                            </div>
+
+                            {showPasswordInfo && (
+                                <p style={{ fontSize: '14px', color: 'white' }}>
+                                    <strong>Green ✅</strong> means the requirement is met.
+                                    <strong> Red ❌</strong> means it is not met.
+                                </p>
                             )}
 
-                            <label>Confirm Password:</label>
+                            <ul className={styles.passwordRequirements}>
+                                <li className={passwordStrength.minLength ? styles.valid : styles.invalid}>
+                                    {passwordStrength.minLength ? '✅' : '❌'} At least 8 characters long
+                                </li>
+                                <li className={passwordStrength.upperCase ? styles.valid : styles.invalid}>
+                                    {passwordStrength.upperCase ? '✅' : '❌'} At least one uppercase letter
+                                </li>
+                                <li className={passwordStrength.lowerCase ? styles.valid : styles.invalid}>
+                                    {passwordStrength.lowerCase ? '✅' : '❌'} At least one lowercase letter
+                                </li>
+                                <li className={passwordStrength.digit ? styles.valid : styles.invalid}>
+                                    {passwordStrength.digit ? '✅' : '❌'} At least one digit
+                                </li>
+                                <li className={passwordStrength.specialChar ? styles.valid : styles.invalid}>
+                                    {passwordStrength.specialChar ? '✅' : '❌'} At least one special character
+                                </li>
+                            </ul>
+
+                            <label className={styles.formLabel}>Confirm Password:</label>
                             <div style={{ position: 'relative' }}>
                                 <input
                                     type={confirmPasswordVisible ? 'text' : 'password'}
                                     name="ConfirmPassword"
                                     value={mentee.ConfirmPassword}
                                     onChange={handleChange}
-                                    required
+                                    className={`${styles.formInput} ${formErrors.ConfirmPassword ? styles.errorInput : ''}`}
+
                                 />
                                 <span
+                                    type="button"
+                                    className={styles.passwordToggle}
                                     onClick={toggleConfirmPasswordVisibility}
-                                    style={{
-                                        position: 'absolute',
-                                        right: '10px',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        cursor: 'pointer'
-                                    }}
                                 >
                                     {confirmPasswordVisible ? '🙈' : '👁'}
                                 </span>
                             </div>
+                            {formErrors.ConfirmPassword && <span className={styles.errorText}>{formErrors.ConfirmPassword}</span>}
 
-                            <button type="submit">Sign Up</button>
-                            <p>Already have an account? <Link to="/login">Login</Link></p>
+                            <button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? 'Processing...' : 'Sign Up'}
+                            </button>
+                            <p className={styles.passwordParagraph}>Already have an account? <span className={styles.loginLink}><Link to="/login" className={styles.loginLink}>Login</Link></span> </p>
                         </form>
                     </div>
                 </div>
