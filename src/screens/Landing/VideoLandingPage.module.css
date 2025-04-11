@@ -18,6 +18,7 @@
     overflow: hidden;
     max-width: 100%;
     align-items: center;
+    padding: 0; /* Add padding to prevent overlap */
   }
   
   .overlay {
@@ -31,7 +32,7 @@
   }
   
   .overlayTextContainer {
-    position: relative;
+    position: absolute;
     top: 40%; /* Adjusted for better positioning */
     left: 50%;
     transform: translate(-50%, -50%);
@@ -241,6 +242,7 @@
     max-width: 1200px;
     margin: 0 auto;
   }
+
   
   .coreValueCard {
     flex: 1;
@@ -249,6 +251,11 @@
     padding: 20px;
     border-radius: 8px;
     background-color: rgba(6, 7, 8, 0.75);
+    transition: transform 0.3s ease-in-out; /* Smooth zoom effect */
+  }
+
+  .coreValueCard:hover {
+    transform: scale(1.1); /* Zoom effect on hover */
   }
   
   .coreValueHeading {
@@ -377,15 +384,23 @@
 
   .buttonContainer {
     position: absolute; /* Positioning the buttons absolutely within the video section */
-    bottom: 250px; /* Positioning from the bottom */
+    justify-content: center; /* Center buttons horizontally */
+    align-items: center; /* Center buttons vertically */
+    bottom: 25%; /* Positioning from the bottom */
     left: 50%; /* Centering horizontally */
     transform: translateX(-50%); /* Adjusting for centering */
     display: flex; /* Using flexbox for layout */
-    gap: 100px; /* Space between buttons */
+    gap: 250px; /* Space between buttons */
     z-index: 2; /* Ensure buttons are on top */
-    margin: 10px 0; /* Add vertical spacing between buttons */
-
+    width: auto; /* Prevents unnecessary stretching */
+    flex-wrap: nowrap; /* Ensures buttons stay in one row */
+    padding: 10px 0; /* Prevents vertical shifting */
   }
+  .buttonWrapper {
+    display: inline-block; /* Align buttons in a row */
+    margin-right: 10px; /* Add space between buttons */
+  }
+  
 
   @media (max-width: 768px) {
   /* Decrease the text container's width and adjust font size */
@@ -437,7 +452,7 @@
     font-size: 16px; /* Font size */
     width: 400px; /* Fixed width */
     transition: transform 0.3s ease-in-out, background-color 0.3s ease;
-    animation: popUp 0.4s ease-out forwards;
+    animation: popUp 0.4s ease-out forwards;white-space: nowrap; /* Prevents button text from wrapping */
   }
   
   .primaryButton:hover {
