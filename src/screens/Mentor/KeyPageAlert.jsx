@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./KeyPageAlert.module.css";
 import { FaKey, FaWindowClose } from "react-icons/fa";
 import axios from "axios";
-
+  import { useNotification } from './../Admin/NotificationContext';
 function KeyPageAlert({ showModal, onClose }) {
   const [viewState, setViewState] = useState("initial");
   const [firstName, setFirstName] = useState("");
@@ -10,6 +10,7 @@ function KeyPageAlert({ showModal, onClose }) {
   const [contact, setContact] = useState("");
   const [loading, setLoading] = useState(false);
   const [keyNotifications, setKeyNotifications] = useState([]);
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -112,7 +113,7 @@ function KeyPageAlert({ showModal, onClose }) {
       ]);
 
       setViewState("info");
-      alert("Notification sent successfully!");
+      showNotification("Notification sent successfully!");
     } catch (error) {
       console.error("Error sending notification:", error.response || error);
       alert(error.response?.data?.message || "Failed to send notification");

@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import NavBar from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
 import styles from './BookingsPage.module.css';
-
+import { useNotification } from './../Admin/NotificationContext';
 const MentorBookingsPage = () => {
   const [bookings, setBookings] = useState([]);
   const [modules, setModules] = useState({});
@@ -12,7 +12,7 @@ const MentorBookingsPage = () => {
   const [modalInfo, setModalInfo] = useState({ show: false, action: '', bookingId: null });
   const [reason, setReason] = useState('');
   const [studEmail, setStudEmail] = useState("");
-
+ const { showNotification } = useNotification();
   useEffect(() => {
     document.body.style.overflow = "hidden";
     
@@ -171,7 +171,7 @@ const MentorBookingsPage = () => {
                 const studentEmail = studEmail; // Replace with actual student's email
                 const emailSubject = "Your booking has been rescheduled";
                 const emailMessage = `Your booking with ID ${bookingId} has been successfully rescheduled. Reason: ${reasonToSend || 'No specific reason provided.'}`;
-
+                showNotification(`Your booking with ID ${bookingId} has been successfully rescheduled. Reason: ${reasonToSend || 'No specific reason provided.'}`);
                 const emailResponse = await fetch('https://localhost:7163/api/Email/send', {
                   method: 'POST',
                   headers: {
@@ -186,7 +186,7 @@ const MentorBookingsPage = () => {
 
                 if (!emailResponse.ok) throw new Error('Failed to send email notification');
 
-                toast.warning(`Rescheduling booking with ID ${bookingId} for the reason: ${reasonToSend || 'No specific reason provided'}.`);
+                showNotification(`Rescheduling booking with ID ${bookingId} for the reason: ${reasonToSend || 'No specific reason provided'}.`);
                 console.log(rescheduleResponse);
                 console.log(emailResponse);
 
