@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavBar from './Navigation/NavBar';
 import SideBar from './Navigation/SideBar';
 import axios from 'axios';
+import { useNotification } from './../Admin/NotificationContext';
 
 const RegisterPage = () => {
     const [selectedModule, setSelectedModule] = useState('');
@@ -11,7 +12,7 @@ const RegisterPage = () => {
     const [displayName, setDisplayName] = useState('PROFILE');
     const [isRegisterActivated, setIsRegisterActivated] = useState(false);
     const [activationTime, setActivationTime] = useState(null);
-
+    const { showNotification } = useNotification();
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         if (storedUser && storedUser.firstName && storedUser.lastName) {
@@ -64,10 +65,9 @@ const RegisterPage = () => {
 
     const handleActivateRegister = async () => {
         if (!selectedModule) {
-            alert("Please select a module.");
+            showNotification("Please select a module.");
             return;
         }
-        
         try {
             const payload = {
                 MentorId: mentorID,
@@ -79,7 +79,7 @@ const RegisterPage = () => {
 
             const response = await axios.post('https://localhost:7163/api/MenteeAndMentorRegister/InsertMentorRegister', payload);
 
-            alert(response.data.message || "Register activated successfully.");
+            showNotification(response.data.message || "Register activated successfully.");
             setIsRegisterActivated(true);
             setActivationTime(Date.now());
         } catch (error) {
@@ -101,7 +101,7 @@ const RegisterPage = () => {
             await axios.post('https://localhost:7163/api/MenteeAndMentorRegister/InsertMentorRegister', payload);
             setIsRegisterActivated(false);
             setActivationTime(null);
-            alert("Register automatically deactivated.");
+            showNotification("Register automatically deactivated.");
         } catch (error) {
             console.error("Error deactivating register:", error);
         }

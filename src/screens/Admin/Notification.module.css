@@ -1,0 +1,94 @@
+/* Notification.module.css */
+
+/* Keyframe animations */
+@keyframes slideInRight {
+    0% {
+      transform: translateX(120%);
+      opacity: 0;
+    }
+    80% {
+      transform: translateX(-10px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideOutRight {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    20% {
+      transform: translateX(-10px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(120%);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes progressBar {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+  
+  /* Notification wrapper styles */
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 320px;
+    overflow: hidden;
+    transform-origin: right center;
+    animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+  
+  .notificationClosing {
+    animation: slideOutRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+  
+  /* Type-specific backgrounds */
+  .success {
+    background-color: #4CAF50;
+  }
+  
+  .error {
+    background-color: #F44336;
+  }
+  
+  .warning {
+    background-color: #FF9800;
+  }
+  
+  .info {
+    background-color: #2196F3;
+  }
+  
+  /* Progress bar */
+  .progressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+  
+  /* Icon styles */
+  .icon {
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+  }

@@ -3,7 +3,7 @@ import styles from './Report.module.css';
 import NavBar from './Navigation/NavBar.jsx';
 import SideBar from './Navigation/SideBar';
 import axios from 'axios';
-
+import { useNotification } from './../Admin/NotificationContext';
 const Report = () => {
     const [formData, setFormData] = useState({
         date: '',
@@ -16,7 +16,7 @@ const Report = () => {
     const [isSubmitting, setIsSubmitting] = useState(false); // To manage submission state
     const [modalOpen, setModalOpen] = useState(false); // To control the modal visibility
     const [modalMessage, setModalMessage] = useState(''); // To control the modal message
-
+    const { showNotification } = useNotification();
     const storedUser = JSON.parse(localStorage.getItem("user"));
 
     // Hide overflow when the component is mounted
