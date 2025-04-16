@@ -1,292 +1,163 @@
 .settingsContainer {
-  width: 85%;
-  background: #ffffff;
-  color: #2d3748;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  margin: 2rem auto;
-  padding: 2rem;
-  min-height: 60vh;
-  position: relative;
-  overflow: hidden;
-}
-
-.settingsContainer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 6px;
-  height: 100%;
-  background: linear-gradient(to bottom, #4f46e5, #7c3aed);
+  width: 86%;
+  color: #212121;
+  border-radius: 10px;
+  text-align: center;
+  height: 60vh;
+  margin-left: 220px;
+  margin-bottom: 60px;
+  min-height: -20vh;
+  
 }
 
 .settingsContainer h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 2rem;
-  padding-left: 1rem;
-  position: relative;
   display: flex;
-  align-items: center;
+  justify-self: start;
+  font-size: 40px;
+  margin-left: 700px;
+  margin-bottom: 50px;
+  color: #070707;
+  
 }
 
-.settingsContainer h2::before {
-  content: '⚙️';
-  margin-right: 1rem;
-  font-size: 2rem;
-}
-
-/* Tabs Section - Modern Design */
+/* Tabs Section */
 .settingsTabs {
   display: flex;
-  justify-content: flex-start;
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 2rem;
-  padding-left: 1rem;
+  justify-content: center;
+  top: 200px;
 }
 
 .settingsTabs button {
-  color: #64748b;
-  padding: 0.75rem 1.5rem;
+  color: #212121;
+  padding: 10px 20px;
   background-color: transparent;
   border: none;
-  border-bottom: 3px solid transparent;
-  font-size: 1rem;
-  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  font-size: 16px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  margin-right: 0.5rem;
-  border-radius: 6px 6px 0 0;
 }
 
-.settingsTabs button:hover {
-  color: #4f46e5;
-  background-color: rgba(79, 70, 229, 0.05);
-}
-
+.settingsTabs button:hover,
 .settingsTabs .activeTab {
-  color: #4f46e5;
-  border-bottom: 3px solid #4f46e5;
-  font-weight: 600;
-  background-color: rgba(79, 70, 229, 0.05);
+  border-bottom: 2px solid #1e67ef;
+  font-weight: bold;
+  color: #1e67ef;
 }
 
-/* Tab Content - Card Design */
+/* Tab Content */
 .tabContent {
-  background-color: #f8fafc;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 30px;
+  border-top: 1px solid black;
+  text-align: left;
 }
 
-/* Password Form - Modern Style */
+/* Password Form */
 .passwordForm {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  width: 600px;
 }
 
 .passwordForm .formGroup {
-  margin-bottom: 1.5rem;
-  position: relative;
+  width: 100%;
 }
 
-.passwordForm label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #334155;
-  font-size: 0.95rem;
-}
-
+/* Input Fields */
 .passwordForm input {
+  display: block;
   width: 100%;
-  padding: 0.875rem 1rem 0.875rem 2.5rem;
-  font-size: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background-color: #ffffff;
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #212121;
+  border-radius: 5px;
 }
 
-.passwordForm input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-  outline: none;
-}
-
-.passwordForm input::placeholder {
-  color: #94a3b8;
-}
-
-/* Form Icons */
-.passwordForm .formGroup::before {
-  position: absolute;
-  left: 1rem;
-  top: 2.6rem;
-  color: #94a3b8;
-  font-size: 1.1rem;
-}
-
-.passwordForm .currentPassword::before {
-  content: '🔒';
-}
-
-.passwordForm .newPassword::before {
-  content: '🔄';
-}
-
-.passwordForm .confirmPassword::before {
-  content: '✅';
-}
-
-/* Form Button - Gradient Style */
+/* Form Button */
 .changePasswordButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1rem;
-  width: 100%;
-  max-width: 250px;
-  padding: 0.875rem 1.5rem;
-  background: linear-gradient(to right, #4f46e5, #7c3aed);
+  justify-self: center;
+  margin-top: 20px;
+  width: 250px;
+  padding: 10px 20px;
+  background-color: #1e67ef;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
 }
 
 .changePasswordButton:hover {
-  background: linear-gradient(to right, #4338ca, #6d28d9);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(79, 70, 229, 0.25);
+  background-color: #4372a3;
 }
 
-.changePasswordButton:active {
-  transform: translateY(0);
-}
-
-/* Profile Container - Modern Card */
+/* Profile Container */
 .profileContainer {
-  background-color: #f8fafc;
-  padding: 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-}
-
-/* Profile Form - Grid Layout */
-.profileForm {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.profileForm .formGroup {
-  margin-bottom: 1rem;
-}
-
-.profileForm label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #334155;
-  font-size: 0.95rem;
-}
-
-.profileForm input, 
-.profileForm select {
   width: 100%;
-  padding: 0.875rem 1rem;
-  font-size: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
   background-color: #ffffff;
-  transition: all 0.3s ease;
+  color: #212121;
+  border-radius: 10px;
+  text-align: center;
 }
 
-.profileForm input:focus, 
-.profileForm select:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-  outline: none;
-}
-
-/* Disabled Input - Subtle Style */
-.profileForm input:disabled, 
-.profileForm select:disabled {
-  background-color: #f1f5f9;
-  color: #64748b;
-}
-
-/* Buttons - Modern Style */
-.editButton, 
-.updateButton {
-  display: inline-flex;
-  align-items: center;
+/* Profile Form */
+.profileForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: center;
-  padding: 0.875rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
+}
+
+/* Form Group */
+.profileForm .formGroup {
+  flex-basis: 48%;
+  text-align: left;
+}
+
+/* Full Width Form Group */
+.profileForm .formGroupFullWidth {
+  flex-basis: 100%;
+}
+
+/* Input Fields */
+.profileForm input, select {
+  width: 90%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #070707;
+}
+.for input{
+  background-color:#D9D9D9 ;
+}
+
+/* Disabled Input */
+.profileForm input:disabled, select:disabled {
+  background-color: #e9e9e9;
+}
+
+/* Edit and Update Buttons */
+.editButton, .updateButton {
+  width: 150px;
+  padding: 10px 20px;
+  font-size: 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .editButton {
-  background: linear-gradient(to right, #4f46e5, #7c3aed);
-  color: white;
-  width: 100%;
-  max-width: 250px;
-}
-
-.editButton:hover {
-  background: linear-gradient(to right, #4338ca, #6d28d9);
-  transform: translateY(-2px);
+  background-color: #1e67ef;
+  width: 250px;
+  color: #fff;
 }
 
 .updateButton {
-  background: linear-gradient(to right, #10b981, #34d399);
-  color: white;
+  background-color: #28a745;
+  color: #fff;
 }
 
-.updateButton:hover {
-  background: linear-gradient(to right, #0d9b6c, #2bbd8a);
-  transform: translateY(-2px);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .settingsContainer {
-    width: 95%;
-    padding: 1.5rem;
-  }
-  
-  .settingsTabs {
-    flex-wrap: wrap;
-  }
-  
-  .tabContent, .profileContainer {
-    padding: 1.5rem;
-  }
-  
-  .profileForm {
-    grid-template-columns: 1fr;
-  }
-  
-  .changePasswordButton, 
-  .editButton {
-    width: 100%;
-  }
+h2{
+  color: #070707;
 }
