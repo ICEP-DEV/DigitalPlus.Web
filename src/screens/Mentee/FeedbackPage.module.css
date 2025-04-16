@@ -4,7 +4,8 @@
   flex-direction: column;
   min-height: 88vh;
   align-items: center;
-  background-color: #D9D9D9;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Content and Navigation Alignment */
@@ -100,42 +101,50 @@
 /* Button Group Styling */
 .buttonGroup {
   display: flex;
-  justify-content: space-evenly;
-  gap: 40px;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
 }
 
 /* Button Styling */
 .submitButton, 
 .clearButton {
-  padding: 12px 40px;
+  padding: 15px 40px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  height: 50px;
-  width: 300px;
-  margin-top: 20px; /* Adjusted margin for consistency */
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .submitButton {
-  background-color: #0E4C79;
-  color: rgba(255, 255, 255, 0.548);
+  background: linear-gradient(135deg, #0E4C79 0%, #05273f 100%);
+  color: white;
 }
 
 .submitButton:hover {
-  background-color: #05273f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(14, 76, 121, 0.2);
 }
 
 .clearButton {
-  background-color: #0E4C79;
-  color: rgba(255, 255, 255, 0.548);
+  background: white;
+  color: #0E4C79;
+  border: 2px solid #0E4C79;
 }
 
 .clearButton:hover {
-  background-color: #05273f;
+  background: #f0f7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(14, 76, 121, 0.1);
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
