@@ -92,3 +92,40 @@
 .button:active {
     transform: scale(0.95);
 }
+/* ProtectedMessage.module.css */
+.protectedMessage {
+    opacity: 0.5;
+    color: rgba(0, 0, 0, 0.5);
+    background-color: rgb(235, 235, 235);
+    transition: opacity 0.3s ease;
+    padding: -10px; /* Optional: adds some spacing */
+    border-radius: 4px; /* Optional: rounds corners */
+  }
+  
+  .protectedMessage:hover {
+    opacity: 0.8;
+  }
+  /* ProtectedMessage.module.css */
+.container {
+  position: relative; /* Creates positioning context */
+  min-height: 100px; /* Adjust as needed */
+}
+
+.infoButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background-color: transparent;
+  border: none;
+  color: #007bff; /* Blue color, change as needed */
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.infoButton:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
