@@ -31,6 +31,7 @@ const ModulesContent = () => {
   // Hardcoded list of departments
   const [departments, setDepartments] = useState([]);
   const [courses, setCourses] = useState([]);
+  const [newCourseCode, setNewCourseCode] = useState("");
 
   // State to hold modules
   const [modules, setModules] = useState([]);
@@ -56,8 +57,8 @@ const ModulesContent = () => {
   const [newDepartmentName, setNewDepartmentName] = useState("");
 
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
-  
-
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pendingUpdateData, setPendingUpdateData] = useState(null);
 
   // Fetch modules from the server when the component mounts
   useEffect(() => {
@@ -76,13 +77,19 @@ const ModulesContent = () => {
         }
       })
       .then((data) => {
-        // Assign random colors and icons to each module
-        const modulesWithStyles = data.map((module) => ({
-          ...module,
-          department: module.department || "Unknown Department", // Ensure department is set
-          icon: <FaBook size={40} />,
-          backgroundColor: getRandomColor(),
-        }));
+        const modulesWithStyles = data.map((module) => {
+          const course = courses.find((c) => c.course_Id === module.course_Id);
+          const department = course ? course.department_Id : null;
+
+          return {
+            ...module,
+            department_Id: department,
+            course_Name: course ? course.course_Name : "Unknown",
+            icon: <FaBook size={40} />,
+            backgroundColor: getRandomColor(),
+          };
+        });
+
         setModules(modulesWithStyles);
         filterModules(modulesWithStyles, selectedDepartment);
         setLoading(false);
@@ -107,20 +114,15 @@ const ModulesContent = () => {
       .catch((error) => console.error("Error fetching courses:", error));
   }, []);
 
-  //Getting courses with the department id
-  const course = courses.find((c) => c.course_Id === module.course_Id);
-  const department = departments.find(
-    (d) => d.department_Id === course?.department_Id
-  );
-
   //adding the course to the module
   const handleAddCourse = () => {
-    if (!newCourseName || !selectedCourseDeptId)
+    if (!newCourseName || !newCourseCode || !selectedCourseDeptId)
       return alert("All fields required.");
 
     const newCourse = {
       course_Id: 0,
       course_Name: newCourseName,
+      course_Code: newCourseCode,
       department_Id: parseInt(selectedCourseDeptId),
     };
 
@@ -132,6 +134,7 @@ const ModulesContent = () => {
       .then((res) => res.json())
       .then(() => {
         setNewCourseName("");
+        setNewCourseCode("");
         setSelectedCourseDeptId("");
         setIsAddCourseModalOpen(false);
         // Refresh courses
@@ -234,47 +237,58 @@ const ModulesContent = () => {
       newDescription.trim() !== "" &&
       newDepartment !== ""
     ) {
-      if (window.confirm("Are you sure you want to update this module?")) {
-        const updatedModule = {
-          module_Id: editingModule.module_Id,
-          module_Name: newModuleName,
-          module_Code: newModuleCode,
-          course_Id: parseInt(newCourseId),
-          description: newDescription,
-          department_Id: parseInt(newDepartment),
-        };
+      const updatedModule = {
+        module_Id: editingModule.module_Id,
+        module_Name: newModuleName,
+        module_Code: newModuleCode,
+        course_Id: parseInt(newCourseId),
+        description: newDescription,
+        department_Id: parseInt(newDepartment),
+      };
 
-        fetch("https://localhost:7163/api/DigitalPlusCrud/UpdateModule", {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedModule),
-        })
-          .then((response) => {
-            if (response.ok) {
-              alert("Module updated successfully");
-              setIsModuleModalOpen(false);
-              setEditingModule(null);
-              // Clear form
-              setNewModuleName("");
-              setNewModuleCode("");
-              setNewCourseId(0);
-              setNewDescription("");
-              setNewDepartment("");
-              fetchModulesFromServer(); // Refresh list
-            } else {
-              throw new Error("Failed to update module");
-            }
-          })
-          .catch((error) => {
-            alert(error.message);
-          });
-      }
+      console.log("Prepared updated module:", updatedModule);
+      setPendingUpdateData(updatedModule);
+      setShowConfirmModal(true); // Show confirmation modal
     } else {
+      console.log("Validation failed");
       alert("Please fill in all fields.");
     }
+
+    const confirmUpdateModule = () => {
+      if (!pendingUpdateData) return;
+    
+      fetch("https://localhost:7163/api/DigitalPlusCrud/UpdateModule", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(pendingUpdateData),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("Module updated successfully");
+            setIsModuleModalOpen(false);
+            setEditingModule(null);
+            setNewModuleName("");
+            setNewModuleCode("");
+            setNewCourseId(0);
+            setNewDescription("");
+            setNewDepartment("");
+            fetchModulesFromServer(); // Refresh list
+          } else {
+            throw new Error("Failed to update module");
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating module:", error);
+        })
+        .finally(() => {
+          setShowConfirmModal(false);
+          setPendingUpdateData(null);
+        });
+    };
   };
+  
 
   // Function to edit an existing module
   const handleEditModule = (module) => {
@@ -388,9 +402,12 @@ const ModulesContent = () => {
 
   const handleDeleteDepartment = (id) => {
     if (window.confirm("Are you sure you want to delete this department?")) {
-      fetch(`https://localhost:7163/api/DigitalPlusCrud/DeleteDepartment/${id}`, {
-        method: "DELETE",
-      })
+      fetch(
+        `https://localhost:7163/api/DigitalPlusCrud/DeleteDepartment/${id}`,
+        {
+          method: "DELETE",
+        }
+      )
         .then((res) => {
           if (!res.ok) throw new Error("Failed to delete department");
           setDepartments((prev) => prev.filter((d) => d.department_Id !== id));
@@ -427,52 +444,58 @@ const ModulesContent = () => {
       ) : (
         <div className={styles.modulesCarousel}>
           <div className={styles.modulesCarouselItems} ref={carouselRef}>
-            {filteredModules.map((module) => (
-              <div
-                className={styles.modulesCarouselItem}
-                key={module.module_Id}
-              >
-                {/* Module Details */}
-                <div className={styles.moduleDetails}>
-                  <p>
-                    <strong>Name:</strong> {module.module_Name}
-                  </p>
-                  <p>
-                    <strong>Code:</strong> {module.module_Code}
-                  </p>
-                  <p>
-                    <strong>Course:</strong>{" "}
-                    {courses.find((c) => c.course_Id === module.course_Id)
-                      ?.course_Name || "Unknown"}
-                  </p>
-                  <p>
-                    <strong>Description:</strong> {module.description}
-                  </p>
-                  <p>
-                    <strong>Department:</strong>{" "}
-                    {department?.department_Name || "Unknown"}
-                  </p>
-                </div>
+            {filteredModules.map((module) => {
+              const course = courses.find(
+                (c) => c.course_Id === module.course_Id
+              );
+              const department = departments.find(
+                (d) => d.department_Id === course?.department_Id
+              );
 
-                {/* Edit & Delete Buttons on the Right */}
-                <div className={styles.moduleIcons}>
-                  <button
-                    onClick={() => handleEditModule(module)}
-                    className={styles.editIcon}
-                    title="Edit Module"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteModule(module.module_Id)}
-                    className={styles.deleteIcon}
-                    title="Delete Module"
-                  >
-                    <FaTrash />
-                  </button>
+              return (
+                <div
+                  className={styles.modulesCarouselItem}
+                  key={module.module_Id}
+                >
+                  <div className={styles.moduleDetails}>
+                    <p>
+                      <strong>Name:</strong> {module.module_Name}
+                    </p>
+                    <p>
+                      <strong>Code:</strong> {module.module_Code}
+                    </p>
+                    <p>
+                      <strong>Course:</strong>{" "}
+                      {course?.course_Name || "Unknown"}
+                    </p>
+                    <p>
+                      <strong>Description:</strong> {module.description}
+                    </p>
+                    <p>
+                      <strong>Department:</strong>{" "}
+                      {department?.department_Name || "Unknown"}
+                    </p>
+                  </div>
+
+                  <div className={styles.moduleIcons}>
+                    <button
+                      onClick={() => handleEditModule(module)}
+                      className={styles.editIcon}
+                      title="Edit Module"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteModule(module.module_Id)}
+                      className={styles.deleteIcon}
+                      title="Delete Module"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -513,6 +536,7 @@ const ModulesContent = () => {
         <table className={styles.departmentTable}>
           <thead>
             <tr>
+              <th>Course Code</th>
               <th>Course Name</th>
               <th>Department</th>
               <th>Actions</th>
@@ -526,6 +550,7 @@ const ModulesContent = () => {
                 );
                 return (
                   <tr key={course.course_Id}>
+                    <td>{course.course_Code}</td>
                     <td>{course.course_Name}</td>
                     <td>{dept?.department_Name || "Unknown"}</td>
                     <td>
@@ -578,20 +603,6 @@ const ModulesContent = () => {
               </tr>
             )}
           </tbody>
-          <tbody>
-            {departments.map((dept) => (
-              <tr key={dept.department_Id}>
-                <td>{dept.department_Name}</td>
-                <td>
-                  <button
-                    onClick={() => handleDeleteDepartment(dept.department_Id)}
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
         </table>
       </div>
 
@@ -611,6 +622,7 @@ const ModulesContent = () => {
                     placeholder="Module Name"
                     className={styles.newModuleInput}
                   />
+
                   <label className={styles.label}>Module Code</label>
                   <input
                     type="text"
@@ -621,10 +633,10 @@ const ModulesContent = () => {
                     disabled={!!editingModule} // Disable code input when editing
                   />
                 </div>
+
                 <div className={styles.formSection}>
-                  <label className={styles.label}>Course Name</label>
+                  <label className={styles.label}>Course</label>
                   <select
-                    type="number"
                     value={newCourseId}
                     onChange={(e) => {
                       const selectedCourseId = parseInt(e.target.value);
@@ -634,14 +646,33 @@ const ModulesContent = () => {
                         (course) => course.course_Id === selectedCourseId
                       );
                       if (selectedCourse) {
-                        setNewDepartment(selectedCourse.department_Id); // Automatically set department
+                        setNewDepartment(selectedCourse.department_Id); // ✅ This line is crucial
                       } else {
-                        setNewDepartment(""); // Reset if invalid
+                        setNewDepartment("");
                       }
                     }}
-                    placeholder="Course Name"
+                    className={styles.newModuleSelect}
+                  >
+                    <option value="">Select Course</option>
+                    {courses.map((course) => (
+                      <option key={course.course_Id} value={course.course_Id}>
+                        {course.course_Name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <label className={styles.label}>Department</label>
+                  <input
+                    type="text"
+                    value={
+                      departments.find(
+                        (d) => d.department_Id === parseInt(newDepartment)
+                      )?.department_Name || ""
+                    }
+                    disabled
                     className={styles.newModuleInput}
                   />
+
                   <label className={styles.label}>Description</label>
                   <textarea
                     value={newDescription}
@@ -649,41 +680,6 @@ const ModulesContent = () => {
                     placeholder="Description"
                     className={styles.newModuleTextarea}
                   />
-                  <label className={styles.label}>Course</label>
-                  <select
-                    value={newCourseId}
-                    onChange={(e) => setNewCourseId(parseInt(e.target.value))}
-                    className={styles.newModuleSelect}
-                  >
-                    <option value="">Select Course</option>
-                    {courses.map((course) => {
-                      const dept = departments.find(
-                        (d) => d.department_Id === course.department_Id
-                      );
-                      return (
-                        <option key={course.course_Id} value={course.course_Id}>
-                          {course.course_Name} (
-                          {dept?.department_Name || "Unknown Dept"})
-                        </option>
-                      );
-                    })}
-                  </select>
-                  {/* <label className={styles.label}>Department</label>
-                  <select
-                    value={newDepartment}
-                    onChange={(e) => setNewDepartment(parseInt(e.target.value))}
-                    className={styles.newModuleSelect}
-                  >
-                    <option value="">Select Department</option>
-                    {departments.map((dept) => (
-                      <option
-                        key={dept.department_Id}
-                        value={dept.department_Id}
-                      >
-                        {dept.department_Name}
-                      </option>
-                    ))}
-                  </select> */}
                 </div>
               </div>
               <div className={styles.addModuleActions}>
@@ -718,6 +714,13 @@ const ModulesContent = () => {
                   type="text"
                   value={newCourseName}
                   onChange={(e) => setNewCourseName(e.target.value)}
+                  className={styles.newModuleInput}
+                />
+                <label className={styles.label}>Course Code</label>
+                <input
+                  type="text"
+                  value={newCourseCode}
+                  onChange={(e) => setNewCourseCode(e.target.value)}
                   className={styles.newModuleInput}
                 />
                 <label className={styles.label}>Department</label>
