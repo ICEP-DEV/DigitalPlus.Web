@@ -3,10 +3,11 @@ import { Navigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './PrivateRoute.module.css';
-import { FaLock } from 'react-icons/fa';
+import { FaLock, FaInfoCircle } from 'react-icons/fa';
 
 const PrivateRoute = ({ children }) => {
     const [open, setOpen] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(true);
     const user = localStorage.getItem('user');
 
@@ -26,6 +27,10 @@ const PrivateRoute = ({ children }) => {
         window.location.href = '/login';
     };
 
+    const toggleInfo = () => {
+        setShowInfo(!showInfo);
+    };
+
     if (!isAuthenticated) {
         return (
             <AnimatePresence>
@@ -41,9 +46,33 @@ const PrivateRoute = ({ children }) => {
                             <div className={styles.title}>
                                 <FaLock size={32} />
                             </div>
-                            <Button onClick={handleRedirectToLogin} className={styles.button}>
-                                Go to Login
-                            </Button>
+                            <div className={styles.buttonGroup}>
+                                <Button onClick={handleRedirectToLogin} className={styles.button}>
+                                    Go to Login
+                                </Button>
+                                <Button 
+        onClick={toggleInfo} 
+        className={styles.infoButton}
+        startIcon={<FaInfoCircle />}
+        title='Why Am I seing this'
+      >
+      </Button>
+                            </div>
+                            {showInfo && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className={styles.infoBox}
+                                >
+                                    <p className={styles.protectedMessage}>
+      This page is protected and requires authentication. 
+      You're seeing this message because you're not logged in 
+      or your session has expired. Please log in to access 
+      this content.
+    </p>
+                                </motion.div>
+                            )}
                         </div>
                     </motion.div>
                 )}

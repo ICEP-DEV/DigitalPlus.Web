@@ -86,7 +86,7 @@ const SignUp = () => {
         if (!mentee.Mentee_Id.trim()) {
             errors.Mentee_Id = 'Student number is required';
             isValid = false;
-        }
+          }
 
         if (!mentee.FirstName.trim()) {
             errors.FirstName = 'First name is required';
