@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import tutLogo from '../Header/Assets/tutLogo.png';
 import styles from './VideoLandingPageHeader.module.css';
 
-const VideoLandingPageHeader = () => {
+const RosterHeader = () => {
   const [loaded, setLoaded] = useState(false);
   const [hoveredLink, setHoveredLink] = useState(null);
   const [scrolled, setScrolled] = useState(false);
@@ -22,7 +21,7 @@ const VideoLandingPageHeader = () => {
     <header className={`${styles.header} ${scrolled ? styles.headerScrolled : ''}`} 
     style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 1000 }}>
       <div className={styles.logoContainer}>
-        <a href="#carousel-section">
+        <a href="/">
           <img
             src={tutLogo}
             alt="TUT Logo"
@@ -34,30 +33,12 @@ const VideoLandingPageHeader = () => {
   
       <nav className={`${styles.nav} ${loaded ? styles.navLoaded : ''}`}>
   <a
-    href="#carousel-section"
+    href="/"
     className={`${styles.navLink} ${loaded ? styles.slideIn : ''}`}
     style={{ transitionDelay: '0.1s' }}
   >
     <span className={styles.linkText}>
       HOME
-    </span>
-  </a>
-  <a
-    href="#about-section"
-    className={`${styles.navLink} ${loaded ? styles.slideIn : ''}`}
-    style={{ transitionDelay: '0.2s' }}
-  >
-    <span className={styles.linkText}>
-      ABOUT
-    </span>
-  </a>
-  <a
-    href="#services-section"
-    className={`${styles.navLink} ${loaded ? styles.slideIn : ''}`}
-    style={{ transitionDelay: '0.3s' }}
-  >
-    <span className={styles.linkText}>
-      SERVICES
     </span>
   </a>
   <a
@@ -77,4 +58,4 @@ const VideoLandingPageHeader = () => {
   );
 };
 
-export default VideoLandingPageHeader;
+export default RosterHeader;

@@ -1,625 +1,997 @@
-/* VideoLandingPage.module.css */
 
-/* Carousel Section */
-/* Ensure the body doesn't scroll horizontally */
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
 
-  body, html {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-  }
-  
 .carouselSection {
-    position: relative;
+  position: relative;
+  width: 100%;
+  height: 90vh; 
+  overflow: hidden;
+  max-width: 100%;
+  align-items: center;
+  padding: 0;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(6, 7, 8, 0.7);
+  z-index: 1;
+}
+
+.overlayTextContainer {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  z-index: 2;
+  width: 90%;
+}
+
+/* Add to your styles.module.css */
+
+
+
+/* Base fade-in animation */
+.fadeIn {
+  opacity: 0;
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.fadeIn span {
+  display: inline-block;
+}
+
+/* Staggered animations */
+.fadeIn:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.fadeIn:nth-child(2) {
+  animation-delay: 0.6s;
+}
+
+.typing {
+  animation: typing 1.5s steps(40, end) 1s forwards,
+             blinkCaret 0.75s step-end infinite;
+  opacity: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* Special word animations */
+.wementor {
+  display: inline-block;
+  
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+.platform {
+  position: relative;
+}
+
+.platform::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  
+  animation: underlineExpand 0.8s ease-out 1.8s forwards;
+}
+
+/* Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+    opacity: 1;
+  }
+  to {
     width: 100%;
-    height: 90vh; 
-    overflow: hidden;
-    max-width: 100%;
-    align-items: center;
-    padding: 0; /* Add padding to prevent overlap */
+    opacity: 1;
   }
-  
-  .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+}
+
+@keyframes blinkCaret {
+  from, to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #00ffff;
+  }
+}
+
+
+
+@keyframes underlineExpand {
+  from {
+    width: 0;
+  }
+  to {
     width: 100%;
-    height: 100%;
-    background-color: rgba(6, 7, 8, 0.7);
-    z-index: 1; /* In front of the carousel */
   }
-  
-  .overlayTextContainer {
-    position: absolute;
-    top: 40%; /* Adjusted for better positioning */
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    text-align: center;
-    z-index: 2; /* Ensure the text is above the overlay */
+}
+
+/* Optional background pulse */
+.overlayTextContainer::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+  animation: pulseBackground 4s ease-in-out infinite;
+  z-index: -1;
+  opacity: 0;
+}
+
+
+
+.overlayText {
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  letter-spacing: 2px;
+  line-height: 1.2;
+  z-index: 2;
+}
+
+/* About Section */
+.aboutSection {
+  position: relative;
+  padding: 80px 20px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+.aboutOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(6, 7, 8, 0.85);
+  z-index: 1;
+}
+
+.aboutContent {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.aboutHeading {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.aboutParagraph {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 20px;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  color: #fff;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.aboutParagraph p {
+  margin-bottom: 20px;
+}
+
+.aboutParagraph p:last-child {
+  margin-bottom: 0;
+}
+
+.aboutImage {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0 auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
   }
-
-  
-
-
-  .overlayText {
-    font-size: 3rem;
-    font-weight: bold;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds a shadow for better readability */
-    letter-spacing: 2px;
-    line-height: 1.2;
-    z-index: 2;
+  100% {
+    transform: translateX(0);
+    opacity: 1;
   }
-  
-  /* About Section */
+}
+
+.slide-in {
+  animation: slideIn 1s ease forwards;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
   .aboutSection {
-    position: relative;
-    padding: 50px 20px;
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    max-width: 100vw; /* Constrain the sections to viewport width */
-    margin: 0 auto; /* Ensure content is centered */
-    box-sizing: border-box; /* Include padding/border in element's width */
-    overflow: hidden;
-  }
-  
-  .aboutOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(6, 7, 8, 0.85);
-    z-index: 1;
-  }
-  
-  .aboutContent {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-    padding: 20px; /* Add padding for vertical spacing */
-    margin-left: 100px; /* Add margin to move the content to the right */
-    
+    flex-wrap: nowrap;
+    justify-content: space-around;
   }
   
   .aboutHeading {
-    font-size: 2.5rem;
-    color: #fff;
-    margin-bottom: 20px;
     text-align: left;
   }
   
   .aboutParagraph {
-    max-width: 600px;
-    margin: 0 auto 20px 0;
-    padding: 20px;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    color: #fff;
-    line-height: 1.6;
     text-align: left;
-    word-wrap: break-word;
+    font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .aboutSection {
+    padding: 100px 20px;
   }
   
-  @keyframes slideIn {
-    0% {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    100% {
-      transform: translateX(0);
-      opacity: 1;
-    }
+  .aboutHeading {
+    font-size: 3rem;
   }
-
+  
+  .aboutParagraph {
+    font-size: 1.2rem;
+  }
+  
   .aboutImage {
-    max-width: 100%;
-    height: 400px;
-    border-radius: 8px;
-    transition: opacity 1s ease-in-out;
+    max-width: 500px;
   }
+}
 
-  .aboutImage.slide-in {
-    animation: slideIn 1s ease forwards;
-  }
+.imageContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  
-  /* Mission Section */
+
+/* Mission Section */
+.missionSection {
+  position: relative;
+  padding: 80px 20px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  align-items: center;
+  justify-content: center; /* Center content instead of space-between */
+  gap: 40px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  min-height: 500px; /* Ensure minimum height */
+}
+
+.missionOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(6, 7, 8, 0.85);
+  z-index: 1;
+}
+
+.missionContent {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  max-width: 1200px; /* Limit maximum width */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+}
+
+.missionHeading {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.missionParagraph {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  color: #fff;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.missionImage {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
   .missionSection {
-    position: relative;
-    padding: 50px 20px;
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    max-width: 100vw; /* Constrain the sections to viewport width */
-    margin: 0 auto; /* Ensure content is centered */
-    box-sizing: border-box; /* Include padding/border in element's width */
-    
-  }
-  
-  .missionOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(6, 7, 8, 0.85);
-    z-index: 1;
-  }
-  
-  .missionContent {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-    flex-direction: wrap;
-    padding: 20px;
-    justify-content: space-between;
-    margin-left: 200px; /* Add margin to move the content to the right */
-  }
-
-  .missionText {
-    flex: 1; /* Takes up available space */
-    margin-left: 20px; /* Adds spacing between image and text */
-  }
-  
-  .missionHeading {
-    font-size: 2.5rem;
-    color: #fff;
-    margin-bottom: 20px;
-    text-align: center;
+    flex-wrap: nowrap; /* Prevent wrapping on larger screens */
+    justify-content: space-around; /* Better spacing for larger screens */
   }
   
   .missionParagraph {
-    width: 50%;
-    max-width: 600px;
-    margin: 0 auto 20px 0;
-    padding: 20px;
-    border-radius: 8px;
-    font-size: 1.5rem;
-    color: #fff;
-    line-height: 1.6;
-    text-align: center;
-    word-wrap: break-word;
+    font-size: 1.3rem;
   }
-  
-  .missionImage {
-    max-width: 250px;
-    height: auto;
-    width: 45%;
-    border-radius: 8px;
-    flex: 1; /* Takes up half the space */
-  }
-  
-  
-  /* Core Values Section */
-  .coreValuesSection {
-    position: relative;
-    padding: 50px 20px;
-    background-size: cover;
-    background-position: center;
-    text-align: center;
-    max-width: 100vw; /* Constrain the sections to viewport width */
-    margin: 0 auto; /* Ensure content is centered */
-    box-sizing: border-box; /* Include padding/border in element's width */
-    overflow-x: hidden;
-  }
-  
-  .coreValuesOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(6, 7, 8, 0.85);
-    z-index: 1;
-  }
-  
-  .coreValuesContent {
-    position: relative;
-    z-index: 2;
-  }
-  
-  .coreValuesHeading {
-    font-size: 2.5rem;
-    color: #fff;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .coreValueContainer {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+}
 
-  
-  .coreValueCard {
-    flex: 1;
-    max-width: 300px;
-    margin: 20px;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: rgba(6, 7, 8, 0.75);
-    transition: transform 0.3s ease-in-out; /* Smooth zoom effect */
-  }
-
-  .coreValueCard:hover {
-    transform: scale(1.1); /* Zoom effect on hover */
+@media (min-width: 1024px) {
+  .missionSection {
+    padding: 100px 20px;
   }
   
-  .coreValueHeading {
+  .missionHeading {
+    font-size: 3rem;
+  }
+  
+  .missionParagraph {
     font-size: 1.5rem;
-    color: #fff;
-    margin-bottom: 10px;
-    text-align: center;
   }
-  
-  .coreValueParagraph {
-    font-size: 0.75rem;
-    color: #fff;
-    line-height: 1.6;
-    text-align: center;
-    font-size:1.5em;
+}
+
+
+/* Animation Classes */
+.fadeIn {
+  animation: fadeIn 1s ease forwards;
+}
+
+.slideInLeft {
+  animation: slideInLeft 1s ease forwards;
+}
+
+.slideInRight {
+  animation: slideInRight 1s ease forwards;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  /* Services Section */
-  .servicesSection {
-    position: relative;
-    padding: 50px 20px;
-    background-size: cover;
-    background-position: center;
-    text-align: center;
-    max-width: 100vw; /* Constrain the sections to viewport width */
-    margin: 0 auto; /* Ensure content is centered */
-    box-sizing: border-box; /* Include padding/border in element's width */
+  to {
+    opacity: 1;
   }
-  
-  .servicesOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(6, 7, 8, 0.85);
-    z-index: 1;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
   }
-  
-  .servicesContent {
-    position: relative;
-    z-index: 2;
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
-  
-  .servicesHeading {
-    font-size: 2.5rem;
-    color: #fff;
-    margin-bottom: 20px;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
   }
-  .serviceTitle {
-  color: white; /* Change the title font color to white */
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Add transition to all animated elements */
+.missionHeading,
+.missionParagraph,
+.aboutHeading,
+.aboutParagraph {
+  opacity: 0;
+}
+
+.missionImage,
+.aboutImage {
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+
+
+
+/* Core Values Section */
+.coreValuesSection {
+  position: relative;
+  padding: 50px 20px;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  max-width: 100vw;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.coreValuesOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(6, 7, 8, 0.85);
+  z-index: 1;
+}
+
+.coreValuesContent {
+  position: relative;
+  z-index: 2;
+}
+
+.coreValuesHeading {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.coreValueContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.coreValueCard {
+  flex: 1;
+  max-width: 300px;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: rgba(6, 7, 8, 0.75);
+  transition: transform 0.3s ease-in-out;
+}
+
+.coreValueCard:hover {
+  transform: scale(1.1);
+}
+
+.coreValueHeading {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.coreValueParagraph {
+  font-size: 0.75rem;
+  color: #fff;
+  line-height: 1.6;
+  text-align: center;
+  font-size:1.5em;
+}
+
+/* Services Section */
+.servicesSection {
+  position: relative;
+  padding: 50px 20px;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  max-width: 100vw;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.servicesOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(6, 7, 8, 0.85);
+  z-index: 1;
+}
+
+.servicesContent {
+  position: relative;
+  z-index: 2;
+}
+
+.servicesHeading {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.serviceTitle {
+  color: white;
 }
 
 .serviceDescription {
-  color: white; /* Change the description font color to white */
+  color: white;
 }
 
-  
-  .servicesParagraph {
-    font-size: 1.2rem;
-    color: #fff;
-    line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-    word-wrap: break-word;
-  }
-  .fullscreenVideo {
-    position: absolute; /* Positioning absolute to cover the section */
-    top: 0;
-    left: 0;
-    width: 100%; /* Full viewport width */
-    height: 100vh; /* Full viewport height */
-    object-fit: cover; /* Ensures the video covers the area without distortion */
-    z-index: 1; /* Places the video behind other content */
-  }
+.servicesParagraph {
+  font-size: 1.2rem;
+  color: #fff;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  word-wrap: break-word;
+}
 
+.fullscreenVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 1;
+}
 
+.highlightsScroller {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  white-space: nowrap;
+  z-index: 4;
+  scroll-behavior: smooth;
+  overflow: hidden;
+  margin: 0 auto;
+  max-width: 100vw;
+}
 
-  
-  .highlightsScroller {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 40px; /* Adjust height as needed */
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    align-items: center;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    white-space: nowrap; /* Keep the items on one line */
-    z-index: 4; /* Above the video and other content */
-    scroll-behavior: smooth;
-    overflow: hidden;
-    margin: 0 auto; /* Center the scroller */
-    max-width: 100vw; /* Ensure no overflow */
-    
-  }
-  
-  .highlightsContent {
-    display: inline-block;
-  white-space: nowrap; /* Ensure the text stays on one line */
-  padding-left: 100%; /* Start the text off-screen */
-  animation: scroll 20s linear infinite; /* Animate the scrolling */
+.highlightsContent {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: scroll 20s linear infinite;
   color: white;
   font-size: 2em;
-  }
+}
 
-  @keyframes scroll {
-    0% { transform: translateX(100%); }
-    10%{transform: translateX(0)}
-    100% { transform: translateX(-100%); }
-  }
-  
-  .highlightItem {
-    display: inline-block;
+@keyframes scroll {
+  0% { transform: translateX(100%); }
+  10%{transform: translateX(0)}
+  100% { transform: translateX(-100%); }
+}
+
+.highlightItem {
+  display: inline-block;
   color: white;
   font-size: 1.2rem;
-  }
-  .separator {
-    padding: 0 10px;
-    color: white;
-  }
+}
 
-  
+.separator {
+  padding: 0 10px;
+  color: white;
+}
 
-  .buttonContainer {
-    position: absolute; /* Positioning the buttons absolutely within the video section */
-    justify-content: center; /* Center buttons horizontally */
-    align-items: center; /* Center buttons vertically */
-    bottom: 25%; /* Positioning from the bottom */
-    left: 50%; /* Centering horizontally */
-    transform: translateX(-50%); /* Adjusting for centering */
-    display: flex; /* Using flexbox for layout */
-    gap: 250px; /* Space between buttons */
-    z-index: 2; /* Ensure buttons are on top */
-    width: auto; /* Prevents unnecessary stretching */
-    flex-wrap: nowrap; /* Ensures buttons stay in one row */
-    padding: 10px 0; /* Prevents vertical shifting */
-  }
-  .buttonWrapper {
-    display: inline-block; /* Align buttons in a row */
-    margin-right: 10px; /* Add space between buttons */
-  }
-  
+.buttonContainer {
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  bottom: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 250px;
+  z-index: 2;
+  width: auto;
+  flex-wrap: nowrap;
+  padding: 10px 0;
+}
 
-  @media (max-width: 768px) {
-  /* Decrease the text container's width and adjust font size */
-  .overlayTextContainer {
-    width: 90%; /* More flexible space for smaller screens */
-    top: 20%; /* Push the text upwards to create more room */
-    transform: translate(-50%, -20%);
-    font-size: 16px;
-  }
+.buttonWrapper {
+  display: inline-block;
+  margin-right: 10px;
+}
 
-  /* Stack buttons vertically instead of side by side */
-  .buttonContainer {
-    flex-direction: column;
-    align-items: center;
-    width: 100%; /* Make buttons more flexible */
-    z-index: 2;
+@keyframes popUp {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
   }
-
-  /* Make buttons larger and spaced out */
-  .primaryButton {
-    margin: 10px 0;
-    width: 80%; /* Full width to make sure they fit the smaller screen */
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
-  
-  @keyframes popUp {
-    0% {
-      transform: scale(0.8);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
 
-  .primaryButton,
-  .secondaryButton {
-    transition: transform 0.3s ease; /* Smooth transition for the zoom effect */
-  }
-  
-  .primaryButton {
-    background-color: #013220; /* Primary button color */
-    color: white; /* Button text color */
-    border: none; /* No border */
-    padding: 10px 20px; /* Padding for button */
-    border-radius: 100px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    width: 400px; /* Fixed width */
-    transition: transform 0.3s ease-in-out, background-color 0.3s ease;
-    animation: popUp 0.4s ease-out forwards;white-space: nowrap; /* Prevents button text from wrapping */
-  }
-  
-  .primaryButton:hover {
-    background-color: #013220; /* Change color on hover */
-    transform: scale(1.1); /* Scale up the button to 110% */
-    z-index: 2;
-  }
-  
-  .secondaryButton {
-    background-color: transparent; /* Transparent background for secondary button */
-    color: white; /* Primary color for text */
-    border: 2px solid #013220; /* Border for secondary button */
-    padding: 10px 20px; /* Padding for button */
-    border-radius: 50px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    width: 400px; /* Fixed width */
-  }
-  
-  .secondaryButton:hover {
-    background-color: #013220; /* Change background color on hover */
-    color: white; /* Change text color on hover */
-    transform: scale(1.1); /* Scale up the button to 110% */
-  }
-  
-  
+.primaryButton,
+.secondaryButton {
+  transition: transform 0.3s ease;
+}
 
+.primaryButton {
+  background-color: #013220;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 400px;
+  transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+  animation: popUp 0.4s ease-out forwards;
+  white-space: nowrap;
+}
+
+.primaryButton:hover {
+  background-color: #013220;
+  transform: scale(1.1);
+  z-index: 2;
+}
+
+.secondaryButton {
+  background-color: transparent;
+  color: white;
+  border: 2px solid #013220;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 400px;
+}
+
+.secondaryButton:hover {
+  background-color: #013220;
+  color: white;
+  transform: scale(1.1);
+}
 
 .wementor {
-  font-size: 5rem; /* Increase size as needed */
+  font-size: 5rem;
   text-decoration: underline;  
-  color: #fff; /* Ensure the color matches your design */
-  font-family: 'Candara', sans-serif; /* Font for the <h1> */
-  display: inline-table; /* Keep it on the same line */
-  margin-right: 35px; /* Add some margin between the words */
+  color: #fff;
+  font-family: 'Candara', sans-serif;
+  display: inline-table;
+  margin-right: 35px;
 }
 
 .platform {
-  font-size: 5rem; /* Same size as WE-MEN-TOR */
+  font-size: 5rem;
   color: #fff;
-  font-family: 'Candara', sans-serif; /* Font for the <h1> */
-  display: inline; /* Keep it on the same line */
-  margin-left: 35px; /* You can remove this if needed */
+  font-family: 'Candara', sans-serif;
   display: inline;
+  margin-left: 35px;
 }
+
 .overlayTextContainer h4 {
-  font-size: 2rem; /* Increase the size (adjust as needed) */
-  font-weight: bold; /* Make it bold if needed */
-  color: white; /* You can also customize the color */
-}
-/* Media Query for smaller screens */
-@media (max-width: 768px) {
-  .wementor {
-    font-size: 3rem; /* Smaller font size on mobile */
-    margin-right: 20px; /* Adjust margin for mobile */
-  }
-
-  .platform {
-    font-size: 3rem; /* Smaller font size on mobile */
-    margin-left: 20px; /* Adjust margin for mobile */
-  }
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
 }
 
-/* Optional: Media Query for very small screens */
-@media (max-width: 480px) {
-  .wementor, .platform {
-    font-size: 2.5rem; /* Even smaller font size on very small screens */
-  }
-}
-
-
-/* Responsive Adjustments */
-@media screen and (max-width: 1024px) {
-  /* Tablet Styles */
-  .aboutContent, .missionContent {
-    margin-left: 20px; /* Reduce left margin for smaller screens */
+/* Responsive Media Queries */
+@media (max-width: 1200px) {
+  .buttonContainer {
+    gap: 150px;
   }
   
-  .aboutParagraph, .missionParagraph, .coreValueParagraph {
-    font-size: 1rem; /* Adjust font size */
-    padding: 10px; /* Reduce padding */
+  .primaryButton,
+  .secondaryButton {
+    width: 350px;
   }
-
-  .aboutImage, .missionImage {
-    height: auto; /* Ensure images scale correctly */
-    width: 100%; /* Full width for smaller screens */
-    max-width: none;
-  }
-
-  .missionText {
-    margin-left: 0; /* Remove unnecessary margin */
-    text-align: center; /* Center-align text for smaller screens */
-  }
-
-  .coreValuesSection {
-    text-align: center; /* Align all core values to center */
-  }
-
-  .coreValueContainer {
-    flex-direction: column; /* Stack the core value cards */
-  }
-
-  .coreValueCard {
-    margin: 10px auto; /* Center core value cards */
-  }
-
-  .servicesParagraph {
-    font-size: 1rem; /* Reduce paragraph font size */
+  
+  .missionContent {
+    margin-left: 100px;
   }
 }
 
-@media screen and (max-width: 768px) {
-  /* Mobile Styles */
+@media (max-width: 992px) {
+  .aboutContent {
+    margin-left: 50px;
+  }
+  
+  .missionContent {
+    margin-left: 50px;
+  }
+  
+  .missionParagraph {
+    width: 70%;
+  }
+  
+  .buttonContainer {
+    gap: 100px;
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 300px;
+  }
+  
+  .wementor,
+  .platform {
+    font-size: 4rem;
+    margin-right: 25px;
+    margin-left: 25px;
+  }
+  
+  .overlayText {
+    font-size: 2.5rem;
+  }
+  
+  .overlayTextContainer h4 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 768px) {
   .carouselSection {
-    height: 70vh; /* Adjust carousel height for smaller screens */
+    height: 80vh;
   }
-
+  
+  .aboutSection,
+  .missionSection {
+    flex-direction: column;
+    padding: 40px 15px;
+  }
+  
+  .aboutContent,
+  .missionContent {
+    margin-left: 0;
+    text-align: center;
+  }
+  
+  .aboutHeading,
+  .aboutParagraph,
+  .missionHeading,
+  .missionParagraph {
+    text-align: center;
+    margin: 0 auto 20px;
+  }
+  
+  .missionParagraph {
+    width: 100%;
+  }
+  
+  .aboutImage,
+  .missionImage {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 20px auto;
+  }
+  
+  .buttonContainer {
+    flex-direction: column;
+    gap: 20px;
+    bottom: 20%;
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 280px;
+  }
+  
+  .wementor,
+  .platform {
+    font-size: 3.5rem;
+    margin-right: 15px;
+    margin-left: 15px;
+    display: inline;
+  }
+  
   .overlayText {
-    font-size: 2rem; /* Smaller font for mobile */
-    line-height: 1.4; /* Adjust line height */
+    font-size: 2.2rem;
   }
-
-  .aboutContent, .missionContent {
-    padding: 10px; /* Reduce padding for tighter layouts */
+  
+  .overlayTextContainer h4 {
+    font-size: 1.5rem;
   }
-
-  .aboutHeading, .missionHeading, .coreValuesHeading, .servicesHeading {
-    font-size: 1.8rem; /* Smaller headings for mobile */
-    text-align: center; /* Center-align headings */
+  
+  .coreValueCard {
+    max-width: 250px;
+    margin: 15px;
   }
-
-  .aboutParagraph, .missionParagraph, .servicesParagraph {
-    font-size: 0.9rem; /* Smaller font size */
+  
+  .highlightsContent {
+    font-size: 1.5em;
   }
+}
 
-  .aboutImage, .missionImage {
-    width: 100%; /* Images take full width */
-    max-width: none;
+@media (max-width: 576px) {
+  .carouselSection {
+    height: 70vh;
   }
-
+  
+  .wementor,
+  .platform {
+    font-size: 2.5rem;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .overlayText {
+    font-size: 1.8rem;
+  }
+  
+  .overlayTextContainer h4 {
+    font-size: 1.2rem;
+  }
+  
+  .aboutHeading,
+  .missionHeading,
+  .coreValuesHeading,
+  .servicesHeading {
+    font-size: 2rem;
+  }
+  
+  .aboutParagraph,
+  .missionParagraph,
+  .servicesParagraph {
+    font-size: 1rem;
+    padding: 15px;
+  }
+  
+  .coreValueParagraph {
+    font-size: 1.2em;
+  }
+  
+  .buttonContainer {
+    bottom: 15%;
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 250px;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  
   .coreValueContainer {
-    flex-direction: column; /* Stack core values vertically */
+    justify-content: center;
   }
-
+  
   .coreValueCard {
-    width: 90%; /* Core value cards take up most of the width */
-    margin: 10px auto; /* Center-align */
+    max-width: 100%;
+    margin: 10px 0;
+  }
+  
+  .highlightsContent {
+    font-size: 1em;
+  }
+  
+  .highlightItem {
+    font-size: 1rem;
   }
 }
 
-@media screen and (max-width: 480px) {
-  /* Extra Small Mobile Styles */
+@media (max-width: 400px) {
+  .carouselSection {
+    height: 60vh;
+  }
+  
+  .wementor,
+  .platform {
+    font-size: 2rem;
+  }
+  
   .overlayText {
-    font-size: 1.5rem; /* Smaller font for extra small devices */
+    font-size: 1.5rem;
   }
-
-  .aboutParagraph, .missionParagraph, .servicesParagraph {
-    font-size: 0.8rem; /* Reduce font size further */
-    padding: 5px; /* Minimize padding */
+  
+  .buttonContainer {
+    bottom: 10%;
   }
-
-  .aboutHeading, .missionHeading, .coreValuesHeading, .servicesHeading {
-    font-size: 1.5rem; /* Smaller headings */
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 220px;
   }
-
-  .coreValueCard {
-    width: 95%; /* Maximize use of small screen width */
+  
+  .aboutImage,
+  .missionImage {
+    height: 300px;
   }
 }
+
+
+/* Example transitions */
+.animate-fadeIn {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.animate-slideInLeft {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.animate-slideInRight {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.animate-slideInUp {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Initial hidden state */
+[data-animate] {
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+[data-animate="fadeIn"] {
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+[data-animate="slideInLeft"] {
+  transform: translateX(-50px);
+}
+
+[data-animate="slideInRight"] {
+  transform: translateX(-100px);
+}
+
+[data-animate="slideInUp"] {
+  transform: translateY(50px);
+}
+
+
 

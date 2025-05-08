@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './LoginPage.module.css';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
+import 'react-toastify/dist/ReactToastify.css'; 
+import LoginHeader from "./Header/LoginHeader";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -50,6 +51,7 @@ const Login = () => {
     };
     return (
         <div className={styles.loginContainer}>
+            <LoginHeader />
             <ToastContainer /> {/* Add ToastContainer here */}
             <div className={styles.formBox}>
                 <h1 className={styles.formTitle}>WE-MEN-TOR</h1>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaInfoCircle, FaDownload } from 'react-icons/fa';
-import styles from './AnnouncePage.module.css'; // Importing the CSS module
-import VideoLandingPageHeader from "./Header/VideoLandingPageHeader";
+import styles from './AnnouncePage.module.css';
+import AnnounceHeader from "./Header/AnnounceHeader";
 
 function AnnouncePage() {
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -74,7 +74,7 @@ function AnnouncePage() {
 
     return (
         <div className={styles.container}>
-            <VideoLandingPageHeader />
+            <AnnounceHeader />
             <div className={styles.content}>
                 <h1>Announcements</h1>
                 <div className={styles.timelineWrapper}>
