@@ -79,13 +79,32 @@
   position: relative;
   padding-left: 15px;
   margin: 0 30px;
+  transition: color 0.3s ease;
+  overflow: hidden; 
+  transform: translateY(-20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
+.slideIn {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.navLink {
+  position: relative;
+}
+
+.linkText {
+  position: relative;
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+}
+
 
 .navLink:hover {
   transform: scale(1.2);
   color: white;
   opacity: 1;
-  text-shadow: 0 0 8px #fff, 0 0 12px #fff, 0 0 20px #fff;
+  text-shadow: 0 0 8px #fff, 0 0 12px #fff, 0 0 20px #fff; 
 }
 
 .navLinkLoaded {

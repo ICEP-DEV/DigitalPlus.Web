@@ -3,7 +3,7 @@ import axios from "axios";
 import { FaClock, FaCalendarAlt, FaDownload } from "react-icons/fa";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import VideoLandingPageHeader from "./Header/VideoLandingPageHeader";
+import RosterHeader from "./Header/RosterHeader";
 
 function RosterPage() {
   const [scheduleData, setScheduleData] = useState([]);
@@ -91,7 +91,7 @@ function RosterPage() {
 
   return (
       <div style={styles.container}>
-          <VideoLandingPageHeader />
+          <RosterHeader />
         <h1 style={styles.header}>Mentor's Lab 10-252</h1>
 
         <div style={styles.filterContainer}>
