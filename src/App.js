@@ -1,6 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginPage from './screens/Login/LoginPage.js';
 import AboutPage from './screens/about/AboutPage.js';
 import FeedbackPage from './screens/Mentee/FeedbackPage.js';

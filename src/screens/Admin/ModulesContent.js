@@ -8,6 +8,7 @@ import {
   FaCheck,
 } from "react-icons/fa";
 import styles from "./ModulesContent.module.css";
+import { Modal, Button, Form } from "react-bootstrap";
 
 const ModulesContent = () => {
   const carouselRef = useRef(null);
@@ -253,42 +254,41 @@ const ModulesContent = () => {
       console.log("Validation failed");
       alert("Please fill in all fields.");
     }
-
-    const confirmUpdateModule = () => {
-      if (!pendingUpdateData) return;
-    
-      fetch("https://localhost:7163/api/DigitalPlusCrud/UpdateModule", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(pendingUpdateData),
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log("Module updated successfully");
-            setIsModuleModalOpen(false);
-            setEditingModule(null);
-            setNewModuleName("");
-            setNewModuleCode("");
-            setNewCourseId(0);
-            setNewDescription("");
-            setNewDepartment("");
-            fetchModulesFromServer(); // Refresh list
-          } else {
-            throw new Error("Failed to update module");
-          }
-        })
-        .catch((error) => {
-          console.error("Error updating module:", error);
-        })
-        .finally(() => {
-          setShowConfirmModal(false);
-          setPendingUpdateData(null);
-        });
-    };
   };
+
+  const confirmUpdateModule = () => {
+    if (!pendingUpdateData) return;
   
+    fetch(`https://localhost:7163/api/DigitalPlusCrud/UpdateModule/${pendingUpdateData.module_Id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pendingUpdateData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Module updated successfully");
+          setIsModuleModalOpen(false);
+          setEditingModule(null);
+          setNewModuleName("");
+          setNewModuleCode("");
+          setNewCourseId(0);
+          setNewDescription("");
+          setNewDepartment("");
+          fetchModulesFromServer(); // Refresh list
+        } else {
+          throw new Error("Failed to update module");
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating module:", error);
+      })
+      .finally(() => {
+        setShowConfirmModal(false);
+        setPendingUpdateData(null);
+      });
+  };
 
   // Function to edit an existing module
   const handleEditModule = (module) => {
@@ -700,6 +700,46 @@ const ModulesContent = () => {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal for Update
+      <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Update</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to update this module?</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirmModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={confirmUpdateModule}>
+            Yes, Update
+          </Button>
+        </Modal.Footer>
+      </Modal> */}
+
+      {showConfirmModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: "30%",
+            left: "30%",
+            width: "40%",
+            padding: "20px",
+            background: "#fff",
+            border: "1px solid #ccc",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
+            zIndex: 1000,
+          }}
+        >
+          <h3>Confirm Update</h3>
+          <p>Are you sure you want to update this module?</p>
+          <button onClick={confirmUpdateModule}>Yes, Update</button>
+          <button onClick={() => setShowConfirmModal(false)}>Cancel</button>
         </div>
       )}
 
